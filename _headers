@@ -1,4 +1,4 @@
 /*
-  Content-Security-Policy: default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://api.tomtom.com https://overpass-api.de https://basemaps.cartocdn.com https://tile.openstreetmap.org; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: blob: https: http:; connect-src 'self' https://api.tomtom.com https://overpass-api.de https://sncf-proxy.nicolas7lejeune.workers.dev; frame-src https://embed.waze.com https://www.waze.com;
+  Access-Control-Allow-Origin: *
   X-Frame-Options: SAMEORIGIN
   X-Content-Type-Options: nosniff
