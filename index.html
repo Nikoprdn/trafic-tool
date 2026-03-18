@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Trafic Tool — Radio Monaco</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
@@ -306,7 +307,30 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 /* ─── BOTTOM 2-col ─── */
 .bottom-row{display:grid;grid-template-columns:1fr 360px;gap:12px}
 
-/* ─── RESPONSIVE ─── */
+/* ─── CARTE A8 ─── */
+#a8-map .leaflet-container{background:#0b1929}
+.a8-inc-item{
+  background:var(--s2);border:1px solid var(--border);border-radius:7px;
+  padding:8px 12px;border-left:3px solid var(--amber);
+  font-size:.74rem;color:var(--muted);line-height:1.5;
+}
+.a8-inc-item.severe{border-left-color:var(--red)}
+.a8-inc-item.minor {border-left-color:var(--green)}
+.a8-inc-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:3px}
+.a8-inc-tag{font-family:'Rajdhani',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:1px 6px;border-radius:3px}
+.a8-inc-tag.jam{background:rgba(228,3,46,.15);color:var(--red)}
+.a8-inc-tag.road-closed{background:rgba(228,3,46,.2);color:var(--red)}
+.a8-inc-tag.construction{background:rgba(245,158,11,.15);color:var(--amber)}
+.a8-inc-tag.other{background:rgba(56,189,248,.1);color:var(--blue)}
+.a8-inc-time{font-size:.6rem;color:var(--dim)}
+.a8-legend{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 12px 0;font-size:.68rem;color:var(--text-muted)}
+.a8-leg-item{display:flex;align-items:center;gap:5px}
+.a8-leg-line{width:22px;height:4px;border-radius:2px}
+
+/* Leaflet popup sombre */
+.leaflet-popup-content-wrapper{background:#1a1820!important;border:1px solid #3a3548!important;color:#ede9f5!important;box-shadow:0 4px 16px rgba(0,0,0,.5)!important}
+.leaflet-popup-tip{background:#1a1820!important}
+.leaflet-popup-content{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#ede9f5;margin:8px 12px}
 @media(max-width:1100px){.gares-grid{grid-template-columns:repeat(2,1fr)}.bottom-row{grid-template-columns:1fr}}
 @media(max-width:700px){.gares-grid{grid-template-columns:1fr}.h-title{font-size:1rem}}
 </style>
@@ -462,6 +486,54 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
         <span>5 prochains passages · hors TGV/Intercités</span>
         <span class="sep">·</span>
         <span id="ferro-last-update">Rafraîchissement toutes les 30s</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SECTION 2 — AUTOROUTE A8 (TomTom)
+  ══════════════════════════════════════════ -->
+  <div class="section-wrap" id="sec-a8">
+    <div class="section-toggle" onclick="toggleSection('sec-a8')">
+      <div class="section-toggle-l">
+        <div class="section-ico ico-r">🛣️</div>
+        <div>
+          <div class="section-title">Autoroute A8 — Trafic temps réel</div>
+          <div class="section-sub">Cannes → Nice → Monaco → Menton · Incidents &amp; Fluidité · TomTom Traffic API</div>
+        </div>
+      </div>
+      <div class="section-toggle-r">
+        <span class="badge badge-live">Live</span>
+        <span class="badge badge-ok" id="a8-badge" style="margin-left:2px">Chargement…</span>
+        <button class="btn btn-g" style="font-size:.68rem;padding:3px 9px" onclick="refreshA8(event)">↺ Actu</button>
+        <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+    </div>
+
+    <div class="section-body">
+      <!-- Carte TomTom -->
+      <div style="position:relative">
+        <div id="a8-map-loader" style="position:absolute;inset:0;background:#0b1929;display:flex;align-items:center;justify-content:center;z-index:10;transition:opacity .4s">
+          <div class="spin"></div>
+        </div>
+        <div id="a8-map" style="width:100%;height:420px;background:#0b1929"></div>
+      </div>
+
+      <!-- Incidents TomTom -->
+      <div style="padding:10px;border-top:1px solid var(--border)">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;padding-left:4px">
+          ⚡ Incidents signalés sur l'axe
+        </div>
+        <div id="a8-incidents" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto">
+          <div style="padding:10px;text-align:center;color:var(--dim);font-size:.75rem">Chargement des incidents…</div>
+        </div>
+      </div>
+
+      <div class="sbar">
+        <div class="dot"></div>
+        <span>TomTom Traffic API · Axe A8 Cannes → Menton</span>
+        <span class="sep">·</span>
+        <span id="a8-last-update">Rafraîchissement toutes les 2 min</span>
       </div>
     </div>
   </div>
@@ -1081,6 +1153,221 @@ document.getElementById('inc-feed').innerHTML = `
 
 pollXFeed();
 setInterval(pollXFeed, POLL_MS);
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   SECTION A8 — TomTom Traffic via Cloudflare Worker
+═══════════════════════════════════════════════════════ */
+
+// Bounding box A8 : Cannes (7.01) → Menton (7.52), lat 43.52 → 43.80
+const A8_BBOX = '7.01,43.52,7.52,43.80';
+
+let a8Map      = null;
+let incLayer   = null;   // markers incidents
+let a8Inited   = false;
+
+/* ── Initialise la carte Leaflet avec tuiles TomTom trafic ── */
+function initA8Map(){
+  if(a8Inited) return;
+  a8Inited = true;
+
+  a8Map = L.map('a8-map', {
+    center: [43.65, 7.26],   // centré entre Cannes et Menton
+    zoom: 11,
+    zoomControl: true,
+    attributionControl: true
+  });
+
+  // Fond sombre CartoDB
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://carto.com/" target="_blank">CARTO</a>',
+    subdomains: 'abcd', maxZoom: 18
+  }).addTo(a8Map);
+
+  // Tuiles trafic TomTom — flux de circulation coloré
+  // La clé est passée via le Worker pour ne pas l'exposer
+  // On utilise le Worker comme proxy de tuiles
+  const trafficTiles = L.tileLayer(
+    `${CF_WORKER}/tomtom-tile/{z}/{x}/{y}`,
+    { opacity: 0.82, maxZoom: 18, attribution: '&copy; TomTom' }
+  ).addTo(a8Map);
+
+  incLayer = L.layerGroup().addTo(a8Map);
+
+  // Tracé A8
+  drawA8Route();
+
+  // Légende
+  drawLegend();
+
+  // Loader off dès que la carte est prête
+  a8Map.whenReady(() => {
+    const loader = document.getElementById('a8-map-loader');
+    if(loader){ loader.style.opacity='0'; setTimeout(()=>loader.remove(),400); }
+  });
+}
+
+/* ── Tracé de la route A8 ── */
+function drawA8Route(){
+  const a8Points = [
+    [43.2780,6.6450],[43.3500,6.7500],[43.3850,6.8800],[43.4300,6.9400],
+    [43.4900,6.9800],[43.5455,7.0195],[43.5700,7.0800],[43.5950,7.1200],
+    [43.6250,7.1750],[43.6650,7.2050],[43.6950,7.2500],[43.7060,7.2620],
+    [43.7100,7.2750],[43.7250,7.3100],[43.7384,7.4246],[43.7550,7.4750],
+    [43.7750,7.5050]
+  ];
+  // Ombre
+  L.polyline(a8Points,{color:'#000',weight:8,opacity:.3,lineCap:'round'}).addTo(a8Map);
+  // Route
+  L.polyline(a8Points,{color:'#0064ab',weight:4,opacity:.9,lineCap:'round',
+    dashArray:null}).addTo(a8Map);
+
+  // Labels villes
+  const villes = [
+    {pos:[43.5455,7.0195],label:'Cannes'},
+    {pos:[43.7060,7.2620],label:'Nice'},
+    {pos:[43.7384,7.4246],label:'Monaco'},
+    {pos:[43.7750,7.5050],label:'Menton'},
+  ];
+  villes.forEach(v=>{
+    const ico = L.divIcon({
+      html:`<div style="background:#003a79;color:#f5e642;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:11px;padding:2px 7px;border-radius:4px;border:1px solid rgba(245,230,66,.4);white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.5)">${v.label}</div>`,
+      className:'',iconAnchor:[0,10]
+    });
+    L.marker(v.pos,{icon:ico,zIndexOffset:50}).addTo(a8Map);
+  });
+}
+
+/* ── Légende ── */
+function drawLegend(){
+  const legend = L.control({position:'bottomright'});
+  legend.onAdd = () => {
+    const d = L.DomUtil.create('div');
+    d.style.cssText='background:rgba(10,20,40,.88);border:1px solid #1a3a5c;border-radius:7px;padding:7px 10px;font-size:11px;color:rgba(255,255,255,.7);font-family:DM Sans,sans-serif';
+    d.innerHTML=`
+      <div style="font-weight:700;margin-bottom:5px;letter-spacing:.08em;text-transform:uppercase;font-size:9px;color:rgba(255,255,255,.4)">Fluidité</div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <span><span style="display:inline-block;width:18px;height:3px;background:#00b050;border-radius:2px;margin-right:5px;vertical-align:middle"></span>Fluide</span>
+        <span><span style="display:inline-block;width:18px;height:3px;background:#ffd600;border-radius:2px;margin-right:5px;vertical-align:middle"></span>Ralenti</span>
+        <span><span style="display:inline-block;width:18px;height:3px;background:#ff6600;border-radius:2px;margin-right:5px;vertical-align:middle"></span>Congestionné</span>
+        <span><span style="display:inline-block;width:18px;height:3px;background:#cc0000;border-radius:2px;margin-right:5px;vertical-align:middle"></span>Bouchon</span>
+      </div>`;
+    return d;
+  };
+  legend.addTo(a8Map);
+}
+
+/* ── Charge les incidents TomTom via le Worker ── */
+async function loadA8Incidents(){
+  try{
+    const r = await fetch(`${CF_WORKER}/tomtom-incidents?bbox=${A8_BBOX}`,
+      {signal:AbortSignal.timeout(10000)});
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    const incidents = data.incidents || [];
+
+    // Met à jour le badge
+    const badge = document.getElementById('a8-badge');
+    if(badge){
+      if(!incidents.length){
+        badge.className='badge badge-ok'; badge.textContent='Trafic fluide';
+      } else {
+        const severe = incidents.filter(i=>i.properties?.iconCategory >= 5).length;
+        badge.className='badge badge-warn';
+        badge.textContent=`${incidents.length} incident${incidents.length>1?'s':''}`+(severe?` · ${severe} grave${severe>1?'s':''}`: '');
+      }
+    }
+
+    // Markers sur la carte
+    if(incLayer) incLayer.clearLayers();
+    incidents.forEach(inc => {
+      const props = inc.properties || {};
+      const coords = inc.geometry?.coordinates;
+      if(!coords) return;
+
+      // Centroïde (LineString → premier point, Point → direct)
+      let lat, lng;
+      if(inc.geometry.type === 'Point'){ [lng,lat] = coords; }
+      else if(inc.geometry.type === 'LineString'){ [lng,lat] = coords[0]; }
+      else return;
+
+      const cat    = props.iconCategory || 0;
+      const color  = cat >= 9 ? '#cc0000' : cat >= 5 ? '#ff6600' : '#ffd600';
+      const icon   = cat >= 9 ? '🚨' : cat >= 5 ? '⚠️' : 'ℹ️';
+
+      const marker = L.circleMarker([lat,lng],{
+        radius:9, fillColor:color, color:'#fff',
+        fillOpacity:.9, weight:1.5
+      });
+
+      const desc = (props.events||[]).map(e=>e.description||'').filter(Boolean).join(' · ') || 'Incident signalé';
+      const from = props.from || '';
+      const to   = props.to || '';
+      marker.bindPopup(`
+        <strong>${icon} ${desc}</strong>
+        ${from||to ? `<br><span style="color:rgba(255,255,255,.5);font-size:.7rem">${[from,to].filter(Boolean).join(' → ')}</span>` : ''}
+        ${props.delay ? `<br><span style="color:#f5e642;font-size:.7rem">Retard estimé : ${Math.round(props.delay/60)} min</span>` : ''}
+      `);
+
+      if(incLayer) incLayer.addLayer(marker);
+    });
+
+    // Liste des incidents
+    const list = document.getElementById('a8-incidents');
+    if(list){
+      if(!incidents.length){
+        list.innerHTML = `<div style="padding:10px;text-align:center;color:var(--green);font-size:.78rem">✓ Aucun incident signalé sur l'axe A8</div>`;
+      } else {
+        list.innerHTML = incidents.slice(0,8).map(inc => {
+          const props = inc.properties || {};
+          const cat   = props.iconCategory || 0;
+          const desc  = (props.events||[]).map(e=>e.description||'').filter(Boolean).join(' · ') || 'Incident';
+          const from  = props.from || '';
+          const to    = props.to   || '';
+          const delay = props.delay ? `<span style="color:#f5e642;margin-left:6px;font-size:.62rem">+${Math.round(props.delay/60)} min</span>` : '';
+          const tagClass = cat >= 9 ? 'jam' : cat >= 6 ? 'road-closed' : cat >= 3 ? 'construction' : 'other';
+          const tagLabel = cat >= 9 ? 'Bouchon' : cat >= 6 ? 'Route fermée' : cat >= 3 ? 'Travaux' : 'Info';
+          const itemClass = cat >= 9 ? 'severe' : cat <= 1 ? 'minor' : '';
+          return `<div class="a8-inc-item ${itemClass}">
+            <div class="a8-inc-row">
+              <span class="a8-inc-tag ${tagClass}">${tagLabel}</span>
+              ${delay}
+              <span class="a8-inc-time">${nowStr()}</span>
+            </div>
+            <div>${desc}</div>
+            ${from||to?`<div style="font-size:.62rem;color:var(--dim);margin-top:2px">${[from,to].filter(Boolean).join(' → ')}</div>`:''}
+          </div>`;
+        }).join('');
+      }
+    }
+
+    document.getElementById('a8-last-update').textContent = `Màj ${nowStr()}`;
+
+  } catch(err){
+    const list = document.getElementById('a8-incidents');
+    if(list) list.innerHTML = `<div style="padding:10px;color:var(--red);font-size:.74rem">⚠ ${err.message}</div>`;
+    const badge = document.getElementById('a8-badge');
+    if(badge){ badge.className='badge badge-warn'; badge.textContent='Erreur'; }
+  }
+}
+
+function refreshA8(e){
+  if(e) e.stopPropagation();
+  initA8Map();
+  loadA8Incidents();
+}
+
+// Init dès que la section est visible (ou immédiatement si déjà déployée)
+document.getElementById('sec-a8').addEventListener('click', function onFirstClick(){
+  initA8Map();
+  this.removeEventListener('click', onFirstClick);
+}, {once:false});
+
+// Init auto au chargement + rafraîchissement toutes les 2 min
+setTimeout(()=>{ initA8Map(); loadA8Incidents(); }, 500);
+setInterval(loadA8Incidents, 120000);
 </script>
 </body>
 </html>
