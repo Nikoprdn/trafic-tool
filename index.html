@@ -359,8 +359,16 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
   .leaflet-popup-content-wrapper{background:#1a1820!important;border:1px solid #3a3548!important;color:#ede9f5!important;border-radius:8px!important}
   .leaflet-popup-tip{background:#1a1820!important}
   .leaflet-popup-content{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#ede9f5;margin:8px 12px}
+  /* Section A8 : pas d'overflow:hidden pour que la carte Leaflet soit visible */
+  #sec-a8 .section-body { overflow: visible !important; }
+  #sec-a8 .section-body > * { overflow: visible; }
+  /* Force hauteur carte A8 */
+  #a8-map { width:100% !important; height:520px !important; min-height:520px !important; z-index:1; position:relative; }
+  #a8-map .leaflet-container { width:100% !important; height:520px !important; background:#0d1b2a; }
+  #a8-section-body { overflow: visible !important; }
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -1265,6 +1273,10 @@ async function initA8Map() {
   };
   leg.addTo(a8Map);
 
+  /* Forcer le recalcul de la taille (important après affichage) */
+  setTimeout(() => { if(a8Map) a8Map.invalidateSize(); }, 200);
+  setTimeout(() => { if(a8Map) a8Map.invalidateSize(); }, 600);
+
   /* Masquer le loader */
   const ldr = document.getElementById('a8-loader');
   if (ldr) { ldr.style.opacity = '0'; setTimeout(() => ldr.remove(), 600); }
@@ -1353,8 +1365,9 @@ function tryInitA8() {
   if (sec && !sec.classList.contains('collapsed')) initA8Map();
 }
 
+// Déclencher au DOMContentLoaded ET au window.onload (double sécurité)
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(tryInitA8, 200);
+  setTimeout(tryInitA8, 300);
   const toggle = document.querySelector('#sec-a8 .section-toggle');
   if (toggle) toggle.addEventListener('click', () => {
     setTimeout(() => {
@@ -1362,6 +1375,9 @@ document.addEventListener('DOMContentLoaded', () => {
       else if (a8Map) a8Map.invalidateSize();
     }, 350);
   });
+});
+window.addEventListener('load', () => {
+  setTimeout(tryInitA8, 100);
 });
 </script>l'init immédiatement (section ouverte par défaut)
   setTimeout(tryInitA8, 100);
@@ -1380,5 +1396,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
