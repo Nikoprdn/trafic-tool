@@ -600,33 +600,15 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
   
       <div class="section-body" id="a8-section-body">
 
-        <!-- ═══ CARTE A8 TomTom ═══ -->
-        <div style="position:relative">
-          <div id="a8-map" style="width:100%;height:520px;background:#0d1b2a"></div>
+        <div id="a8-map" style="width:100%;height:520px;background:#0d1b2a;position:relative;z-index:1"></div>
 
-          <!-- Loader overlay -->
-          <div id="a8-loader" style="position:absolute;inset:0;background:#0d1b2a;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:500;gap:12px;transition:opacity .5s">
-            <div class="spin"></div>
-            <span style="font-size:.75rem;color:rgba(255,255,255,.5)">Chargement carte trafic…</span>
-          </div>
-
-          <!-- Lien externe -->
-          <div style="position:absolute;top:10px;right:10px;z-index:1000">
-            <a href="https://wt3.autoroutes-trafic.fr/" target="_blank" rel="noopener"
-               style="background:rgba(0,20,50,.9);color:#fff;font-size:.65rem;padding:6px 10px;border-radius:6px;text-decoration:none;border:1px solid rgba(255,255,255,.2);white-space:nowrap;display:block">
-              🛣 Autoroutes Trafic ↗
-            </a>
-          </div>
-        </div>
-
-        <!-- ═══ INCIDENTS TomTom ═══ -->
         <div style="padding:10px 14px 12px;border-top:1px solid var(--border)">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
             <span style="font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)">⚡ Incidents A8</span>
             <span id="a8-inc-ts" style="font-size:.6rem;color:var(--dim)"></span>
           </div>
           <div id="a8-inc-list" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto">
-            <div style="color:var(--dim);font-size:.74rem;padding:6px 0">Chargement…</div>
+            <div style="color:var(--dim);font-size:.74rem;padding:4px 0">Chargement…</div>
           </div>
         </div>
 
@@ -639,7 +621,7 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
       </div>
     </div>
 
-  <div class="section-wrap" id="sec-waze">
+   <div class="section-wrap" id="sec-waze">
     <div class="section-toggle" onclick="toggleSection('sec-waze')">
       <div class="section-toggle-l">
         
@@ -1209,191 +1191,157 @@ const A8_ECH = [
   { p:[43.6221,7.1648], n:'Villeneuve-Loubet',  s:'48' },
   { p:[43.6458,7.1960], n:'Cagnes-sur-Mer',     s:'50' },
   { p:[43.6641,7.2120], n:'St-Laurent-du-Var',  s:'52' },
-  { p:[43.6842,7.2287], n:'Nice Ouest',         s:'54' },
-  { p:[43.6972,7.2581], n:'Nice Centre',        s:'55' },
-  { p:[43.7182,7.2921], n:'Nice Est',           s:'57' },
-  { p:[43.7288,7.3524], n:'Eze',                s:'58' },
-  { p:[43.7350,7.3978], n:"Cap d'Ail",          s:'59' },
-  { p:[43.7370,7.4191], n:'Monaco',             s:'60' },
-  { p:[43.7490,7.4623], n:'Roquebrune',         s:'62' },
-  { p:[43.7745,7.5122], n:'Menton',             s:'63' },
-];
+  { p:[43.6842,7.2287], n:<script>
+(function() {
+  'use strict';
 
-/* ── Init carte ─────────────────────────────────────────────── */
-async function initA8Map() {
-  if (a8Inited || typeof L === 'undefined') return;
-  a8Inited = true;
+  var TOMTOM_KEY = 'Qqzn6c769jPXkMaq87SqF2V8KXLqjhWw';
+  var a8Map = null;
+  var a8Inited = false;
 
-  /* Créer la carte Leaflet */
-  a8Map = L.map('a8-map', { center:[43.66,7.24], zoom:11, zoomControl:true, preferCanvas:true });
+  var A8_ECH = [
+    { p:[43.5526,7.0200], n:'Cannes Ouest'     },
+    { p:[43.5628,7.0432], n:'Cannes Centre'     },
+    { p:[43.5788,7.0800], n:'Antibes'           },
+    { p:[43.6008,7.1229], n:'Biot'              },
+    { p:[43.6221,7.1648], n:'Villeneuve-Loubet' },
+    { p:[43.6458,7.1960], n:'Cagnes-sur-Mer'    },
+    { p:[43.6641,7.2120], n:'St-Laurent-du-Var' },
+    { p:[43.6842,7.2287], n:'Nice Ouest'        },
+    { p:[43.6972,7.2581], n:'Nice Centre'       },
+    { p:[43.7182,7.2921], n:'Nice Est'          },
+    { p:[43.7288,7.3524], n:'Eze'               },
+    { p:[43.7350,7.3978], n:"Cap d'Ail"         },
+    { p:[43.7370,7.4191], n:'Monaco'            },
+    { p:[43.7490,7.4623], n:'Roquebrune'        },
+    { p:[43.7745,7.5122], n:'Menton'            },
+  ];
 
-  /* Fond CartoDB Dark */
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '© <a href="https://carto.com/">CARTO</a> © OSM',
-    subdomains: 'abcd', maxZoom: 19
-  }).addTo(a8Map);
+  function buildMap() {
+    if (a8Inited) return;
+    if (typeof L === 'undefined') return;
+    var el = document.getElementById('a8-map');
+    if (!el) return;
+    a8Inited = true;
 
-  /* ── Tuiles trafic TomTom Flow (vert→rouge) ─────────────── */
-  L.tileLayer(
-    `https://api.tomtom.com/traffic/map/4/tile/flow/relative-delay/{z}/{x}/{y}.png?key=${TOMTOM_KEY}&tileSize=256`,
-    { opacity: 0.85, maxZoom: 19, attribution: '© TomTom' }
-  ).addTo(a8Map);
+    // Carte
+    a8Map = L.map(el, { center:[43.66,7.24], zoom:11 });
 
-  /* ── Tuiles incidents TomTom (icônes) ──────────────────── */
-  L.tileLayer(
-    `https://api.tomtom.com/traffic/map/4/tile/incidents/s3/{z}/{x}/{y}.png?key=${TOMTOM_KEY}&tileSize=256`,
-    { opacity: 1, maxZoom: 19 }
-  ).addTo(a8Map);
+    // Fond CartoDB
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      subdomains:'abcd', maxZoom:19,
+      attribution:'&copy; CARTO &copy; OSM'
+    }).addTo(a8Map);
 
-  /* ── Échangeurs ────────────────────────────────────────── */
-  A8_ECH.forEach(e => {
-    L.circleMarker(e.p, {
-      radius:5, fillColor:'#f5e642', color:'#003a79', fillOpacity:1, weight:2
-    }).bindTooltip(`<b>${e.n}</b><br>Sortie ${e.s}`, {sticky:true}).addTo(a8Map);
+    // TomTom trafic flow
+    L.tileLayer(
+      'https://api.tomtom.com/traffic/map/4/tile/flow/relative-delay/{z}/{x}/{y}.png?key=' + TOMTOM_KEY + '&tileSize=256',
+      { opacity:0.85, maxZoom:19 }
+    ).addTo(a8Map);
 
-    L.marker(e.p, { icon: L.divIcon({
-      html:`<div style="background:rgba(0,20,60,.88);color:#f5e642;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap;margin-left:9px;margin-top:-6px;border:1px solid rgba(245,230,66,.2)">${e.n}</div>`,
-      className:'', iconAnchor:[0,10]
-    }), zIndexOffset:200, interactive:false }).addTo(a8Map);
-  });
+    // TomTom incidents
+    L.tileLayer(
+      'https://api.tomtom.com/traffic/map/4/tile/incidents/s3/{z}/{x}/{y}.png?key=' + TOMTOM_KEY + '&tileSize=256',
+      { maxZoom:19 }
+    ).addTo(a8Map);
 
-  /* ── Légende ───────────────────────────────────────────── */
-  const leg = L.control({position:'bottomright'});
-  leg.onAdd = () => {
-    const d = L.DomUtil.create('div');
-    d.style.cssText = 'background:rgba(0,15,40,.92);border:1px solid #1a3a5c;border-radius:8px;padding:9px 13px;font-size:11px;color:rgba(255,255,255,.65);line-height:1.95';
-    d.innerHTML = `
-      <div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:3px">Trafic TomTom · A8</div>
-      <span style="display:inline-block;width:16px;height:4px;background:#00b050;vertical-align:middle;border-radius:2px;margin-right:6px"></span>Fluide<br>
-      <span style="display:inline-block;width:16px;height:4px;background:#ffd600;vertical-align:middle;border-radius:2px;margin-right:6px"></span>Ralenti<br>
-      <span style="display:inline-block;width:16px;height:4px;background:#ff6600;vertical-align:middle;border-radius:2px;margin-right:6px"></span>Congestionné<br>
-      <span style="display:inline-block;width:16px;height:4px;background:#cc0000;vertical-align:middle;border-radius:2px;margin-right:6px"></span>Bouchon<br>
-      <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f5e642;border:2px solid #003a79;vertical-align:middle;margin-right:6px"></span>Échangeur`;
-    return d;
-  };
-  leg.addTo(a8Map);
-
-  /* Forcer le recalcul de la taille (important après affichage) */
-  setTimeout(() => { if(a8Map) a8Map.invalidateSize(); }, 200);
-  setTimeout(() => { if(a8Map) a8Map.invalidateSize(); }, 600);
-
-  /* Masquer le loader */
-  const ldr = document.getElementById('a8-loader');
-  if (ldr) { ldr.style.opacity = '0'; setTimeout(() => ldr.remove(), 600); }
-
-  /* ── Tracé OSM + Incidents (en parallèle, non bloquant) ── */
-  loadA8Trace();
-  setTimeout(loadA8Incidents, 2000);
-  if (a8IncTimer) clearInterval(a8IncTimer);
-  a8IncTimer = setInterval(loadA8Incidents, 120000);
-}
-
-/* ── Tracé réel A8 depuis OpenStreetMap ─────────────────────── */
-async function loadA8Trace() {
-  try {
-    const q = `[out:json][timeout:12];way["ref"="A8"]["highway"~"motorway|motorway_link"](43.50,6.95,43.85,7.56);out geom;`;
-    const r = await fetch('https://overpass-api.de/api/interpreter', {
-      method: 'POST', body: 'data=' + encodeURIComponent(q),
-      signal: AbortSignal.timeout(12000)
+    // Échangeurs
+    A8_ECH.forEach(function(e) {
+      L.circleMarker(e.p, {
+        radius:5, fillColor:'#f5e642', color:'#003a79', fillOpacity:1, weight:2
+      }).bindTooltip(e.n).addTo(a8Map);
     });
-    if (!r.ok) return;
-    const d = await r.json();
-    const traceLayer = L.layerGroup().addTo(a8Map);
-    (d.elements || []).forEach(el => {
-      if (el.type !== 'way' || !el.geometry) return;
-      const pts = el.geometry.map(p => [p.lat, p.lon]);
-      const w   = el.tags?.highway?.includes('link') ? 3 : 5;
-      L.polyline(pts, { color:'#000',    weight:w+4, opacity:.3, interactive:false }).addTo(traceLayer);
-      L.polyline(pts, { color:'#0064ab', weight:w,   opacity:.8, interactive:false }).addTo(traceLayer);
-    });
-  } catch(e) { console.warn('Overpass A8:', e.message); }
-}
 
-/* ── Incidents A8 via Worker (TomTom Incident Details v5) ───── */
-async function loadA8Incidents() {
-  const list  = document.getElementById('a8-inc-list');
-  const ts    = document.getElementById('a8-inc-ts');
-  const badge = document.getElementById('a8-badge');
-  try {
-    const r = await fetch(`${CF_WORKER}/a8-incidents`, { signal: AbortSignal.timeout(10000) });
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
-    const incs = data.incidents || [];
+    // Légende
+    var leg = L.control({ position:'bottomright' });
+    leg.onAdd = function() {
+      var d = L.DomUtil.create('div');
+      d.style.cssText = 'background:rgba(0,15,40,.92);border:1px solid #1a3a5c;border-radius:8px;padding:9px 13px;font-size:11px;color:rgba(255,255,255,.7);line-height:2';
+      d.innerHTML = '<b style="font-size:9px;opacity:.4;letter-spacing:.08em">TRAFIC A8 · TOMTOM</b><br>'
+        + '<span style="display:inline-block;width:16px;height:4px;background:#00b050;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Fluide<br>'
+        + '<span style="display:inline-block;width:16px;height:4px;background:#ffd600;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Ralenti<br>'
+        + '<span style="display:inline-block;width:16px;height:4px;background:#ff6600;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Congestionné<br>'
+        + '<span style="display:inline-block;width:16px;height:4px;background:#cc0000;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Bouchon';
+      return d;
+    };
+    leg.addTo(a8Map);
 
-    /* Màj timestamp */
-    if (ts) ts.textContent = `Màj ${nowStr()} · ${incs.length} incident(s)`;
+    // Tracé OSM
+    fetch('https://overpass-api.de/api/interpreter', {
+      method:'POST',
+      body:'data=' + encodeURIComponent('[out:json][timeout:12];way["ref"="A8"]["highway"~"motorway|motorway_link"](43.50,6.95,43.85,7.56);out geom;')
+    }).then(function(r){ return r.json(); }).then(function(d){
+      var g = L.layerGroup().addTo(a8Map);
+      (d.elements||[]).forEach(function(el){
+        if(el.type!=='way'||!el.geometry) return;
+        var pts = el.geometry.map(function(p){ return [p.lat,p.lon]; });
+        var w = el.tags&&el.tags.highway&&el.tags.highway.indexOf('link')>-1?3:5;
+        L.polyline(pts,{color:'#000',weight:w+4,opacity:.3,interactive:false}).addTo(g);
+        L.polyline(pts,{color:'#0064ab',weight:w,opacity:.8,interactive:false}).addTo(g);
+      });
+    }).catch(function(){});
 
-    /* Badge header */
-    if (badge) {
-      if (!incs.length) { badge.className='badge badge-ok';   badge.textContent='A8 Fluide'; }
-      else              { badge.className='badge badge-warn'; badge.textContent=`${incs.length} incident(s) A8`; }
-    }
+    // Incidents (décalé)
+    setTimeout(loadA8Inc, 2000);
+    setInterval(loadA8Inc, 120000);
 
-    /* Liste */
-    if (!list) return;
-    if (!incs.length) {
-      list.innerHTML = `<div style="color:var(--green);font-size:.75rem;padding:4px 0">✓ Aucun incident signalé — A8 fluide</div>`;
-      return;
-    }
-    list.innerHTML = incs.map(i => {
-      const color = i.type==='accident'?'#ef4444' : i.type==='travaux'?'#f59e0b' : '#60a5fa';
-      const emoji = i.type==='accident'?'🚨'       : i.type==='travaux'?'🚧'       : '⚠️';
-      return `<div style="background:var(--s2);border:1px solid var(--border);border-left:3px solid ${color};border-radius:6px;padding:8px 11px;font-size:.74rem">
-        <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px">
-          <span style="font-weight:700;color:${color};font-size:.68rem">${emoji} ${(i.type||'INCIDENT').toUpperCase()}</span>
-          ${i.time?`<span style="font-size:.6rem;color:var(--dim);margin-left:auto">${i.time}</span>`:''}
-        </div>
-        <div style="color:var(--fg);margin-bottom:${i.desc?'3px':'0'}">${i.title||''}</div>
-        ${i.desc?`<div style="color:var(--dim);font-size:.65rem">${i.desc}</div>`:''}
-      </div>`;
-    }).join('');
-
-  } catch(err) {
-    if (ts)   ts.textContent   = `Erreur · ${err.message}`;
-    if (list) list.innerHTML   = `<div style="font-size:.72rem;color:var(--dim)">
-      Données indisponibles ·
-      <a href="https://wt3.autoroutes-trafic.fr/" target="_blank" style="color:var(--blue)">Autoroutes Trafic ↗</a>
-    </div>`;
+    // Redimensionner après animation
+    setTimeout(function(){ a8Map.invalidateSize(); }, 400);
   }
-}
 
-/* ── Déclenchement lazy (quand Leaflet est prêt) ────────────── */
-function tryInitA8() {
-  if (a8Inited) return;
-  if (typeof L === 'undefined') { setTimeout(tryInitA8, 150); return; }
-  const sec = document.getElementById('sec-a8');
-  if (sec && !sec.classList.contains('collapsed')) initA8Map();
-}
+  function loadA8Inc() {
+    var list  = document.getElementById('a8-inc-list');
+    var ts    = document.getElementById('a8-inc-ts');
+    var badge = document.getElementById('a8-badge');
+    fetch(CF_WORKER + '/a8-incidents')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        var incs = data.incidents||[];
+        if(ts) ts.textContent = 'Màj ' + nowStr() + ' · ' + incs.length + ' incident(s)';
+        if(badge){
+          badge.className = incs.length ? 'badge badge-warn' : 'badge badge-ok';
+          badge.textContent = incs.length ? incs.length + ' incident(s) A8' : 'A8 Fluide';
+        }
+        if(!list) return;
+        if(!incs.length){
+          list.innerHTML = '<div style="color:var(--green);font-size:.75rem;padding:4px 0">✓ Aucun incident — A8 fluide</div>';
+          return;
+        }
+        list.innerHTML = incs.map(function(i){
+          var c = i.type==='accident'?'#ef4444':i.type==='travaux'?'#f59e0b':'#60a5fa';
+          var e = i.type==='accident'?'🚨':i.type==='travaux'?'🚧':'⚠️';
+          return '<div style="background:var(--s2);border:1px solid var(--border);border-left:3px solid '+c+';border-radius:6px;padding:8px 11px;font-size:.74rem">'
+            +'<div style="font-weight:700;color:'+c+';font-size:.68rem;margin-bottom:3px">'+e+' '+(i.type||'INCIDENT').toUpperCase()+(i.time?' · <span style='font-weight:400;color:var(--dim)'>'+i.time+'</span>':'')+'</div>'
+            +'<div>'+(i.title||'')+'</div>'
+            +(i.desc?'<div style="color:var(--dim);font-size:.65rem;margin-top:2px">'+i.desc+'</div>':'')
+            +'</div>';
+        }).join('');
+      }).catch(function(e){
+        if(ts) ts.textContent = 'Erreur: '+e.message;
+      });
+  }
 
-// Déclencher au DOMContentLoaded ET au window.onload (double sécurité)
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(tryInitA8, 300);
-  const toggle = document.querySelector('#sec-a8 .section-toggle');
-  if (toggle) toggle.addEventListener('click', () => {
-    setTimeout(() => {
-      if (!a8Inited) tryInitA8();
+  // Exposer pour le toggle
+  window.initA8Map = buildMap;
+
+  // Essayer dès que le DOM est prêt
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function(){ setTimeout(buildMap, 50); });
+  } else {
+    setTimeout(buildMap, 50);
+  }
+  window.addEventListener('load', function(){ setTimeout(buildMap, 100); });
+
+  // Écouter le toggle de la section
+  document.addEventListener('click', function(ev){
+    var toggle = ev.target.closest('#sec-a8 .section-toggle');
+    if (!toggle) return;
+    setTimeout(function(){
+      if (!a8Inited) buildMap();
       else if (a8Map) a8Map.invalidateSize();
     }, 350);
   });
-});
-window.addEventListener('load', () => {
-  setTimeout(tryInitA8, 100);
-});
-</script>l'init immédiatement (section ouverte par défaut)
-  setTimeout(tryInitA8, 100);
-
-  const sec = document.getElementById('sec-a8');
-  if(!sec) return;
-  const toggle = sec.querySelector('.section-toggle');
-  if(toggle){
-    toggle.addEventListener('click', () => {
-      setTimeout(() => {
-        if(!a8Inited) tryInitA8();
-        else if(a8Map) a8Map.invalidateSize();
-      }, 350);
-    });
-  }
-});
+})();
 </script>
-
 </body>
+</html>
