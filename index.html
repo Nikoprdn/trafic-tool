@@ -522,7 +522,7 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
         <span class="sep">·</span>
         <span>5 prochains passages · hors TGV/Intercités</span>
         <span class="sep">·</span>
-        <span id="ferro-last-update">Rafraîchissement toutes les 30s</span>
+        <span id="ferro-last-update">Rafraîchissement toutes les 2 min</span>
       </div>
     </div>
   </div>
@@ -963,9 +963,9 @@ async function pollAllGares(){
   if(el) el.textContent = `Màj ${nowStr()}`;
 }
 
-// Démarrage immédiat puis toutes les 30s
+// Démarrage immédiat puis toutes les 2 min (optimisation quota SNCF)
 pollAllGares();
-setInterval(pollAllGares, 30000);
+setInterval(pollAllGares, 120000);
 
 /* ─── INCIDENTS — Scraping @deruellehugo via allorigins ─── */
 const PROXY   = 'https://api.allorigins.win/get?url=';
