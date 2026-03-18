@@ -592,27 +592,41 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
   
       <div class="section-body">
 
-        <!-- iframe Vinci Autoroutes — Info trafic A8 temps réel -->
+        <!-- Carte A8 — Leaflet + OpenStreetMap + données Bison Futé -->
         <div style="position:relative">
-          <div id="a8-vinci-loader" style="position:absolute;inset:0;background:var(--s2);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;transition:opacity .6s;gap:10px;pointer-events:none">
-            <div class="spin"></div>
-            <span style="font-size:.75rem;color:var(--dim)">Chargement info trafic Vinci…</span>
+          <div id="a8-map" style="width:100%;height:500px;background:#0b1929"></div>
+
+          <!-- Boutons accès rapide -->
+          <div style="position:absolute;top:10px;right:10px;z-index:1000;display:flex;flex-direction:column;gap:6px">
+            <a href="https://wt3.autoroutes-trafic.fr/" target="_blank" rel="noopener"
+               style="background:rgba(0,20,50,.92);color:#fff;font-size:.65rem;padding:6px 10px;border-radius:6px;text-decoration:none;border:1px solid rgba(255,255,255,.2);white-space:nowrap;display:flex;align-items:center;gap:5px">
+              🛣 Autoroutes Trafic ↗
+            </a>
+            <a href="https://www.vinci-autoroutes.com/fr/autoroutes-temps-reel/" target="_blank" rel="noopener"
+               style="background:rgba(0,20,50,.92);color:#fff;font-size:.65rem;padding:6px 10px;border-radius:6px;text-decoration:none;border:1px solid rgba(255,255,255,.2);white-space:nowrap;display:flex;align-items:center;gap:5px">
+              🔶 Vinci Autoroutes ↗
+            </a>
           </div>
-          <iframe
-            src="https://www.vinci-autoroutes.com/fr/autoroutes-temps-reel/"
-            id="a8-vinci-frame"
-            style="width:100%;height:560px;border:none;display:block;background:#fff"
-            title="Vinci Autoroutes — Info trafic A8 temps réel"
-            loading="lazy"
-            onload="(()=>{var l=document.getElementById('a8-vinci-loader');if(l){l.style.opacity='0';setTimeout(function(){l.remove()},600)}})()">
-          </iframe>
+        </div>
+
+        <!-- Incidents A8 depuis Bison Futé (DATEX II open data) -->
+        <div style="padding:10px 12px;border-top:1px solid var(--border)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)">
+              ⚡ Incidents A8
+            </div>
+            <div id="a8-inc-status" style="font-size:.6rem;color:var(--dim)">Chargement…</div>
+          </div>
+          <div id="a8-inc-list" style="display:flex;flex-direction:column;gap:5px;max-height:180px;overflow-y:auto">
+            <div style="padding:8px;text-align:center;color:var(--dim);font-size:.74rem">Récupération des données…</div>
+          </div>
         </div>
 
         <div class="sbar">
           <div class="dot"></div>
-          <span>vinci-autoroutes.com · Info trafic A8 La Provençale</span>
+          <span>Leaflet · OpenStreetMap · A8 La Provençale Cannes→Menton</span>
           <span class="sep">·</span>
-          <span>Accidents · Bouchons · Travaux · Temps réel</span>
+          <span id="a8-last-update">Incidents : Bison Futé / DATEX II open data</span>
         </div>
       </div>
     </div>
@@ -1175,7 +1189,172 @@ setInterval(loadNavitiaDisruptions, 120000);
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
+/* ═══════════════════════════════════════════════════════
+   SECTION A8 — Carte Leaflet + Incidents Bison Futé
+   - Fond : OpenStreetMap CartoDB Dark (gratuit)
+   - Tracé A8 précis Cannes → Menton + échangeurs
+   - Incidents : DATEX II Bison Futé open data (proxy Worker)
+═══════════════════════════════════════════════════════ */
 
+let a8Map = null;
+let a8IncLayer = null;
+let a8Inited = false;
+
+const A8_ECHANGEURS = [
+  { pos:[43.5470,7.0110], label:'Cannes Ouest',       sortie:'8'  },
+  { pos:[43.5580,7.0390], label:'Cannes Centre',       sortie:'9'  },
+  { pos:[43.5750,7.0750], label:'Antibes',             sortie:'44' },
+  { pos:[43.5980,7.1200], label:'Biot',                sortie:'47' },
+  { pos:[43.6180,7.1620], label:'Villeneuve-Loubet',   sortie:'48' },
+  { pos:[43.6450,7.1920], label:'Cagnes-sur-Mer',      sortie:'50' },
+  { pos:[43.6700,7.2080], label:'St-Laurent-du-Var',   sortie:'52' },
+  { pos:[43.6920,7.2380], label:'Nice Ouest',          sortie:'54' },
+  { pos:[43.7050,7.2620], label:'Nice Centre',         sortie:'55' },
+  { pos:[43.7210,7.2960], label:'Nice Est',            sortie:'57' },
+  { pos:[43.7310,7.3420], label:'Eze',                 sortie:'58' },
+  { pos:[43.7400,7.4030], label:"Cap d'Ail",           sortie:'59' },
+  { pos:[43.7384,7.4246], label:'Monaco',              sortie:'60' },
+  { pos:[43.7480,7.4680], label:'Roquebrune',          sortie:'62' },
+  { pos:[43.7650,7.5020], label:'Menton',              sortie:'63' },
+];
+
+const A8_TRACE = [
+  [43.5470,7.0110],[43.5530,7.0260],[43.5580,7.0390],[43.5680,7.0580],
+  [43.5750,7.0750],[43.5870,7.0980],[43.5980,7.1200],[43.6100,7.1420],
+  [43.6180,7.1620],[43.6340,7.1780],[43.6450,7.1920],[43.6600,7.2020],
+  [43.6700,7.2080],[43.6810,7.2220],[43.6920,7.2380],[43.7020,7.2530],
+  [43.7050,7.2620],[43.7120,7.2760],[43.7210,7.2960],[43.7280,7.3200],
+  [43.7310,7.3420],[43.7360,7.3820],[43.7400,7.4030],[43.7384,7.4246],
+  [43.7420,7.4480],[43.7480,7.4680],[43.7560,7.4860],[43.7650,7.5020],
+];
+
+function initA8Map(){
+  if(a8Inited) return;
+  a8Inited = true;
+
+  a8Map = L.map('a8-map',{ center:[43.65,7.26], zoom:11, zoomControl:true });
+
+  // Fond sombre CartoDB
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+    attribution:'© <a href="https://carto.com/">CARTO</a> © OSM contributors',
+    subdomains:'abcd', maxZoom:19
+  }).addTo(a8Map);
+
+  a8IncLayer = L.layerGroup().addTo(a8Map);
+
+  // Tracé A8
+  L.polyline(A8_TRACE,{color:'#000',weight:9,opacity:.4}).addTo(a8Map);
+  L.polyline(A8_TRACE,{color:'#0064ab',weight:5,opacity:.95}).addTo(a8Map);
+  L.polyline(A8_TRACE,{color:'#38bdf8',weight:2,opacity:.4}).addTo(a8Map);
+
+  // Échangeurs
+  A8_ECHANGEURS.forEach(e => {
+    L.circleMarker(e.pos,{
+      radius:5, fillColor:'#f5e642', color:'#003a79', fillOpacity:1, weight:2
+    }).bindTooltip(`<strong>${e.label}</strong><br>Sortie ${e.sortie}`,{permanent:false}).addTo(a8Map);
+
+    L.marker(e.pos,{icon:L.divIcon({
+      html:`<div style="background:rgba(0,20,60,.88);color:#f5e642;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap;margin-left:9px;margin-top:-6px;border:1px solid rgba(245,230,66,.25)">${e.label}</div>`,
+      className:'',iconAnchor:[0,10]
+    }),zIndexOffset:40}).addTo(a8Map);
+  });
+
+  // Légende
+  const leg = L.control({position:'bottomright'});
+  leg.onAdd = () => {
+    const d = L.DomUtil.create('div');
+    d.style.cssText='background:rgba(0,15,40,.92);border:1px solid #1a3a5c;border-radius:8px;padding:9px 12px;font-size:11px;color:rgba(255,255,255,.6);font-family:sans-serif;line-height:2';
+    d.innerHTML=`<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:2px">A8 La Provençale</div>
+<span style="display:inline-block;width:20px;height:3px;background:#0064ab;vertical-align:middle;margin-right:5px;border-radius:2px"></span>Tracé A8<br>
+<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f5e642;border:2px solid #003a79;vertical-align:middle;margin-right:5px"></span>Échangeur<br>
+<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ef4444;vertical-align:middle;margin-right:5px"></span>Incident`;
+    return d;
+  };
+  leg.addTo(a8Map);
+
+  // Charge les incidents au démarrage
+  loadA8Incidents();
+  setInterval(loadA8Incidents, 120000);
+}
+
+/* ── Incidents A8 via proxy Worker (Bison Futé / DATEX II) ── */
+async function loadA8Incidents(){
+  const list   = document.getElementById('a8-inc-list');
+  const status = document.getElementById('a8-inc-status');
+  const badge  = document.getElementById('a8-badge');
+
+  try {
+    // Endpoint Worker : scrape + parse le flux DATEX II Bison Futé pour l'A8
+    const r = await fetch(`${CF_WORKER}/a8-incidents`, {signal: AbortSignal.timeout(10000)});
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    const incidents = data.incidents || [];
+
+    // Màj carte
+    if(a8IncLayer) a8IncLayer.clearLayers();
+    incidents.forEach(inc => {
+      if(inc.lat == null || inc.lng == null) return;
+      const color = inc.type==='accident'?'#ef4444':inc.type==='travaux'?'#f59e0b':'#38bdf8';
+      const emoji = inc.type==='accident'?'🚨':inc.type==='travaux'?'🚧':'⚠️';
+      L.circleMarker([inc.lat,inc.lng],{
+        radius:10,fillColor:color,color:'#fff',fillOpacity:.9,weight:2
+      }).bindPopup(`<strong>${emoji} ${inc.title}</strong><br>${inc.desc||''}`).addTo(a8IncLayer);
+    });
+
+    // Màj liste
+    if(status) status.textContent = `Màj ${nowStr()} · ${incidents.length} incident(s)`;
+    if(list){
+      if(!incidents.length){
+        list.innerHTML=`<div style="padding:8px 4px;color:var(--green);font-size:.75rem">✓ Aucun incident signalé sur l'A8 · Trafic fluide</div>`;
+      } else {
+        list.innerHTML=incidents.map(i=>{
+          const color=i.type==='accident'?'#ef4444':i.type==='travaux'?'#f59e0b':'#60a5fa';
+          const emoji=i.type==='accident'?'🚨':i.type==='travaux'?'🚧':'⚠️';
+          return `<div style="background:var(--s2);border:1px solid var(--border);border-left:3px solid ${color};border-radius:6px;padding:7px 10px;font-size:.74rem">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+              <span style="font-size:.7rem;font-weight:700;color:${color}">${emoji} ${i.type?.toUpperCase()||'INCIDENT'}</span>
+              <span style="font-size:.6rem;color:var(--dim);margin-left:auto">${i.time||nowStr()}</span>
+            </div>
+            <div style="color:var(--fg)">${i.title||''}</div>
+            ${i.desc?`<div style="color:var(--dim);font-size:.65rem;margin-top:2px">${i.desc}</div>`:''}
+          </div>`;
+        }).join('');
+      }
+    }
+    if(badge){
+      if(!incidents.length){ badge.className='badge badge-ok'; badge.textContent='A8 Fluide'; }
+      else { badge.className='badge badge-warn'; badge.textContent=`${incidents.length} incident(s) A8`; }
+    }
+  } catch(err){
+    if(status) status.textContent = `Indisponible · ${err.message}`;
+    if(list) list.innerHTML=`<div style="padding:8px 4px;font-size:.72rem">
+      <div style="color:var(--dim);margin-bottom:6px">Données incidents indisponibles.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a href="https://wt3.autoroutes-trafic.fr/" target="_blank" style="color:var(--blue);font-size:.68rem">🛣 Autoroutes Trafic</a>
+        <a href="https://www.vinci-autoroutes.com/fr/autoroutes-temps-reel/" target="_blank" style="color:var(--blue);font-size:.68rem">🔶 Vinci Autoroutes</a>
+      </div>
+    </div>`;
+  }
+}
+
+// Init carte quand la section A8 est ouverte (lazy)
+document.addEventListener('DOMContentLoaded', () => {
+  // Init immédiate si section visible
+  const sec = document.getElementById('sec-a8');
+  if(sec && !sec.classList.contains('collapsed')) {
+    setTimeout(() => { if(window.L) initA8Map(); }, 300);
+  }
+  // Observer le toggle
+  const toggle = sec?.querySelector('.section-toggle');
+  if(toggle){
+    toggle.addEventListener('click', () => {
+      setTimeout(() => {
+        if(window.L && !a8Inited) initA8Map();
+        else if(a8Map) a8Map.invalidateSize();
+      }, 350);
+    });
+  }
+});
 </script>
 
 </body>
