@@ -113,54 +113,97 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 .gare-code{font-size:.58rem;color:var(--dim);background:var(--s3);border:1px solid var(--border);padding:1px 5px;border-radius:3px;letter-spacing:.07em;font-family:'Rajdhani',sans-serif;font-weight:600}
 .gare-sbar{display:flex;align-items:center;gap:6px;padding:5px 10px;background:var(--s2);border-top:1px solid var(--border);font-size:.6rem;color:var(--dim);letter-spacing:.05em;text-transform:uppercase;flex-shrink:0}
 
-/* ─── TRAIN TABLE ─── */
-.train-table-wrap{flex:1;overflow-y:auto;max-height:280px}
+/* ─── TABLEAU DÉPARTS — Style tableau SNCF ─── */
+.train-table-wrap{flex:1;overflow-y:auto;max-height:310px;background:#0a2744}
 .train-table-wrap::-webkit-scrollbar{width:3px}
-.train-table-wrap::-webkit-scrollbar-track{background:var(--bg)}
-.train-table-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.train-table-wrap::-webkit-scrollbar-track{background:#0a2744}
+.train-table-wrap::-webkit-scrollbar-thumb{background:#1a4a7a;border-radius:2px}
 
-.train-table{width:100%;border-collapse:collapse}
-.train-table thead th{
-  position:sticky;top:0;z-index:2;
-  background:var(--s3);
+/* Chaque ligne = une row SNCF */
+.sncf-row{
+  display:grid;
+  grid-template-columns:90px 1fr auto;
+  align-items:center;
+  gap:0;
+  padding:0 10px;
+  min-height:46px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  background:#0d3060;
+  transition:background .12s;
+  position:relative;
+}
+.sncf-row:nth-child(even){background:#0a2744}
+.sncf-row:hover{background:#143d78}
+
+/* Barre verte état à gauche */
+.sncf-row::before{
+  content:'';
+  position:absolute;left:0;top:8px;bottom:8px;
+  width:3px;border-radius:0 2px 2px 0;
+  background:var(--green);
+}
+.sncf-row.late::before{background:var(--amber)}
+.sncf-row.cancelled::before{background:var(--red)}
+
+/* Colonne heure */
+.sncf-heure{
+  font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;
+  color:#f5e642;letter-spacing:.04em;padding-left:8px;
+  line-height:1;white-space:nowrap;
+}
+.sncf-heure .sncf-heure-theo{
+  display:block;font-size:.62rem;font-weight:400;
+  color:rgba(245,230,66,.5);text-decoration:line-through;
+  letter-spacing:.02em;margin-top:1px;
+}
+
+/* Colonne destination */
+.sncf-dest{padding:0 8px;min-width:0}
+.sncf-dest-name{
+  font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;
+  color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  line-height:1.2;
+}
+.sncf-dest-sub{
+  font-size:.62rem;color:rgba(255,255,255,.45);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin-top:1px;line-height:1;
+}
+
+/* Colonne droite : état + voie */
+.sncf-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+
+/* Badge état */
+.sncf-etat{
   font-family:'Rajdhani',sans-serif;font-size:.62rem;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
-  padding:5px 8px;border-bottom:1px solid var(--border);text-align:left;
-  white-space:nowrap;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:rgba(34,197,94,.9);white-space:nowrap;
 }
-.train-table tbody tr{border-bottom:1px solid rgba(56,51,74,.5);transition:background .12s}
-.train-table tbody tr:hover{background:rgba(255,255,255,.03)}
-.train-table tbody td{padding:5px 8px;font-size:.75rem;vertical-align:middle;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.sncf-etat.late{color:var(--amber)}
+.sncf-etat.cancelled{color:var(--red)}
 
-/* Heure */
-.td-heure{font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:700;color:var(--txt);letter-spacing:.05em;width:52px}
-.td-heure.retard{color:var(--amber)}
-.td-retard{font-size:.62rem;color:var(--amber);display:block;line-height:1}
-
-/* Direction */
-.td-dir{color:var(--muted);max-width:130px}
-.td-dir strong{color:var(--txt);display:block;font-size:.76rem}
-.td-dir span{font-size:.62rem;color:var(--dim)}
-
-/* Voie */
-.td-voie{font-family:'Rajdhani',sans-serif;font-size:.78rem;font-weight:700;color:var(--dim);width:36px;text-align:center}
-
-/* Badge ligne */
-.td-ligne .ligne-badge{
-  display:inline-block;font-family:'Rajdhani',sans-serif;font-size:.62rem;font-weight:700;
-  padding:1px 5px;border-radius:3px;letter-spacing:.05em;
-  background:var(--s3);border:1px solid var(--border);color:var(--muted);
+/* Badge voie — carré blanc SNCF */
+.sncf-voie{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:5px;
+  background:#fff;
+  flex-shrink:0;
 }
+.sncf-voie-label{
+  font-size:.42rem;font-weight:700;text-transform:uppercase;
+  color:#0a2744;letter-spacing:.04em;line-height:1;
+}
+.sncf-voie-val{
+  font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:800;
+  color:#0a2744;line-height:1;letter-spacing:.02em;
+}
+.sncf-voie.empty{background:rgba(255,255,255,.15)}
+.sncf-voie.empty .sncf-voie-label,
+.sncf-voie.empty .sncf-voie-val{color:rgba(255,255,255,.3)}
 
-/* Status pill */
-.pill{display:inline-flex;align-items:center;gap:3px;font-family:'Rajdhani',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:1px 6px;border-radius:10px;white-space:nowrap}
-.pill-ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:var(--green)}
-.pill-late{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--amber)}
-.pill-supp{background:rgba(228,3,46,.12);border:1px solid rgba(228,3,46,.3);color:var(--red)}
-
-/* Empty / error state */
-.train-empty{padding:20px;text-align:center;color:var(--dim);font-size:.75rem}
-.train-loading{padding:16px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--dim);font-size:.74rem}
+/* Vide / erreur */
+.train-empty{padding:20px;text-align:center;color:rgba(255,255,255,.3);font-size:.75rem;background:#0a2744}
+.train-loading{padding:16px;display:flex;align-items:center;justify-content:center;gap:8px;color:rgba(255,255,255,.3);font-size:.74rem;background:#0a2744}
 
 /* ─── INCIDENTS ─── */
 .inc-body-wrap{padding:10px;display:flex;flex-direction:column;gap:8px}
@@ -535,15 +578,14 @@ function retardMin(rt, theo){
   return toMin(rt) - toMin(theo);
 }
 
-/* ── Rend le tableau HTML ── */
+/* ── Rend le tableau HTML style panneau SNCF ── */
 function renderTrainTable(tbId, departures, disruptions){
   const wrap = document.getElementById(tbId);
   if(!wrap) return;
 
-  // Filtre les grandes lignes, garde 5 TER/Régionaux
+  // Filtre grandes lignes, garde 5 TER/Régionaux
   const filtered = departures.filter(d => {
     const mode = (
-      (d.stop_date_time?.data_freshness || '') +
       (d.display_informations?.physical_mode || '') +
       (d.display_informations?.commercial_mode || '') +
       (d.display_informations?.network || '')
@@ -556,13 +598,6 @@ function renderTrainTable(tbId, departures, disruptions){
     return;
   }
 
-  // Index disruptions par trip id
-  const disruptedTrips = new Set(
-    (disruptions||[]).flatMap(d =>
-      (d.impacted_objects||[]).map(o => o.pt_object?.id||'')
-    )
-  );
-
   const rows = filtered.map(dep => {
     const dt   = dep.stop_date_time || {};
     const info = dep.display_informations || {};
@@ -570,48 +605,51 @@ function renderTrainTable(tbId, departures, disruptions){
     const theo = dt.base_departure_date_time;
     const delay = retardMin(rt, theo);
     const isLate = delay > 0;
-    const isCancelled = (dt.data_freshness||'').toLowerCase().includes('base') && delay > 60;
+    const isCancelled = (dt.data_freshness||'') === 'base_schedule' && delay > 60;
 
     const heureAff = fmtSncfTime(rt || theo);
 
-    // Direction : nettoie les parenthèses et prend la destination finale
+    // Direction — destination finale propre
     let dir = info.direction || dep.route?.name || 'N/A';
     dir = dir.replace(/\s*\(.*?\)/g,'').trim();
     if(dir.includes(' vers ')) dir = dir.split(' vers ').pop().trim();
 
-    // Numéro train / code
-    const code = info.headsign || info.code || '';
+    // Sous-titre : réseau + numéro train
+    const code    = info.headsign || info.code || '';
+    const network = info.network || info.commercial_mode || '';
+    const sub     = [network, code].filter(Boolean).join(' | ');
 
-    // Réseau / mode
-    const network = info.network || '';
+    // Voie
+    const platform = dep.stop_point?.platform || '';
 
-    // Pill état
-    let pill = `<span class="pill pill-ok">✓ À l'heure</span>`;
-    if(isCancelled)    pill = `<span class="pill pill-supp">Supprimé</span>`;
-    else if(delay > 0) pill = `<span class="pill pill-late">+${delay} min</span>`;
+    // Classes état
+    const rowClass = isCancelled ? 'cancelled' : isLate ? 'late' : '';
+    const etatClass = isCancelled ? 'cancelled' : isLate ? 'late' : '';
+    let etatLabel = 'À l\'heure';
+    if(isCancelled) etatLabel = 'Supprimé';
+    else if(delay > 0) etatLabel = `+${delay} min`;
 
-    return `<tr>
-      <td class="td-heure ${isLate?'retard':''}">
+    return `
+    <div class="sncf-row ${rowClass}">
+      <div class="sncf-heure">
         ${heureAff}
-        ${isLate && theo ? `<span class="td-retard">${fmtSncfTime(theo)}</span>` : ''}
-      </td>
-      <td class="td-dir">
-        <strong>${dir}</strong>
-        <span>${network}</span>
-      </td>
-      <td class="td-ligne"><span class="ligne-badge">${code}</span></td>
-      <td>${pill}</td>
-      <td class="td-voie">${dep.stop_point?.platform||'—'}</td>
-    </tr>`;
+        ${isLate && theo ? `<span class="sncf-heure-theo">${fmtSncfTime(theo)}</span>` : ''}
+      </div>
+      <div class="sncf-dest">
+        <div class="sncf-dest-name">${dir}</div>
+        <div class="sncf-dest-sub">${sub}</div>
+      </div>
+      <div class="sncf-right">
+        <span class="sncf-etat ${etatClass}">${etatLabel}</span>
+        <div class="sncf-voie ${platform?'':'empty'}">
+          <span class="sncf-voie-label">Voie</span>
+          <span class="sncf-voie-val">${platform||'—'}</span>
+        </div>
+      </div>
+    </div>`;
   }).join('');
 
-  wrap.innerHTML = `
-    <table class="train-table">
-      <thead><tr>
-        <th>Heure</th><th>Destination</th><th>Train</th><th>État</th><th>Voie</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
+  wrap.innerHTML = rows;
 }
 
 /* ── Fetch départs d'une gare via Cloudflare Worker ── */
