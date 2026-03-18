@@ -1,964 +1,147 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Trafic Tool — Radio Monaco</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"/>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<style>
-:root{
-  --red:#E4032E; --red-d:#a8001f;
-  --red-s:rgba(228,3,46,.13); --red-b:rgba(228,3,46,.32);
-  --bg:#0b0a0f; --s1:#17151e; --s2:#201d28; --s3:#2a2735;
-  --border:#38334a; --pur:#37333E; --pur-l:#504a62;
-  --txt:#ece8f4; --muted:#958fa6; --dim:#615b73;
-  --green:#22c55e; --amber:#f59e0b; --blue:#38bdf8;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--txt);min-height:100vh}
-
-/* ─── HEADER ─── */
-header{
-  position:sticky;top:0;z-index:300;height:62px;
-  background:linear-gradient(115deg,var(--s1) 0%,var(--pur) 100%);
-  border-bottom:2px solid var(--red);
-  box-shadow:0 2px 28px rgba(0,0,0,.6);
-  display:grid;grid-template-columns:auto 1fr auto;
-  align-items:center;padding:0 18px;gap:12px;
-}
-.h-logo{display:flex;align-items:center}
-.h-logo img{height:38px;width:auto;filter:brightness(0) invert(1)}
-.h-title{
-  text-align:center;font-family:'Rajdhani',sans-serif;
-  font-size:1.55rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
-}
-.h-title em{color:var(--red);font-style:normal}
-#clock{
-  font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:600;
-  letter-spacing:.1em;color:var(--red);
-  background:var(--red-s);border:1px solid var(--red-b);
-  padding:4px 14px;border-radius:7px;min-width:106px;text-align:center;
-}
-
-/* ─── MAIN ─── */
-main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
-
-/* ─── COLLAPSIBLE SECTION ─── */
-.section-wrap{background:var(--s1);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 3px 20px rgba(0,0,0,.4)}
-
-.section-toggle{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 16px;
-  background:linear-gradient(90deg,var(--s2),var(--s3));
-  border-bottom:1px solid var(--border);
-  cursor:pointer;user-select:none;gap:10px;
-  transition:background .15s;
-}
-.section-toggle:hover{background:linear-gradient(90deg,var(--s3),#32303f)}
-.section-toggle-l{display:flex;align-items:center;gap:10px;min-width:0}
-.section-ico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
-.ico-r{background:var(--red-s);border:1px solid var(--red-b)}
-.ico-p{background:rgba(55,51,62,.5);border:1px solid var(--pur-l)}
-.ico-a{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3)}
-.section-title{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase}
-.section-sub{font-size:.67rem;color:var(--muted);letter-spacing:.05em;margin-top:1px}
-.section-toggle-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
-
-.chevron{
-  width:20px;height:20px;display:flex;align-items:center;justify-content:center;
-  color:var(--muted);transition:transform .25s;flex-shrink:0;
-}
-.chevron svg{width:14px;height:14px}
-.section-wrap.collapsed .chevron{transform:rotate(-90deg)}
-
-.section-body{transition:max-height .3s ease,opacity .25s;overflow:hidden;max-height:2000px;opacity:1}
-.section-wrap.collapsed .section-body{max-height:0;opacity:0}
-
-/* ─── BADGES ─── */
-.badge{font-family:'Rajdhani',sans-serif;font-size:.63rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:2px 8px;border-radius:20px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
-.badge-live{background:var(--red-s);border:1px solid var(--red-b);color:var(--red)}
-.badge-live::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--red);box-shadow:0 0 5px var(--red);animation:blink 1.6s infinite}
-.badge-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green)}
-.badge-warn{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:var(--amber)}
-.badge-count{background:var(--red-s);border:1px solid var(--red-b);color:var(--red)}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
-
-/* ─── BUTTONS ─── */
-.btn{font-family:'Rajdhani',sans-serif;font-size:.74rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:4px 11px;border-radius:5px;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all .14s;white-space:nowrap}
-.btn-r{background:var(--red);color:#fff}.btn-r:hover{background:var(--red-d);color:#fff}
-.btn-g{background:var(--s3);border:1px solid var(--border);color:var(--muted)}.btn-g:hover{background:var(--pur);color:var(--txt)}
-.btn-test{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.35);color:var(--amber);font-size:.68rem;padding:3px 9px}
-.btn-test:hover{background:rgba(245,158,11,.25);color:var(--amber)}
-
-/* ─── STATUS BAR ─── */
-.sbar{display:flex;align-items:center;gap:8px;padding:6px 14px;background:var(--s2);border-top:1px solid var(--border);font-size:.64rem;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 4px var(--green);animation:blink 2s infinite;flex-shrink:0}
-.dot-warn{background:var(--amber)!important;box-shadow:0 0 4px var(--amber)!important}
-.sep{color:var(--border)}
-
-/* ─── SPINNER ─── */
-.ldr{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--s2);z-index:10;transition:opacity .35s}
-.ldr.gone{opacity:0;pointer-events:none}
-.spin{width:26px;height:26px;border:2.5px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* ─── GARES GRID ─── */
-.gares-body{padding:10px}
-.gares-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-
-.gare-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;min-height:260px}
-.gare-head{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--s2);border-bottom:1px solid var(--border);gap:6px;flex-shrink:0}
-.gare-name{font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;line-height:1}
-.gare-code{font-size:.58rem;color:var(--dim);background:var(--s3);border:1px solid var(--border);padding:1px 5px;border-radius:3px;letter-spacing:.07em;font-family:'Rajdhani',sans-serif;font-weight:600}
-.gare-sbar{display:flex;align-items:center;gap:6px;padding:5px 10px;background:var(--s2);border-top:1px solid var(--border);font-size:.6rem;color:var(--dim);letter-spacing:.05em;text-transform:uppercase;flex-shrink:0}
-
-/* ─── TABLEAU DÉPARTS — Style tableau SNCF ─── */
-.train-table-wrap{flex:1;overflow-y:auto;max-height:310px;background:#0a2744}
-.train-table-wrap::-webkit-scrollbar{width:3px}
-.train-table-wrap::-webkit-scrollbar-track{background:#0a2744}
-.train-table-wrap::-webkit-scrollbar-thumb{background:#1a4a7a;border-radius:2px}
-
-/* Chaque ligne = une row SNCF */
-.sncf-row{
-  display:grid;
-  grid-template-columns:90px 1fr auto;
-  align-items:center;
-  gap:0;
-  padding:0 10px;
-  min-height:46px;
-  border-bottom:1px solid rgba(255,255,255,.07);
-  background:#0d3060;
-  transition:background .12s;
-  position:relative;
-}
-.sncf-row:nth-child(even){background:#0a2744}
-.sncf-row:hover{background:#143d78}
-
-/* Barre verte état à gauche */
-.sncf-row::before{
-  content:'';
-  position:absolute;left:0;top:8px;bottom:8px;
-  width:3px;border-radius:0 2px 2px 0;
-  background:var(--green);
-}
-.sncf-row.late::before{background:var(--amber)}
-.sncf-row.cancelled::before{background:var(--red)}
-
-/* Colonne heure */
-.sncf-heure{
-  font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;
-  color:#f5e642;letter-spacing:.04em;padding-left:8px;
-  line-height:1;white-space:nowrap;
-}
-.sncf-heure .sncf-heure-theo{
-  display:block;font-size:.62rem;font-weight:400;
-  color:rgba(245,230,66,.5);text-decoration:line-through;
-  letter-spacing:.02em;margin-top:1px;
-}
-
-/* Colonne destination */
-.sncf-dest{padding:0 8px;min-width:0}
-.sncf-dest-name{
-  font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;
-  color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  line-height:1.2;
-}
-.sncf-dest-sub{
-  font-size:.62rem;color:rgba(255,255,255,.45);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  margin-top:1px;line-height:1;
-}
-
-/* Colonne droite : état + voie */
-.sncf-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
-
-/* Badge état */
-.sncf-etat{
-  font-family:'Rajdhani',sans-serif;font-size:.62rem;font-weight:700;
-  letter-spacing:.07em;text-transform:uppercase;
-  color:rgba(34,197,94,.9);white-space:nowrap;
-}
-.sncf-etat.late{color:var(--amber)}
-.sncf-etat.cancelled{color:var(--red)}
-
-/* Badge voie — carré blanc SNCF */
-.sncf-voie{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  width:34px;height:34px;border-radius:5px;
-  background:#fff;
-  flex-shrink:0;
-}
-.sncf-voie-label{
-  font-size:.42rem;font-weight:700;text-transform:uppercase;
-  color:#0a2744;letter-spacing:.04em;line-height:1;
-}
-.sncf-voie-val{
-  font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:800;
-  color:#0a2744;line-height:1;letter-spacing:.02em;
-}
-.sncf-voie.empty{background:rgba(255,255,255,.15)}
-.sncf-voie.empty .sncf-voie-label,
-.sncf-voie.empty .sncf-voie-val{color:rgba(255,255,255,.3)}
-
-/* Vide / erreur */
-.train-empty{padding:20px;text-align:center;color:rgba(255,255,255,.3);font-size:.75rem;background:#0a2744}
-.train-loading{padding:16px;display:flex;align-items:center;justify-content:center;gap:8px;color:rgba(255,255,255,.3);font-size:.74rem;background:#0a2744}
-
-/* ─── INCIDENTS ─── */
-.inc-body-wrap{padding:10px;display:flex;flex-direction:column;gap:8px}
-
-.inc-feed{display:flex;flex-direction:column;gap:7px;max-height:360px;overflow-y:auto;padding-right:4px}
-.inc-feed::-webkit-scrollbar{width:3px}
-.inc-feed::-webkit-scrollbar-track{background:var(--s2)}
-.inc-feed::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-
-.inc-item{
-  background:var(--s2);border:1px solid var(--border);
-  border-radius:8px;padding:9px 12px;
-  border-left:3px solid var(--amber);
-  transition:box-shadow .3s,border-color .3s;
-}
-.inc-item.ok{border-left-color:var(--green)}
-.inc-item.crit{border-left-color:var(--red)}
-.inc-item.info{border-left-color:var(--blue)}
-
-/* FLASH animation for new incidents */
-@keyframes flash-red{
-  0%,100%{background:var(--s2);box-shadow:none}
-  25%{background:rgba(228,3,46,.22);box-shadow:0 0 16px rgba(228,3,46,.45)}
-  75%{background:rgba(228,3,46,.1);box-shadow:0 0 8px rgba(228,3,46,.25)}
-}
-.inc-item.flashing{
-  animation:flash-red 1s ease-in-out infinite;
-  border-left-color:var(--red)!important;
-  cursor:pointer;
-}
-.inc-item.flashing::after{
-  content:'👆 Cliquer pour acquitter';
-  display:block;font-size:.58rem;color:var(--red);
-  margin-top:4px;letter-spacing:.06em;opacity:.7;
-}
-
-.inc-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
-.inc-tag{font-family:'Rajdhani',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:1px 7px;border-radius:3px}
-.inc-tag.retard{background:rgba(245,158,11,.15);color:var(--amber)}
-.inc-tag.incident{background:rgba(228,3,46,.15);color:var(--red)}
-.inc-tag.ok{background:rgba(34,197,94,.12);color:var(--green)}
-.inc-tag.info{background:rgba(56,189,248,.12);color:var(--blue)}
-.inc-time{font-size:.6rem;color:var(--dim)}
-.inc-text{font-size:.76rem;color:var(--muted);line-height:1.5}
-.inc-text strong{color:var(--txt)}
-.inc-src{font-size:.6rem;color:var(--dim);margin-top:3px}
-
-/* X timeline wrapper */
-.x-wrap{border-top:1px solid var(--border)}
-.x-label{
-  display:flex;align-items:center;gap:7px;padding:6px 14px;
-  background:var(--s2);border-bottom:1px solid var(--border);
-  font-family:'Rajdhani',sans-serif;font-size:.7rem;font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
-}
-.x-label a{margin-left:auto;font-size:.62rem;color:var(--red-b);text-decoration:none}
-
-/* ─── WAZE ─── */
-.waze-body{position:relative;height:440px}
-.waze-body iframe{width:100%;height:100%;border:none;display:block}
-
-/* ─── BOTTOM 2-col ─── */
-.bottom-row{display:grid;grid-template-columns:1fr 360px;gap:12px}
-
-/* ─── RESPONSIVE ─── */
-@media(max-width:1100px){.gares-grid{grid-template-columns:repeat(2,1fr)}.bottom-row{grid-template-columns:1fr}}
-@media(max-width:700px){.gares-grid{grid-template-columns:1fr}.h-title{font-size:1rem}}
-</style>
-</head>
-<body>
-
-<!-- ══ HEADER ══ -->
-<header>
-  <div class="h-logo">
-    <!-- Logo Radio Monaco — version blanche via CSS filter -->
-    <img src="logo-radio-monaco.png" alt="Radio Monaco Monte-Carlo"
-         onerror="this.style.display='none'"/>
-  </div>
-  <div class="h-title">TRAFIC <em>TOOL</em></div>
-  <div id="clock">00:00:00</div>
-</header>
-
-<main>
-
-  <!-- ══════════════════════════════════════════
-       SECTION 1 — FERROVIAIRE
-  ══════════════════════════════════════════ -->
-  <div class="section-wrap" id="sec-ferro">
-    <div class="section-toggle" onclick="toggleSection('sec-ferro')">
-      <div class="section-toggle-l">
-        <div class="section-ico ico-r">🚂</div>
-        <div>
-          <div class="section-title">Ferroviaire — Départs temps réel</div>
-          <div class="section-sub">6 gares · Côte d'Azur · 5 prochains trains · hors TGV</div>
-        </div>
-      </div>
-      <div class="section-toggle-r">
-        <span class="badge badge-live">Live</span>
-        <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-      </div>
-    </div>
-
-    <div class="section-body">
-      <div class="gares-body">
-        <div class="gares-grid">
-
-          <!-- Cannes -->
-          <div class="gare-card">
-            <div class="gare-head">
-              <div><div class="gare-name">Cannes</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">CAN</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-cannes">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-cannes">API SNCF · Cannes</span></div>
-          </div>
-
-          <!-- Nice St-Augustin -->
-          <div class="gare-card">
-            <div class="gare-head">
-              <div><div class="gare-name">Nice St-Augustin</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">NIC-A</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-nice-augustin">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-nice-augustin">API SNCF · Nice St-Augustin</span></div>
-          </div>
-
-          <!-- Nice-Ville -->
-          <div class="gare-card">
-            <div class="gare-head">
-              <div><div class="gare-name">Nice-Ville</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">NIC-V</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-nice-ville">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-nice-ville">API SNCF · Nice-Ville</span></div>
-          </div>
-
-          <!-- Antibes -->
-          <div class="gare-card">
-            <div class="gare-head">
-              <div><div class="gare-name">Antibes</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">ANT</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-antibes">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-antibes">API SNCF · Antibes</span></div>
-          </div>
-
-          <!-- Villefranche-sur-Mer -->
-          <div class="gare-card">
-            <div class="gare-head">
-              <div><div class="gare-name">Villefranche / Beaulieu</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">VFR</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-villefranche">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-villefranche">API SNCF · Villefranche</span></div>
-          </div>
-
-          <!-- Monaco -->
-          <div class="gare-card">
-            <div class="gare-head">
-              <div><div class="gare-name">Monaco MC 🎲</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">MCO</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-monaco">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-monaco">API SNCF · Monaco</span></div>
-          </div>
-
-        </div><!-- /gares-grid -->
-      </div>
-      <div class="sbar">
-        <div class="dot"></div>
-        <span>API SNCF Navitia · localhost:3000</span>
-        <span class="sep">·</span>
-        <span>5 prochains départs · hors TGV/Intercités</span>
-        <span class="sep">·</span>
-        <span id="ferro-last-update">Rafraîchissement toutes les 30s</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       BOTTOM ROW : INCIDENTS + WAZE
-  ══════════════════════════════════════════ -->
-  <div class="bottom-row">
-
-    <!-- ─── INCIDENTS ─── -->
-    <div class="section-wrap" id="sec-inc">
-      <div class="section-toggle" onclick="toggleSection('sec-inc')">
-        <div class="section-toggle-l">
-          <div class="section-ico ico-a">⚠️</div>
-          <div>
-            <div class="section-title">Incidents &amp; Perturbations</div>
-            <div class="section-sub">Axe Cannes → Nice → Menton · TER PACA</div>
-          </div>
-        </div>
-        <div class="section-toggle-r">
-          <span class="badge badge-ok" id="inc-badge">Normal</span>
-          <button class="btn btn-test" onclick="testFlash(event)" title="Tester le clignotement d'une alerte">
-            🔴 Test alerte
-          </button>
-          <button class="btn btn-g" style="font-size:.68rem;padding:3px 9px" onclick="pollXFeed(event)" title="Actualiser">
-            ↺ Actu
-          </button>
-          <a href="https://www.ter.sncf.com/sud-provence-alpes-cote-d-azur/se-deplacer/info-trafic" target="_blank" class="btn btn-g">TER PACA ↗</a>
-          <a href="https://x.com/deruellehugo" target="_blank" class="btn btn-g">@deruellehugo ↗</a>
-          <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-        </div>
-      </div>
-
-      <div class="section-body">
-        <div class="inc-body-wrap">
-          <!-- Feed incidents -->
-          <div class="inc-feed" id="inc-feed">
-            <div style="display:flex;align-items:center;gap:10px;padding:10px;color:var(--dim);font-size:.78rem">
-              <div class="spin"></div> Chargement…
-            </div>
-          </div>
-        </div>
-
-        <!-- X / @deruellehugo — lien direct (embed désactivé : rate limit 429) -->
-        <div class="x-wrap">
-          <div class="x-label">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.731-8.835L1.254 2.25H8.08l4.261 5.635 5.903-5.635zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            @deruellehugo — Info trafic
-            <a href="https://x.com/deruellehugo" target="_blank">Voir sur X ↗</a>
-          </div>
-          <div style="background:var(--s2);padding:16px 20px;display:flex;align-items:center;gap:12px">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="color:var(--dim);flex-shrink:0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.731-8.835L1.254 2.25H8.08l4.261 5.635 5.903-5.635zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            <div>
-              <div style="font-size:.78rem;color:var(--muted);line-height:1.5">
-                Suivre <strong style="color:var(--txt)">@deruellehugo</strong> sur X pour les alertes trafic en temps réel sur l'axe Côte d'Azur.
-              </div>
-              <a href="https://x.com/deruellehugo" target="_blank" class="btn btn-g" style="margin-top:8px;display:inline-flex">
-                Ouvrir le fil @deruellehugo ↗
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="sbar">
-          <div class="dot" id="inc-dot"></div>
-          <span id="inc-status">Vérification en cours…</span>
-          <span class="sep">·</span>
-          <span>Mise à jour toutes les 90 s</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ─── WAZE ─── -->
-    <div class="section-wrap" id="sec-waze">
-      <div class="section-toggle" onclick="toggleSection('sec-waze')">
-        <div class="section-toggle-l">
-          <div class="section-ico ico-p">🗺️</div>
-          <div>
-            <div class="section-title">Waze — Monaco</div>
-            <div class="section-sub">Principauté · Temps réel communautaire</div>
-          </div>
-        </div>
-        <div class="section-toggle-r">
-          <a href="https://www.waze.com/fr/live-map/?zoom=13&lat=43.7384&lon=7.4246" target="_blank" class="btn btn-r" onclick="event.stopPropagation()">Ouvrir Waze ↗</a>
-          <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-        </div>
-      </div>
-      <div class="section-body">
-        <!-- Waze bloque son embed via X-Frame-Options — lien direct -->
-        <div style="padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:14px;background:var(--s2);text-align:center">
-          <div style="font-size:2.5rem;line-height:1">🗺️</div>
-          <div style="font-size:.82rem;color:var(--muted);line-height:1.6">
-            Waze Live Map centré sur <strong style="color:var(--txt)">Monaco</strong><br>
-            <span style="font-size:.7rem;color:var(--dim)">43.7384°N · 7.4246°E · zoom 13</span>
-          </div>
-          <a href="https://www.waze.com/fr/live-map/?zoom=13&lat=43.7384&lon=7.4246"
-             target="_blank" class="btn btn-r" style="font-size:.85rem;padding:8px 20px">
-            🗺️ Ouvrir Waze Live Map
-          </a>
-          <div style="font-size:.68rem;color:var(--dim)">S'ouvre dans un nouvel onglet · données communautaires temps réel</div>
-        </div>
-        <div class="sbar">
-          <div class="dot"></div>
-          <span>waze.com/fr/live-map · Monaco</span>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /bottom-row -->
-
-</main>
-
-<!-- Twitter widget retiré (rate limit 429) -->
-
-<script>
-/* ─── CLOCK ─── */
-(function(){
-  const el=document.getElementById('clock');
-  const p=n=>String(n).padStart(2,'0');
-  function t(){const n=new Date();el.textContent=`${p(n.getHours())}:${p(n.getMinutes())}:${p(n.getSeconds())}`}
-  t();setInterval(t,1000);
-})();
-
-/* ─── LOADER HIDE ─── */
-function gone(id){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.classList.add('gone');
-  setTimeout(()=>{try{el.remove()}catch(e){}},400);
-}
-setTimeout(()=>gone('l-waze'),10000);
-
-/* ─── COLLAPSIBLE ─── */
-function toggleSection(id){
-  document.getElementById(id).classList.toggle('collapsed');
-}
-
-/* ═══════════════════════════════════════════
-   FERROVIAIRE — via Cloudflare Worker proxy
-   https://sncf-proxy.nicolas7lejeune.workers.dev
-═══════════════════════════════════════════ */
-const CF_WORKER = 'https://sncf-proxy.nicolas7lejeune.workers.dev';
-
-// Modes grande ligne à exclure
-const EXCLUDED_MODES = ['tgv','intercités de nuit','intercites de nuit','eurostar','thalys','lyria','inoui'];
-
-// Gares — résolution par nom via le Worker (/search puis /departures?station=)
-const GARES = [
-  { id:'cannes',        label:'Cannes',                   station:'Cannes',                tb:'tb-cannes',        ts:'ts-cannes'        },
-  { id:'nice-augustin', label:'Nice St-Augustin',         station:'Nice Saint-Augustin',   tb:'tb-nice-augustin', ts:'ts-nice-augustin' },
-  { id:'nice-ville',    label:'Nice-Ville',               station:'Nice Ville',            tb:'tb-nice-ville',    ts:'ts-nice-ville'    },
-  { id:'antibes',       label:'Antibes',                  station:'Antibes',               tb:'tb-antibes',       ts:'ts-antibes'       },
-  { id:'villefranche',  label:'Villefranche / Beaulieu',  station:'Villefranche sur Mer',  tb:'tb-villefranche',  ts:'ts-villefranche'  },
-  { id:'monaco',        label:'Monaco MC',                station:'Monaco Monte-Carlo',    tb:'tb-monaco',        ts:'ts-monaco'        },
-];
-
-/* ── Formate une date Navitia "20250318T143000" → "14:30" ── */
-function fmtSncfTime(dt){
-  if(!dt || dt.length < 13) return '--:--';
-  return dt.substring(9,11) + ':' + dt.substring(11,13);
-}
-
-/* ── Retard en minutes ── */
-function retardMin(rt, theo){
-  if(!rt || !theo) return 0;
-  const toMin = s => parseInt(s.substring(9,11),10)*60 + parseInt(s.substring(11,13),10);
-  return toMin(rt) - toMin(theo);
-}
-
-/* ── Rend le tableau HTML style panneau SNCF ── */
-function renderTrainTable(tbId, departures, disruptions){
-  const wrap = document.getElementById(tbId);
-  if(!wrap) return;
-
-  // Filtre grandes lignes, garde 5 TER/Régionaux
-  const filtered = departures.filter(d => {
-    const mode = (
-      (d.display_informations?.physical_mode || '') +
-      (d.display_informations?.commercial_mode || '') +
-      (d.display_informations?.network || '')
-    ).toLowerCase();
-    return !EXCLUDED_MODES.some(ex => mode.includes(ex));
-  }).slice(0, 5);
-
-  if(!filtered.length){
-    wrap.innerHTML = '<div class="train-empty">Aucun départ régional disponible</div>';
-    return;
-  }
-
-  const rows = filtered.map(dep => {
-    const dt   = dep.stop_date_time || {};
-    const info = dep.display_informations || {};
-    const rt   = dt.departure_date_time;
-    const theo = dt.base_departure_date_time;
-    const delay = retardMin(rt, theo);
-    const isLate = delay > 0;
-    const isCancelled = (dt.data_freshness||'') === 'base_schedule' && delay > 60;
-
-    const heureAff = fmtSncfTime(rt || theo);
-
-    // Direction — destination finale propre
-    let dir = info.direction || dep.route?.name || 'N/A';
-    dir = dir.replace(/\s*\(.*?\)/g,'').trim();
-    if(dir.includes(' vers ')) dir = dir.split(' vers ').pop().trim();
-
-    // Sous-titre : réseau + numéro train
-    const code    = info.headsign || info.code || '';
-    const network = info.network || info.commercial_mode || '';
-    const sub     = [network, code].filter(Boolean).join(' | ');
-
-    // Voie
-    const platform = dep.stop_point?.platform || '';
-
-    // Classes état
-    const rowClass = isCancelled ? 'cancelled' : isLate ? 'late' : '';
-    const etatClass = isCancelled ? 'cancelled' : isLate ? 'late' : '';
-    let etatLabel = 'À l\'heure';
-    if(isCancelled) etatLabel = 'Supprimé';
-    else if(delay > 0) etatLabel = `+${delay} min`;
-
-    return `
-    <div class="sncf-row ${rowClass}">
-      <div class="sncf-heure">
-        ${heureAff}
-        ${isLate && theo ? `<span class="sncf-heure-theo">${fmtSncfTime(theo)}</span>` : ''}
-      </div>
-      <div class="sncf-dest">
-        <div class="sncf-dest-name">${dir}</div>
-        <div class="sncf-dest-sub">${sub}</div>
-      </div>
-      <div class="sncf-right">
-        <span class="sncf-etat ${etatClass}">${etatLabel}</span>
-        <div class="sncf-voie ${platform?'':'empty'}">
-          <span class="sncf-voie-label">Voie</span>
-          <span class="sncf-voie-val">${platform||'—'}</span>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-
-  wrap.innerHTML = rows;
-}
-
-/* ── Fetch départs d'une gare via Cloudflare Worker ── */
-async function fetchGare(gare){
-  try{
-    // Utilise station= (résolution par nom côté Worker) ou stopId= si connu
-    const param = gare.stopId
-      ? `stopId=${encodeURIComponent(gare.stopId)}`
-      : `station=${encodeURIComponent(gare.station)}`;
-    const url = `${CF_WORKER}/departures?${param}&count=20`;
-    const r = await fetch(url, { signal: AbortSignal.timeout(12000) });
-    if(!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
-
-    const departures  = data.departures  || [];
-    const disruptions = data.disruptions || [];
-
-    renderTrainTable(gare.tb, departures, disruptions);
-
-    const ts = document.getElementById(gare.ts);
-    if(ts) ts.textContent = `${gare.label} · màj ${nowStr()}`;
-
-    // Remonte les disruptions actives dans le feed incidents
-    disruptions.forEach(d => {
-      const severity = (d.severity?.effect||'').toLowerCase();
-      if(severity === 'no_service' || severity === 'significant_delays' || severity === 'reduced_service'){
-        const msg = (d.messages||[]).map(m=>m.text).filter(Boolean).join(' — ') || d.cause || 'Perturbation';
-        const incId = d.id || `disr-${gare.id}-${btoa(msg).substring(0,12)}`;
-        if(!knownTweetIds.has(incId)){
-          knownTweetIds.add(incId);
-          const tw = { id: incId, text: `<strong>${gare.label}</strong> — ${msg}`, time: nowStr() };
-          allTweets.unshift(tw);
-          injectTweet(tw, true);
-          document.getElementById('sec-inc').classList.remove('collapsed');
+/**
+ * Cloudflare Worker — sncf-proxy
+ *
+ * Routes :
+ *   GET /departures?station=Cannes&count=20
+ *   GET /departures?stopId=stop_area:SNCF:87756403&count=20
+ *   GET /stops?tripId=OCE:SN...          ← arrêts d'un train
+ *   GET /disruptions
+ *   GET /search?q=Nice                   ← debug IDs
+ */
+
+const NAVITIA = 'https://api.sncf.com/v1/coverage/sncf';
+
+// IDs Navitia fiables — évite les ambiguïtés de recherche par nom
+// Source : codes UIC officiels SNCF
+const STATION_IDS = {
+  'Cannes':               'stop_area:SNCF:87757302',
+  'Nice Saint-Augustin':  'stop_area:SNCF:87756405',
+  'Nice Ville':           'stop_area:SNCF:87756403',  // ← ID exact Nice-Ville
+  'Antibes':              'stop_area:SNCF:87757575',
+  'Villefranche sur Mer': 'stop_area:SNCF:87757609',
+  'Monaco Monte-Carlo':   'stop_area:SNCF:87756528',
+};
+
+const stationCache = new Map(Object.entries(STATION_IDS));
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    if (request.method === 'OPTIONS') return cors(null, 204);
+
+    const auth = 'Basic ' + btoa((env.SNCF_TOKEN || '') + ':');
+
+    // ── /search?q= ──────────────────────────────────────────
+    if (url.pathname === '/search') {
+      const q = url.searchParams.get('q') || '';
+      try {
+        const r = await fetch(
+          `${NAVITIA}/places?q=${encodeURIComponent(q)}&type[]=stop_area&count=5`,
+          { headers: { Authorization: auth } }
+        );
+        const d = await r.json();
+        return cors((d.places||[]).map(p=>({
+          id: p.id, stopAreaId: p.stop_area?.id, name: p.name
+        })));
+      } catch(e){ return cors({error:e.message},500) }
+    }
+
+    // ── /departures ─────────────────────────────────────────
+    if (url.pathname === '/departures') {
+      const count   = url.searchParams.get('count') || '20';
+      let resolvedId = url.searchParams.get('stopId');
+      const station  = url.searchParams.get('station');
+
+      // Résolution : d'abord le cache/dictionnaire, puis /places
+      if (!resolvedId && station) {
+        resolvedId = stationCache.get(station);
+        if (!resolvedId) {
+          try {
+            const r = await fetch(
+              `${NAVITIA}/places?q=${encodeURIComponent(station)}&type[]=stop_area&count=3`,
+              { headers: { Authorization: auth } }
+            );
+            const d = await r.json();
+            const found = (d.places||[]).find(p => p.embedded_type === 'stop_area');
+            if (found) {
+              resolvedId = found.stop_area?.id || found.id;
+              stationCache.set(station, resolvedId);
+            }
+          } catch(e){ return cors({error:'Résolution gare: '+e.message},500) }
         }
       }
-    });
 
-  } catch(err){
-    const wrap = document.getElementById(gare.tb);
-    if(wrap) wrap.innerHTML = `<div class="train-empty" style="color:var(--red);font-size:.68rem">
-      ⚠ ${err.message}
-    </div>`;
-  }
-}
+      if (!resolvedId) return cors({error:'stopId ou station manquant'},400);
 
-/* ── Poll toutes les gares en parallèle ── */
-async function pollAllGares(){
-  await Promise.all(GARES.map(g => fetchGare(g)));
-  const el = document.getElementById('ferro-last-update');
-  if(el) el.textContent = `Màj ${nowStr()}`;
-}
-
-// Démarrage immédiat puis toutes les 30s
-pollAllGares();
-setInterval(pollAllGares, 30000);
-
-/* ─── INCIDENTS — Scraping @deruellehugo via allorigins ─── */
-const PROXY   = 'https://api.allorigins.win/get?url=';
-const X_URL   = 'https://x.com/deruellehugo';
-const POLL_MS = 60000; // toutes les 60s
-
-// Ensemble des IDs de tweets déjà affichés (identifiant = hash du texte + heure)
-let knownTweetIds = new Set();
-// Tous les tweets actuellement dans le feed
-let allTweets = [];
-
-function nowStr(){
-  return new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-}
-
-/* ── Flash infini — stop au clic ── */
-function startFlash(itemEl){
-  itemEl.classList.add('flashing');
-  function dismiss(){
-    itemEl.classList.remove('flashing');
-    itemEl.removeEventListener('click', dismiss);
-    checkAllAcknowledged();
-  }
-  itemEl.addEventListener('click', dismiss);
-}
-
-function checkAllAcknowledged(){
-  if(!document.querySelector('.inc-item.flashing')){
-    const badge=document.getElementById('inc-badge');
-    const dot=document.getElementById('inc-dot');
-    const stillAlerts=allTweets.length>0;
-    if(!stillAlerts){
-      badge.className='badge badge-ok'; badge.textContent='Normal';
-      dot.classList.remove('dot-warn');
-    } else {
-      badge.className='badge badge-warn';
-      badge.textContent=`${allTweets.length} tweet${allTweets.length>1?'s':''}`;
+      try {
+        const r = await fetch(
+          `${NAVITIA}/stop_areas/${encodeURIComponent(resolvedId)}/departures`+
+          `?count=${count}&data_freshness=realtime&disable_geojson=true`,
+          { headers: { Authorization: auth } }
+        );
+        const d = await r.json();
+        d._resolvedStopId = resolvedId;
+        return cors(d, r.status);
+      } catch(e){ return cors({error:e.message},500) }
     }
+
+    // ── /stops?tripId=OCE:... ────────────────────────────────
+    // Retourne les arrêts d'un vehicle_journey (pour afficher les dessertes)
+    if (url.pathname === '/stops') {
+      const tripId = url.searchParams.get('tripId');
+      if (!tripId) return cors({error:'tripId manquant'},400);
+
+      try {
+        const r = await fetch(
+          `${NAVITIA}/vehicle_journeys/${encodeURIComponent(tripId)}`+
+          `?disable_geojson=true`,
+          { headers: { Authorization: auth } }
+        );
+        const d = await r.json();
+        const vj = (d.vehicle_journeys||[])[0];
+        if (!vj) return cors({stops:[]});
+
+        // Extrait la liste des arrêts proprement
+        const stops = (vj.stop_times||[]).map(st => ({
+          name: st.stop_point?.name || st.stop_point?.label || '',
+          departure: st.departure_time,   // format "143000"
+          arrival:   st.arrival_time
+        })).filter(s => s.name);
+
+        return cors({ stops });
+      } catch(e){ return cors({error:e.message, stops:[]},500) }
+    }
+
+    // ── /disruptions ─────────────────────────────────────────
+    if (url.pathname === '/disruptions') {
+      try {
+        const r = await fetch(
+          `${NAVITIA}/disruptions?count=30&disable_geojson=true`,
+          { headers: { Authorization: auth } }
+        );
+        const d = await r.json();
+        const kw = ['cannes','nice','menton','antibes','monaco',
+                    'villefranche','beaulieu','cagnes','vintimille'];
+        const filtered = (d.disruptions||[]).filter(dis =>
+          kw.some(k => JSON.stringify(dis).toLowerCase().includes(k))
+        );
+        return cors({disruptions: filtered});
+      } catch(e){ return cors({error:e.message},500) }
+    }
+
+    return cors({routes:['/departures','/stops','/disruptions','/search']},404);
   }
-}
+};
 
-/* ── Bouton TEST ── */
-function testFlash(e){
-  e.stopPropagation();
-  const fakeId = 'test-'+Date.now();
-  const fakeTweet = {
-    id: fakeId,
-    text: '🔴 ALERTE TEST — Train retardé de 15 min entre Cannes et Menton. Cause : obstacle sur la voie.',
-    time: nowStr(),
-    isNew: true
-  };
-  injectTweet(fakeTweet, true);
-  document.getElementById('sec-inc').classList.remove('collapsed');
-}
-
-/* ── Injecte un tweet dans le feed ── */
-function injectTweet(tw, flash){
-  const feed = document.getElementById('inc-feed');
-  // Retire le message "aucun tweet"
-  const empty = feed.querySelector('.inc-item.ok');
-  if(empty) empty.remove();
-
-  const el = document.createElement('div');
-  el.className = 'inc-item' + (flash ? ' crit' : '');
-  el.dataset.id = tw.id;
-  el.innerHTML = `
-    <div class="inc-row">
-      <span class="inc-tag incident">🐦 @deruellehugo</span>
-      <span class="inc-time">${tw.time}</span>
-    </div>
-    <div class="inc-text">${tw.text}</div>
-    <div class="inc-src">
-      Source : x.com/deruellehugo &nbsp;·&nbsp;
-      <a href="${X_URL}" target="_blank" style="color:var(--blue);text-decoration:none;">Voir sur X ↗</a>
-    </div>
-  `;
-
-  // Insère en tête
-  feed.prepend(el);
-  if(flash) startFlash(el);
-
-  // Badge & dot
-  const badge = document.getElementById('inc-badge');
-  const dot   = document.getElementById('inc-dot');
-  badge.className='badge badge-warn';
-  badge.textContent=`${allTweets.length} tweet${allTweets.length>1?'s':''}`;
-  dot.classList.add('dot-warn');
-  document.getElementById('inc-status').textContent = `Nouveau tweet · ${nowStr()}`;
-}
-
-/* ── Scraping X via allorigins ── */
-async function pollXFeed(e){
-  if(e) e.stopPropagation();
-
-  let html = '';
-  try{
-    const encoded = encodeURIComponent(X_URL);
-    const r = await fetch(`${PROXY}${encoded}`, {signal: AbortSignal.timeout(10000)});
-    if(!r.ok) throw new Error('fetch failed');
-    const d = await r.json();
-    html = d.contents || '';
-  } catch(err){
-    document.getElementById('inc-status').textContent = `Erreur réseau · ${nowStr()}`;
-    return;
-  }
-
-  // Parse le HTML retourné
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-
-  // X retourne souvent du JS côté client. On cherche les tweets dans les balises
-  // article[data-testid="tweet"] ou dans les scripts JSON embarqués
-  let tweets = [];
-
-  // Méthode 1 : articles DOM (marche si JS pré-rendu)
-  doc.querySelectorAll('[data-testid="tweetText"]').forEach(el => {
-    const text = el.innerText || el.textContent || '';
-    if(text.trim()) tweets.push(text.trim());
+function cors(body, status=200){
+  return new Response(body!==null ? JSON.stringify(body) : null, {
+    status,
+    headers:{
+      'Content-Type':'application/json',
+      'Access-Control-Allow-Origin':'*',
+      'Access-Control-Allow-Methods':'GET,OPTIONS',
+      'Access-Control-Allow-Headers':'Content-Type',
+      'Cache-Control':'no-store'
+    }
   });
-
-  // Méthode 2 : regex dans le source HTML brut pour extraire les textes de tweets
-  if(!tweets.length){
-    const matches = html.matchAll(/"full_text":"((?:[^"\\]|\\.)*)"/g);
-    for(const m of matches){
-      const t = m[1]
-        .replace(/\\n/g,' ').replace(/\\u[0-9a-fA-F]{4}/g,'')
-        .replace(/\\/g,'').trim();
-      if(t && t.length > 10 && !t.startsWith('http') && !tweets.includes(t))
-        tweets.push(t);
-    }
-  }
-
-  // Méthode 3 : cherche les blocs "text" dans les JSON injectés dans les scripts
-  if(!tweets.length){
-    const scriptMatches = html.matchAll(/"text":"((?:[^"\\]|\\.)*)"/g);
-    for(const m of scriptMatches){
-      const t = m[1].replace(/\\n/g,' ').replace(/\\/g,'').trim();
-      if(t && t.length > 20 && !t.includes('{') && !tweets.includes(t))
-        tweets.push(t);
-    }
-  }
-
-  // Déduplique et prend les 8 premiers
-  tweets = [...new Set(tweets)].slice(0, 8);
-
-  if(!tweets.length){
-    // X bloque souvent le scraping côté serveur — affiche un message d'attente
-    document.getElementById('inc-status').textContent = `Vérification · ${nowStr()} · (X nécessite JS)`;
-    if(!allTweets.length){
-      document.getElementById('inc-feed').innerHTML = `
-        <div class="inc-item ok">
-          <div class="inc-row"><span class="inc-tag ok">✓ En veille</span><span class="inc-time">${nowStr()}</span></div>
-          <div class="inc-text">Surveillance de <strong>@deruellehugo</strong> active.<br>
-          X.com limite le scraping sans authentification — utilise le bouton <strong>🔴 Test alerte</strong> pour valider le système.<br><br>
-          <strong>Pour activer la détection automatique :</strong><br>
-          Fournis un <strong>feed RSS rss.app</strong> de @deruellehugo dans le champ ci-dessous.</div>
-          <div class="inc-src">Polling toutes les 60s · ${nowStr()}</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;padding:8px 4px;flex-wrap:wrap">
-          <input id="rss-input" type="text" placeholder="https://rss.app/feeds/VOTRE_FEED.xml"
-            style="flex:1;background:var(--s3);border:1px solid var(--border);border-radius:5px;padding:5px 10px;color:var(--txt);font-size:.75rem;min-width:200px"/>
-          <button onclick="setRssFeed()" class="btn btn-r" style="font-size:.72rem">✓ Valider</button>
-        </div>`;
-    }
-    return;
-  }
-
-  // Détecte les nouveaux tweets
-  const newTweets = tweets.filter(t => {
-    const id = btoa(unescape(encodeURIComponent(t))).substring(0,24);
-    if(knownTweetIds.has(id)) return false;
-    knownTweetIds.add(id);
-    return true;
-  });
-
-  newTweets.forEach(text => {
-    const id = btoa(unescape(encodeURIComponent(text))).substring(0,24);
-    const tw = { id, text: text.replace(/</g,'&lt;').replace(/>/g,'&gt;'), time: nowStr(), isNew: true };
-    allTweets.unshift(tw);
-    if(allTweets.length > 20) allTweets.pop();
-    injectTweet(tw, true); // flash car nouveau
-    document.getElementById('sec-inc').classList.remove('collapsed');
-  });
-
-  document.getElementById('inc-status').textContent =
-    newTweets.length
-      ? `${newTweets.length} nouveau(x) tweet(s) · ${nowStr()}`
-      : `Aucun nouveau tweet · màj ${nowStr()}`;
 }
-
-/* ── RSS feed manuel (si l'utilisateur fournit un lien rss.app) ── */
-let customRssUrl = null;
-function setRssFeed(){
-  const val = document.getElementById('rss-input')?.value?.trim();
-  if(val && val.startsWith('http')){
-    customRssUrl = val;
-    pollRssFeed();
-    setInterval(pollRssFeed, POLL_MS);
-    document.getElementById('inc-status').textContent = `RSS connecté · ${nowStr()}`;
-  }
-}
-
-async function pollRssFeed(){
-  if(!customRssUrl) return;
-  try{
-    const r = await fetch(`${PROXY}${encodeURIComponent(customRssUrl)}`, {signal: AbortSignal.timeout(8000)});
-    if(!r.ok) return;
-    const d = await r.json();
-    const xml = d.contents || '';
-    const parser = new DOMParser();
-    const rssDoc = parser.parseFromString(xml, 'application/xml');
-    const items = Array.from(rssDoc.querySelectorAll('item')).slice(0, 10);
-
-    items.forEach(item => {
-      const guid  = item.querySelector('guid')?.textContent || '';
-      const title = item.querySelector('title')?.textContent || '';
-      const desc  = item.querySelector('description')?.textContent || '';
-      const pubDate = item.querySelector('pubDate')?.textContent || '';
-      const id = guid || btoa(title).substring(0,24);
-      const text = (title || desc).replace(/<[^>]+>/g,' ').trim();
-      if(!text || knownTweetIds.has(id)) return;
-      knownTweetIds.add(id);
-
-      const timeStr = pubDate
-        ? new Date(pubDate).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})
-        : nowStr();
-      const tw = { id, text: text.replace(/</g,'&lt;').replace(/>/g,'&gt;'), time: timeStr };
-      allTweets.unshift(tw);
-      injectTweet(tw, true);
-      document.getElementById('sec-inc').classList.remove('collapsed');
-    });
-
-    document.getElementById('inc-status').textContent = `RSS @deruellehugo · màj ${nowStr()}`;
-  } catch(e){}
-}
-
-/* ── Init ── */
-// Affichage initial en attente
-document.getElementById('inc-feed').innerHTML = `
-  <div class="inc-item ok">
-    <div class="inc-row"><span class="inc-tag ok">✓ En veille</span><span class="inc-time">${nowStr()}</span></div>
-    <div class="inc-text">Surveillance de <strong>@deruellehugo</strong> active.<br>Toute nouvelle publication déclenchera une alerte clignotante.</div>
-    <div class="inc-src">Polling toutes les 60s · ${nowStr()}</div>
-  </div>
-  <div style="display:flex;gap:8px;align-items:center;padding:8px 4px;flex-wrap:wrap;border-top:1px solid var(--border);margin-top:4px">
-    <span style="font-size:.68rem;color:var(--dim);white-space:nowrap">Feed RSS rss.app :</span>
-    <input id="rss-input" type="text" placeholder="https://rss.app/feeds/VOTRE_FEED.xml"
-      style="flex:1;background:var(--s3);border:1px solid var(--border);border-radius:5px;padding:5px 10px;color:var(--txt);font-size:.72rem;outline:none;min-width:200px"/>
-    <button onclick="setRssFeed()" class="btn btn-r" style="font-size:.7rem;padding:4px 10px">✓ Activer</button>
-  </div>`;
-
-pollXFeed();
-setInterval(pollXFeed, POLL_MS);
-</script>
-</body>
-</html>
