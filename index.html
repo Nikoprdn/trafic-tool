@@ -360,7 +360,7 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
   .leaflet-popup-tip{background:#1a1820!important}
   .leaflet-popup-content{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#ede9f5;margin:8px 12px}
   </style>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
 <body>
 
@@ -974,14 +974,18 @@ async function fetchGare(gare){
 
 /* ── Poll toutes les gares en parallèle ── */
 async function pollAllGares(){
-  await Promise.all(GARES.map(g => fetchGare(g)));
+  // Requêtes séquentielles (400ms entre chaque) → évite les 429 Navitia
+  for(const g of GARES){
+    await fetchGare(g);
+    await new Promise(r => setTimeout(r, 800));
+  }
   const el = document.getElementById('ferro-last-update');
   if(el) el.textContent = `Màj ${nowStr()}`;
 }
 
 // Démarrage immédiat puis toutes les 2 min (optimisation quota SNCF)
 pollAllGares();
-setInterval(pollAllGares, 120000);
+setInterval(pollAllGares, 180000);
 
 /* ═══════════════════════════════════════════════════════
    INCIDENTS FERROVIAIRES — API Navitia via Worker
@@ -1140,7 +1144,7 @@ async function loadNavitiaDisruptions(e){
           <span class="inc-time">${period}</span>
         </div>
         ${affected ? `<div style="font-size:.62rem;color:var(--blue);margin:3px 0 2px;font-weight:600">${affected}</div>` : ''}
-        <div class="inc-text">${msg.replace(/</g,'&lt;').replace(/>/g,'&gt;').slice(0,260)}</div>
+        <div class="inc-text">${msg.slice(0,260).split('<').join('&lt;').split('>').join('&gt;')}</div>
         <div class="inc-src">Source : API SNCF Navitia · ${nowStr()}</div>
       </div>`;
     }).join('');
@@ -1172,12 +1176,12 @@ async function loadNavitiaDisruptions(e){
   }
 }
 
-// Démarrage + polling 2 min
-loadNavitiaDisruptions();
-setInterval(loadNavitiaDisruptions, 120000);
+// Démarrage décalé 6s (évite 429 au chargement)
+setTimeout(loadNavitiaDisruptions, 6000);
+setInterval(loadNavitiaDisruptions, 180000);
 </script>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
 /* ═══════════════════════════════════════════════════════════
@@ -1224,12 +1228,18 @@ async function initA8Map(){
   });
 
   // ── Fond de carte CartoDB Dark ──────────────────────────────
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  const tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution: '© <a href="https://carto.com/">CARTO</a> © <a href="https://www.openstreetmap.org/">OSM</a>',
     subdomains: 'abcd',
-    maxZoom: 19,
-    pane: 'tilePane'
-  }).addTo(a8Map);
+    maxZoom: 19
+  });
+  tileLayer.addTo(a8Map);
+  tileLayer.on('tileerror', () => {
+    // Fallback OSM standard si CartoDB bloqué
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors', maxZoom: 19
+    }).addTo(a8Map);
+  });
 
   // ── TomTom Traffic Flow tiles (transparentes, par-dessus) ───
   // Style "relative-delay" : vert=fluide, jaune=ralenti, orange=congestionné, rouge=bouchon
@@ -1296,8 +1306,8 @@ async function initA8Map(){
   // ── Tracé OSM réel via Overpass ─────────────────────────────
   loadA8TraceOSM();
 
-  // ── Incidents A8 via Worker ──────────────────────────────────
-  loadA8Incidents();
+  // ── Incidents A8 via Worker (décalé 10s pour éviter 429) ────
+  setTimeout(loadA8Incidents, 10000);
   setInterval(loadA8Incidents, 120000);
 }
 
