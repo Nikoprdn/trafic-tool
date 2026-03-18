@@ -334,8 +334,8 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
       <div class="section-toggle-l">
         <div class="section-ico ico-r">🚂</div>
         <div>
-          <div class="section-title">Ferroviaire — Départs temps réel</div>
-          <div class="section-sub">6 gares · Côte d'Azur · 5 prochains trains · hors TGV</div>
+          <div class="section-title">Ferroviaire — Départs &amp; Arrivées temps réel</div>
+          <div class="section-sub">7 gares · Axe Cannes → Menton · hors TGV</div>
         </div>
       </div>
       <div class="section-toggle-r">
@@ -363,21 +363,6 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
             <div class="gare-sbar"><div class="dot"></div><span id="ts-cannes">API SNCF · Cannes</span></div>
           </div>
 
-          <!-- Nice St-Augustin -->
-          <div class="gare-card">
-            <div class="gare-head">
-              <div><div class="gare-name">Nice St-Augustin</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">NIC-A</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-nice-augustin">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-nice-augustin">API SNCF · Nice St-Augustin</span></div>
-          </div>
-
           <!-- Nice-Ville -->
           <div class="gare-card">
             <div class="gare-head">
@@ -393,25 +378,10 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
             <div class="gare-sbar"><div class="dot"></div><span id="ts-nice-ville">API SNCF · Nice-Ville</span></div>
           </div>
 
-          <!-- Antibes -->
-          <div class="gare-card">
-            <div class="gare-head">
-              <div><div class="gare-name">Antibes</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">ANT</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-antibes">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-antibes">API SNCF · Antibes</span></div>
-          </div>
-
           <!-- Villefranche-sur-Mer -->
           <div class="gare-card">
             <div class="gare-head">
-              <div><div class="gare-name">Villefranche / Beaulieu</div></div>
+              <div><div class="gare-name">Villefranche-sur-Mer</div></div>
               <div style="display:flex;align-items:center;gap:5px">
                 <span class="gare-code">VFR</span>
                 <span class="dot" style="animation:blink 2s infinite"></span>
@@ -420,13 +390,28 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
             <div class="train-table-wrap" id="tb-villefranche">
               <div class="train-loading"><div class="spin"></div>Chargement…</div>
             </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-villefranche">API SNCF · Villefranche</span></div>
+            <div class="gare-sbar"><div class="dot"></div><span id="ts-villefranche">API SNCF · Villefranche-sur-Mer</span></div>
+          </div>
+
+          <!-- Cap d'Ail -->
+          <div class="gare-card">
+            <div class="gare-head">
+              <div><div class="gare-name">Cap d'Ail</div></div>
+              <div style="display:flex;align-items:center;gap:5px">
+                <span class="gare-code">CAI</span>
+                <span class="dot" style="animation:blink 2s infinite"></span>
+              </div>
+            </div>
+            <div class="train-table-wrap" id="tb-cap-dail">
+              <div class="train-loading"><div class="spin"></div>Chargement…</div>
+            </div>
+            <div class="gare-sbar"><div class="dot"></div><span id="ts-cap-dail">API SNCF · Cap d'Ail</span></div>
           </div>
 
           <!-- Monaco -->
           <div class="gare-card">
             <div class="gare-head">
-              <div><div class="gare-name">Monaco MC 🎲</div></div>
+              <div><div class="gare-name">Monaco Monte-Carlo 🎲</div></div>
               <div style="display:flex;align-items:center;gap:5px">
                 <span class="gare-code">MCO</span>
                 <span class="dot" style="animation:blink 2s infinite"></span>
@@ -438,13 +423,43 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
             <div class="gare-sbar"><div class="dot"></div><span id="ts-monaco">API SNCF · Monaco</span></div>
           </div>
 
+          <!-- Roquebrune-Cap-Martin -->
+          <div class="gare-card">
+            <div class="gare-head">
+              <div><div class="gare-name">Roquebrune-Cap-Martin</div></div>
+              <div style="display:flex;align-items:center;gap:5px">
+                <span class="gare-code">RCM</span>
+                <span class="dot" style="animation:blink 2s infinite"></span>
+              </div>
+            </div>
+            <div class="train-table-wrap" id="tb-roquebrune">
+              <div class="train-loading"><div class="spin"></div>Chargement…</div>
+            </div>
+            <div class="gare-sbar"><div class="dot"></div><span id="ts-roquebrune">API SNCF · Roquebrune-Cap-Martin</span></div>
+          </div>
+
+          <!-- Menton -->
+          <div class="gare-card">
+            <div class="gare-head">
+              <div><div class="gare-name">Menton</div></div>
+              <div style="display:flex;align-items:center;gap:5px">
+                <span class="gare-code">MEN</span>
+                <span class="dot" style="animation:blink 2s infinite"></span>
+              </div>
+            </div>
+            <div class="train-table-wrap" id="tb-menton">
+              <div class="train-loading"><div class="spin"></div>Chargement…</div>
+            </div>
+            <div class="gare-sbar"><div class="dot"></div><span id="ts-menton">API SNCF · Menton</span></div>
+          </div>
+
         </div><!-- /gares-grid -->
       </div>
       <div class="sbar">
         <div class="dot"></div>
-        <span>API SNCF Navitia · localhost:3000</span>
+        <span>API SNCF Navitia · sncf-proxy.nicolas7lejeune.workers.dev</span>
         <span class="sep">·</span>
-        <span>5 prochains départs · hors TGV/Intercités</span>
+        <span>5 prochains passages · hors TGV/Intercités</span>
         <span class="sep">·</span>
         <span id="ferro-last-update">Rafraîchissement toutes les 30s</span>
       </div>
@@ -593,14 +608,16 @@ const CF_WORKER = 'https://sncf-proxy.nicolas7lejeune.workers.dev';
 // Modes grande ligne à exclure
 const EXCLUDED_MODES = ['tgv','intercités de nuit','intercites de nuit','eurostar','thalys','lyria','inoui'];
 
-// Gares — résolution par nom via le Worker (/search puis /departures?station=)
+// Gares — IDs Navitia stop_area:SNCF:{UIC7}
+// Les IDs sans résolution dynamique pour fiabilité maximale
 const GARES = [
-  { id:'cannes',        label:'Cannes',                   station:'Cannes',                tb:'tb-cannes',        ts:'ts-cannes'        },
-  { id:'nice-augustin', label:'Nice St-Augustin',         station:'Nice Saint-Augustin',   tb:'tb-nice-augustin', ts:'ts-nice-augustin' },
-  { id:'nice-ville',    label:'Nice-Ville',               station:'Nice Ville',            tb:'tb-nice-ville',    ts:'ts-nice-ville'    },
-  { id:'antibes',       label:'Antibes',                  station:'Antibes',               tb:'tb-antibes',       ts:'ts-antibes'       },
-  { id:'villefranche',  label:'Villefranche / Beaulieu',  station:'Villefranche sur Mer',  tb:'tb-villefranche',  ts:'ts-villefranche'  },
-  { id:'monaco',        label:'Monaco MC',                station:'Monaco Monte-Carlo',    tb:'tb-monaco',        ts:'ts-monaco'        },
+  { id:'cannes',      label:'Cannes',               stopId:'stop_area:SNCF:87756294', tb:'tb-cannes',      ts:'ts-cannes'      },
+  { id:'nice-ville',  label:'Nice-Ville',           stopId:'stop_area:SNCF:87756403', tb:'tb-nice-ville',  ts:'ts-nice-ville'  },
+  { id:'villefranche',label:'Villefranche-sur-Mer', stopId:'stop_area:SNCF:87756452', tb:'tb-villefranche',ts:'ts-villefranche'},
+  { id:'cap-dail',    label:"Cap d'Ail",            stopId:'stop_area:SNCF:87756470', tb:'tb-cap-dail',    ts:'ts-cap-dail'    },
+  { id:'monaco',      label:'Monaco Monte-Carlo',   stopId:'stop_area:SNCF:87756478', tb:'tb-monaco',      ts:'ts-monaco'      },
+  { id:'roquebrune',  label:'Roquebrune-Cap-Martin',stopId:'stop_area:SNCF:87756486', tb:'tb-roquebrune',  ts:'ts-roquebrune'  },
+  { id:'menton',      label:'Menton',               stopId:'stop_area:SNCF:87756494', tb:'tb-menton',      ts:'ts-menton'      },
 ];
 
 /* ── Formate une date Navitia "20250318T143000" → "14:30" ── */
@@ -627,7 +644,7 @@ function fmtRawTime(t){
 /* ── Cache arrêts ── */
 const stopsCache = {};
 
-/* ── Construit le ticker HTML d'arrêts ── */
+/* ── Construit le ticker HTML d'arrêts — défilement lent ── */
 function buildTicker(stops){
   if(!stops||!stops.length) return '<span style="font-size:.58rem;color:rgba(255,255,255,.2)">Aucune desserte</span>';
   const items = stops.map((s,i) => {
@@ -638,8 +655,8 @@ function buildTicker(stops){
       ${s.name}${time?` <span style="opacity:.55;font-size:.57rem">${time}</span>`:''}${plat}
     </span><span style="color:rgba(255,255,255,.15);margin-right:12px;font-size:.52rem">▸</span>`;
   }).join('');
-  // Duplique ×2 pour défilement seamless
-  const dur = Math.max(12, Math.min(45, stops.length * 1.8));
+  // Lent : 3.5s par arrêt, min 25s, max 90s
+  const dur = Math.max(25, Math.min(90, stops.length * 3.5));
   return `<div class="sncf-stops-ticker" style="animation-duration:${dur}s">${items}${items}</div>`;
 }
 
@@ -738,32 +755,56 @@ function renderTrainTable(tbId, departures, disruptions){
 }
 async function fetchGare(gare){
   try{
-    // Utilise station= (résolution par nom côté Worker) ou stopId= si connu
-    const param = gare.stopId
-      ? `stopId=${encodeURIComponent(gare.stopId)}`
-      : `station=${encodeURIComponent(gare.station)}`;
-    const url = `${CF_WORKER}/departures?${param}&count=20`;
-    const r = await fetch(url, { signal: AbortSignal.timeout(12000) });
-    if(!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
+    const stopParam = `stopId=${encodeURIComponent(gare.stopId)}&count=15`;
 
-    const departures  = data.departures  || [];
-    const disruptions = data.disruptions || [];
+    // Appels parallèles départs + arrivées
+    const [rDep, rArr] = await Promise.allSettled([
+      fetch(`${CF_WORKER}/departures?${stopParam}`, {signal:AbortSignal.timeout(12000)}),
+      fetch(`${CF_WORKER}/arrivals?${stopParam}`,   {signal:AbortSignal.timeout(12000)})
+    ]);
 
-    renderTrainTable(gare.tb, departures, disruptions);
+    let departures  = [];
+    let arrivals    = [];
+    let disruptions = [];
+
+    if(rDep.status==='fulfilled' && rDep.value.ok){
+      const d = await rDep.value.json();
+      departures  = (d.departures  || []).map(t=>({...t,_type:'dep'}));
+      disruptions = d.disruptions || [];
+    }
+    if(rArr.status==='fulfilled' && rArr.value.ok){
+      const d = await rArr.value.json();
+      arrivals = (d.arrivals || []).map(t=>({...t,_type:'arr'}));
+    }
+
+    // Fusionne, déduplique sur tripId+minute, trie chronologiquement
+    const seen   = new Set();
+    const merged = [...departures, ...arrivals].filter(t => {
+      const dt   = t.stop_date_time || {};
+      const time = dt.departure_date_time || dt.arrival_date_time || '';
+      const trip = t.vehicle_journey?.id || (t.links||[]).find(l=>l.type==='vehicle_journey')?.id || Math.random();
+      const key  = `${trip}-${time.substring(9,13)}`;
+      if(seen.has(key)) return false;
+      seen.add(key); return true;
+    }).sort((a,b)=>{
+      const ta = a.stop_date_time?.departure_date_time || a.stop_date_time?.arrival_date_time || '';
+      const tb = b.stop_date_time?.departure_date_time || b.stop_date_time?.arrival_date_time || '';
+      return ta.localeCompare(tb);
+    });
+
+    renderTrainTable(gare.tb, merged, disruptions);
 
     const ts = document.getElementById(gare.ts);
     if(ts) ts.textContent = `${gare.label} · màj ${nowStr()}`;
 
-    // Remonte les disruptions actives dans le feed incidents
     disruptions.forEach(d => {
       const severity = (d.severity?.effect||'').toLowerCase();
-      if(severity === 'no_service' || severity === 'significant_delays' || severity === 'reduced_service'){
-        const msg = (d.messages||[]).map(m=>m.text).filter(Boolean).join(' — ') || d.cause || 'Perturbation';
+      if(['no_service','significant_delays','reduced_service'].includes(severity)){
+        const msg   = (d.messages||[]).map(m=>m.text).filter(Boolean).join(' — ') || d.cause || 'Perturbation';
         const incId = d.id || `disr-${gare.id}-${btoa(msg).substring(0,12)}`;
         if(!knownTweetIds.has(incId)){
           knownTweetIds.add(incId);
-          const tw = { id: incId, text: `<strong>${gare.label}</strong> — ${msg}`, time: nowStr() };
+          const tw = {id:incId, text:`<strong>${gare.label}</strong> — ${msg}`, time:nowStr()};
           allTweets.unshift(tw);
           injectTweet(tw, true);
           document.getElementById('sec-inc').classList.remove('collapsed');
@@ -773,9 +814,7 @@ async function fetchGare(gare){
 
   } catch(err){
     const wrap = document.getElementById(gare.tb);
-    if(wrap) wrap.innerHTML = `<div class="train-empty" style="color:var(--red);font-size:.68rem">
-      ⚠ ${err.message}
-    </div>`;
+    if(wrap) wrap.innerHTML = `<div class="train-empty" style="color:#E4032E;font-size:.68rem">⚠ ${err.message}</div>`;
   }
 }
 
