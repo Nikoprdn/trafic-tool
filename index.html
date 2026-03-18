@@ -371,432 +371,275 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 
 <main>
 
-  <!-- ══════════════════════════════════════════
-       SECTION 1 — FERROVIAIRE
-  ══════════════════════════════════════════ -->
   <div class="section-wrap" id="sec-ferro">
-    <div class="section-toggle" onclick="toggleSection('sec-ferro')">
-      <div class="section-toggle-l">
-        <div class="section-ico ico-r">🚂</div>
-        <div>
-          <div class="section-title">Ferroviaire — Départs &amp; Arrivées temps réel</div>
-          <div class="section-sub">7 gares · Axe Cannes → Menton · hors TGV</div>
+      <div class="section-toggle" onclick="toggleSection('sec-ferro')">
+        <div class="section-toggle-l">
+          <div class="section-ico ico-r">🚂</div>
+          <div>
+            <div class="section-title">Ferroviaire — Départs &amp; Arrivées temps réel</div>
+            <div class="section-sub">7 gares · Axe Cannes → Menton · hors TGV</div>
+          </div>
+        </div>
+        <div class="section-toggle-r">
+          <span class="badge badge-live">Live</span>
+          <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
       </div>
-      <div class="section-toggle-r">
-        <span class="badge badge-live">Live</span>
-        <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+  
+      <div class="section-body">
+        <!-- Toggles gares -->
+        <div class="gares-toggles" id="gares-toggles">
+          <span style="font-size:.62rem;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;align-self:center;margin-right:4px">Afficher :</span>
+          <button class="gare-toggle-btn active" data-target="cannes"      onclick="toggleGare(this)">Cannes</button>
+          <button class="gare-toggle-btn active" data-target="nice-ville"  onclick="toggleGare(this)">Nice-Ville</button>
+          <button class="gare-toggle-btn active" data-target="villefranche" onclick="toggleGare(this)">Villefranche</button>
+          <button class="gare-toggle-btn active" data-target="cap-dail"    onclick="toggleGare(this)">Cap d'Ail</button>
+          <button class="gare-toggle-btn active" data-target="monaco"      onclick="toggleGare(this)">Monaco</button>
+          <button class="gare-toggle-btn active" data-target="roquebrune"  onclick="toggleGare(this)">Roquebrune</button>
+          <button class="gare-toggle-btn active" data-target="menton"      onclick="toggleGare(this)">Menton</button>
+          <button class="gare-toggle-btn" style="margin-left:auto;background:var(--s3);border-color:var(--border);color:var(--dim)" onclick="toggleAllGares(true)">Tout afficher</button>
+          <button class="gare-toggle-btn" style="background:var(--s3);border-color:var(--border);color:var(--dim)" onclick="toggleAllGares(false)">Tout masquer</button>
+        </div>
+  
+        <div class="gares-body">
+          <div class="gares-grid">
+  
+            <!-- Cannes -->
+            <div class="gare-card" data-gare="cannes">
+              <div class="gare-head">
+                <div><div class="gare-name">Cannes</div></div>
+                <div style="display:flex;align-items:center;gap:5px">
+                  <span class="gare-code">CAN</span>
+                  <span class="dot" style="animation:blink 2s infinite"></span>
+                </div>
+              </div>
+              <div class="train-table-wrap" id="tb-cannes">
+                <div class="train-loading"><div class="spin"></div>Chargement…</div>
+              </div>
+              <div class="gare-sbar"><div class="dot"></div><span id="ts-cannes">API SNCF · Cannes</span></div>
+            </div>
+  
+            <!-- Nice-Ville -->
+            <div class="gare-card" data-gare="nice-ville">
+              <div class="gare-head">
+                <div><div class="gare-name">Nice-Ville</div></div>
+                <div style="display:flex;align-items:center;gap:5px">
+                  <span class="gare-code">NIC-V</span>
+                  <span class="dot" style="animation:blink 2s infinite"></span>
+                </div>
+              </div>
+              <div class="train-table-wrap" id="tb-nice-ville">
+                <div class="train-loading"><div class="spin"></div>Chargement…</div>
+              </div>
+              <div class="gare-sbar"><div class="dot"></div><span id="ts-nice-ville">API SNCF · Nice-Ville</span></div>
+            </div>
+  
+            <!-- Villefranche-sur-Mer -->
+            <div class="gare-card" data-gare="villefranche">
+              <div class="gare-head">
+                <div><div class="gare-name">Villefranche-sur-Mer</div></div>
+                <div style="display:flex;align-items:center;gap:5px">
+                  <span class="gare-code">VFR</span>
+                  <span class="dot" style="animation:blink 2s infinite"></span>
+                </div>
+              </div>
+              <div class="train-table-wrap" id="tb-villefranche">
+                <div class="train-loading"><div class="spin"></div>Chargement…</div>
+              </div>
+              <div class="gare-sbar"><div class="dot"></div><span id="ts-villefranche">API SNCF · Villefranche-sur-Mer</span></div>
+            </div>
+  
+            <!-- Cap d'Ail -->
+            <div class="gare-card" data-gare="cap-dail">
+              <div class="gare-head">
+                <div><div class="gare-name">Cap d'Ail</div></div>
+                <div style="display:flex;align-items:center;gap:5px">
+                  <span class="gare-code">CAI</span>
+                  <span class="dot" style="animation:blink 2s infinite"></span>
+                </div>
+              </div>
+              <div class="train-table-wrap" id="tb-cap-dail">
+                <div class="train-loading"><div class="spin"></div>Chargement…</div>
+              </div>
+              <div class="gare-sbar"><div class="dot"></div><span id="ts-cap-dail">API SNCF · Cap d'Ail</span></div>
+            </div>
+  
+            <!-- Monaco -->
+            <div class="gare-card" data-gare="monaco">
+              <div class="gare-head">
+                <div><div class="gare-name">Monaco Monte-Carlo 🎲</div></div>
+                <div style="display:flex;align-items:center;gap:5px">
+                  <span class="gare-code">MCO</span>
+                  <span class="dot" style="animation:blink 2s infinite"></span>
+                </div>
+              </div>
+              <div class="train-table-wrap" id="tb-monaco">
+                <div class="train-loading"><div class="spin"></div>Chargement…</div>
+              </div>
+              <div class="gare-sbar"><div class="dot"></div><span id="ts-monaco">API SNCF · Monaco</span></div>
+            </div>
+  
+            <!-- Roquebrune-Cap-Martin -->
+            <div class="gare-card" data-gare="roquebrune">
+              <div class="gare-head">
+                <div><div class="gare-name">Roquebrune-Cap-Martin</div></div>
+                <div style="display:flex;align-items:center;gap:5px">
+                  <span class="gare-code">RCM</span>
+                  <span class="dot" style="animation:blink 2s infinite"></span>
+                </div>
+              </div>
+              <div class="train-table-wrap" id="tb-roquebrune">
+                <div class="train-loading"><div class="spin"></div>Chargement…</div>
+              </div>
+              <div class="gare-sbar"><div class="dot"></div><span id="ts-roquebrune">API SNCF · Roquebrune-Cap-Martin</span></div>
+            </div>
+  
+            <!-- Menton -->
+            <div class="gare-card" data-gare="menton">
+              <div class="gare-head">
+                <div><div class="gare-name">Menton</div></div>
+                <div style="display:flex;align-items:center;gap:5px">
+                  <span class="gare-code">MEN</span>
+                  <span class="dot" style="animation:blink 2s infinite"></span>
+                </div>
+              </div>
+              <div class="train-table-wrap" id="tb-menton">
+                <div class="train-loading"><div class="spin"></div>Chargement…</div>
+              </div>
+              <div class="gare-sbar"><div class="dot"></div><span id="ts-menton">API SNCF · Menton</span></div>
+            </div>
+  
+          </div><!-- /gares-grid -->
+        </div>
+        <div class="sbar">
+          <div class="dot"></div>
+          <span>API SNCF Navitia · sncf-proxy.nicolas7lejeune.workers.dev</span>
+          <span class="sep">·</span>
+          <span>5 prochains passages · hors TGV/Intercités</span>
+          <span class="sep">·</span>
+          <span id="ferro-last-update">Rafraîchissement toutes les 2 min</span>
+        </div>
       </div>
     </div>
 
-    <div class="section-body">
-      <!-- Toggles gares -->
-      <div class="gares-toggles" id="gares-toggles">
-        <span style="font-size:.62rem;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;align-self:center;margin-right:4px">Afficher :</span>
-        <button class="gare-toggle-btn active" data-target="cannes"      onclick="toggleGare(this)">Cannes</button>
-        <button class="gare-toggle-btn active" data-target="nice-ville"  onclick="toggleGare(this)">Nice-Ville</button>
-        <button class="gare-toggle-btn active" data-target="villefranche" onclick="toggleGare(this)">Villefranche</button>
-        <button class="gare-toggle-btn active" data-target="cap-dail"    onclick="toggleGare(this)">Cap d'Ail</button>
-        <button class="gare-toggle-btn active" data-target="monaco"      onclick="toggleGare(this)">Monaco</button>
-        <button class="gare-toggle-btn active" data-target="roquebrune"  onclick="toggleGare(this)">Roquebrune</button>
-        <button class="gare-toggle-btn active" data-target="menton"      onclick="toggleGare(this)">Menton</button>
-        <button class="gare-toggle-btn" style="margin-left:auto;background:var(--s3);border-color:var(--border);color:var(--dim)" onclick="toggleAllGares(true)">Tout afficher</button>
-        <button class="gare-toggle-btn" style="background:var(--s3);border-color:var(--border);color:var(--dim)" onclick="toggleAllGares(false)">Tout masquer</button>
-      </div>
-
-      <div class="gares-body">
-        <div class="gares-grid">
-
-          <!-- Cannes -->
-          <div class="gare-card" data-gare="cannes">
-            <div class="gare-head">
-              <div><div class="gare-name">Cannes</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">CAN</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-cannes">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-cannes">API SNCF · Cannes</span></div>
-          </div>
-
-          <!-- Nice-Ville -->
-          <div class="gare-card" data-gare="nice-ville">
-            <div class="gare-head">
-              <div><div class="gare-name">Nice-Ville</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">NIC-V</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-nice-ville">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-nice-ville">API SNCF · Nice-Ville</span></div>
-          </div>
-
-          <!-- Villefranche-sur-Mer -->
-          <div class="gare-card" data-gare="villefranche">
-            <div class="gare-head">
-              <div><div class="gare-name">Villefranche-sur-Mer</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">VFR</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-villefranche">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-villefranche">API SNCF · Villefranche-sur-Mer</span></div>
-          </div>
-
-          <!-- Cap d'Ail -->
-          <div class="gare-card" data-gare="cap-dail">
-            <div class="gare-head">
-              <div><div class="gare-name">Cap d'Ail</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">CAI</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-cap-dail">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-cap-dail">API SNCF · Cap d'Ail</span></div>
-          </div>
-
-          <!-- Monaco -->
-          <div class="gare-card" data-gare="monaco">
-            <div class="gare-head">
-              <div><div class="gare-name">Monaco Monte-Carlo 🎲</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">MCO</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-monaco">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-monaco">API SNCF · Monaco</span></div>
-          </div>
-
-          <!-- Roquebrune-Cap-Martin -->
-          <div class="gare-card" data-gare="roquebrune">
-            <div class="gare-head">
-              <div><div class="gare-name">Roquebrune-Cap-Martin</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">RCM</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-roquebrune">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-roquebrune">API SNCF · Roquebrune-Cap-Martin</span></div>
-          </div>
-
-          <!-- Menton -->
-          <div class="gare-card" data-gare="menton">
-            <div class="gare-head">
-              <div><div class="gare-name">Menton</div></div>
-              <div style="display:flex;align-items:center;gap:5px">
-                <span class="gare-code">MEN</span>
-                <span class="dot" style="animation:blink 2s infinite"></span>
-              </div>
-            </div>
-            <div class="train-table-wrap" id="tb-menton">
-              <div class="train-loading"><div class="spin"></div>Chargement…</div>
-            </div>
-            <div class="gare-sbar"><div class="dot"></div><span id="ts-menton">API SNCF · Menton</span></div>
-          </div>
-
-        </div><!-- /gares-grid -->
-      </div>
-      <div class="sbar">
-        <div class="dot"></div>
-        <span>API SNCF Navitia · sncf-proxy.nicolas7lejeune.workers.dev</span>
-        <span class="sep">·</span>
-        <span>5 prochains passages · hors TGV/Intercités</span>
-        <span class="sep">·</span>
-        <span id="ferro-last-update">Rafraîchissement toutes les 2 min</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       SECTION 2 — AUTOROUTE A8 (TomTom)
-  ══════════════════════════════════════════ -->
-  <div class="section-wrap" id="sec-a8">
-    <div class="section-toggle" onclick="toggleSection('sec-a8')">
-      <div class="section-toggle-l">
-        <div class="section-ico ico-r">🛣️</div>
-        <div>
-          <div class="section-title">Autoroute A8 — Trafic temps réel</div>
-          <div class="section-sub">La Provençale · Cannes → Menton · Incidents &amp; Fluidité · TomTom</div>
-        </div>
-      </div>
-      <div class="section-toggle-r">
-        <span class="badge badge-live">Live</span>
-        <span class="badge badge-ok" id="a8-badge" style="margin-left:2px">Chargement…</span>
-        <button class="btn btn-g" style="font-size:.68rem;padding:3px 9px" onclick="refreshA8(event)">↺ Actu</button>
-        <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-      </div>
-    </div>
-
-    <div class="section-body">
-      <div style="position:relative">
-        <div id="a8-map-loader" style="position:absolute;inset:0;background:#0b1929;display:flex;align-items:center;justify-content:center;z-index:10;transition:opacity .4s">
-          <div class="spin"></div>
-        </div>
-        <div id="a8-map" style="width:100%;height:440px;background:#0b1929"></div>
-      </div>
-
-      <!-- Incidents A8 -->
-      <div style="padding:10px;border-top:1px solid var(--border)">
-        <div style="font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;padding-left:4px">
-          ⚡ Incidents sur l'A8
-        </div>
-        <div id="a8-incidents" style="display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto">
-          <div style="padding:10px;text-align:center;color:var(--dim);font-size:.75rem">Chargement…</div>
-        </div>
-      </div>
-
-      <div class="sbar">
-        <div class="dot"></div>
-        <span>TomTom Traffic API · A8 La Provençale</span>
-        <span class="sep">·</span>
-        <span id="a8-last-update">Rafraîchissement toutes les 2 min</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       INCIDENTS FERROVIAIRES — Navitia SNCF
-  ══════════════════════════════════════════ -->
   <div class="section-wrap" id="sec-inc">
-    <div class="section-toggle" onclick="toggleSection('sec-inc')">
-      <div class="section-toggle-l">
-        <div class="section-ico ico-a">⚠️</div>
-        <div>
-          <div class="section-title">Incidents &amp; Perturbations ferroviaires</div>
-          <div class="section-sub">Axe Saint-Tropez → Menton · TER PACA · Données Navitia temps réel</div>
-        </div>
-      </div>
-      <div class="section-toggle-r">
-        <span class="badge badge-ok" id="inc-badge">Chargement…</span>
-        <button class="btn btn-test" onclick="testFlash(event)" title="Tester le clignotement">🔴 Test</button>
-        <button class="btn btn-g" style="font-size:.68rem;padding:3px 9px" onclick="loadNavitiaDisruptions(event)">↺ Actu</button>
-        <a href="https://x.com/deruellehugo" target="_blank" class="btn btn-g">@deruellehugo ↗</a>
-        <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-      </div>
-    </div>
-    <div class="section-body">
-      <div class="inc-body-wrap">
-        <div class="inc-feed" id="inc-feed">
-          <div style="display:flex;align-items:center;gap:10px;padding:10px;color:var(--dim);font-size:.78rem">
-            <div class="spin"></div> Chargement des perturbations SNCF…
-          </div>
-        </div>
-      </div>
-      <div class="sbar">
-        <div class="dot" id="inc-dot"></div>
-        <span id="inc-status">Connexion à Navitia…</span>
-        <span class="sep">·</span>
-        <span>Source : API SNCF Navitia · Perturbations TER PACA temps réel</span>
-        <span class="sep">·</span>
-        <span>Màj toutes les 2 min</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       SECTION 2 — AUTOROUTE A8 (TomTom)
-  ══════════════════════════════════════════ -->
-  <div class="section-wrap" id="sec-a8">
-    <div class="section-toggle" onclick="toggleSection('sec-a8')">
-      <div class="section-toggle-l">
-        <div class="section-ico ico-r">🛣️</div>
-        <div>
-          <div class="section-title">Autoroute A8 — Trafic temps réel</div>
-          <div class="section-sub">La Provençale · Cannes → Menton · Incidents &amp; Fluidité · TomTom</div>
-        </div>
-      </div>
-      <div class="section-toggle-r">
-        <span class="badge badge-live">Live</span>
-        <span class="badge badge-ok" id="a8-badge" style="margin-left:2px">Chargement…</span>
-        <button class="btn btn-g" style="font-size:.68rem;padding:3px 9px" onclick="refreshA8(event)">↺ Actu</button>
-        <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-      </div>
-    </div>
-
-    <div class="section-body">
-      <div style="position:relative">
-        <div id="a8-map-loader" style="position:absolute;inset:0;background:#0b1929;display:flex;align-items:center;justify-content:center;z-index:10;transition:opacity .4s">
-          <div class="spin"></div>
-        </div>
-        <div id="a8-map" style="width:100%;height:440px;background:#0b1929"></div>
-      </div>
-
-      <!-- Incidents A8 -->
-      <div style="padding:10px;border-top:1px solid var(--border)">
-        <div style="font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;padding-left:4px">
-          ⚡ Incidents sur l'A8
-        </div>
-        <div id="a8-incidents" style="display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto">
-          <div style="padding:10px;text-align:center;color:var(--dim);font-size:.75rem">Chargement…</div>
-        </div>
-      </div>
-
-      <div class="sbar">
-        <div class="dot"></div>
-        <span>TomTom Traffic API · A8 La Provençale</span>
-        <span class="sep">·</span>
-        <span id="a8-last-update">Rafraîchissement toutes les 2 min</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       BOTTOM ROW : INCIDENTS + WAZE
-  ══════════════════════════════════════════ -->
-  <div class="bottom-row">
-
-    <!-- ─── INCIDENTS ─── -->
-    <div class="section-wrap" id="sec-inc">
       <div class="section-toggle" onclick="toggleSection('sec-inc')">
         <div class="section-toggle-l">
           <div class="section-ico ico-a">⚠️</div>
           <div>
-            <div class="section-title">Incidents &amp; Perturbations</div>
-            <div class="section-sub">Axe Cannes → Nice → Menton · TER PACA</div>
+            <div class="section-title">Incidents &amp; Perturbations ferroviaires</div>
+            <div class="section-sub">Axe Saint-Tropez → Menton · TER PACA · Données Navitia temps réel</div>
           </div>
         </div>
         <div class="section-toggle-r">
-          <span class="badge badge-ok" id="inc-badge">Normal</span>
-          <button class="btn btn-test" onclick="testFlash(event)" title="Tester le clignotement d'une alerte">
-            🔴 Test alerte
-          </button>
-          <button class="btn btn-g" style="font-size:.68rem;padding:3px 9px" onclick="pollXFeed(event)" title="Actualiser">
-            ↺ Actu
-          </button>
-          <a href="https://www.ter.sncf.com/sud-provence-alpes-cote-d-azur/se-deplacer/info-trafic" target="_blank" class="btn btn-g">TER PACA ↗</a>
+          <span class="badge badge-ok" id="inc-badge">Chargement…</span>
+          <button class="btn btn-test" onclick="testFlash(event)" title="Tester le clignotement">🔴 Test</button>
+          <button class="btn btn-g" style="font-size:.68rem;padding:3px 9px" onclick="loadNavitiaDisruptions(event)">↺ Actu</button>
           <a href="https://x.com/deruellehugo" target="_blank" class="btn btn-g">@deruellehugo ↗</a>
           <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
       </div>
-
       <div class="section-body">
         <div class="inc-body-wrap">
-          <!-- Feed incidents -->
           <div class="inc-feed" id="inc-feed">
             <div style="display:flex;align-items:center;gap:10px;padding:10px;color:var(--dim);font-size:.78rem">
-              <div class="spin"></div> Chargement…
+              <div class="spin"></div> Chargement des perturbations SNCF…
             </div>
           </div>
         </div>
-
-        <!-- X / @deruellehugo — lien direct (embed désactivé : rate limit 429) -->
-        <div class="x-wrap">
-          <div class="x-label">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.731-8.835L1.254 2.25H8.08l4.261 5.635 5.903-5.635zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            @deruellehugo — Info trafic
-            <a href="https://x.com/deruellehugo" target="_blank">Voir sur X ↗</a>
-          </div>
-          <div style="background:var(--s2);padding:16px 20px;display:flex;align-items:center;gap:12px">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="color:var(--dim);flex-shrink:0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.731-8.835L1.254 2.25H8.08l4.261 5.635 5.903-5.635zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            <div>
-              <div style="font-size:.78rem;color:var(--muted);line-height:1.5">
-                Suivre <strong style="color:var(--txt)">@deruellehugo</strong> sur X pour les alertes trafic en temps réel sur l'axe Côte d'Azur.
-              </div>
-              <a href="https://x.com/deruellehugo" target="_blank" class="btn btn-g" style="margin-top:8px;display:inline-flex">
-                Ouvrir le fil @deruellehugo ↗
-              </a>
-            </div>
-          </div>
-        </div>
-
         <div class="sbar">
           <div class="dot" id="inc-dot"></div>
-          <span id="inc-status">Vérification en cours…</span>
+          <span id="inc-status">Connexion à Navitia…</span>
           <span class="sep">·</span>
-          <span>Mise à jour toutes les 90 s</span>
+          <span>Source : API SNCF Navitia · Perturbations TER PACA temps réel</span>
+          <span class="sep">·</span>
+          <span>Màj toutes les 2 min</span>
         </div>
       </div>
     </div>
 
-    <!-- ─── WAZE ─── -->
-    <div class="section-wrap" id="sec-waze">
-      <div class="section-toggle" onclick="toggleSection('sec-waze')">
+  <div class="section-wrap" id="sec-a8">
+      <div class="section-toggle" onclick="toggleSection('sec-a8')">
         <div class="section-toggle-l">
-          <div class="section-ico ico-p">🗺️</div>
+          <div class="section-ico ico-r">🛣️</div>
           <div>
-            <div class="section-title">Waze — Monaco</div>
-            <div class="section-sub">Principauté · Temps réel communautaire</div>
+            <div class="section-title">Autoroute A8 — Trafic temps réel</div>
+            <div class="section-sub">La Provençale · Cannes → Menton · Incidents &amp; Fluidité · TomTom</div>
           </div>
         </div>
         <div class="section-toggle-r">
-          <a href="https://www.waze.com/fr/live-map/?zoom=13&lat=43.7384&lon=7.4246" target="_blank" class="btn btn-r" onclick="event.stopPropagation()">Ouvrir Waze ↗</a>
+          <span class="badge badge-live">Live</span>
+          <span class="badge badge-ok" id="a8-badge" style="margin-left:2px">Chargement…</span>
+          <button class="btn btn-g" style="font-size:.68rem;padding:3px 9px" onclick="refreshA8(event)">↺ Actu</button>
           <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
       </div>
+  
       <div class="section-body">
-        <!-- Waze bloque son embed via X-Frame-Options — lien direct -->
-        <div style="padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:14px;background:var(--s2);text-align:center">
-          <div style="font-size:2.5rem;line-height:1">🗺️</div>
-          <div style="font-size:.82rem;color:var(--muted);line-height:1.6">
-            Waze Live Map centré sur <strong style="color:var(--txt)">Monaco</strong><br>
-            <span style="font-size:.7rem;color:var(--dim)">43.7384°N · 7.4246°E · zoom 13</span>
+        <div style="position:relative">
+          <div id="a8-map-loader" style="position:absolute;inset:0;background:#0b1929;display:flex;align-items:center;justify-content:center;z-index:10;transition:opacity .4s">
+            <div class="spin"></div>
           </div>
-          <a href="https://www.waze.com/fr/live-map/?zoom=13&lat=43.7384&lon=7.4246"
-             target="_blank" class="btn btn-r" style="font-size:.85rem;padding:8px 20px">
-            🗺️ Ouvrir Waze Live Map
-          </a>
-          <div style="font-size:.68rem;color:var(--dim)">S'ouvre dans un nouvel onglet · données communautaires temps réel</div>
+          <div id="a8-map" style="width:100%;height:440px;background:#0b1929"></div>
         </div>
+  
+        <!-- Incidents A8 -->
+        <div style="padding:10px;border-top:1px solid var(--border)">
+          <div style="font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;padding-left:4px">
+            ⚡ Incidents sur l'A8
+          </div>
+          <div id="a8-incidents" style="display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto">
+            <div style="padding:10px;text-align:center;color:var(--dim);font-size:.75rem">Chargement…</div>
+          </div>
+        </div>
+  
         <div class="sbar">
           <div class="dot"></div>
-          <span>waze.com/fr/live-map · Monaco</span>
+          <span>TomTom Traffic API · A8 La Provençale</span>
+          <span class="sep">·</span>
+          <span id="a8-last-update">Rafraîchissement toutes les 2 min</span>
         </div>
       </div>
     </div>
 
-  </div><!-- /bottom-row -->
-
-
-
-  <!-- ══════════════════════════════════════════
-       WAZE — Monaco
-  ══════════════════════════════════════════ -->
   <div class="section-wrap" id="sec-waze">
     <div class="section-toggle" onclick="toggleSection('sec-waze')">
       <div class="section-toggle-l">
         <div class="section-ico ico-p">🗺️</div>
         <div>
-          <div class="section-title">Waze — Monaco</div>
-          <div class="section-sub">Principauté · Temps réel communautaire</div>
+          <div class="section-title">Waze Live Map — Monaco</div>
+          <div class="section-sub">Principauté de Monaco · Trafic communautaire temps réel</div>
         </div>
       </div>
       <div class="section-toggle-r">
-        <a href="https://www.waze.com/fr/live-map/?zoom=13&lat=43.7384&lon=7.4246" target="_blank" class="btn btn-r" onclick="event.stopPropagation()">Ouvrir Waze ↗</a>
+        <span class="badge badge-live">Live</span>
+        <a href="https://www.waze.com/fr/live-map/?zoom=13&lat=43.7384&lon=7.4246" target="_blank" class="btn btn-r" onclick="event.stopPropagation()">↗ Plein écran</a>
         <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
       </div>
     </div>
     <div class="section-body">
-      <div style="padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:14px;background:var(--s2);text-align:center">
-        <div style="font-size:2.5rem;line-height:1">🗺️</div>
-        <div style="font-size:.82rem;color:var(--muted);line-height:1.6">
-          Waze Live Map centré sur <strong style="color:var(--txt)">Monaco</strong><br>
-          <span style="font-size:.7rem;color:var(--dim)">43.7384°N · 7.4246°E · zoom 13</span>
+      <div style="position:relative;height:460px">
+        <div id="waze-loader" style="position:absolute;inset:0;background:var(--s2);display:flex;align-items:center;justify-content:center;z-index:10;transition:opacity .4s">
+          <div class="spin"></div>
         </div>
-        <a href="https://www.waze.com/fr/live-map/?zoom=13&lat=43.7384&lon=7.4246" target="_blank" class="btn btn-r" style="font-size:.85rem;padding:8px 20px">
-          🗺️ Ouvrir Waze Live Map
-        </a>
+        <iframe
+          src="https://embed.waze.com/iframe?zoom=13&lat=43.7384&lon=7.4246&ct=livemap&pin=0"
+          style="width:100%;height:100%;border:none;display:block"
+          title="Waze Live Map — Monaco"
+          allowfullscreen
+          loading="lazy"
+          onload="(()=>{const l=document.getElementById('waze-loader');if(l){l.style.opacity='0';setTimeout(()=>l.remove(),400)}})()">
+        </iframe>
       </div>
-      <div class="sbar"><div class="dot"></div><span>waze.com/fr/live-map · Monaco</span></div>
+      <div class="sbar">
+        <div class="dot"></div>
+        <span>embed.waze.com · Monaco 43.7384°N 7.4246°E</span>
+        <span class="sep">·</span>
+        <span>Données communautaires Waze temps réel</span>
+      </div>
     </div>
-  </div></main>
+  </div>
+</main>
 
 <!-- Twitter widget retiré (rate limit 429) -->
 
