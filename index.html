@@ -114,140 +114,134 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 .gare-sbar{display:flex;align-items:center;gap:6px;padding:5px 10px;background:var(--s2);border-top:1px solid var(--border);font-size:.6rem;color:var(--dim);letter-spacing:.05em;text-transform:uppercase;flex-shrink:0}
 
 /* ─── TABLEAU DÉPARTS — Style tableau SNCF ─── */
-.train-table-wrap{flex:1;overflow-y:auto;max-height:310px;background:#0a2744}
+.train-table-wrap{flex:1;overflow-y:auto;max-height:310px;background:#003a79}
 .train-table-wrap::-webkit-scrollbar{width:3px}
-.train-table-wrap::-webkit-scrollbar-track{background:#0a2744}
-.train-table-wrap::-webkit-scrollbar-thumb{background:#1a4a7a;border-radius:2px}
+.train-table-wrap::-webkit-scrollbar-track{background:#003a79}
+.train-table-wrap::-webkit-scrollbar-thumb{background:#0064ab;border-radius:2px}
 
 /* Chaque ligne = une row SNCF */
 .sncf-row{
   display:grid;
-  grid-template-columns:90px 1fr auto;
-  align-items:center;
+  grid-template-columns:82px 1fr auto;
+  align-items:start;
   gap:0;
-  padding:0 10px;
-  min-height:46px;
-  border-bottom:1px solid rgba(255,255,255,.07);
-  background:#0d3060;
-  transition:background .12s;
+  padding:7px 10px 6px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:#003a79;
   position:relative;
 }
-.sncf-row:nth-child(even){background:#0a2744}
-.sncf-row:hover{background:#143d78}
+.sncf-row:nth-child(even){background:#003570}
 
-/* Barre verte état à gauche */
+/* Barre état à gauche */
 .sncf-row::before{
   content:'';
-  position:absolute;left:0;top:8px;bottom:8px;
+  position:absolute;left:0;top:10px;bottom:10px;
   width:3px;border-radius:0 2px 2px 0;
-  background:var(--green);
+  background:#22c55e;
 }
-.sncf-row.late::before{background:var(--amber)}
-.sncf-row.cancelled::before{background:var(--red)}
+.sncf-row.late::before{background:#f59e0b}
+.sncf-row.cancelled::before{background:#E4032E}
 
 /* Colonne heure */
 .sncf-heure{
-  font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;
+  font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;
   color:#f5e642;letter-spacing:.04em;padding-left:8px;
-  line-height:1;white-space:nowrap;
+  line-height:1.1;white-space:nowrap;padding-top:2px;
 }
 .sncf-heure .sncf-heure-theo{
-  display:block;font-size:.62rem;font-weight:400;
+  display:block;font-size:.6rem;font-weight:400;
   color:rgba(245,230,66,.5);text-decoration:line-through;
   letter-spacing:.02em;margin-top:1px;
 }
 
 /* Colonne destination */
-.sncf-dest{padding:0 8px;min-width:0}
+.sncf-dest{padding:0 8px;min-width:0;overflow:hidden}
 .sncf-dest-name{
-  font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;
+  font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:600;
   color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   line-height:1.2;
 }
 .sncf-dest-sub{
-  font-size:.62rem;color:rgba(255,255,255,.45);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  margin-top:1px;line-height:1;
+  font-size:.6rem;color:rgba(255,255,255,.4);
+  white-space:nowrap;margin-top:1px;line-height:1;
+}
+
+/* ─── ARRÊTS EN DÉFILEMENT ─── */
+.sncf-stops-scroll{
+  margin-top:4px;
+  height:16px;
+  overflow:hidden;
+  position:relative;
+}
+.sncf-stops-ticker{
+  display:flex;
+  align-items:center;
+  gap:0;
+  white-space:nowrap;
+  animation:ticker-scroll 18s linear infinite;
+  width:max-content;
+}
+.sncf-stops-ticker:hover{animation-play-state:paused}
+@keyframes ticker-scroll{
+  0%   { transform: translateX(0) }
+  100% { transform: translateX(-50%) }
+}
+.sncf-stop-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:.62rem;color:rgba(255,255,255,.55);
+  margin-right:14px;white-space:nowrap;
+}
+.sncf-stop-pill::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:rgba(255,255,255,.25);flex-shrink:0;
+}
+.sncf-stop-pill.terminus{color:#f5e642}
+.sncf-stop-pill.terminus::before{background:#f5e642}
+.sncf-stop-pill .sncf-stop-platform{
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.58rem;
+  background:#0064ab;border-radius:2px;padding:0 3px;
+  color:rgba(255,255,255,.7);margin-left:2px;
 }
 
 /* Colonne droite : état + voie */
-.sncf-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.sncf-right{display:flex;align-items:flex-start;gap:7px;flex-shrink:0;padding-top:2px}
 
-/* Badge état */
 .sncf-etat{
   font-family:'Rajdhani',sans-serif;font-size:.62rem;font-weight:700;
   letter-spacing:.07em;text-transform:uppercase;
-  color:rgba(34,197,94,.9);white-space:nowrap;
+  color:rgba(34,197,94,.9);white-space:nowrap;padding-top:3px;
 }
-.sncf-etat.late{color:var(--amber)}
-.sncf-etat.cancelled{color:var(--red)}
+.sncf-etat.late{color:#f59e0b}
+.sncf-etat.cancelled{color:#E4032E}
 
 /* Badge voie — carré blanc SNCF */
 .sncf-voie{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  width:34px;height:34px;border-radius:5px;
-  background:#fff;
-  flex-shrink:0;
+  width:34px;min-height:34px;border-radius:5px;
+  background:#fff;flex-shrink:0;
 }
 .sncf-voie-label{
   font-size:.42rem;font-weight:700;text-transform:uppercase;
-  color:#0a2744;letter-spacing:.04em;line-height:1;
+  color:#003a79;letter-spacing:.04em;line-height:1;
 }
 .sncf-voie-val{
   font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:800;
-  color:#0a2744;line-height:1;letter-spacing:.02em;
+  color:#003a79;line-height:1;letter-spacing:.02em;
 }
-.sncf-voie.empty{background:rgba(255,255,255,.15)}
+.sncf-voie.empty{background:rgba(255,255,255,.12)}
 .sncf-voie.empty .sncf-voie-label,
-.sncf-voie.empty .sncf-voie-val{color:rgba(255,255,255,.3)}
+.sncf-voie.empty .sncf-voie-val{color:rgba(255,255,255,.25)}
 
-/* Vide / erreur */
-.train-empty{padding:20px;text-align:center;color:rgba(255,255,255,.3);font-size:.75rem;background:#0a2744}
-.train-loading{padding:16px;display:flex;align-items:center;justify-content:center;gap:8px;color:rgba(255,255,255,.3);font-size:.74rem;background:#0a2744}
+/* Vide / erreur / loading */
+.train-empty{padding:20px;text-align:center;color:rgba(255,255,255,.3);font-size:.75rem;background:#003a79}
+.train-loading{padding:16px;display:flex;align-items:center;justify-content:center;gap:8px;color:rgba(255,255,255,.3);font-size:.74rem;background:#003a79}
 
-/* ─── ARRÊTS DÉPLIABLES ─── */
-.sncf-row{cursor:pointer}
-.sncf-row-chevron{
-  font-size:.6rem;color:rgba(255,255,255,.25);
-  margin-left:4px;transition:transform .2s;display:inline-block;
-}
-.sncf-row.open .sncf-row-chevron{transform:rotate(90deg);color:rgba(255,255,255,.5)}
-
-.sncf-stops{
-  display:none;
-  background:#071e38;
-  border-bottom:1px solid rgba(255,255,255,.07);
-  padding:6px 12px 8px 14px;
-}
-.sncf-stops.visible{display:flex;flex-direction:column;gap:0}
-
-.sncf-stop-item{
-  display:flex;align-items:center;gap:8px;
-  padding:3px 0;
-  font-size:.68rem;color:rgba(255,255,255,.5);
-  position:relative;
-}
-/* ligne verticale de la timeline */
-.sncf-stop-item::before{
-  content:'';position:absolute;left:5px;top:0;bottom:0;
-  width:1px;background:rgba(255,255,255,.12);
-}
-.sncf-stop-item:first-child::before{top:50%}
-.sncf-stop-item:last-child::before{bottom:50%}
-.sncf-stop-dot{
-  width:11px;height:11px;border-radius:50%;
-  background:#1a4a7a;border:2px solid rgba(255,255,255,.25);
-  flex-shrink:0;position:relative;z-index:1;
-}
-.sncf-stop-item:first-child .sncf-stop-dot,
-.sncf-stop-item:last-child .sncf-stop-dot{
-  background:#f5e642;border-color:#f5e642;
-}
-.sncf-stop-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sncf-stop-item:first-child .sncf-stop-name,
-.sncf-stop-item:last-child .sncf-stop-name{color:rgba(255,255,255,.85);font-weight:600}
-.sncf-stop-time{font-family:'Rajdhani',sans-serif;font-size:.72rem;color:#f5e642;letter-spacing:.04em;flex-shrink:0}
-.sncf-stops-loading{padding:6px 14px;font-size:.68rem;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:6px}
+/* Override gare-card background */
+.gare-card{background:#003a79 !important;border-color:#0064ab !important}
+.gare-head{background:#0064ab !important;border-bottom-color:rgba(255,255,255,.1) !important}
+.gare-name{color:#fff !important}
+.gare-code{background:#003a79 !important;border-color:rgba(255,255,255,.2) !important;color:rgba(255,255,255,.5) !important}
+.gare-sbar{background:#002d5e !important;border-top-color:rgba(255,255,255,.08) !important;color:rgba(255,255,255,.3) !important}
 
 /* ─── INCIDENTS ─── */
 .inc-body-wrap{padding:10px;display:flex;flex-direction:column;gap:8px}
@@ -622,10 +616,47 @@ function retardMin(rt, theo){
   return toMin(rt) - toMin(theo);
 }
 
-/* ── Formate "143000" → "14:30" (format stop_times du vehicle_journey) ── */
+/* ── Formate "143000" → "14:30" (format stop_times) ── */
 function fmtRawTime(t){
-  if(!t||t.length<6) return '';
+  if(!t||t.length<4) return '';
+  // Navitia peut envoyer "14:30:00" ou "143000"
+  if(t.includes(':')) return t.substring(0,5);
   return t.substring(0,2)+':'+t.substring(2,4);
+}
+
+/* ── Cache arrêts ── */
+const stopsCache = {};
+
+/* ── Construit le ticker HTML d'arrêts ── */
+function buildTicker(stops){
+  if(!stops||!stops.length) return '<span style="font-size:.58rem;color:rgba(255,255,255,.2)">Aucune desserte</span>';
+  const items = stops.map((s,i) => {
+    const isLast = i === stops.length - 1;
+    const time   = fmtRawTime(s.departure||s.arrival);
+    const plat   = s.platform ? `<span class="sncf-stop-platform">${s.platform}</span>` : '';
+    return `<span class="sncf-stop-pill${isLast?' terminus':''}">
+      ${s.name}${time?` <span style="opacity:.55;font-size:.57rem">${time}</span>`:''}${plat}
+    </span><span style="color:rgba(255,255,255,.15);margin-right:12px;font-size:.52rem">▸</span>`;
+  }).join('');
+  // Duplique ×2 pour défilement seamless
+  const dur = Math.max(12, Math.min(45, stops.length * 1.8));
+  return `<div class="sncf-stops-ticker" style="animation-duration:${dur}s">${items}${items}</div>`;
+}
+
+/* ── Charge et injecte les arrêts dans un ticker ── */
+async function loadStops(tripId, wrapperId){
+  const wrap = document.getElementById(wrapperId);
+  if(!wrap || !tripId) return;
+  if(stopsCache[tripId]){
+    wrap.innerHTML = buildTicker(stopsCache[tripId]); return;
+  }
+  try{
+    const r = await fetch(`${CF_WORKER}/stops?tripId=${encodeURIComponent(tripId)}`,
+      {signal:AbortSignal.timeout(8000)});
+    const d = await r.json();
+    stopsCache[tripId] = d.stops||[];
+    wrap.innerHTML = buildTicker(stopsCache[tripId]);
+  } catch(e){ wrap.innerHTML = ''; }
 }
 
 /* ── Rend le tableau HTML style panneau SNCF ── */
@@ -633,12 +664,11 @@ function renderTrainTable(tbId, departures, disruptions){
   const wrap = document.getElementById(tbId);
   if(!wrap) return;
 
-  // Filtre grandes lignes, garde 5 TER/Régionaux
   const filtered = departures.filter(d => {
     const mode = (
-      (d.display_informations?.physical_mode || '') +
-      (d.display_informations?.commercial_mode || '') +
-      (d.display_informations?.network || '')
+      (d.display_informations?.physical_mode  || '') +
+      (d.display_informations?.commercial_mode|| '') +
+      (d.display_informations?.network        || '')
     ).toLowerCase();
     return !EXCLUDED_MODES.some(ex => mode.includes(ex));
   }).slice(0, 5);
@@ -648,58 +678,47 @@ function renderTrainTable(tbId, departures, disruptions){
     return;
   }
 
-  const html = filtered.map((dep, idx) => {
+  wrap.innerHTML = filtered.map((dep, idx) => {
     const dt   = dep.stop_date_time || {};
     const info = dep.display_informations || {};
     const rt   = dt.departure_date_time;
     const theo = dt.base_departure_date_time;
-    const delay = retardMin(rt, theo);
-    const isLate = delay > 0;
+    const delay    = retardMin(rt, theo);
+    const isLate   = delay > 0;
     const isCancelled = (dt.data_freshness||'') === 'base_schedule' && delay > 60;
+    const heureAff = fmtSncfTime(rt||theo);
 
-    const heureAff = fmtSncfTime(rt || theo);
-
-    // ── Direction : utilise direction si dispo, sinon route.name ──
-    // Navitia peut retourner "Nice-Ville (Nice)" → on nettoie
+    // Direction propre
     let dir = info.direction || dep.route?.name || '';
-    // Supprime parenthèses redondantes
-    dir = dir.replace(/\s*\([^)]*\)/g, '').trim();
-    // Si contient " vers " prend la partie après
+    dir = dir.replace(/\s*\([^)]*\)/g,'').trim();
     if(dir.includes(' vers ')) dir = dir.split(' vers ').pop().trim();
-    // Dernier recours : headsign
     if(!dir) dir = info.headsign || 'N/A';
 
-    // Sous-titre réseau + numéro
     const code    = info.headsign || info.code || '';
     const network = info.network || '';
     const sub     = [network, code].filter(Boolean).join(' | ');
+    const platform= dep.stop_point?.platform || '';
 
-    // ID du vehicle_journey pour charger les arrêts
-    const tripId = dep.vehicle_journey?.id || dep.links?.find(l=>l.type==='vehicle_journey')?.id || '';
-
-    const rowClass  = isCancelled ? 'cancelled' : isLate ? 'late' : '';
-    const etatClass = isCancelled ? 'cancelled' : isLate ? 'late' : '';
-    let etatLabel = "À l'heure";
-    if(isCancelled) etatLabel = 'Supprimé';
-    else if(delay > 0) etatLabel = `+${delay} min`;
-
-    const platform = dep.stop_point?.platform || '';
-    const rowId    = `${tbId}-row-${idx}`;
-    const stopsId  = `${tbId}-stops-${idx}`;
+    const tripId     = dep.vehicle_journey?.id || (dep.links||[]).find(l=>l.type==='vehicle_journey')?.id || '';
+    const tickerId   = `${tbId}-tk-${idx}`;
+    const rowClass   = isCancelled ? 'cancelled' : isLate ? 'late' : '';
+    const etatClass  = isCancelled ? 'cancelled' : isLate ? 'late' : '';
+    let etatLabel    = "À l'heure";
+    if(isCancelled)  etatLabel = 'Supprimé';
+    else if(delay>0) etatLabel = `+${delay} min`;
 
     return `
-    <div class="sncf-row ${rowClass}" id="${rowId}"
-         onclick="toggleStops('${rowId}','${stopsId}','${encodeURIComponent(tripId)}')">
+    <div class="sncf-row ${rowClass}">
       <div class="sncf-heure">
         ${heureAff}
-        ${isLate && theo ? `<span class="sncf-heure-theo">${fmtSncfTime(theo)}</span>` : ''}
+        ${isLate&&theo?`<span class="sncf-heure-theo">${fmtSncfTime(theo)}</span>`:''}
       </div>
       <div class="sncf-dest">
-        <div class="sncf-dest-name">
-          ${dir}
-          <span class="sncf-row-chevron">›</span>
-        </div>
+        <div class="sncf-dest-name">${dir}</div>
         <div class="sncf-dest-sub">${sub}</div>
+        <div class="sncf-stops-scroll" id="${tickerId}">
+          <span style="font-size:.57rem;color:rgba(255,255,255,.18)">· · ·</span>
+        </div>
       </div>
       <div class="sncf-right">
         <span class="sncf-etat ${etatClass}">${etatLabel}</span>
@@ -708,16 +727,15 @@ function renderTrainTable(tbId, departures, disruptions){
           <span class="sncf-voie-val">${platform||'—'}</span>
         </div>
       </div>
-    </div>
-    <div class="sncf-stops" id="${stopsId}">
-      <div class="sncf-stops-loading"><div class="spin" style="width:12px;height:12px;border-width:1.5px"></div>Chargement des arrêts…</div>
     </div>`;
   }).join('');
 
-  wrap.innerHTML = html;
+  // Charge les arrêts en arrière-plan avec léger décalage
+  filtered.forEach((dep, idx) => {
+    const tripId = dep.vehicle_journey?.id || (dep.links||[]).find(l=>l.type==='vehicle_journey')?.id || '';
+    setTimeout(() => loadStops(tripId, `${tbId}-tk-${idx}`), idx * 150);
+  });
 }
-
-/* ── Fetch départs d'une gare via Cloudflare Worker ── */
 async function fetchGare(gare){
   try{
     // Utilise station= (résolution par nom côté Worker) ou stopId= si connu
@@ -771,66 +789,6 @@ async function pollAllGares(){
 // Démarrage immédiat puis toutes les 30s
 pollAllGares();
 setInterval(pollAllGares, 30000);
-
-/* ── Affiche/masque les arrêts d'un train au clic ── */
-const stopsCache = {};   // cache par tripId
-
-async function toggleStops(rowId, stopsId, encodedTripId){
-  const row   = document.getElementById(rowId);
-  const panel = document.getElementById(stopsId);
-  if(!row || !panel) return;
-
-  const isOpen = row.classList.contains('open');
-
-  // Ferme tous les autres panels ouverts dans la même carte
-  const wrap = row.closest('.train-table-wrap');
-  if(wrap){
-    wrap.querySelectorAll('.sncf-row.open').forEach(r => r.classList.remove('open'));
-    wrap.querySelectorAll('.sncf-stops.visible').forEach(p => p.classList.remove('visible'));
-  }
-
-  if(isOpen) return; // toggle : si déjà ouvert on ferme juste
-
-  row.classList.add('open');
-  panel.classList.add('visible');
-
-  const tripId = decodeURIComponent(encodedTripId);
-  if(!tripId){
-    panel.innerHTML = '<div class="sncf-stops-loading" style="color:rgba(255,255,255,.25)">Aucune info de desserte disponible</div>';
-    return;
-  }
-
-  // Utilise le cache si déjà chargé
-  if(stopsCache[tripId]){
-    renderStops(panel, stopsCache[tripId]);
-    return;
-  }
-
-  // Charge depuis le Worker
-  try{
-    const r = await fetch(`${CF_WORKER}/stops?tripId=${encodeURIComponent(tripId)}`,
-      { signal: AbortSignal.timeout(8000) });
-    const data = await r.json();
-    const stops = data.stops || [];
-    stopsCache[tripId] = stops;
-    renderStops(panel, stops);
-  } catch(e){
-    panel.innerHTML = `<div class="sncf-stops-loading" style="color:rgba(228,3,46,.6)">⚠ ${e.message}</div>`;
-  }
-}
-
-function renderStops(panel, stops){
-  if(!stops.length){
-    panel.innerHTML = '<div class="sncf-stops-loading" style="color:rgba(255,255,255,.25)">Aucune desserte trouvée</div>';
-    return;
-  }
-  panel.innerHTML = stops.map((s,i) => `
-    <div class="sncf-stop-item">
-      <div class="sncf-stop-dot"></div>
-      <span class="sncf-stop-name">${s.name}</span>
-      <span class="sncf-stop-time">${fmtRawTime(s.departure||s.arrival)}</span>
-    </div>`).join('');
-}
 
 /* ─── INCIDENTS — Scraping @deruellehugo via allorigins ─── */
 const PROXY   = 'https://api.allorigins.win/get?url=';
