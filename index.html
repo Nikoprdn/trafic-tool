@@ -512,14 +512,14 @@ const CF_WORKER = 'https://sncf-proxy.nicolas7lejeune.workers.dev';
 // Modes grande ligne à exclure
 const EXCLUDED_MODES = ['tgv','intercités de nuit','intercites de nuit','eurostar','thalys','lyria','inoui'];
 
-// IDs Navitia stop_area pour chaque gare
+// Gares — résolution par nom via le Worker (/search puis /departures?station=)
 const GARES = [
-  { id:'cannes',        label:'Cannes',              stopId:'stop_area:SNCF:87757302', tb:'tb-cannes',        ts:'ts-cannes'        },
-  { id:'nice-augustin', label:'Nice St-Augustin',    stopId:'stop_area:SNCF:87756405', tb:'tb-nice-augustin', ts:'ts-nice-augustin' },
-  { id:'nice-ville',    label:'Nice-Ville',          stopId:'stop_area:SNCF:87756403', tb:'tb-nice-ville',    ts:'ts-nice-ville'    },
-  { id:'antibes',       label:'Antibes',             stopId:'stop_area:SNCF:87757575', tb:'tb-antibes',       ts:'ts-antibes'       },
-  { id:'villefranche',  label:'Villefranche / Beaulieu', stopId:'stop_area:SNCF:87757609', tb:'tb-villefranche', ts:'ts-villefranche' },
-  { id:'monaco',        label:'Monaco MC',           stopId:'stop_area:SNCF:87756528', tb:'tb-monaco',        ts:'ts-monaco'        },
+  { id:'cannes',        label:'Cannes',                   station:'Cannes',                tb:'tb-cannes',        ts:'ts-cannes'        },
+  { id:'nice-augustin', label:'Nice St-Augustin',         station:'Nice Saint-Augustin',   tb:'tb-nice-augustin', ts:'ts-nice-augustin' },
+  { id:'nice-ville',    label:'Nice-Ville',               station:'Nice Ville',            tb:'tb-nice-ville',    ts:'ts-nice-ville'    },
+  { id:'antibes',       label:'Antibes',                  station:'Antibes',               tb:'tb-antibes',       ts:'ts-antibes'       },
+  { id:'villefranche',  label:'Villefranche / Beaulieu',  station:'Villefranche sur Mer',  tb:'tb-villefranche',  ts:'ts-villefranche'  },
+  { id:'monaco',        label:'Monaco MC',                station:'Monaco Monte-Carlo',    tb:'tb-monaco',        ts:'ts-monaco'        },
 ];
 
 /* ── Formate une date Navitia "20250318T143000" → "14:30" ── */
@@ -617,7 +617,11 @@ function renderTrainTable(tbId, departures, disruptions){
 /* ── Fetch départs d'une gare via Cloudflare Worker ── */
 async function fetchGare(gare){
   try{
-    const url = `${CF_WORKER}/departures?stopId=${encodeURIComponent(gare.stopId)}&count=20`;
+    // Utilise station= (résolution par nom côté Worker) ou stopId= si connu
+    const param = gare.stopId
+      ? `stopId=${encodeURIComponent(gare.stopId)}`
+      : `station=${encodeURIComponent(gare.station)}`;
+    const url = `${CF_WORKER}/departures?${param}&count=20`;
     const r = await fetch(url, { signal: AbortSignal.timeout(12000) });
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     const data = await r.json();
