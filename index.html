@@ -1177,8 +1177,6 @@ loadNavitiaDisruptions();
 setInterval(loadNavitiaDisruptions, 120000);
 </script>
 
-
-<script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
@@ -1386,20 +1384,33 @@ async function loadA8Incidents(){
   }
 }
 
-// Init lazy — carte chargée à l'ouverture de la section
+// Init robuste — fonctionne que Leaflet soit déjà chargé ou non
+function tryInitA8(){
+  if(a8Inited) return;
+  const sec = document.getElementById('sec-a8');
+  if(!sec || sec.classList.contains('collapsed')) return;
+  if(typeof L === 'undefined') {
+    // Leaflet pas encore dispo — réessaye dans 200ms
+    setTimeout(tryInitA8, 200);
+    return;
+  }
+  initA8Map();
+}
+
+// Attacher le toggle
 document.addEventListener('DOMContentLoaded', () => {
+  // Tenter l'init immédiatement (section ouverte par défaut)
+  setTimeout(tryInitA8, 100);
+
   const sec = document.getElementById('sec-a8');
   if(!sec) return;
-  if(!sec.classList.contains('collapsed')){
-    setTimeout(() => { if(window.L) initA8Map(); }, 400);
-  }
   const toggle = sec.querySelector('.section-toggle');
   if(toggle){
     toggle.addEventListener('click', () => {
       setTimeout(() => {
-        if(window.L && !a8Inited) initA8Map();
+        if(!a8Inited) tryInitA8();
         else if(a8Map) a8Map.invalidateSize();
-      }, 400);
+      }, 350);
     });
   }
 });
