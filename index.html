@@ -497,24 +497,21 @@ function toggleSection(id){
 
 /* ═══════════════════════════════════════════
    FERROVIAIRE — via Cloudflare Worker proxy
-   (évite les blocages CORS de Navitia)
+   https://sncf-proxy.nicolas7lejeune.workers.dev
 ═══════════════════════════════════════════ */
-// URL de ton Worker Cloudflare — à mettre à jour après déploiement du Worker
-// Ex: https://sncf-proxy.TON-COMPTE.workers.dev
-const WORKER_URL = 'https://sncf-proxy.nicolas7lejeune.workers.dev';
+const CF_WORKER = 'https://sncf-proxy.nicolas7lejeune.workers.dev';
 
-// Modes à exclure (grandes lignes)
+// Modes grande ligne à exclure
 const EXCLUDED_MODES = ['tgv','intercités de nuit','intercites de nuit','eurostar','thalys','lyria','inoui'];
 
-// Gares avec leur ID Navitia stop_area (évite une recherche par nom à chaque poll)
-// IDs vérifiés pour la couverture sncf
+// IDs Navitia stop_area pour chaque gare
 const GARES = [
-  { id:'cannes',        label:'Cannes',             stopId:'stop_area:SNCF:87757302', tb:'tb-cannes',        ts:'ts-cannes'        },
-  { id:'nice-augustin', label:'Nice St-Augustin',   stopId:'stop_area:SNCF:87756405', tb:'tb-nice-augustin', ts:'ts-nice-augustin' },
-  { id:'nice-ville',    label:'Nice-Ville',         stopId:'stop_area:SNCF:87756403', tb:'tb-nice-ville',    ts:'ts-nice-ville'    },
-  { id:'antibes',       label:'Antibes',            stopId:'stop_area:SNCF:87757575', tb:'tb-antibes',       ts:'ts-antibes'       },
+  { id:'cannes',        label:'Cannes',              stopId:'stop_area:SNCF:87757302', tb:'tb-cannes',        ts:'ts-cannes'        },
+  { id:'nice-augustin', label:'Nice St-Augustin',    stopId:'stop_area:SNCF:87756405', tb:'tb-nice-augustin', ts:'ts-nice-augustin' },
+  { id:'nice-ville',    label:'Nice-Ville',          stopId:'stop_area:SNCF:87756403', tb:'tb-nice-ville',    ts:'ts-nice-ville'    },
+  { id:'antibes',       label:'Antibes',             stopId:'stop_area:SNCF:87757575', tb:'tb-antibes',       ts:'ts-antibes'       },
   { id:'villefranche',  label:'Villefranche / Beaulieu', stopId:'stop_area:SNCF:87757609', tb:'tb-villefranche', ts:'ts-villefranche' },
-  { id:'monaco',        label:'Monaco MC',          stopId:'stop_area:SNCF:87756403', tb:'tb-monaco',        ts:'ts-monaco'        },
+  { id:'monaco',        label:'Monaco MC',           stopId:'stop_area:SNCF:87756528', tb:'tb-monaco',        ts:'ts-monaco'        },
 ];
 
 /* ── Formate une date Navitia "20250318T143000" → "14:30" ── */
@@ -609,11 +606,11 @@ function renderTrainTable(tbId, departures, disruptions){
     </table>`;
 }
 
-/* ── Fetch départs d'une gare via le Worker proxy ── */
+/* ── Fetch départs d'une gare via Cloudflare Worker ── */
 async function fetchGare(gare){
   try{
-    const url = `${WORKER_URL}/departures?stopId=${encodeURIComponent(gare.stopId)}&count=20`;
-    const r = await fetch(url, { signal: AbortSignal.timeout(10000) });
+    const url = `${CF_WORKER}/departures?stopId=${encodeURIComponent(gare.stopId)}&count=20`;
+    const r = await fetch(url, { signal: AbortSignal.timeout(12000) });
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     const data = await r.json();
 
