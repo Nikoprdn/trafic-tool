@@ -409,22 +409,23 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
           </div>
         </div>
 
-        <!-- X/Twitter Timeline -->
+        <!-- X / @deruellehugo — lien direct (embed désactivé : rate limit 429) -->
         <div class="x-wrap">
           <div class="x-label">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.731-8.835L1.254 2.25H8.08l4.261 5.635 5.903-5.635zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             @deruellehugo — Info trafic
             <a href="https://x.com/deruellehugo" target="_blank">Voir sur X ↗</a>
           </div>
-          <div style="background:var(--s2);overflow:hidden">
-            <a class="twitter-timeline"
-               data-theme="dark"
-               data-chrome="noheader nofooter noborders transparent"
-               data-tweet-limit="4"
-               data-width="100%"
-               data-height="280"
-               href="https://twitter.com/deruellehugo">
-            </a>
+          <div style="background:var(--s2);padding:16px 20px;display:flex;align-items:center;gap:12px">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="color:var(--dim);flex-shrink:0"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.731-8.835L1.254 2.25H8.08l4.261 5.635 5.903-5.635zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            <div>
+              <div style="font-size:.78rem;color:var(--muted);line-height:1.5">
+                Suivre <strong style="color:var(--txt)">@deruellehugo</strong> sur X pour les alertes trafic en temps réel sur l'axe Côte d'Azur.
+              </div>
+              <a href="https://x.com/deruellehugo" target="_blank" class="btn btn-g" style="margin-top:8px;display:inline-flex">
+                Ouvrir le fil @deruellehugo ↗
+              </a>
+            </div>
           </div>
         </div>
 
@@ -448,20 +449,27 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
           </div>
         </div>
         <div class="section-toggle-r">
-          <span class="badge badge-live">Live</span>
-          <a href="https://www.waze.com/fr/live-map/?zoom=13&lat=43.7384&lon=7.4246" target="_blank" class="btn btn-r" onclick="event.stopPropagation()">↗</a>
+          <a href="https://www.waze.com/fr/live-map/?zoom=13&lat=43.7384&lon=7.4246" target="_blank" class="btn btn-r" onclick="event.stopPropagation()">Ouvrir Waze ↗</a>
           <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
         </div>
       </div>
       <div class="section-body">
-        <div class="waze-body">
-          <div class="ldr" id="l-waze"><div class="spin"></div></div>
-          <iframe src="https://embed.waze.com/iframe?zoom=13&lat=43.7384&lon=7.4246&ct=livemap&pin=0"
-            title="Waze Monaco" allowfullscreen loading="lazy" onload="gone('l-waze')"></iframe>
+        <!-- Waze bloque son embed via X-Frame-Options — lien direct -->
+        <div style="padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:14px;background:var(--s2);text-align:center">
+          <div style="font-size:2.5rem;line-height:1">🗺️</div>
+          <div style="font-size:.82rem;color:var(--muted);line-height:1.6">
+            Waze Live Map centré sur <strong style="color:var(--txt)">Monaco</strong><br>
+            <span style="font-size:.7rem;color:var(--dim)">43.7384°N · 7.4246°E · zoom 13</span>
+          </div>
+          <a href="https://www.waze.com/fr/live-map/?zoom=13&lat=43.7384&lon=7.4246"
+             target="_blank" class="btn btn-r" style="font-size:.85rem;padding:8px 20px">
+            🗺️ Ouvrir Waze Live Map
+          </a>
+          <div style="font-size:.68rem;color:var(--dim)">S'ouvre dans un nouvel onglet · données communautaires temps réel</div>
         </div>
         <div class="sbar">
           <div class="dot"></div>
-          <span>embed.waze.com · Monaco 43.7384°N 7.4246°E</span>
+          <span>waze.com/fr/live-map · Monaco</span>
         </div>
       </div>
     </div>
@@ -470,7 +478,7 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 
 </main>
 
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<!-- Twitter widget retiré (rate limit 429) -->
 
 <script>
 /* ─── CLOCK ─── */
