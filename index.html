@@ -272,6 +272,12 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 .inc-tag.info{background:rgba(56,189,248,.12);color:var(--blue)}
 .inc-time{font-size:.6rem;color:var(--dim)}
 .inc-impacts{font-size:.64rem;color:var(--blue);margin:4px 0 3px;line-height:1.7;font-weight:500;border-left:2px solid rgba(56,189,248,.3);padding-left:8px}
+.imp-row{display:flex;align-items:baseline;gap:6px;padding:2px 0}
+.imp-ico{font-size:.7rem;flex-shrink:0}
+.imp-label{color:rgba(255,255,255,.35);font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0;min-width:42px}
+.imp-val{color:rgba(56,189,248,.9);font-weight:600;font-size:.66rem;flex:1}
+.imp-effect-sup{background:rgba(228,3,46,.2);color:#E4032E;border-radius:2px;padding:0 4px;font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-right:3px}
+.imp-effect-ret{background:rgba(245,158,11,.2);color:#f59e0b;border-radius:2px;padding:0 4px;font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-right:3px}
 .inc-text{font-size:.76rem;color:var(--muted);line-height:1.5}
 .inc-text strong{color:var(--txt)}
 .inc-src{font-size:.6rem;color:var(--dim);margin-top:3px}
@@ -1176,56 +1182,54 @@ async function loadNavitiaDisruptions(e){
         .map(m => m.text||'').filter(Boolean).join(' — ')
         || d.disruption_id || 'Perturbation sur l\'axe Cannes–Menton';
 
-      // Trains/lignes/gares impactés — détaillé
-      const impacted = d.impacted_objects || [];
+      // Impacts enrichis par le Worker (_trains, _lines, _stops)
+      const trains = d._trains || [];
+      const lines  = d._lines  || [];
+      const stops  = d._stops  || [];
 
-      // Collecter les numéros de trains (vehicle_journeys) impactés
-      const trainNums = [];
-      const lineNames = [];
-      const stopNames = [];
-
-      impacted.forEach(o => {
-        const type = o.pt_object?.embedded_type || '';
-        if(type === 'vehicle_journey'){
-          const vj   = o.pt_object.vehicle_journey || {};
-          const name = vj.name || vj.headsign || '';
-          if(name) trainNums.push(name);
-          // Si impacted_stops disponibles → gares concernées
-          if(o.impacted_stops?.length){
-            o.impacted_stops.forEach(s => {
-              const sn = s.stop_point?.name || s.stop_area?.name || '';
-              if(sn && !stopNames.includes(sn)) stopNames.push(sn);
-            });
-          }
-        } else if(type === 'line'){
-          const ln = o.pt_object.line?.code || o.pt_object.line?.name || '';
-          if(ln) lineNames.push(ln);
-        } else if(type === 'route'){
-          const rn = o.pt_object.route?.name || '';
-          if(rn) lineNames.push(rn);
-        } else if(type === 'stop_area'){
-          const sn = o.pt_object.stop_area?.name || '';
-          if(sn && !stopNames.includes(sn)) stopNames.push(sn);
-        } else if(type === 'trip'){
-          const tn = o.pt_object.trip?.name || '';
-          if(tn) trainNums.push(tn);
-        }
-      });
-
-      // Construire l'affichage impacts
+      // Construire la cartouche d'impact
       const impactParts = [];
-      if(trainNums.length){
-        impactParts.push(`🚂 Train${trainNums.length>1?'s':''} : ${[...new Set(trainNums)].slice(0,6).join(', ')}`);
+
+      if(trains.length){
+        impactParts.push(
+          `<span class="imp-ico">🚂</span>`
+          + `<span class="imp-label">Train${trains.length>1?'s':''}</span>`
+          + `<span class="imp-val">${trains.slice(0,8).join(', ')}</span>`
+        );
       }
-      if(lineNames.length){
-        impactParts.push(`📋 Ligne${lineNames.length>1?'s':''} : ${[...new Set(lineNames)].slice(0,4).join(', ')}`);
+      if(lines.length){
+        impactParts.push(
+          `<span class="imp-ico">📋</span>`
+          + `<span class="imp-label">Ligne${lines.length>1?'s':''}</span>`
+          + `<span class="imp-val">${lines.slice(0,4).join(', ')}</span>`
+        );
       }
-      if(stopNames.length){
-        impactParts.push(`📍 Gare${stopNames.length>1?'s':''} : ${[...new Set(stopNames)].slice(0,4).join(' → ')}`);
+      if(stops.length){
+        // Grouper par effet : supprimé / retard / info
+        const supprimees = stops.filter(s => s.effect === 'deleted' || s.effect === 'no_pickup');
+        const retardees  = stops.filter(s => s.effect === 'delayed');
+        const autres     = stops.filter(s => !supprimees.includes(s) && !retardees.includes(s));
+
+        const stopLines = [];
+        if(supprimees.length) stopLines.push(
+          `<span class="imp-effect-sup">Supprimé</span> ${supprimees.map(s=>s.name).slice(0,5).join(', ')}`
+        );
+        if(retardees.length) stopLines.push(
+          `<span class="imp-effect-ret">Retard</span> ${retardees.map(s=>s.name).slice(0,5).join(', ')}`
+        );
+        if(autres.length) stopLines.push(
+          autres.map(s=>s.name).slice(0,5).join(' → ')
+        );
+
+        impactParts.push(
+          `<span class="imp-ico">📍</span>`
+          + `<span class="imp-label">Gare${stops.length>1?'s':''}</span>`
+          + `<span class="imp-val">${stopLines.join(' · ')}</span>`
+        );
       }
 
       const affectedHtml = impactParts.length
-        ? `<div class="inc-impacts">${impactParts.join('<br>')}</div>`
+        ? `<div class="inc-impacts">${impactParts.map(p=>`<div class="imp-row">${p}</div>`).join('')}</div>`
         : '';
 
       // Période
