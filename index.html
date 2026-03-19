@@ -1283,7 +1283,24 @@ async function loadNavitiaDisruptions(e){
         startFlash(el);
         document.getElementById('sec-inc').classList.remove('collapsed');
       }
-    }<script>
+    });
+
+  } catch(err){
+    const feed   = document.getElementById('inc-feed');
+    const status = document.getElementById('inc-status');
+    const isDown = err.message.includes('Failed to fetch') || err.message.includes('NetworkError');
+    if(feed) feed.innerHTML = `<div class="inc-item" style="border-left-color:var(--amber)">
+      <div class="inc-text">${isDown ? '⚠️ Worker hors ligne — recréer le Worker Cloudflare' : '⚠️ ' + err.message}</div>
+    </div>`;
+    if(status) status.textContent = isDown ? 'Worker indisponible' : 'Erreur: ' + err.message;
+  }
+}
+
+loadNavitiaDisruptions();
+setInterval(loadNavitiaDisruptions, 120000);
+
+</script>
+<script>
 /* ══════════════════════════════════════════════════════════════
    SECTION A8 — Leaflet + TomTom Traffic (flow + incidents)
    Tracé réel OSM via Overpass API
@@ -1291,179 +1308,149 @@ async function loadNavitiaDisruptions(e){
 ══════════════════════════════════════════════════════════════ */
 
 const TOMTOM_KEY = 'Qqzn6c769jPXkMaq87SqF2V8KXLqjhWw';
-const A8_BBOX    = '6.95,43.50,7.56,43.85'; // minLng,minLat,maxLng,maxLat
 
 let a8Map    = null;
 let a8Inited = false;
-let a8IncTimer = null;
 
-/* Échangeurs A8 — coordonnées GPS précises */
+/* Échangeurs A8 */
 const A8_ECH = [
-  { p:[43.5526,7.0200], n:'Cannes Ouest',      s:'8'  },
-  { p:[43.5628,7.0432], n:'Cannes Centre',      s:'9'  },
-  { p:[43.5788,7.0800], n:'Antibes',            s:'44' },
-  { p:[43.6008,7.1229], n:'Biot',               s:'47' },
-  { p:[43.6221,7.1648], n:'Villeneuve-Loubet',  s:'48' },
-  { p:[43.6458,7.1960], n:'Cagnes-sur-Mer',     s:'50' },
-  { p:[43.6641,7.2120], n:'St-Laurent-du-Var',  s:'52' },
-  { p:[43.6842,7.2287], n:<script>
-(function() {
-  'use strict';
+  { p:[43.5526,7.0200], n:'Cannes Ouest'     },
+  { p:[43.5628,7.0432], n:'Cannes Centre'     },
+  { p:[43.5788,7.0800], n:'Antibes'           },
+  { p:[43.6008,7.1229], n:'Biot'              },
+  { p:[43.6221,7.1648], n:'Villeneuve-Loubet' },
+  { p:[43.6458,7.1960], n:'Cagnes-sur-Mer'    },
+  { p:[43.6641,7.2120], n:'St-Laurent-du-Var' },
+  { p:[43.6842,7.2287], n:'Nice Ouest'        },
+  { p:[43.6972,7.2581], n:'Nice Centre'       },
+  { p:[43.7182,7.2921], n:'Nice Est'          },
+  { p:[43.7288,7.3524], n:'Eze'               },
+  { p:[43.7350,7.3978], n:"Cap d'Ail"         },
+  { p:[43.7370,7.4191], n:'Monaco'            },
+  { p:[43.7490,7.4623], n:'Roquebrune'        },
+  { p:[43.7745,7.5122], n:'Menton'            },
+];
 
-  var TOMTOM_KEY = 'Qqzn6c769jPXkMaq87SqF2V8KXLqjhWw';
-  var a8Map = null;
-  var a8Inited = false;
+function buildMap() {
+  if (a8Inited) return;
+  if (typeof L === 'undefined') return;
+  var el = document.getElementById('a8-map');
+  if (!el) return;
+  a8Inited = true;
 
-  var A8_ECH = [
-    { p:[43.5526,7.0200], n:'Cannes Ouest'     },
-    { p:[43.5628,7.0432], n:'Cannes Centre'     },
-    { p:[43.5788,7.0800], n:'Antibes'           },
-    { p:[43.6008,7.1229], n:'Biot'              },
-    { p:[43.6221,7.1648], n:'Villeneuve-Loubet' },
-    { p:[43.6458,7.1960], n:'Cagnes-sur-Mer'    },
-    { p:[43.6641,7.2120], n:'St-Laurent-du-Var' },
-    { p:[43.6842,7.2287], n:'Nice Ouest'        },
-    { p:[43.6972,7.2581], n:'Nice Centre'       },
-    { p:[43.7182,7.2921], n:'Nice Est'          },
-    { p:[43.7288,7.3524], n:'Eze'               },
-    { p:[43.7350,7.3978], n:"Cap d'Ail"         },
-    { p:[43.7370,7.4191], n:'Monaco'            },
-    { p:[43.7490,7.4623], n:'Roquebrune'        },
-    { p:[43.7745,7.5122], n:'Menton'            },
-  ];
+  a8Map = L.map(el, { center:[43.66,7.24], zoom:11 });
 
-  function buildMap() {
-    if (a8Inited) return;
-    if (typeof L === 'undefined') return;
-    var el = document.getElementById('a8-map');
-    if (!el) return;
-    a8Inited = true;
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    subdomains:'abcd', maxZoom:19,
+    attribution:'&copy; CARTO &copy; OSM'
+  }).addTo(a8Map);
 
-    // Carte
-    a8Map = L.map(el, { center:[43.66,7.24], zoom:11 });
+  var tomtomFlow = L.tileLayer(
+    'https://api.tomtom.com/traffic/map/4/tile/flow/relative-delay/{z}/{x}/{y}.png?key=' + TOMTOM_KEY + '&tileSize=256',
+    { opacity:0.85, maxZoom:19 }
+  );
+  tomtomFlow.on('tileerror', function(){});
+  tomtomFlow.addTo(a8Map);
 
-    // Fond CartoDB
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      subdomains:'abcd', maxZoom:19,
-      attribution:'&copy; CARTO &copy; OSM'
-    }).addTo(a8Map);
+  var tomtomInc = L.tileLayer(
+    'https://api.tomtom.com/traffic/map/4/tile/incidents/s3/{z}/{x}/{y}.png?key=' + TOMTOM_KEY + '&tileSize=256',
+    { maxZoom:19 }
+  );
+  tomtomInc.addTo(a8Map);
 
-    // TomTom trafic flow — avec gestion d'erreur silencieuse
-    var tomtomFlow = L.tileLayer(
-      'https://api.tomtom.com/traffic/map/4/tile/flow/relative-delay/{z}/{x}/{y}.png?key=' + TOMTOM_KEY + '&tileSize=256',
-      { opacity:0.85, maxZoom:19 }
-    );
-    tomtomFlow.on('tileerror', function(){
-      // Tuile TomTom en erreur — silencieux, la carte de base reste visible
-    });
-    tomtomFlow.addTo(a8Map);
-
-    // TomTom incidents
-    var tomtomInc = L.tileLayer(
-      'https://api.tomtom.com/traffic/map/4/tile/incidents/s3/{z}/{x}/{y}.png?key=' + TOMTOM_KEY + '&tileSize=256',
-      { maxZoom:19 }
-    );
-    tomtomInc.addTo(a8Map);
-
-    // Échangeurs
-    A8_ECH.forEach(function(e) {
-      L.circleMarker(e.p, {
-        radius:5, fillColor:'#f5e642', color:'#003a79', fillOpacity:1, weight:2
-      }).bindTooltip(e.n).addTo(a8Map);
-    });
-
-    // Légende
-    var leg = L.control({ position:'bottomright' });
-    leg.onAdd = function() {
-      var d = L.DomUtil.create('div');
-      d.style.cssText = 'background:rgba(0,15,40,.92);border:1px solid #1a3a5c;border-radius:8px;padding:9px 13px;font-size:11px;color:rgba(255,255,255,.7);line-height:2';
-      d.innerHTML = '<b style="font-size:9px;opacity:.4;letter-spacing:.08em">TRAFIC A8 · TOMTOM</b><br>'
-        + '<span style="display:inline-block;width:16px;height:4px;background:#00b050;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Fluide<br>'
-        + '<span style="display:inline-block;width:16px;height:4px;background:#ffd600;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Ralenti<br>'
-        + '<span style="display:inline-block;width:16px;height:4px;background:#ff6600;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Congestionné<br>'
-        + '<span style="display:inline-block;width:16px;height:4px;background:#cc0000;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Bouchon';
-      return d;
-    };
-    leg.addTo(a8Map);
-
-    // Tracé OSM
-    fetch('https://overpass-api.de/api/interpreter', {
-      method:'POST',
-      body:'data=' + encodeURIComponent('[out:json][timeout:12];way["ref"="A8"]["highway"~"motorway|motorway_link"](43.50,6.95,43.85,7.56);out geom;')
-    }).then(function(r){ return r.json(); }).then(function(d){
-      var g = L.layerGroup().addTo(a8Map);
-      (d.elements||[]).forEach(function(el){
-        if(el.type!=='way'||!el.geometry) return;
-        var pts = el.geometry.map(function(p){ return [p.lat,p.lon]; });
-        var w = el.tags&&el.tags.highway&&el.tags.highway.indexOf('link')>-1?3:5;
-        L.polyline(pts,{color:'#000',weight:w+4,opacity:.3,interactive:false}).addTo(g);
-        L.polyline(pts,{color:'#0064ab',weight:w,opacity:.8,interactive:false}).addTo(g);
-      });
-    }).catch(function(){});
-
-    // Incidents (décalé)
-    setTimeout(loadA8Inc, 2000);
-    setInterval(loadA8Inc, 120000);
-
-    // Redimensionner après animation — plusieurs passes pour être sûr
-    setTimeout(function(){ a8Map.invalidateSize(); }, 100);
-    setTimeout(function(){ a8Map.invalidateSize(); }, 400);
-    setTimeout(function(){ a8Map.invalidateSize(); }, 800);
-  }
-
-  function loadA8Inc() {
-    var list  = document.getElementById('a8-inc-list');
-    var ts    = document.getElementById('a8-inc-ts');
-    var badge = document.getElementById('a8-badge');
-    fetch(CF_WORKER + '/a8-incidents')
-      .then(function(r){ return r.json(); })
-      .then(function(data){
-        var incs = data.incidents||[];
-        if(ts) ts.textContent = 'Màj ' + nowStr() + ' · ' + incs.length + ' incident(s)';
-        if(badge){
-          badge.className = incs.length ? 'badge badge-warn' : 'badge badge-ok';
-          badge.textContent = incs.length ? incs.length + ' incident(s) A8' : 'A8 Fluide';
-        }
-        if(!list) return;
-        if(!incs.length){
-          list.innerHTML = '<div style="color:var(--green);font-size:.75rem;padding:4px 0">✓ Aucun incident — A8 fluide</div>';
-          return;
-        }
-        list.innerHTML = incs.map(function(i){
-          var c = i.type==='accident'?'#ef4444':i.type==='travaux'?'#f59e0b':'#60a5fa';
-          var e = i.type==='accident'?'🚨':i.type==='travaux'?'🚧':'⚠️';
-          return '<div style="background:var(--s2);border:1px solid var(--border);border-left:3px solid '+c+';border-radius:6px;padding:8px 11px;font-size:.74rem">'
-            +'<div style="font-weight:700;color:'+c+';font-size:.68rem;margin-bottom:3px">'+e+' '+(i.type||'INCIDENT').toUpperCase()+(i.time?' · <span style='font-weight:400;color:var(--dim)'>'+i.time+'</span>':'')+'</div>'
-            +'<div>'+(i.title||'')+'</div>'
-            +(i.desc?'<div style="color:var(--dim);font-size:.65rem;margin-top:2px">'+i.desc+'</div>':'')
-            +'</div>';
-        }).join('');
-      }).catch(function(e){
-        if(ts) ts.textContent = 'Erreur: '+e.message;
-      });
-  }
-
-  // Exposer pour le toggle
-  window.initA8Map = buildMap;
-
-  // Essayer dès que le DOM est prêt
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function(){ setTimeout(buildMap, 50); });
-  } else {
-    setTimeout(buildMap, 50);
-  }
-  window.addEventListener('load', function(){ setTimeout(buildMap, 100); });
-
-  // Écouter le toggle de la section
-  document.addEventListener('click', function(ev){
-    var toggle = ev.target.closest('#sec-a8 .section-toggle');
-    if (!toggle) return;
-    setTimeout(function(){
-      if (!a8Inited) buildMap();
-      else if (a8Map) a8Map.invalidateSize();
-    }, 350);
+  A8_ECH.forEach(function(e) {
+    L.circleMarker(e.p, {
+      radius:5, fillColor:'#f5e642', color:'#003a79', fillOpacity:1, weight:2
+    }).bindTooltip(e.n).addTo(a8Map);
   });
-})();
+
+  var leg = L.control({ position:'bottomright' });
+  leg.onAdd = function() {
+    var d = L.DomUtil.create('div');
+    d.style.cssText = 'background:rgba(0,15,40,.92);border:1px solid #1a3a5c;border-radius:8px;padding:9px 13px;font-size:11px;color:rgba(255,255,255,.7);line-height:2';
+    d.innerHTML = '<b style="font-size:9px;opacity:.4;letter-spacing:.08em">TRAFIC A8 · TOMTOM</b><br>'
+      + '<span style="display:inline-block;width:16px;height:4px;background:#00b050;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Fluide<br>'
+      + '<span style="display:inline-block;width:16px;height:4px;background:#ffd600;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Ralenti<br>'
+      + '<span style="display:inline-block;width:16px;height:4px;background:#ff6600;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Congestionné<br>'
+      + '<span style="display:inline-block;width:16px;height:4px;background:#cc0000;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Bouchon';
+    return d;
+  };
+  leg.addTo(a8Map);
+
+  fetch('https://overpass-api.de/api/interpreter', {
+    method:'POST',
+    body:'data=' + encodeURIComponent('[out:json][timeout:12];way["ref"="A8"]["highway"~"motorway|motorway_link"](43.50,6.95,43.85,7.56);out geom;')
+  }).then(function(r){ return r.json(); }).then(function(d){
+    var g = L.layerGroup().addTo(a8Map);
+    (d.elements||[]).forEach(function(el){
+      if(el.type!=='way'||!el.geometry) return;
+      var pts = el.geometry.map(function(p){ return [p.lat,p.lon]; });
+      var w = el.tags&&el.tags.highway&&el.tags.highway.indexOf('link')>-1?3:5;
+      L.polyline(pts,{color:'#000',weight:w+4,opacity:.3,interactive:false}).addTo(g);
+      L.polyline(pts,{color:'#0064ab',weight:w,opacity:.8,interactive:false}).addTo(g);
+    });
+  }).catch(function(){});
+
+  setTimeout(loadA8Inc, 2000);
+  setInterval(loadA8Inc, 120000);
+
+  setTimeout(function(){ a8Map.invalidateSize(); }, 100);
+  setTimeout(function(){ a8Map.invalidateSize(); }, 400);
+  setTimeout(function(){ a8Map.invalidateSize(); }, 800);
+}
+
+function loadA8Inc() {
+  var list  = document.getElementById('a8-inc-list');
+  var ts    = document.getElementById('a8-inc-ts');
+  var badge = document.getElementById('a8-badge');
+  fetch(CF_WORKER + '/a8-incidents')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var incs = data.incidents||[];
+      if(ts) ts.textContent = 'Màj ' + nowStr() + ' · ' + incs.length + ' incident(s)';
+      if(badge){
+        badge.className = incs.length ? 'badge badge-warn' : 'badge badge-ok';
+        badge.textContent = incs.length ? incs.length + ' incident(s) A8' : 'A8 Fluide';
+      }
+      if(!list) return;
+      if(!incs.length){
+        list.innerHTML = '<div style="color:var(--green);font-size:.75rem;padding:4px 0">✓ Aucun incident — A8 fluide</div>';
+        return;
+      }
+      list.innerHTML = incs.map(function(i){
+        var c = i.type==='accident'?'#ef4444':i.type==='travaux'?'#f59e0b':'#60a5fa';
+        var e2 = i.type==='accident'?'🚨':i.type==='travaux'?'🚧':'⚠️';
+        return '<div style="background:var(--s2);border:1px solid var(--border);border-left:3px solid '+c+';border-radius:6px;padding:8px 11px;font-size:.74rem">'
+          +'<div style="font-weight:700;color:'+c+';font-size:.68rem;margin-bottom:3px">'+e2+' '+(i.type||'INCIDENT').toUpperCase()+'</div>'
+          +'<div>'+(i.title||'')+'</div>'
+          +(i.desc?'<div style="color:var(--dim);font-size:.65rem;margin-top:2px">'+i.desc+'</div>':'')
+          +'</div>';
+      }).join('');
+    }).catch(function(e){
+      if(ts) ts.textContent = 'Worker hors ligne';
+      if(badge){ badge.className='badge badge-warn'; badge.textContent='A8 ⚠'; }
+    });
+}
+
+window.initA8Map = buildMap;
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function(){ setTimeout(buildMap, 50); });
+} else {
+  setTimeout(buildMap, 50);
+}
+window.addEventListener('load', function(){ setTimeout(buildMap, 100); });
+
+document.addEventListener('click', function(ev){
+  var toggle = ev.target.closest('#sec-a8 .section-toggle');
+  if (!toggle) return;
+  setTimeout(function(){
+    if (!a8Inited) buildMap();
+    else if (a8Map) a8Map.invalidateSize();
+  }, 350);
+});
+
+
 </script>
 </body>
 </html>
