@@ -910,55 +910,50 @@ async function loadStops(tripId, wrapperId){
   } catch(e){ wrap.innerHTML = ''; }
 }
 
-/* ── Rend le tableau style panneau SNCF officiel ── */
-/* Affichage identique aux écrans en gare : aucun filtre sur le contenu  */
-/* Heure affichée = heure théorique (prévue), état = retard en minutes   */
+/* ── Panneau SNCF officiel — dep + arr fusionnés ── */
 function renderTrainTable(tbId, departures, disruptions){
   const wrap = document.getElementById(tbId);
   if(!wrap) return;
 
-  // 5 prochains passages, aucun filtre
   const rows = departures.slice(0, 5);
-
   if(!rows.length){
     wrap.innerHTML = '<div class="train-empty">Aucun passage disponible</div>';
     return;
   }
 
-  wrap.innerHTML = rows.map((dep) => {
+  wrap.innerHTML = rows.map(dep => {
     const dt   = dep.stop_date_time || {};
     const info = dep.display_informations || {};
 
-    // Heure théorique (base) = heure affichée comme sur les panneaux SNCF
+    // Heure : theo = horaire prévu, rt = temps réel
+    // Le Worker a normalisé departure_date_time = heure de passage (dep ou arr)
     const theo = dt.base_departure_date_time || dt.departure_date_time || '';
-    // Heure temps réel (peut différer si retard)
-    const rt   = dt.departure_date_time || theo;
+    const rt   = dt.departure_date_time      || theo;
 
     const delay       = retardMin(rt, theo);
     const isLate      = delay > 1;
-    // Annulé : data_freshness = "base_schedule" et additional_informations contient "no_pickup"
-    const addInfos    = dt.additional_informations || dep._additional_informations || [];
+    const addInfos    = dt.additional_informations || [];
     const isCancelled = addInfos.includes('no_pickup') || addInfos.includes('cancelled');
 
-    // Destination : direction > headsign (comme les panneaux)
-    let dir = (info.direction || '').replace(/\s*\([^)]*\)/g,'').trim();
-    if(dir.includes(' vers ')) dir = dir.split(' vers ').pop().trim();
-    if(!dir) dir = info.headsign || dep.route?.name || '—';
+    // Direction : champ direction Navitia, nettoyé
+    let dir = (info.direction || '').trim();
+    // Supprimer les parenthèses "(Gare de X)" ajoutées par Navitia
+    dir = dir.replace(/\s*\([^)]*\)/g, '').trim();
+    // Garder uniquement la partie après "vers" si présent
+    if(dir.toLowerCase().includes(' vers ')) dir = dir.split(/\s+vers\s+/i).pop().trim();
+    if(!dir) dir = info.headsign || '—';
 
-    // Sous-titre : réseau · numéro de train
-    const network = info.network  || '';
-    const code    = info.headsign || '';
-    const sub     = [network, code].filter(Boolean).join(' · ');
+    // Sous-titre : réseau + numéro train
+    const sub = [info.network, info.headsign].filter(Boolean).join(' · ');
 
     // Voie
     const platform = dep._platform || dep.stop_point?.platform_code || '';
 
-    // Classes CSS
     const rowClass  = isCancelled ? 'cancelled' : isLate ? 'late' : '';
     const etatClass = isCancelled ? 'cancelled' : isLate ? 'late' : '';
     let   etatLabel = "À l'heure";
-    if(isCancelled)  etatLabel = 'Supprimé';
-    else if(isLate)  etatLabel = `+${delay} min`;
+    if(isCancelled) etatLabel = 'Supprimé';
+    else if(isLate) etatLabel = `+${delay} min`;
 
     return `
     <div class="sncf-row ${rowClass}">
@@ -995,7 +990,7 @@ async function fetchGare(gare){
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
 
     const data = await r.json();
-    reqIncrement(1); // 1 requête Navitia par appel /passages
+    reqIncrement(2); // 2 requêtes Navitia par appel /passages (departures + arrivals)
     let disruptions = data.disruptions || [];
     const trains = (data.departures || []).map(t=>({...t,_type:'dep'}));
 
