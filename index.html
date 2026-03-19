@@ -668,10 +668,11 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 
 <script>
 /* ─── CLOCK + NEXT TRAFIC ─── */
+/* Isolé dans son propre try/catch — ne peut pas être cassé par d'autres erreurs JS */
+try {
 (function(){
   const clockEl = document.getElementById('clock');
   const countEl = document.getElementById('rdv-countdown');
-  const nextEl  = document.getElementById('rdv-next');
   const p = n => String(n).padStart(2,'0');
 
   const HORAIRES = [7*60+20, 7*60+40, 8*60+20, 8*60+40, 9*60+20, 9*60+40,
@@ -681,27 +682,31 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
   function fmt(mins){ return `${p(Math.floor(mins/60))}h${p(mins%60)}`; }
 
   function tick(){
-    const now  = new Date();
-    const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
-    clockEl.textContent = `${p(h)}:${p(m)}:${p(s)}`;
+    try {
+      const now  = new Date();
+      const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+      if(clockEl) clockEl.textContent = `${p(h)}:${p(m)}:${p(s)}`;
 
-    const day     = now.getDay(); // 0=dim
-    const nowMins = h*60 + m + s/60;
-    const next    = day === 0 ? undefined : HORAIRES.find(t => t > nowMins);
+      const day     = now.getDay();
+      const nowMins = h*60 + m + s/60;
+      const next    = day === 0 ? undefined : HORAIRES.find(t => t > nowMins);
 
-    if(next !== undefined){
-      const diffSec = Math.round((next - nowMins) * 60);
-      countEl.className = 'rdv-inline-time';
-      countEl.textContent = fmt(next);
-    } else {
-      countEl.className = 'rdv-inline-time';
-      countEl.textContent = day === 0 ? '—' : fmt(HORAIRES[0]); // demain 7h20
-    }
+      if(countEl) {
+        if(next !== undefined){
+          countEl.className = 'rdv-inline-time';
+          countEl.textContent = fmt(next);
+        } else {
+          countEl.className = 'rdv-inline-time';
+          countEl.textContent = day === 0 ? '—' : fmt(HORAIRES[0]);
+        }
+      }
+    } catch(e) { /* silencieux */ }
   }
 
   tick();
   setInterval(tick, 1000);
 })();
+} catch(e) { console.warn('Horloge:', e); }
 
 /* ─── LOADER HIDE ─── */
 function gone(id){
@@ -1073,7 +1078,12 @@ async function fetchGare(gare){
 
   } catch(err){
     const wrap = document.getElementById(gare.tb);
-    if(wrap) wrap.innerHTML = `<div class="train-empty" style="color:#E4032E;font-size:.68rem">⚠ ${err.message}</div>`;
+    const isWorkerDown = err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.message.includes('TypeError');
+    if(wrap) wrap.innerHTML = `<div class="train-empty" style="color:#f59e0b;font-size:.68rem;padding:16px;text-align:center">
+      ${isWorkerDown
+        ? '⚠️ Worker hors ligne<br><span style="opacity:.6;font-size:.6rem">Vérifier sncf-proxy.workers.dev</span>'
+        : `⚠ ${err.message}`}
+    </div>`;
   }
 }
 
