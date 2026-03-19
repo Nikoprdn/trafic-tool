@@ -134,6 +134,11 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
   position:relative;
 }
 .sncf-row:nth-child(even){background:#003570}
+/* Ligne en retard : fond légèrement orangé */
+.sncf-row.late{background:rgba(245,158,11,.08) !important}
+.sncf-row.late:nth-child(even){background:rgba(245,158,11,.12) !important}
+/* Ligne annulée : fond légèrement rouge */
+.sncf-row.cancelled{background:rgba(228,3,46,.08) !important}
 
 /* Barre état à gauche */
 .sncf-row::before{
@@ -151,10 +156,18 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
   color:#f5e642;letter-spacing:.04em;padding-left:10px;
   line-height:1;white-space:nowrap;
 }
+/* Heure théorique barrée : en gros, barrée en orange */
 .sncf-heure .sncf-heure-theo{
-  display:block;font-size:.62rem;font-weight:400;
-  color:rgba(245,230,66,.5);text-decoration:line-through;
-  letter-spacing:.02em;margin-top:2px;
+  display:block;font-size:1.55rem;font-weight:700;
+  color:rgba(245,158,11,.6);text-decoration:line-through;
+  text-decoration-color:rgba(245,158,11,.9);
+  text-decoration-thickness:2px;
+  letter-spacing:.04em;line-height:1;
+}
+/* Heure réelle (retardée) : en orange vif, sous l'heure barrée */
+.sncf-heure .sncf-heure-real{
+  display:block;font-size:1.55rem;font-weight:700;
+  color:#f59e0b;letter-spacing:.04em;line-height:1;margin-top:1px;
 }
 
 /* Colonne destination — simplifiée sans arrêts */
@@ -486,11 +499,13 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
         </div>
         <div class="sbar">
           <div class="dot"></div>
-          <span>API SNCF Navitia · sncf-proxy.nicolas7lejeune.workers.dev</span>
+          <span>API SNCF Navitia</span>
           <span class="sep">·</span>
-          <span>4 prochains passages · hors TGV/OUIGO · Panneau gare</span>
+          <span>4 passages · hors TGV/OUIGO · Panneau gare</span>
           <span class="sep">·</span>
           <span id="ferro-last-update">Rafraîchissement toutes les 2 min</span>
+          <span class="sep">·</span>
+          <span id="req-counter" style="color:#f5e642;font-weight:600" title="Requêtes Navitia sur 24h (limite : 5 000/jour)">⚡ 0 req/24h</span>
         </div>
       </div>
     </div>
@@ -804,14 +819,53 @@ function nowStr(){
 }
 
 /* ═══════════════════════════════════════════
+   COMPTEUR REQUÊTES NAVITIA (limite 5 000/jour)
+   Stocké en localStorage, remis à zéro à minuit
+═══════════════════════════════════════════ */
+const REQ_KEY     = 'navitia_req_count';
+const REQ_DAY_KEY = 'navitia_req_day';
+const REQ_LIMIT   = 5000;
+
+function reqGetCount(){
+  const today = new Date().toISOString().substring(0,10); // YYYY-MM-DD
+  const day   = localStorage.getItem(REQ_DAY_KEY);
+  if(day !== today){
+    // Nouveau jour → remise à zéro
+    localStorage.setItem(REQ_DAY_KEY, today);
+    localStorage.setItem(REQ_KEY, '0');
+    return 0;
+  }
+  return parseInt(localStorage.getItem(REQ_KEY) || '0');
+}
+
+function reqIncrement(n=1){
+  const count = reqGetCount() + n;
+  localStorage.setItem(REQ_KEY, String(count));
+  reqUpdateUI(count);
+  return count;
+}
+
+function reqUpdateUI(count){
+  const el = document.getElementById('req-counter');
+  if(!el) return;
+  const pct   = Math.round(count / REQ_LIMIT * 100);
+  const color = count > 4000 ? '#E4032E' : count > 3000 ? '#f59e0b' : '#f5e642';
+  el.style.color = color;
+  el.title = `${count} requêtes sur ${REQ_LIMIT} utilisées aujourd'hui (${pct}%)`;
+  el.textContent = `⚡ ${count} / ${REQ_LIMIT} req`;
+}
+
+// Init au chargement
+document.addEventListener('DOMContentLoaded', () => reqUpdateUI(reqGetCount()));
+
+/* ═══════════════════════════════════════════
    FERROVIAIRE — via Cloudflare Worker proxy
    https://sncf-proxy.nicolas7lejeune.workers.dev
 ═══════════════════════════════════════════ */
 const CF_WORKER = 'https://sncf-proxy.nicolas7lejeune.workers.dev';
 
 // Filtre panneau de gare : exclure TGV, OUIGO, inoui — garder TOUT le reste
-// (ZOU!, TER, Intercités, trains sans mode connu, etc.)
-// Correspond exactement à ce qu'un écran de gare affiche.
+// Le filtre terminus est géré côté Worker, pas ici.
 function isTerOrRegional(dep){
   const info = dep.display_informations || {};
 
@@ -827,13 +881,9 @@ function isTerOrRegional(dep){
   if(commercial.includes('ouigo') || network.includes('ouigo')) return false;
   if(commercial.includes('inoui') || network.includes('inoui')) return false;
 
-  // Exclure les entrées sans heure (schedules vides)
+  // Exclure les entrées sans heure
   const depTime = dep.stop_date_time?.departure_date_time || '';
   if(!depTime) return false;
-
-  // Exclure additional_informations = "terminus" (le train ne repart pas)
-  const addInfos = dep.stop_date_time?.additional_informations || [];
-  if(addInfos.includes('terminus') || addInfos.includes('stop_time_terminus')) return false;
 
   return true;
 }
@@ -949,8 +999,11 @@ function renderTrainTable(tbId, departures, disruptions){
     return `
     <div class="sncf-row ${rowClass}">
       <div class="sncf-heure">
-        ${heureAff}
-        ${isLate&&theo?`<span class="sncf-heure-theo">${fmtSncfTime(theo)}</span>`:''}
+        ${isLate && theo
+          ? `<span class="sncf-heure-theo">${fmtSncfTime(theo)}</span>
+             <span class="sncf-heure-real">${heureAff}</span>`
+          : heureAff
+        }
       </div>
       <div class="sncf-dest">
         <div class="sncf-dest-name">${dir}</div>
@@ -976,6 +1029,7 @@ async function fetchGare(gare){
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
 
     const data = await r.json();
+    reqIncrement(1); // 1 requête Navitia par appel /passages
     let disruptions = data.disruptions || [];
     const trains = (data.departures || []).map(t=>({...t,_type:'dep'}));
 
