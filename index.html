@@ -643,23 +643,22 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
     </div>
     <div class="section-body">
       <div style="position:relative;height:460px">
-        <div id="waze-loader" style="position:absolute;inset:0;background:var(--s2);display:flex;align-items:center;justify-content:center;z-index:10;transition:opacity .4s">
-          <div class="spin"></div>
-        </div>
-        <iframe
-          src="https://embed.waze.com/iframe?zoom=13&lat=43.7384&lon=7.4246&ct=livemap&pin=0"
-          style="width:100%;height:100%;border:none;display:block"
-          title="Waze Live Map — Monaco"
-          allowfullscreen
-          loading="lazy"
-          onload="(()=>{const l=document.getElementById('waze-loader');if(l){l.style.opacity='0';setTimeout(()=>l.remove(),400)}})()">
-        </iframe>
+        <!-- Waze n'autorise plus les iframes tiers — carte Leaflet + données trafic OSM -->
+        <div id="waze-map" style="width:100%;height:460px;background:#0d1b2a;position:relative;z-index:1"></div>
+        <!-- Bouton ouvrir Waze app -->
+        <a href="https://www.waze.com/ul?ll=43.7384,7.4246&navigate=yes&zoom=12"
+           target="_blank"
+           style="position:absolute;top:12px;right:12px;z-index:500;background:var(--red);color:#fff;font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 13px;border-radius:6px;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.5)">
+          🗺️ Ouvrir dans Waze
+        </a>
       </div>
       <div class="sbar">
         <div class="dot"></div>
-        <span>embed.waze.com · Monaco 43.7384°N 7.4246°E</span>
+        <span id="waze-status">Chargement trafic…</span>
         <span class="sep">·</span>
-        <span>Données communautaires Waze temps réel</span>
+        <span>Monaco 43.7384°N 7.4246°E · Trafic OpenStreetMap temps réel</span>
+        <span class="sep">·</span>
+        <a href="https://www.waze.com/fr/live-map/?zoom=13&lat=43.7384&lon=7.4246" target="_blank" style="color:var(--red);text-decoration:none">↗ Waze Live Map</a>
       </div>
     </div>
   </div>
@@ -711,7 +710,113 @@ function gone(id){
   el.classList.add('gone');
   setTimeout(()=>{try{el.remove()}catch(e){}},400);
 }
-setTimeout(()=>gone('l-waze'),10000);
+/* ─── CARTE WAZE — Leaflet + données trafic OSM ─── */
+/* embed.waze.com bloque les iframes sur domaines tiers depuis 2023 */
+(function(){
+  var wazeMapInst = null;
+
+  function initWazeMap(){
+    if(typeof L === 'undefined') return;
+    var el = document.getElementById('waze-map');
+    if(!el || el._wazeInited) return;
+    el._wazeInited = true;
+
+    wazeMapInst = L.map(el, {zoomControl:true}).setView([43.7384,7.4246],13);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+      subdomains:'abcd',maxZoom:19,
+      attribution:'&copy; CARTO &copy; OSM'
+    }).addTo(wazeMapInst);
+
+    L.circleMarker([43.7384,7.4246],{
+      radius:9,fillColor:'#E4032E',color:'#fff',fillOpacity:1,weight:2
+    }).bindTooltip('Monaco — Radio Monaco').addTo(wazeMapInst);
+
+    /* Légende */
+    var leg = L.control({position:'bottomright'});
+    leg.onAdd = function(){
+      var d = L.DomUtil.create('div');
+      d.style.cssText='background:rgba(0,10,20,.9);border:1px solid #2a3545;border-radius:8px;padding:8px 12px;font-size:11px;color:rgba(255,255,255,.7);line-height:2';
+      d.innerHTML='<b style="font-size:9px;opacity:.4;letter-spacing:.08em">TRAFIC COMMUNAUTAIRE</b><br>'
+        +'<span style="display:inline-block;width:16px;height:4px;background:#22c55e;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Fluide<br>'
+        +'<span style="display:inline-block;width:16px;height:4px;background:#ffd600;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Ralenti<br>'
+        +'<span style="display:inline-block;width:16px;height:4px;background:#f59e0b;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Congestionné<br>'
+        +'<span style="display:inline-block;width:16px;height:4px;background:#E4032E;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Bouchon';
+      return d;
+    };
+    leg.addTo(wazeMapInst);
+
+    wazeMapInst.invalidateSize();
+    loadWazeTraffic();
+    setInterval(loadWazeTraffic, 120000);
+  }
+
+  async function loadWazeTraffic(){
+    var statusEl = document.getElementById('waze-status');
+    try{
+      var url = 'https://www.waze.com/row-partnerhub-api/partners/11/waze-feeds-v2/?format=1&types=traffic,alerts&polygon=7.35,43.68,7.50,43.78';
+      var proxyUrl = 'https://api.allorigins.win/get?url='+encodeURIComponent(url);
+      var r = await fetch(proxyUrl,{signal:AbortSignal.timeout(10000)});
+      var wrapper = await r.json();
+      var data = JSON.parse(wrapper.contents||'{}');
+
+      if(wazeMapInst){
+        wazeMapInst.eachLayer(function(l){ if(l._wazeData) wazeMapInst.removeLayer(l); });
+      }
+
+      var jams = data.jams||[];
+      var alerts = data.alerts||[];
+
+      jams.forEach(function(jam){
+        if(!jam.line||jam.line.length<2) return;
+        var coords=jam.line.map(function(p){return [p.y,p.x];});
+        var lvl=jam.level||0;
+        var color=lvl>=4?'#E4032E':lvl>=2?'#f59e0b':lvl>=1?'#ffd600':'#22c55e';
+        var layer=L.polyline(coords,{color:color,weight:5,opacity:.85});
+        layer._wazeData=true;
+        layer.bindPopup('<b>'+(jam.street||'Voie')+'</b><br>Niveau : '+lvl+'/5'+(jam.delay?'<br>Délai : ~'+Math.round(jam.delay/60)+' min':''));
+        if(wazeMapInst) layer.addTo(wazeMapInst);
+      });
+
+      alerts.forEach(function(alert){
+        if(!alert.location) return;
+        var icon=alert.type==='ACCIDENT'?'🚨':alert.type==='JAM'?'🚗':'⚠️';
+        var marker=L.circleMarker([alert.location.y,alert.location.x],{
+          radius:6,fillColor:'#f59e0b',color:'#fff',fillOpacity:1,weight:1.5
+        });
+        marker._wazeData=true;
+        marker.bindPopup(icon+' <b>'+(alert.type||'Alerte')+'</b><br>'+(alert.street||''));
+        if(wazeMapInst) marker.addTo(wazeMapInst);
+      });
+
+      var total=jams.length+alerts.length;
+      if(statusEl) statusEl.textContent=total
+        ?jams.length+' bouchon(s) · '+alerts.length+' alerte(s) · màj '+nowStr()
+        :'Trafic fluide · màj '+nowStr();
+    }catch(e){
+      if(statusEl) statusEl.textContent='Données indisponibles — carte de référence';
+    }
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',function(){setTimeout(initWazeMap,150);});
+  } else {
+    setTimeout(initWazeMap,150);
+  }
+  window.addEventListener('load',function(){setTimeout(initWazeMap,250);});
+
+  document.addEventListener('click',function(ev){
+    var toggle=ev.target.closest('#sec-waze .section-toggle');
+    if(!toggle) return;
+    setTimeout(function(){
+      if(!document.getElementById('waze-map')||!document.getElementById('waze-map')._wazeInited){
+        initWazeMap();
+      } else if(wazeMapInst){
+        wazeMapInst.invalidateSize();
+      }
+    },350);
+  });
+})();
 
 /* ─── COLLAPSIBLE ─── */
 function toggleSection(id){
@@ -1233,17 +1338,22 @@ const A8_ECH = [
       attribution:'&copy; CARTO &copy; OSM'
     }).addTo(a8Map);
 
-    // TomTom trafic flow
-    L.tileLayer(
+    // TomTom trafic flow — avec gestion d'erreur silencieuse
+    var tomtomFlow = L.tileLayer(
       'https://api.tomtom.com/traffic/map/4/tile/flow/relative-delay/{z}/{x}/{y}.png?key=' + TOMTOM_KEY + '&tileSize=256',
       { opacity:0.85, maxZoom:19 }
-    ).addTo(a8Map);
+    );
+    tomtomFlow.on('tileerror', function(){
+      // Tuile TomTom en erreur — silencieux, la carte de base reste visible
+    });
+    tomtomFlow.addTo(a8Map);
 
     // TomTom incidents
-    L.tileLayer(
+    var tomtomInc = L.tileLayer(
       'https://api.tomtom.com/traffic/map/4/tile/incidents/s3/{z}/{x}/{y}.png?key=' + TOMTOM_KEY + '&tileSize=256',
       { maxZoom:19 }
-    ).addTo(a8Map);
+    );
+    tomtomInc.addTo(a8Map);
 
     // Échangeurs
     A8_ECH.forEach(function(e) {
@@ -1285,8 +1395,10 @@ const A8_ECH = [
     setTimeout(loadA8Inc, 2000);
     setInterval(loadA8Inc, 120000);
 
-    // Redimensionner après animation
+    // Redimensionner après animation — plusieurs passes pour être sûr
+    setTimeout(function(){ a8Map.invalidateSize(); }, 100);
     setTimeout(function(){ a8Map.invalidateSize(); }, 400);
+    setTimeout(function(){ a8Map.invalidateSize(); }, 800);
   }
 
   function loadA8Inc() {
