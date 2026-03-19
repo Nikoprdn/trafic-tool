@@ -859,23 +859,27 @@ const CF_WORKER = 'https://sncf-proxy.nicolas7lejeune.workers.dev';
 
 // Modes grande ligne à exclure — UNIQUEMENT si le mode contient explicitement ces termes
 // On ne filtre PAS les trains sans mode renseigné (ZOU, TER régionaux)
-const EXCLUDED_MODES = ['tgv inoui','ouigo','intercités de nuit','eurostar','thalys','lyria'];
-
-// Filtre : retourne true si le train est un régional/TER (à garder)
+// Filtre : exclure uniquement les TGV — garder tous les trains régionaux
+// (ZOU!, TER, Intercités régionaux, trains locaux, etc.)
 function isTerOrRegional(dep){
   const info = dep.display_informations || {};
-  const mode = [
-    info.physical_mode  || '',
-    info.commercial_mode|| '',
-    info.network        || ''
-  ].join(' ').toLowerCase();
-  // Exclure uniquement les grandes lignes explicitement identifiées
-  if(EXCLUDED_MODES.some(ex => mode.includes(ex))) return false;
-  // Si mode contient "tgv" ET "inoui" → grande ligne
-  if(mode.includes('tgv') && mode.includes('inoui')) return false;
-  // TGV seul sans contexte régional → exclure
-  if(mode.includes('tgv') && !mode.includes('ter') && !mode.includes('zou') && !mode.includes('local')) return false;
-  // Tout le reste = TER/ZOU/Régional → garder
+
+  // Exclure si le mode physique est explicitement "LongDistanceTrain" (TGV, OUIGO)
+  const physicalMode = (info.physical_mode || '').toLowerCase();
+  if(physicalMode.includes('longdistance') || physicalMode.includes('long_distance')) return false;
+
+  // Exclure si le réseau ou le mode commercial contient "tgv", "ouigo", "inoui"
+  const commercial = (info.commercial_mode || '').toLowerCase();
+  const network    = (info.network         || '').toLowerCase();
+  const headsign   = (info.headsign        || '').toLowerCase();
+
+  const isTGV = commercial.includes('tgv') || network.includes('tgv')
+             || commercial.includes('ouigo') || network.includes('ouigo')
+             || commercial.includes('inoui') || network.includes('inoui');
+
+  if(isTGV) return false;
+
+  // Tout le reste : ZOU!, TER, Intercités régionaux, trains sans mode → garder
   return true;
 }
 
@@ -952,7 +956,7 @@ function renderTrainTable(tbId, departures, disruptions){
   const wrap = document.getElementById(tbId);
   if(!wrap) return;
 
-  const filtered = departures.filter(isTerOrRegional).slice(0, 5);
+  const filtered = departures.filter(isTerOrRegional).slice(0, 6);
 
   if(!filtered.length){
     wrap.innerHTML = '<div class="train-empty">Aucun départ régional disponible</div>';
@@ -1019,7 +1023,7 @@ function renderTrainTable(tbId, departures, disruptions){
 }
 async function fetchGare(gare){
   try{
-    const stopParam = `stopId=${encodeURIComponent(gare.stopId)}&count=15`;
+    const stopParam = `stopId=${encodeURIComponent(gare.stopId)}&count=20`;
 
     // Appels parallèles départs + arrivées
     const [rDep, rArr] = await Promise.allSettled([
@@ -1068,9 +1072,21 @@ async function fetchGare(gare){
         const incId = d.id || `disr-${gare.id}-${btoa(msg).substring(0,12)}`;
         if(!knownTweetIds.has(incId)){
           knownTweetIds.add(incId);
-          const tw = {id:incId, text:`<strong>${gare.label}</strong> — ${msg}`, time:nowStr()};
-          allTweets.unshift(tw);
-          injectTweet(tw, true);
+          const feed = document.getElementById('inc-feed');
+          if(feed){
+            const el = document.createElement('div');
+            el.className = 'inc-item crit';
+            el.dataset.id = incId;
+            el.innerHTML = `
+              <div class="inc-row">
+                <span class="inc-tag incident">🚨 Perturbation</span>
+                <span class="inc-time">${nowStr()}</span>
+              </div>
+              <div class="inc-text"><strong>${gare.label}</strong> — ${msg.slice(0,200)}</div>
+              <div class="inc-src">Source : API SNCF Navitia · ${nowStr()}</div>`;
+            feed.prepend(el);
+            startFlash(el);
+          }
           document.getElementById('sec-inc').classList.remove('collapsed');
         }
       }
