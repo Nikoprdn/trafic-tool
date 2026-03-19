@@ -125,7 +125,7 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 /* Chaque ligne = une row SNCF */
 .sncf-row{
   display:grid;
-  grid-template-columns:90px 1fr auto;
+  grid-template-columns:120px 1fr auto;
   align-items:center;
   gap:0;
   padding:9px 14px 8px;
@@ -177,7 +177,17 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
   letter-spacing:.04em;line-height:1;
 }
 
-/* Colonne destination — simplifiée sans arrêts */
+/* Label DEST sous l'heure */
+.sncf-dest-tag{
+  display:block;font-size:.52rem;font-weight:500;letter-spacing:.06em;
+  color:rgba(255,255,255,.35);text-transform:uppercase;
+  margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:110px;
+}
+.sncf-dest-tag strong{
+  color:rgba(255,255,255,.75);font-weight:700;font-size:.58rem;
+  text-transform:none;letter-spacing:.01em;
+}
 .sncf-dest{padding:0 12px;min-width:0;overflow:hidden}
 .sncf-dest-name{
   font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:600;
@@ -971,9 +981,9 @@ function renderTrainTable(tbId, departures, disruptions){
                <span class="sncf-heure-real">${fmtSncfTime(rt)}</span>`
             : fmtSncfTime(theo)
         }
+        <span class="sncf-dest-tag">DEST <strong>${dir}</strong></span>
       </div>
       <div class="sncf-dest">
-        <div class="sncf-dest-name">${dir}</div>
         <div class="sncf-dest-sub">${sub}</div>
       </div>
       <div class="sncf-right">
