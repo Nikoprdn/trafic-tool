@@ -264,6 +264,7 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 .inc-tag.ok{background:rgba(34,197,94,.12);color:var(--green)}
 .inc-tag.info{background:rgba(56,189,248,.12);color:var(--blue)}
 .inc-time{font-size:.6rem;color:var(--dim)}
+.inc-impacts{font-size:.64rem;color:var(--blue);margin:4px 0 3px;line-height:1.7;font-weight:500;border-left:2px solid rgba(56,189,248,.3);padding-left:8px}
 .inc-text{font-size:.76rem;color:var(--muted);line-height:1.5}
 .inc-text strong{color:var(--txt)}
 .inc-src{font-size:.6rem;color:var(--dim);margin-top:3px}
@@ -906,6 +907,31 @@ function fmtSncfTime(dt){
   return dt.substring(9,11) + ':' + dt.substring(11,13);
 }
 
+/* ── Convertit une date Navitia "20250318T143000" → timestamp JS (ms) ── */
+/* Navitia renvoie l'heure LOCALE France sans timezone explicite            */
+/* On reconstruit un Date local : le navigateur est en heure française      */
+function navitiaToMs(dt){
+  if(!dt || dt.length < 13) return 0;
+  // "20250318T143000" → year=2025, month=03, day=18, H=14, M=30
+  const y  = parseInt(dt.substring(0,4));
+  const mo = parseInt(dt.substring(4,6)) - 1; // mois 0-indexed
+  const d  = parseInt(dt.substring(6,8));
+  const h  = parseInt(dt.substring(9,11));
+  const mi = parseInt(dt.substring(11,13));
+  return new Date(y, mo, d, h, mi, 0).getTime();
+}
+
+/* ── Filtre les trains déjà passés (heure locale navigateur) ── */
+function isNotPassed(dep){
+  const dt = dep.stop_date_time || {};
+  // Utiliser l'heure réelle (temps réel) pour juger si le train est passé
+  const rt = dt.departure_date_time || dt.base_departure_date_time || '';
+  if(!rt) return false;
+  const trainMs = navitiaToMs(rt);
+  // Tolérance : afficher jusqu'à 1 minute après le départ
+  return trainMs >= Date.now() - 60000;
+}
+
 /* ── Retard en minutes ── */
 function retardMin(rt, theo){
   if(!rt || !theo) return 0;
@@ -961,7 +987,11 @@ function renderTrainTable(tbId, departures, disruptions){
   const wrap = document.getElementById(tbId);
   if(!wrap) return;
 
-  const filtered = departures.filter(isTerOrRegional).slice(0, 4);
+  // Filtre : pas TGV + pas déjà passé (heure locale navigateur)
+  const filtered = departures
+    .filter(isTerOrRegional)
+    .filter(isNotPassed)
+    .slice(0, 4);
 
   if(!filtered.length){
     wrap.innerHTML = '<div class="train-empty">Aucun départ régional disponible</div>';
@@ -1215,22 +1245,57 @@ async function loadNavitiaDisruptions(e){
         .map(m => m.text||'').filter(Boolean).join(' — ')
         || d.disruption_id || 'Perturbation sur l\'axe Cannes–Menton';
 
-      // Lignes / trains impactés
-      const affected = (d.impacted_objects||[])
-        .map(o => {
-          if(o.pt_object?.embedded_type==='line'){
-            return `Ligne ${o.pt_object.line?.code||o.pt_object.line?.name||'?'}`;
+      // Trains/lignes/gares impactés — détaillé
+      const impacted = d.impacted_objects || [];
+
+      // Collecter les numéros de trains (vehicle_journeys) impactés
+      const trainNums = [];
+      const lineNames = [];
+      const stopNames = [];
+
+      impacted.forEach(o => {
+        const type = o.pt_object?.embedded_type || '';
+        if(type === 'vehicle_journey'){
+          const vj   = o.pt_object.vehicle_journey || {};
+          const name = vj.name || vj.headsign || '';
+          if(name) trainNums.push(name);
+          // Si impacted_stops disponibles → gares concernées
+          if(o.impacted_stops?.length){
+            o.impacted_stops.forEach(s => {
+              const sn = s.stop_point?.name || s.stop_area?.name || '';
+              if(sn && !stopNames.includes(sn)) stopNames.push(sn);
+            });
           }
-          if(o.pt_object?.embedded_type==='trip'){
-            return `Train ${o.pt_object.trip?.name||'?'}`;
-          }
-          if(o.pt_object?.embedded_type==='stop_area'){
-            return o.pt_object.stop_area?.name||'';
-          }
-          return '';
-        })
-        .filter((v,i,a) => v && a.indexOf(v)===i)
-        .slice(0,4).join('  ·  ');
+        } else if(type === 'line'){
+          const ln = o.pt_object.line?.code || o.pt_object.line?.name || '';
+          if(ln) lineNames.push(ln);
+        } else if(type === 'route'){
+          const rn = o.pt_object.route?.name || '';
+          if(rn) lineNames.push(rn);
+        } else if(type === 'stop_area'){
+          const sn = o.pt_object.stop_area?.name || '';
+          if(sn && !stopNames.includes(sn)) stopNames.push(sn);
+        } else if(type === 'trip'){
+          const tn = o.pt_object.trip?.name || '';
+          if(tn) trainNums.push(tn);
+        }
+      });
+
+      // Construire l'affichage impacts
+      const impactParts = [];
+      if(trainNums.length){
+        impactParts.push(`🚂 Train${trainNums.length>1?'s':''} : ${[...new Set(trainNums)].slice(0,6).join(', ')}`);
+      }
+      if(lineNames.length){
+        impactParts.push(`📋 Ligne${lineNames.length>1?'s':''} : ${[...new Set(lineNames)].slice(0,4).join(', ')}`);
+      }
+      if(stopNames.length){
+        impactParts.push(`📍 Gare${stopNames.length>1?'s':''} : ${[...new Set(stopNames)].slice(0,4).join(' → ')}`);
+      }
+
+      const affectedHtml = impactParts.length
+        ? `<div class="inc-impacts">${impactParts.join('<br>')}</div>`
+        : '';
 
       // Période
       const p = d.application_periods?.[0];
@@ -1247,7 +1312,7 @@ async function loadNavitiaDisruptions(e){
           <span class="inc-tag ${tagCls}">${tag}</span>
           <span class="inc-time">${period}</span>
         </div>
-        ${affected ? `<div style="font-size:.62rem;color:var(--blue);margin:3px 0 2px;font-weight:600">${affected}</div>` : ''}
+        ${affectedHtml}
         <div class="inc-text">${msg.slice(0,260).split('<').join('&lt;').split('>').join('&gt;')}</div>
         <div class="inc-src">Source : API SNCF Navitia · ${nowStr()}</div>
       </div>`;
