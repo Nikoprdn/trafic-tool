@@ -309,47 +309,7 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 /* ─── BOTTOM 2-col ─── */
 .bottom-row{display:grid;grid-template-columns:1fr 360px;gap:12px}
 
-/* ─── TOGGLE GARES ─── */
-.gares-toggles{
-  display:flex;flex-wrap:wrap;gap:6px;
-  padding:10px 12px 8px;
-  background:var(--s2);border-bottom:1px solid var(--border);
-}
-.gare-toggle-btn{
-  font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;
-  letter-spacing:.08em;text-transform:uppercase;
-  padding:4px 11px;border-radius:20px;cursor:pointer;
-  transition:all .15s;
-  background:#003a79;color:rgba(255,255,255,.5);
-  border:1px solid rgba(255,255,255,.15);
-}
-.gare-toggle-btn.active{
-  background:#0064ab;color:#fff;
-  border-color:rgba(255,255,255,.4);
-  box-shadow:0 0 8px rgba(0,100,171,.4);
-}
-.gare-toggle-btn:hover{background:#0064ab;color:#fff}
-.gare-card{transition:all .2s}
-.gare-card.hidden{display:none}
-
 /* ─── CARTE A8 ─── */
-.a8-inc-item{
-  background:var(--s2);border:1px solid var(--border);border-radius:7px;
-  padding:8px 12px;border-left:3px solid var(--amber);
-  font-size:.74rem;color:var(--muted);line-height:1.5;
-}
-.a8-inc-item.severe{border-left-color:var(--red)}
-.a8-inc-item.minor {border-left-color:var(--green)}
-.a8-inc-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:3px}
-.a8-inc-tag{font-family:'Rajdhani',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:1px 6px;border-radius:3px}
-.a8-inc-tag.jam{background:rgba(228,3,46,.15);color:var(--red)}
-.a8-inc-tag.road-closed{background:rgba(228,3,46,.2);color:var(--red)}
-.a8-inc-tag.construction{background:rgba(245,158,11,.15);color:var(--amber)}
-.a8-inc-tag.other{background:rgba(56,189,248,.1);color:var(--blue)}
-.a8-inc-time{font-size:.6rem;color:var(--dim)}
-.a8-legend{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 12px 0;font-size:.68rem;color:var(--text-muted)}
-.a8-leg-item{display:flex;align-items:center;gap:5px}
-.a8-leg-line{width:22px;height:4px;border-radius:2px}
 
 /* ─── NEXT TRAFIC ─── */
 .h-right{display:flex;align-items:center;gap:10px}
@@ -358,21 +318,8 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 .rdv-inline-label{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.65)}
 .rdv-inline-time{font-size:1.1rem;font-weight:600;letter-spacing:.08em;color:#fff;line-height:1.2}
 
-  /* Leaflet popup sombre */
-  .leaflet-popup-content-wrapper{background:#1a1820!important;border:1px solid #3a3548!important;color:#ede9f5!important;border-radius:8px!important}
-  .leaflet-popup-tip{background:#1a1820!important}
-  .leaflet-popup-content{font-family:'DM Sans',sans-serif;font-size:.78rem;color:#ede9f5;margin:8px 12px}
-  /* Section A8 : pas d'overflow:hidden pour que la carte Leaflet soit visible */
-  #sec-a8 .section-body { overflow: visible !important; }
-  #sec-a8 .section-body > * { overflow: visible; }
-  /* Force hauteur carte A8 */
-  #a8-map { width:100% !important; height:520px !important; min-height:520px !important; z-index:1; position:relative; }
-  #a8-map .leaflet-container { width:100% !important; height:520px !important; background:#0d1b2a; }
-  #a8-section-body { overflow: visible !important; }
-  </style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
-</head>
+
+
 <body>
 
 <!-- ══ HEADER ══ -->
@@ -545,28 +492,47 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
   
       <div class="section-body" id="a8-section-body">
 
-        <!-- Carte APRR Info Trafic -->
-        <div style="position:relative;height:560px;background:#0d1b2a">
-          <iframe
-            src="https://voyage.aprr.fr/information-trafic"
-            style="width:100%;height:560px;border:none;display:block"
-            title="APRR Information Trafic"
-            loading="lazy"
-            allowfullscreen>
-          </iframe>
-          <!-- Bouton plein écran -->
-          <a href="https://voyage.aprr.fr/information-trafic"
-             target="_blank"
-             style="position:absolute;top:12px;right:12px;z-index:500;background:var(--red);color:#fff;font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 13px;border-radius:6px;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.5)">
-            🗺️ Plein écran APRR
-          </a>
+        <!-- APRR — iframe bloqué par X-Frame-Options côté APRR, panneau de redirection -->
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:48px 24px;background:linear-gradient(160deg,var(--s2),var(--s3));min-height:260px;border-bottom:1px solid var(--border)">
+
+          <!-- Logo-like header -->
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:52px;height:52px;border-radius:12px;background:rgba(228,3,46,.15);border:1px solid rgba(228,3,46,.35);display:flex;align-items:center;justify-content:center;font-size:1.6rem">🛣️</div>
+            <div>
+              <div style="font-family:'Rajdhani',sans-serif;font-size:1.15rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--txt)">APRR · Information Trafic</div>
+              <div style="font-size:.68rem;color:var(--muted);margin-top:2px;letter-spacing:.05em">A8 La Provençale · Cannes → Menton · Temps réel</div>
+            </div>
+          </div>
+
+          <!-- Explication technique -->
+          <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:10px 16px;max-width:520px;text-align:center">
+            <span style="font-size:.72rem;color:var(--amber);font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase">⚠️ Intégration iframe bloquée</span>
+            <p style="font-size:.71rem;color:var(--muted);margin-top:6px;line-height:1.6">Le site voyage.aprr.fr interdit son affichage dans un cadre externe (<code style="background:var(--s3);padding:1px 5px;border-radius:3px;font-size:.68rem">X-Frame-Options: SAMEORIGIN</code>). Ouvrez la carte directement sur leur site.</p>
+          </div>
+
+          <!-- Boutons d'accès -->
+          <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+            <a href="https://voyage.aprr.fr/information-trafic" target="_blank"
+               style="display:inline-flex;align-items:center;gap:8px;background:var(--red);color:#fff;font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:11px 22px;border-radius:8px;text-decoration:none;box-shadow:0 3px 14px rgba(228,3,46,.35);transition:all .15s">
+              🗺️ Trafic A8 en temps réel
+            </a>
+            <a href="https://voyage.aprr.fr/carte-itineraires?type=roadwork" target="_blank"
+               style="display:inline-flex;align-items:center;gap:8px;background:var(--s3);border:1px solid var(--border);color:var(--txt);font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:11px 22px;border-radius:8px;text-decoration:none;transition:all .15s">
+              🚧 Chantiers & Travaux
+            </a>
+            <a href="https://voyage.aprr.fr/prevision-trafic" target="_blank"
+               style="display:inline-flex;align-items:center;gap:8px;background:var(--s3);border:1px solid var(--border);color:var(--txt);font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:11px 22px;border-radius:8px;text-decoration:none;transition:all .15s">
+              📅 Prévisions
+            </a>
+          </div>
+
         </div>
 
         <div class="sbar">
-          <div class="dot"></div>
-          <span>Source : voyage.aprr.fr · APRR La Provençale · A8 Cannes → Menton</span>
+          <div class="dot dot-warn"></div>
+          <span>Source : voyage.aprr.fr · Accès direct uniquement (iframe bloqué par APRR)</span>
           <span class="sep">·</span>
-          <a href="https://voyage.aprr.fr/information-trafic" target="_blank" style="color:var(--red);text-decoration:none">↗ APRR Info Trafic</a>
+          <a href="https://voyage.aprr.fr/information-trafic" target="_blank" style="color:var(--red);text-decoration:none">↗ Ouvrir APRR</a>
         </div>
       </div>
     </div>
@@ -593,10 +559,15 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
     </div>
     <div class="section-body">
       <div style="position:relative;height:460px">
-        <!-- Waze n'autorise plus les iframes tiers — carte Leaflet + données trafic OSM -->
-        <div id="waze-map" style="width:100%;height:460px;background:#0d1b2a;position:relative;z-index:1"></div>
+        <iframe
+          src="https://embed.waze.com/fr/iframe?zoom=14&lat=43.7384&lon=7.4246&pin=0&ct=livemap"
+          style="width:100%;height:460px;border:none;display:block;background:#0d1b2a"
+          title="Waze Live Map — Monaco"
+          loading="lazy"
+          allowfullscreen>
+        </iframe>
         <!-- Bouton ouvrir Waze app -->
-        <a href="https://www.waze.com/ul?ll=43.7384,7.4246&navigate=yes&zoom=12"
+        <a href="https://www.waze.com/ul?ll=43.7384,7.4246&navigate=yes&zoom=14"
            target="_blank"
            style="position:absolute;top:12px;right:12px;z-index:500;background:var(--red);color:#fff;font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 13px;border-radius:6px;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.5)">
           🗺️ Ouvrir dans Waze
@@ -604,11 +575,11 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
       </div>
       <div class="sbar">
         <div class="dot"></div>
-        <span id="waze-status">Chargement trafic…</span>
+        <span id="waze-status">Waze Live Map · Monaco 43.7384°N 7.4246°E</span>
         <span class="sep">·</span>
-        <span>Monaco 43.7384°N 7.4246°E · Trafic OpenStreetMap temps réel</span>
+        <span>Trafic communautaire temps réel · embed.waze.com</span>
         <span class="sep">·</span>
-        <a href="https://www.waze.com/fr/live-map/?zoom=13&lat=43.7384&lon=7.4246" target="_blank" style="color:var(--red);text-decoration:none">↗ Waze Live Map</a>
+        <a href="https://www.waze.com/fr/live-map/?zoom=14&lat=43.7384&lon=7.4246" target="_blank" style="color:var(--red);text-decoration:none">↗ Waze Live Map</a>
       </div>
     </div>
   </div>
@@ -663,114 +634,6 @@ function gone(id){
   el.classList.add('gone');
   setTimeout(()=>{try{el.remove()}catch(e){}},400);
 }
-/* ─── CARTE WAZE — Leaflet + données trafic OSM ─── */
-/* embed.waze.com bloque les iframes sur domaines tiers depuis 2023 */
-(function(){
-  var wazeMapInst = null;
-
-  function initWazeMap(){
-    if(typeof L === 'undefined') return;
-    var el = document.getElementById('waze-map');
-    if(!el || el._wazeInited) return;
-    el._wazeInited = true;
-
-    wazeMapInst = L.map(el, {zoomControl:true}).setView([43.7384,7.4246],13);
-
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-      subdomains:'abcd',maxZoom:19,
-      attribution:'&copy; CARTO &copy; OSM'
-    }).addTo(wazeMapInst);
-
-    L.circleMarker([43.7384,7.4246],{
-      radius:9,fillColor:'#E4032E',color:'#fff',fillOpacity:1,weight:2
-    }).bindTooltip('Monaco — Radio Monaco').addTo(wazeMapInst);
-
-    /* Légende */
-    var leg = L.control({position:'bottomright'});
-    leg.onAdd = function(){
-      var d = L.DomUtil.create('div');
-      d.style.cssText='background:rgba(0,10,20,.9);border:1px solid #2a3545;border-radius:8px;padding:8px 12px;font-size:11px;color:rgba(255,255,255,.7);line-height:2';
-      d.innerHTML='<b style="font-size:9px;opacity:.4;letter-spacing:.08em">TRAFIC COMMUNAUTAIRE</b><br>'
-        +'<span style="display:inline-block;width:16px;height:4px;background:#22c55e;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Fluide<br>'
-        +'<span style="display:inline-block;width:16px;height:4px;background:#ffd600;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Ralenti<br>'
-        +'<span style="display:inline-block;width:16px;height:4px;background:#f59e0b;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Congestionné<br>'
-        +'<span style="display:inline-block;width:16px;height:4px;background:#E4032E;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Bouchon';
-      return d;
-    };
-    leg.addTo(wazeMapInst);
-
-    wazeMapInst.invalidateSize();
-    loadWazeTraffic();
-    setInterval(loadWazeTraffic, 120000);
-  }
-
-  async function loadWazeTraffic(){
-    var statusEl = document.getElementById('waze-status');
-    try{
-      var url = 'https://www.waze.com/row-partnerhub-api/partners/11/waze-feeds-v2/?format=1&types=traffic,alerts&polygon=7.35,43.68,7.50,43.78';
-      var proxyUrl = 'https://api.allorigins.win/get?url='+encodeURIComponent(url);
-      var r = await fetch(proxyUrl,{signal:AbortSignal.timeout(10000)});
-      var wrapper = await r.json();
-      var data = JSON.parse(wrapper.contents||'{}');
-
-      if(wazeMapInst){
-        wazeMapInst.eachLayer(function(l){ if(l._wazeData) wazeMapInst.removeLayer(l); });
-      }
-
-      var jams = data.jams||[];
-      var alerts = data.alerts||[];
-
-      jams.forEach(function(jam){
-        if(!jam.line||jam.line.length<2) return;
-        var coords=jam.line.map(function(p){return [p.y,p.x];});
-        var lvl=jam.level||0;
-        var color=lvl>=4?'#E4032E':lvl>=2?'#f59e0b':lvl>=1?'#ffd600':'#22c55e';
-        var layer=L.polyline(coords,{color:color,weight:5,opacity:.85});
-        layer._wazeData=true;
-        layer.bindPopup('<b>'+(jam.street||'Voie')+'</b><br>Niveau : '+lvl+'/5'+(jam.delay?'<br>Délai : ~'+Math.round(jam.delay/60)+' min':''));
-        if(wazeMapInst) layer.addTo(wazeMapInst);
-      });
-
-      alerts.forEach(function(alert){
-        if(!alert.location) return;
-        var icon=alert.type==='ACCIDENT'?'🚨':alert.type==='JAM'?'🚗':'⚠️';
-        var marker=L.circleMarker([alert.location.y,alert.location.x],{
-          radius:6,fillColor:'#f59e0b',color:'#fff',fillOpacity:1,weight:1.5
-        });
-        marker._wazeData=true;
-        marker.bindPopup(icon+' <b>'+(alert.type||'Alerte')+'</b><br>'+(alert.street||''));
-        if(wazeMapInst) marker.addTo(wazeMapInst);
-      });
-
-      var total=jams.length+alerts.length;
-      if(statusEl) statusEl.textContent=total
-        ?jams.length+' bouchon(s) · '+alerts.length+' alerte(s) · màj '+nowStr()
-        :'Trafic fluide · màj '+nowStr();
-    }catch(e){
-      if(statusEl) statusEl.textContent='Données indisponibles — carte de référence';
-    }
-  }
-
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',function(){setTimeout(initWazeMap,150);});
-  } else {
-    setTimeout(initWazeMap,150);
-  }
-  window.addEventListener('load',function(){setTimeout(initWazeMap,250);});
-
-  document.addEventListener('click',function(ev){
-    var toggle=ev.target.closest('#sec-waze .section-toggle');
-    if(!toggle) return;
-    setTimeout(function(){
-      if(!document.getElementById('waze-map')||!document.getElementById('waze-map')._wazeInited){
-        initWazeMap();
-      } else if(wazeMapInst){
-        wazeMapInst.invalidateSize();
-      }
-    },350);
-  });
-})();
-
 /* ─── COLLAPSIBLE ─── */
 function toggleSection(id){
   document.getElementById(id).classList.toggle('collapsed');
@@ -853,7 +716,6 @@ const GARES = [
   { id:'cannes',      label:'Cannes',               stopId:'stop_area:SNCF:87756294', tb:'tb-cannes',      ts:'ts-cannes'      },
   { id:'nice-ville',  label:'Nice-Ville',           stopId:'stop_area:SNCF:87756403', tb:'tb-nice-ville',  ts:'ts-nice-ville'  },
   { id:'monaco',      label:'Monaco Monte-Carlo',   stopId:'stop_area:SNCF:87756478', tb:'tb-monaco',      ts:'ts-monaco'      },
-  { id:'roquebrune',  label:'Roquebrune-Cap-Martin',stopId:'stop_area:SNCF:87756486', tb:'tb-roquebrune',  ts:'ts-roquebrune'  },
   { id:'menton',      label:'Menton',               stopId:'stop_area:SNCF:87756494', tb:'tb-menton',      ts:'ts-menton'      },
 ];
 
@@ -1112,7 +974,7 @@ function testFlash(e){
 }
 
 /* ── Charge les perturbations depuis Navitia via le Worker ── */
-/* Couvre : Cannes · Nice · Villefranche · Cap d'Ail · Monaco · Roquebrune · Menton */
+/* Couvre : Cannes · Nice-Ville · Monaco · Menton */
 /* Inclut : suppressions, retards, service réduit, travaux, toutes perturbations */
 
 async function loadNavitiaDisruptions(e){
@@ -1284,158 +1146,6 @@ async function loadNavitiaDisruptions(e){
 
 loadNavitiaDisruptions();
 setInterval(loadNavitiaDisruptions, 120000);
-
-</script>
-<script>
-/* ══════════════════════════════════════════════════════════════
-   SECTION A8 — Leaflet + TomTom Traffic (flow + incidents)
-   Tracé réel OSM via Overpass API
-   Clé TomTom : Qqzn6c769jPXkMaq87SqF2V8KXLqjhWw
-══════════════════════════════════════════════════════════════ */
-
-const TOMTOM_KEY = 'Qqzn6c769jPXkMaq87SqF2V8KXLqjhWw';
-
-let a8Map    = null;
-let a8Inited = false;
-
-/* Échangeurs A8 */
-const A8_ECH = [
-  { p:[43.5526,7.0200], n:'Cannes Ouest'     },
-  { p:[43.5628,7.0432], n:'Cannes Centre'     },
-  { p:[43.5788,7.0800], n:'Antibes'           },
-  { p:[43.6008,7.1229], n:'Biot'              },
-  { p:[43.6221,7.1648], n:'Villeneuve-Loubet' },
-  { p:[43.6458,7.1960], n:'Cagnes-sur-Mer'    },
-  { p:[43.6641,7.2120], n:'St-Laurent-du-Var' },
-  { p:[43.6842,7.2287], n:'Nice Ouest'        },
-  { p:[43.6972,7.2581], n:'Nice Centre'       },
-  { p:[43.7182,7.2921], n:'Nice Est'          },
-  { p:[43.7288,7.3524], n:'Eze'               },
-  { p:[43.7350,7.3978], n:"Cap d'Ail"         },
-  { p:[43.7370,7.4191], n:'Monaco'            },
-  { p:[43.7490,7.4623], n:'Roquebrune'        },
-  { p:[43.7745,7.5122], n:'Menton'            },
-];
-
-function buildMap() {
-  if (a8Inited) return;
-  if (typeof L === 'undefined') return;
-  var el = document.getElementById('a8-map');
-  if (!el) return;
-  a8Inited = true;
-
-  a8Map = L.map(el, { center:[43.66,7.24], zoom:11 });
-
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    subdomains:'abcd', maxZoom:19,
-    attribution:'&copy; CARTO &copy; OSM'
-  }).addTo(a8Map);
-
-  var tomtomFlow = L.tileLayer(
-    'https://api.tomtom.com/traffic/map/4/tile/flow/relative-delay/{z}/{x}/{y}.png?key=' + TOMTOM_KEY + '&tileSize=256',
-    { opacity:0.85, maxZoom:19 }
-  );
-  tomtomFlow.on('tileerror', function(){});
-  tomtomFlow.addTo(a8Map);
-
-  var tomtomInc = L.tileLayer(
-    'https://api.tomtom.com/traffic/map/4/tile/incidents/s3/{z}/{x}/{y}.png?key=' + TOMTOM_KEY + '&tileSize=256',
-    { maxZoom:19 }
-  );
-  tomtomInc.addTo(a8Map);
-
-  A8_ECH.forEach(function(e) {
-    L.circleMarker(e.p, {
-      radius:5, fillColor:'#f5e642', color:'#003a79', fillOpacity:1, weight:2
-    }).bindTooltip(e.n).addTo(a8Map);
-  });
-
-  var leg = L.control({ position:'bottomright' });
-  leg.onAdd = function() {
-    var d = L.DomUtil.create('div');
-    d.style.cssText = 'background:rgba(0,15,40,.92);border:1px solid #1a3a5c;border-radius:8px;padding:9px 13px;font-size:11px;color:rgba(255,255,255,.7);line-height:2';
-    d.innerHTML = '<b style="font-size:9px;opacity:.4;letter-spacing:.08em">TRAFIC A8 · TOMTOM</b><br>'
-      + '<span style="display:inline-block;width:16px;height:4px;background:#00b050;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Fluide<br>'
-      + '<span style="display:inline-block;width:16px;height:4px;background:#ffd600;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Ralenti<br>'
-      + '<span style="display:inline-block;width:16px;height:4px;background:#ff6600;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Congestionné<br>'
-      + '<span style="display:inline-block;width:16px;height:4px;background:#cc0000;vertical-align:middle;margin-right:6px;border-radius:2px"></span>Bouchon';
-    return d;
-  };
-  leg.addTo(a8Map);
-
-  fetch('https://overpass-api.de/api/interpreter', {
-    method:'POST',
-    body:'data=' + encodeURIComponent('[out:json][timeout:12];way["ref"="A8"]["highway"~"motorway|motorway_link"](43.50,6.95,43.85,7.56);out geom;')
-  }).then(function(r){ return r.json(); }).then(function(d){
-    var g = L.layerGroup().addTo(a8Map);
-    (d.elements||[]).forEach(function(el){
-      if(el.type!=='way'||!el.geometry) return;
-      var pts = el.geometry.map(function(p){ return [p.lat,p.lon]; });
-      var w = el.tags&&el.tags.highway&&el.tags.highway.indexOf('link')>-1?3:5;
-      L.polyline(pts,{color:'#000',weight:w+4,opacity:.3,interactive:false}).addTo(g);
-      L.polyline(pts,{color:'#0064ab',weight:w,opacity:.8,interactive:false}).addTo(g);
-    });
-  }).catch(function(){});
-
-  setTimeout(loadA8Inc, 2000);
-  setInterval(loadA8Inc, 120000);
-
-  setTimeout(function(){ a8Map.invalidateSize(); }, 100);
-  setTimeout(function(){ a8Map.invalidateSize(); }, 400);
-  setTimeout(function(){ a8Map.invalidateSize(); }, 800);
-}
-
-function loadA8Inc() {
-  var list  = document.getElementById('a8-inc-list');
-  var ts    = document.getElementById('a8-inc-ts');
-  var badge = document.getElementById('a8-badge');
-  fetch(CF_WORKER + '/a8-incidents')
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      var incs = data.incidents||[];
-      if(ts) ts.textContent = 'Màj ' + nowStr() + ' · ' + incs.length + ' incident(s)';
-      if(badge){
-        badge.className = incs.length ? 'badge badge-warn' : 'badge badge-ok';
-        badge.textContent = incs.length ? incs.length + ' incident(s) A8' : 'A8 Fluide';
-      }
-      if(!list) return;
-      if(!incs.length){
-        list.innerHTML = '<div style="color:var(--green);font-size:.75rem;padding:4px 0">✓ Aucun incident — A8 fluide</div>';
-        return;
-      }
-      list.innerHTML = incs.map(function(i){
-        var c = i.type==='accident'?'#ef4444':i.type==='travaux'?'#f59e0b':'#60a5fa';
-        var e2 = i.type==='accident'?'🚨':i.type==='travaux'?'🚧':'⚠️';
-        return '<div style="background:var(--s2);border:1px solid var(--border);border-left:3px solid '+c+';border-radius:6px;padding:8px 11px;font-size:.74rem">'
-          +'<div style="font-weight:700;color:'+c+';font-size:.68rem;margin-bottom:3px">'+e2+' '+(i.type||'INCIDENT').toUpperCase()+'</div>'
-          +'<div>'+(i.title||'')+'</div>'
-          +(i.desc?'<div style="color:var(--dim);font-size:.65rem;margin-top:2px">'+i.desc+'</div>':'')
-          +'</div>';
-      }).join('');
-    }).catch(function(e){
-      if(ts) ts.textContent = 'Worker hors ligne';
-      if(badge){ badge.className='badge badge-warn'; badge.textContent='A8 ⚠'; }
-    });
-}
-
-window.initA8Map = buildMap;
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function(){ setTimeout(buildMap, 50); });
-} else {
-  setTimeout(buildMap, 50);
-}
-window.addEventListener('load', function(){ setTimeout(buildMap, 100); });
-
-document.addEventListener('click', function(ev){
-  var toggle = ev.target.closest('#sec-a8 .section-toggle');
-  if (!toggle) return;
-  setTimeout(function(){
-    if (!a8Inited) buildMap();
-    else if (a8Map) a8Map.invalidateSize();
-  }, 350);
-});
-
 
 </script>
 </body>
