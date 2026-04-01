@@ -44,6 +44,12 @@ header{
 /* ─── MAIN ─── */
 main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 
+/* ─── FLEX ROW: FERRO + INC ─── */
+@media (max-width:900px){
+  #flex-ferro-inc{flex-direction:column!important}
+  #sec-inc{flex:none!important}
+}
+
 /* ─── COLLAPSIBLE SECTION ─── */
 .section-wrap{background:var(--s1);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 3px 20px rgba(0,0,0,.4)}
 
@@ -239,6 +245,33 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 .gare-code{background:#003a79 !important;border-color:rgba(255,255,255,.2) !important;color:rgba(255,255,255,.45) !important}
 .gare-sbar{background:#002d5e !important;border-top-color:rgba(255,255,255,.07) !important;color:rgba(255,255,255,.28) !important}
 
+/* ─── INCIDENTS INLINE dans gare-head ─── */
+.gare-inc-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:'Rajdhani',sans-serif;font-size:.58rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;
+  padding:2px 7px;border-radius:20px;cursor:pointer;
+  white-space:nowrap;transition:opacity .15s;flex-shrink:0;
+}
+.gare-inc-pill.ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--green)}
+.gare-inc-pill.warn{background:rgba(245,158,11,.13);border:1px solid rgba(245,158,11,.35);color:var(--amber)}
+.gare-inc-pill.crit{background:rgba(228,3,46,.13);border:1px solid rgba(228,3,46,.35);color:var(--red)}
+.gare-inc-pill.loading{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--dim)}
+.gare-inc-panel{
+  display:none;background:#0d1824;border-top:1px solid rgba(255,255,255,.08);
+  padding:7px 12px;font-size:.68rem;color:var(--muted);line-height:1.55;
+}
+.gare-inc-panel.open{display:block}
+.gare-inc-panel .inc-line{
+  padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05);
+}
+.gare-inc-panel .inc-line:last-child{border-bottom:none}
+.gare-inc-panel .inc-tag-s{font-family:'Rajdhani',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:1px 5px;border-radius:2px;margin-right:4px}
+.gare-inc-panel .inc-tag-s.retard{background:rgba(245,158,11,.15);color:var(--amber)}
+.gare-inc-panel .inc-tag-s.incident{background:rgba(228,3,46,.15);color:var(--red)}
+.gare-inc-panel .inc-tag-s.info{background:rgba(56,189,248,.12);color:var(--blue)}
+.gare-inc-panel .inc-tag-s.ok{background:rgba(34,197,94,.12);color:var(--green)}
+
 /* ─── INCIDENTS ─── */
 .inc-body-wrap{padding:10px;display:flex;flex-direction:column;gap:8px}
 
@@ -339,7 +372,9 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
 
 <main>
 
-  <div class="section-wrap" id="sec-ferro">
+  <div id="flex-ferro-inc" style="display:flex;gap:12px;align-items:flex-start">
+
+  <div class="section-wrap" id="sec-ferro" style="flex:2;min-width:0">
       <div class="section-toggle" onclick="toggleSection('sec-ferro')">
         <div class="section-toggle-l">
           <div class="section-ico ico-r">🚂</div>
@@ -363,14 +398,16 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
   
             <!-- Cannes -->
             <div class="gare-card" data-gare="cannes">
-              <div class="gare-head">
+              <div class="gare-head" onclick="toggleGareInc('cannes-inc')">
                 <div class="gare-name">🚉 Cannes</div>
-                <div style="display:flex;align-items:center;gap:8px">
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap">
                   <span id="ts-cannes" style="font-size:.58rem;color:rgba(255,255,255,.35);letter-spacing:.04em">Chargement…</span>
+                  <span id="inc-pill-cannes" class="gare-inc-pill loading" title="Incidents Cannes">⋯</span>
                   <span class="gare-code">CAN</span>
                   <span class="dot" style="animation:blink 2s infinite"></span>
                 </div>
               </div>
+              <div class="gare-inc-panel" id="cannes-inc"></div>
               <div class="train-table-wrap" id="tb-cannes">
                 <div class="train-loading"><div class="spin"></div>Chargement…</div>
               </div>
@@ -378,14 +415,16 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
   
             <!-- Nice-Ville -->
             <div class="gare-card" data-gare="nice-ville">
-              <div class="gare-head">
+              <div class="gare-head" onclick="toggleGareInc('nice-ville-inc')">
                 <div class="gare-name">🚉 Nice-Ville</div>
-                <div style="display:flex;align-items:center;gap:8px">
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap">
                   <span id="ts-nice-ville" style="font-size:.58rem;color:rgba(255,255,255,.35);letter-spacing:.04em">Chargement…</span>
+                  <span id="inc-pill-nice-ville" class="gare-inc-pill loading" title="Incidents Nice-Ville">⋯</span>
                   <span class="gare-code">NIC-V</span>
                   <span class="dot" style="animation:blink 2s infinite"></span>
                 </div>
               </div>
+              <div class="gare-inc-panel" id="nice-ville-inc"></div>
               <div class="train-table-wrap" id="tb-nice-ville">
                 <div class="train-loading"><div class="spin"></div>Chargement…</div>
               </div>
@@ -393,14 +432,16 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
   
             <!-- Monaco -->
             <div class="gare-card" data-gare="monaco">
-              <div class="gare-head">
+              <div class="gare-head" onclick="toggleGareInc('monaco-inc')">
                 <div class="gare-name">🎲 Monaco Monte-Carlo</div>
-                <div style="display:flex;align-items:center;gap:8px">
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap">
                   <span id="ts-monaco" style="font-size:.58rem;color:rgba(255,255,255,.35);letter-spacing:.04em">Chargement…</span>
+                  <span id="inc-pill-monaco" class="gare-inc-pill loading" title="Incidents Monaco">⋯</span>
                   <span class="gare-code">MCO</span>
                   <span class="dot" style="animation:blink 2s infinite"></span>
                 </div>
               </div>
+              <div class="gare-inc-panel" id="monaco-inc"></div>
               <div class="train-table-wrap" id="tb-monaco">
                 <div class="train-loading"><div class="spin"></div>Chargement…</div>
               </div>
@@ -408,14 +449,16 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
   
             <!-- Menton -->
             <div class="gare-card" data-gare="menton">
-              <div class="gare-head">
+              <div class="gare-head" onclick="toggleGareInc('menton-inc')">
                 <div class="gare-name">🚉 Menton</div>
-                <div style="display:flex;align-items:center;gap:8px">
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:nowrap">
                   <span id="ts-menton" style="font-size:.58rem;color:rgba(255,255,255,.35);letter-spacing:.04em">Chargement…</span>
+                  <span id="inc-pill-menton" class="gare-inc-pill loading" title="Incidents Menton">⋯</span>
                   <span class="gare-code">MEN</span>
                   <span class="dot" style="animation:blink 2s infinite"></span>
                 </div>
               </div>
+              <div class="gare-inc-panel" id="menton-inc"></div>
               <div class="train-table-wrap" id="tb-menton">
                 <div class="train-loading"><div class="spin"></div>Chargement…</div>
               </div>
@@ -436,7 +479,7 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
       </div>
     </div>
 
-  <div class="section-wrap" id="sec-inc">
+  <div class="section-wrap" id="sec-inc" style="flex:1;min-width:0">
       <div class="section-toggle" onclick="toggleSection('sec-inc')">
         <div class="section-toggle-l">
           <div class="section-ico ico-a">⚠️</div>
@@ -470,6 +513,8 @@ main{padding:12px 12px 32px;display:flex;flex-direction:column;gap:12px}
         </div>
       </div>
     </div>
+
+  </div><!-- /flex-ferro-inc -->
 
   <div class="section-wrap" id="sec-a8">
       <div class="section-toggle" onclick="toggleSection('sec-a8')">
@@ -977,6 +1022,102 @@ function testFlash(e){
 /* Couvre : Cannes · Nice-Ville · Monaco · Menton */
 /* Inclut : suppressions, retards, service réduit, travaux, toutes perturbations */
 
+/* ─── GARE INCIDENT HELPERS ─── */
+function toggleGareInc(panelId){
+  const p = document.getElementById(panelId);
+  if(!p) return;
+  p.classList.toggle('open');
+}
+
+/* Map stop names to gare IDs */
+const GARE_STOP_MAP = {
+  'cannes':    ['Cannes','cannes'],
+  'nice-ville':['Nice-Ville','Nice Ville','nice','nice-ville','Nice'],
+  'monaco':    ['Monaco','Monaco-Monte-Carlo','Monte-Carlo','monaco'],
+  'menton':    ['Menton','menton']
+};
+
+function updateGarePills(disruptions){
+  // Reset all pills
+  const gares = ['cannes','nice-ville','monaco','menton'];
+  gares.forEach(g => {
+    const pill = document.getElementById('inc-pill-'+g);
+    const panel = document.getElementById(g+'-inc');
+    if(pill){ pill.className='gare-inc-pill ok'; pill.textContent='✓'; }
+    if(panel){ panel.innerHTML=''; }
+  });
+
+  if(!disruptions || !disruptions.length) return;
+
+  const score = d => {
+    const eff = (d.severity?.effect||'').toLowerCase();
+    if(eff==='no_service') return 4;
+    if(eff==='significant_delays'||eff.includes('delay')) return 3;
+    if(eff==='reduced_service'||eff==='modified_service') return 2;
+    return 1;
+  };
+
+  // Group disruptions per gare
+  const gareDisruptions = {};
+  gares.forEach(g => gareDisruptions[g] = []);
+
+  disruptions.forEach(d => {
+    const stops = d._stops || [];
+    const lines = d._lines || [];
+    const trains = d._trains || [];
+    let matched = false;
+    // Match by stop name
+    stops.forEach(s => {
+      gares.forEach(g => {
+        if(GARE_STOP_MAP[g].some(alias => 
+          (s.name||'').toLowerCase().includes(alias.toLowerCase())
+        )){
+          gareDisruptions[g].push(d);
+          matched = true;
+        }
+      });
+    });
+    // If no stop match, assign to all (global disruption)
+    if(!matched && (lines.length||trains.length)){
+      gares.forEach(g => gareDisruptions[g].push(d));
+    }
+  });
+
+  // Update each gare pill
+  gares.forEach(g => {
+    const pill = document.getElementById('inc-pill-'+g);
+    const panel = document.getElementById(g+'-inc');
+    const discs = gareDisruptions[g];
+    if(!pill||!panel) return;
+
+    if(!discs.length){
+      pill.className='gare-inc-pill ok'; pill.textContent='✓';
+      panel.innerHTML='';
+      return;
+    }
+
+    const maxScore = Math.max(...discs.map(score));
+    if(maxScore>=4){ pill.className='gare-inc-pill crit'; pill.textContent='⚠ '+discs.length; }
+    else if(maxScore>=3){ pill.className='gare-inc-pill warn'; pill.textContent='⏱ '+discs.length; }
+    else { pill.className='gare-inc-pill warn'; pill.textContent='ⓘ '+discs.length; }
+
+    // Build compact panel
+    panel.innerHTML = discs.slice(0,3).map(d => {
+      const s = score(d);
+      let tag, tagCls;
+      if(s>=4){tag='🚫 Suppression';tagCls='incident';}
+      else if(s>=3){tag='⏱ Retard';tagCls='retard';}
+      else if(s>=2){tag='⚡ Service réduit';tagCls='retard';}
+      else{tag='ℹ️ Info';tagCls='info';}
+      const msg = (d.messages||[])
+        .filter(m=>!m.channel||m.channel.content_type==='text/plain'||m.channel.name==='moteur')
+        .map(m=>m.text||'').filter(Boolean).join(' — ')
+        || 'Perturbation';
+      return \`<div class="inc-line"><span class="inc-tag-s \${tagCls}">\${tag}</span>\${msg.slice(0,120).replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>\`;
+    }).join('')+(discs.length>3?'<div class="inc-line" style="color:var(--dim);font-size:.58rem">+ '+(discs.length-3)+' autre(s)…</div>':'');
+  });
+}
+
 async function loadNavitiaDisruptions(e){
   if(e) e.stopPropagation();
 
@@ -1000,6 +1141,7 @@ async function loadNavitiaDisruptions(e){
       badge.className='badge badge-ok'; badge.textContent='Normal';
       if(dot) dot.classList.remove('dot-warn');
       if(status) status.textContent = `Trafic normal · màj ${nowStr()}`;
+      updateGarePills([]);
       return;
     }
 
@@ -1111,6 +1253,9 @@ async function loadNavitiaDisruptions(e){
         <div class="inc-src">Source : API SNCF Navitia · ${nowStr()}</div>
       </div>`;
     }).join('');
+
+    // Update gare pills
+    updateGarePills(disruptions);
 
     // Badge
     const nbSup  = disruptions.filter(d=>score(d)===4).length;
