@@ -8,26 +8,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --red:    #E4032E;
-  --bg:     #0D1016;
-  --panel:  #12151C;
-  --card:   #181B26;
-  --border: #232730;
-  --text:   #E8EAF0;
-  --muted:  #5E6474;
-  --muted2: #42465A;
-  --yellow: #F5C518;
-  --orange: #FF6B35;
-  --green:  #27AE60;
-  --sb-bg:   #003580;
-  --sb-head: #002460;
-  --sb-row:  #0046B8;
-  --sb-alt:  #003EA0;
-  --sb-sep:  rgba(255,255,255,.07);
+  --red:#E4032E; --bg:#0D1016; --panel:#12151C; --card:#181B26;
+  --border:#232730; --text:#E8EAF0; --muted:#5E6474; --muted2:#42465A;
+  --yellow:#F5C518; --orange:#FF6B35; --green:#27AE60;
+  --sb-bg:#003580; --sb-head:#002460; --sb-row:#0046B8; --sb-alt:#003EA0; --sb-sep:rgba(255,255,255,.07);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow',sans-serif;}
 
+/* HEADER */
 .hdr{background:var(--red);height:84px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 36px;position:sticky;top:0;z-index:100;box-shadow:0 4px 28px rgba(0,0,0,.7);}
 .hdr-left{display:flex;align-items:center;gap:20px;}
 .hdr-logo{height:68px;width:auto;filter:brightness(0) invert(1);}
@@ -35,6 +24,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .hdr-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;letter-spacing:.22em;color:rgba(255,255,255,.85);text-transform:uppercase;}
 .hdr-clock{font-family:'Share Tech Mono',monospace;font-size:32px;color:#fff;text-align:right;}
 
+/* LAYOUT */
 .wrap{max-width:1600px;margin:0 auto;padding:22px 28px 48px;}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
 .card-h{display:flex;align-items:center;gap:12px;padding:0 20px;height:48px;background:var(--card);border-bottom:1px solid var(--border);}
@@ -47,46 +37,31 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .tbtn{background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.4);color:var(--yellow);border-radius:4px;padding:4px 14px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
 .tbtn:hover{background:rgba(245,197,24,.22);}
 
-/* ═══ TABLE MATRIX ═══ */
+/* MATRIX TABLE */
 .mx-wrap{overflow-x:auto;}
 .mx-wrap::-webkit-scrollbar{height:4px;}
 .mx-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-
 table.mx{width:100%;border-collapse:collapse;background:var(--sb-bg);}
 table.mx thead tr{background:var(--sb-head);}
-table.mx th{
-  padding:11px 16px;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-  color:rgba(255,255,255,.45);
-  border-right:1px solid rgba(255,255,255,.06);
-  white-space:nowrap;
-}
+table.mx th{padding:11px 16px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);border-right:1px solid rgba(255,255,255,.06);white-space:nowrap;}
 table.mx th:last-child{border-right:none;}
-table.mx th.th-st{
-  text-align:center;min-width:140px;
-  color:rgba(255,255,255,.9);
-  background:rgba(0,0,0,.18);
-}
-table.mx th.th-st small{
-  display:block;font-size:9px;font-weight:400;
-  letter-spacing:.06em;color:rgba(255,255,255,.32);margin-top:2px;
-}
-
+table.mx th.th-st{text-align:center;min-width:140px;color:rgba(255,255,255,.9);background:rgba(0,0,0,.18);}
+table.mx th.th-st small{display:block;font-size:9px;font-weight:400;letter-spacing:.06em;color:rgba(255,255,255,.32);margin-top:2px;}
 table.mx tbody tr{background:var(--sb-row);border-bottom:2px solid var(--sb-sep);transition:filter .1s;}
 table.mx tbody tr:nth-child(even){background:var(--sb-alt);}
 table.mx tbody tr:last-child{border-bottom:none;}
-
 table.mx td{padding:0 16px;height:66px;border-right:1px solid rgba(255,255,255,.05);vertical-align:middle;}
 table.mx td:last-child{border-right:none;}
 
+/* Barre statut */
 td.td-bar{padding:0;width:5px;}
 td.td-bar.ok      {background:var(--green);}
 td.td-bar.delayed {background:var(--orange);}
 td.td-bar.cancelled{background:var(--red);}
 td.td-bar.modified{background:var(--orange);}
 
-td.td-info{min-width:160px;}
+/* Info */
+td.td-info{min-width:155px;}
 .inf-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:400;font-style:italic;color:rgba(255,255,255,.55);line-height:1;margin-bottom:3px;}
 .inf-lbl.delayed  {color:var(--orange);}
 .inf-lbl.cancelled{color:#ff8080;}
@@ -94,88 +69,31 @@ td.td-info{min-width:160px;}
 .inf-lbl.ok       {color:rgba(255,255,255,.35);}
 .inf-num{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,255,255,.6);}
 
+/* Direction */
 td.td-dir{padding:0 18px;}
 .dir-name{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .dir-name.x{text-decoration:line-through;color:var(--muted);font-weight:400;}
 
 /* ═══ CELLULES HEURE ═══ */
 td.td-t{
-  padding:0;
-  text-align:center;
-  min-width:140px;
+  padding:0;text-align:center;min-width:140px;
   border-left:1px solid rgba(255,255,255,.08) !important;
-  overflow:hidden;
-  vertical-align:middle;
-  position:relative;
+  overflow:hidden;vertical-align:middle;position:relative;
 }
-
-/* Aucun passage */
 .t-none{font-family:'Share Tech Mono',monospace;font-size:20px;color:rgba(255,255,255,.1);}
+.t-ok{font-family:'Share Tech Mono',monospace;font-size:28px;font-weight:700;color:var(--yellow);display:block;text-align:center;}
 
-/* À l'heure — heure jaune, centrée, rien d'autre */
-.t-ok{
-  font-family:'Share Tech Mono',monospace;
-  font-size:28px;font-weight:700;color:var(--yellow);
-  display:block;text-align:center;
-}
+/* Retardée */
+td.td-t.delayed-cell{background:rgba(255,107,53,.22);border-left:2px solid var(--orange) !important;}
+.t-flip{position:relative;width:100%;height:66px;display:flex;align-items:center;justify-content:center;}
+.t-flip .va{position:absolute;font-family:'Share Tech Mono',monospace;font-size:24px;font-weight:700;color:rgba(255,255,255,.4);text-decoration:line-through;animation:va 4s ease-in-out infinite;}
+.t-flip .vb{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;animation:vb 4s ease-in-out infinite;}
+.vb-time{font-family:'Share Tech Mono',monospace;font-size:28px;font-weight:700;color:var(--orange);line-height:1;}
+.vb-badge{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;background:var(--orange);color:#fff;padding:2px 12px;border-radius:12px;letter-spacing:.03em;}
+@keyframes va{0%{opacity:1;transform:translateY(0);}35%{opacity:1;transform:translateY(0);}45%{opacity:0;transform:translateY(-8px);}65%{opacity:0;transform:translateY(0);}100%{opacity:0;}}
+@keyframes vb{0%{opacity:0;transform:translateY(8px);}35%{opacity:0;transform:translateY(0);}45%{opacity:1;transform:translateY(0);}90%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-8px);}}
 
-/* ── Cellule retardée ── */
-td.td-t.delayed-cell{
-  background:rgba(255,107,53,.22);
-  border-left:2px solid var(--orange) !important;
-}
-
-/* Conteneur flip */
-.t-flip{
-  position:relative;
-  width:100%;height:66px;
-  display:flex;align-items:center;justify-content:center;
-}
-
-/* Vue A : heure planifiée barrée */
-.t-flip .va{
-  position:absolute;
-  font-family:'Share Tech Mono',monospace;
-  font-size:24px;font-weight:700;
-  color:rgba(255,255,255,.4);
-  text-decoration:line-through;
-  animation:va 4s ease-in-out infinite;
-}
-
-/* Vue B : heure réelle + badge */
-.t-flip .vb{
-  position:absolute;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-  animation:vb 4s ease-in-out infinite;
-}
-.vb-time{
-  font-family:'Share Tech Mono',monospace;
-  font-size:28px;font-weight:700;color:var(--orange);line-height:1;
-}
-.vb-badge{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;font-weight:700;
-  background:var(--orange);color:#fff;
-  padding:2px 12px;border-radius:12px;letter-spacing:.03em;
-}
-
-@keyframes va{
-  0%  {opacity:1;transform:translateY(0);}
-  35% {opacity:1;transform:translateY(0);}
-  45% {opacity:0;transform:translateY(-8px);}
-  55% {opacity:0;transform:translateY(8px);}
-  65% {opacity:0;transform:translateY(0);}
-  100%{opacity:0;}
-}
-@keyframes vb{
-  0%  {opacity:0;transform:translateY(8px);}
-  35% {opacity:0;transform:translateY(0);}
-  45% {opacity:1;transform:translateY(0);}
-  90% {opacity:1;transform:translateY(0);}
-  100%{opacity:0;transform:translateY(-8px);}
-}
-
-/* Supprimé */
+/* Supprimée */
 td.td-t.cancelled-cell{background:rgba(228,3,46,.12);}
 .t-cancelled{font-family:'Share Tech Mono',monospace;font-size:24px;color:var(--muted);text-decoration:line-through;}
 
@@ -204,7 +122,8 @@ td.td-t.cancelled-cell{background:rgba(228,3,46,.12);}
 .dis-test-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--yellow);opacity:.55;padding:4px 14px 0;}
 .no-dis{display:flex;align-items:center;gap:8px;padding:14px 0;color:var(--green);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:.08em;}
 
-.map-frame{position:relative;width:100%;padding-top:56%;overflow:hidden;}
+/* CARTES — empilées verticalement, grandes */
+.map-frame{position:relative;width:100%;padding-top:48%;overflow:hidden;}
 .map-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
 .map-footer{padding:8px 16px;background:var(--card);border-top:1px solid var(--border);display:flex;align-items:center;gap:16px;}
 .map-lnk{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;}
@@ -248,20 +167,15 @@ td.td-t.cancelled-cell{background:rgba(228,3,46,.12);}
     <div id="dis-body" class="dis-wrap"><p style="font-size:12px;color:#5E6474;font-family:monospace">Chargement...</p></div>
   </div>
 
-  <div class="columns is-variable is-4">
-    <div class="column is-half">
-      <div class="card">
-        <div class="card-h"><span style="font-size:15px">&#128739;&#65039;</span><span class="card-t">Autoroute A8 — Trafic</span><div class="pill" style="margin-left:10px"><span class="dot"></span>Temps réel</div></div>
-        <div class="map-frame"><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d55000!2d7.35!3d43.73!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sfr!4v1!5m2!1sfr!2sfr&layer=t" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-        <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; Carte APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:12px">&#128279; Bison Futé</a></div>
-      </div>
-    </div>
-    <div class="column is-half">
-      <div class="card">
-        <div class="card-h"><span style="font-size:15px">&#128506;&#65039;</span><span class="card-t">Waze — Monaco</span><div class="pill" style="margin-left:10px"><span class="dot"></span>LIVE</div></div>
-        <div class="map-frame"><iframe src="https://embed.waze.com/iframe?zoom=14&lat=43.73916&lon=7.42653&ct=livemap" allow="geolocation" allowfullscreen loading="lazy"></iframe></div>
-      </div>
-    </div>
+  <div class="card">
+    <div class="card-h"><span style="font-size:15px">&#128739;&#65039;</span><span class="card-t">Autoroute A8 — Trafic</span><div class="pill" style="margin-left:10px"><span class="dot"></span>Temps réel</div></div>
+    <div class="map-frame"><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d55000!2d7.35!3d43.73!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sfr!4v1!5m2!1sfr!2sfr&layer=t" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+    <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; Carte APRR détaillée</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a></div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span style="font-size:15px">&#128506;&#65039;</span><span class="card-t">Waze — Monaco</span><div class="pill" style="margin-left:10px"><span class="dot"></span>LIVE</div></div>
+    <div class="map-frame"><iframe src="https://embed.waze.com/iframe?zoom=14&lat=43.73916&lon=7.42653&ct=livemap" allow="geolocation" allowfullscreen loading="lazy"></iframe></div>
   </div>
 
 </div>
@@ -288,16 +202,15 @@ function stOf(row){
 }
 var SL={cancelled:'Train supprime',delayed:'Retarde',modified:'Parcours modifie',terminus:'Terminus except.',ok:'A l\'heure'};
 
-/* Cellule heure — utilise UNIQUEMENT t.planned et t.display (strings "HH:MM") */
 function timeCell(t, rowSt){
   if(!t||typeof t!=='object'||!t.planned){
     return'<td class="td-t"><span class="t-none">—</span></td>';
   }
-  var planned = String(t.planned);
-  var display = String(t.display||t.planned);
-  var delay   = Number(t.delay)||0;
-  var isCancelled = rowSt==='cancelled';
-  var isDelayed   = delay>0 && !isCancelled;
+  var planned=String(t.planned);
+  var display=String(t.display||t.planned);
+  var delay=Number(t.delay)||0;
+  var isCancelled=rowSt==='cancelled';
+  var isDelayed=delay>0&&!isCancelled;
 
   if(isCancelled){
     return'<td class="td-t cancelled-cell"><span class="t-cancelled">'+planned+'</span></td>';
@@ -332,7 +245,7 @@ function buildRow(row){
 }
 
 function buildTable(rows){
-  if(!rows||!rows.length) return'<div class="board-msg">Aucun train trouve</div>';
+  if(!rows||!rows.length)return'<div class="board-msg">Aucun train trouve</div>';
   var h='<div class="mx-wrap"><table class="mx"><thead><tr>';
   h+='<th style="width:5px;padding:0"></th>';
   h+='<th>Etat &amp; N&#176;</th>';
@@ -347,7 +260,7 @@ function buildTable(rows){
 function loadMatrix(){
   var el=document.getElementById('matrix-body');if(!el)return;
   el.innerHTML='<div class="board-msg">Chargement...</div>';
-  fetch(W+'/matrix?count=12')
+  fetch(W+'/matrix?count=15')
     .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
     .then(function(d){
       el.innerHTML=buildTable(d.rows||[]);
