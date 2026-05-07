@@ -8,10 +8,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --red:#E4032E; --bg:#0D1016; --panel:#12151C; --card:#181B26;
-  --border:#232730; --text:#E8EAF0; --muted:#5E6474; --muted2:#42465A;
-  --yellow:#F5C518; --orange:#FF6B35; --green:#27AE60;
-  --sb-bg:#003580; --sb-head:#002460; --sb-row:#0046B8; --sb-alt:#003EA0; --sb-sep:rgba(255,255,255,.07);
+  --red:    #E4032E;
+  --bg:     #0D1016;
+  --panel:  #12151C;
+  --card:   #181B26;
+  --border: #232730;
+  --text:   #E8EAF0;
+  --muted:  #5E6474;
+  --muted2: #42465A;
+  --yellow: #F5C518;
+  --orange: #FF6B35;
+  --green:  #27AE60;
+  --sb-bg:   #003580;
+  --sb-head: #002055;
+  --sb-row:  #004AC0;
+  --sb-alt:  #0041A8;
+  --sb-sep:  rgba(255,255,255,.06);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow',sans-serif;}
@@ -37,70 +49,129 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .tbtn{background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.4);color:var(--yellow);border-radius:4px;padding:4px 14px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
 .tbtn:hover{background:rgba(245,197,24,.22);}
 
-/* MATRIX TABLE */
-.mx-wrap{overflow-x:auto;}
-.mx-wrap::-webkit-scrollbar{height:4px;}
-.mx-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-table.mx{width:100%;border-collapse:collapse;background:var(--sb-bg);}
-table.mx thead tr{background:var(--sb-head);}
-table.mx th{padding:11px 16px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);border-right:1px solid rgba(255,255,255,.06);white-space:nowrap;}
-table.mx th:last-child{border-right:none;}
-table.mx th.th-st{text-align:center;min-width:140px;color:rgba(255,255,255,.9);background:rgba(0,0,0,.18);}
-table.mx th.th-st small{display:block;font-size:9px;font-weight:400;letter-spacing:.06em;color:rgba(255,255,255,.32);margin-top:2px;}
-table.mx tbody tr{background:var(--sb-row);border-bottom:2px solid var(--sb-sep);transition:filter .1s;}
-table.mx tbody tr:nth-child(even){background:var(--sb-alt);}
-table.mx tbody tr:last-child{border-bottom:none;}
-table.mx td{padding:0 16px;height:66px;border-right:1px solid rgba(255,255,255,.05);vertical-align:middle;}
-table.mx td:last-child{border-right:none;}
+/* ═══ 4 GARES EN GRILLE 2×2 ═══ */
+.stations-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+}
+.st-panel{
+  border-right:1px solid var(--border);
+  overflow:hidden;
+}
+.st-panel:nth-child(even){border-right:none;}
+.st-panel:nth-child(1),
+.st-panel:nth-child(2){border-bottom:1px solid var(--border);}
 
-/* Barre statut */
-td.td-bar{padding:0;width:5px;}
-td.td-bar.ok      {background:var(--green);}
-td.td-bar.delayed {background:var(--orange);}
-td.td-bar.cancelled{background:var(--red);}
-td.td-bar.modified{background:var(--orange);}
+/* En-tête de gare */
+.st-head{
+  background:var(--sb-head);
+  padding:10px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.st-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.85);
+}
+.st-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:bdot 2s ease-in-out infinite;}
 
-/* Info */
-td.td-info{min-width:155px;}
-.inf-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:400;font-style:italic;color:rgba(255,255,255,.55);line-height:1;margin-bottom:3px;}
-.inf-lbl.delayed  {color:var(--orange);}
-.inf-lbl.cancelled{color:#ff8080;}
-.inf-lbl.modified {color:var(--orange);}
-.inf-lbl.ok       {color:rgba(255,255,255,.35);}
-.inf-num{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,255,255,.6);}
+/* ═══ TABLEAU TRAINS PAR GARE ═══ */
+.st-board{background:var(--sb-bg);}
+
+/* Chaque ligne train */
+.train-row{
+  display:grid;
+  grid-template-columns:5px 130px 100px 1fr 60px;
+  align-items:stretch;
+  min-height:60px;
+  border-bottom:1px solid var(--sb-sep);
+  background:var(--sb-row);
+  transition:filter .1s;
+}
+.train-row:nth-child(even){background:var(--sb-alt);}
+.train-row:last-child{border-bottom:none;}
+
+/* Barre statut gauche */
+.tr-bar{align-self:stretch;}
+.tr-bar.ok      {background:var(--green);}
+.tr-bar.delayed {background:var(--orange);}
+.tr-bar.cancelled{background:var(--red);}
+.tr-bar.modified{background:var(--orange);}
+
+/* Statut + heure */
+.tr-tc{display:flex;flex-direction:column;justify-content:center;padding:6px 10px 6px 16px;gap:2px;}
+.tr-status{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:400;font-style:italic;line-height:1;
+  color:rgba(255,255,255,.6);
+}
+.tr-status.delayed  {color:var(--orange);}
+.tr-status.cancelled{color:#ff8080;}
+.tr-status.modified {color:var(--orange);}
+.tr-status.ok       {color:rgba(255,255,255,.38);}
+
+.tr-time{
+  font-family:'Share Tech Mono',monospace;
+  font-size:26px;font-weight:700;color:var(--yellow);line-height:1;
+}
+.tr-time.cancelled{color:var(--muted);text-decoration:line-through;}
+
+/* Badge retard */
+.tr-badge-wrap{display:flex;align-items:center;justify-content:center;padding:0 8px;}
+.tr-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;
+  padding:5px 14px;border-radius:22px;white-space:nowrap;letter-spacing:.03em;
+}
+.tr-badge.big   {background:#B50020;color:#fff;}
+.tr-badge.minor {background:#C85800;color:#fff;}
+.tr-badge.gone  {background:rgba(180,0,0,.2);color:#ff8080;border:1px solid rgba(255,80,80,.3);font-size:12px;}
+.tr-badge.modif {background:#7B4000;color:#FFBB80;}
+
+/* ═══ HEURE RETARDÉE : animation flip ═══ */
+.tr-badge-wrap.delayed-cell{
+  display:flex;align-items:center;justify-content:center;
+  padding:0;
+}
+.t-flip{
+  position:relative;width:100px;height:60px;
+  display:flex;align-items:center;justify-content:center;
+}
+.t-flip .va{
+  position:absolute;
+  font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;
+  color:rgba(255,255,255,.4);text-decoration:line-through;
+  animation:va 4s ease-in-out infinite;
+}
+.t-flip .vb{
+  position:absolute;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  animation:vb 4s ease-in-out infinite;
+}
+.vb-lbl{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;background:var(--orange);color:#fff;padding:4px 12px;border-radius:16px;letter-spacing:.03em;}
+@keyframes va{0%{opacity:1;}38%{opacity:1;}48%{opacity:0;}100%{opacity:0;}}
+@keyframes vb{0%{opacity:0;}38%{opacity:0;}48%{opacity:1;}95%{opacity:1;}100%{opacity:0;}}
 
 /* Direction */
-td.td-dir{padding:0 18px;}
-.dir-name{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.dir-name.x{text-decoration:line-through;color:var(--muted);font-weight:400;}
+.tr-dest{display:flex;flex-direction:column;justify-content:center;padding:6px 12px;overflow:hidden;}
+.tr-dname{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;}
+.tr-dname.x{text-decoration:line-through;color:var(--muted);font-weight:400;}
+.tr-dsub{font-family:'Share Tech Mono',monospace;font-size:9.5px;color:rgba(255,255,255,.32);margin-top:3px;}
 
-/* ═══ CELLULES HEURE ═══ */
-td.td-t{
-  padding:0;text-align:center;min-width:140px;
-  border-left:1px solid rgba(255,255,255,.08) !important;
-  overflow:hidden;vertical-align:middle;position:relative;
-}
-.t-none{font-family:'Share Tech Mono',monospace;font-size:20px;color:rgba(255,255,255,.1);}
-.t-ok{font-family:'Share Tech Mono',monospace;font-size:28px;font-weight:700;color:var(--yellow);display:block;text-align:center;}
+/* Voie */
+.tr-voie{display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.18);padding:0 8px;}
+.tr-voie-lbl{font-size:8px;color:rgba(255,255,255,.3);font-family:'Barlow Condensed',sans-serif;letter-spacing:.07em;text-transform:uppercase;}
+.tr-voie-box{background:#fff;border-radius:5px;width:36px;height:36px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:2px;}
+.tr-voie-v{font-size:20px;font-family:'Barlow Condensed',sans-serif;font-weight:800;color:#222;line-height:1;}
+.tr-voie-box.empty{background:rgba(255,255,255,.1);}
+.tr-voie-box.empty .tr-voie-v{color:rgba(255,255,255,.2);font-size:14px;}
 
-/* Retardée */
-td.td-t.delayed-cell{background:rgba(255,107,53,.22);border-left:2px solid var(--orange) !important;}
-.t-flip{position:relative;width:100%;height:66px;display:flex;align-items:center;justify-content:center;}
-.t-flip .va{position:absolute;font-family:'Share Tech Mono',monospace;font-size:24px;font-weight:700;color:rgba(255,255,255,.4);text-decoration:line-through;animation:va 4s ease-in-out infinite;}
-.t-flip .vb{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;animation:vb 4s ease-in-out infinite;}
-.vb-time{font-family:'Share Tech Mono',monospace;font-size:28px;font-weight:700;color:var(--orange);line-height:1;}
-.vb-badge{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;background:var(--orange);color:#fff;padding:2px 12px;border-radius:12px;letter-spacing:.03em;}
-@keyframes va{0%{opacity:1;transform:translateY(0);}35%{opacity:1;transform:translateY(0);}45%{opacity:0;transform:translateY(-8px);}65%{opacity:0;transform:translateY(0);}100%{opacity:0;}}
-@keyframes vb{0%{opacity:0;transform:translateY(8px);}35%{opacity:0;transform:translateY(0);}45%{opacity:1;transform:translateY(0);}90%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-8px);}}
-
-/* Supprimée */
-td.td-t.cancelled-cell{background:rgba(228,3,46,.12);}
-.t-cancelled{font-family:'Share Tech Mono',monospace;font-size:24px;color:var(--muted);text-decoration:line-through;}
-
-.board-msg{display:flex;align-items:center;justify-content:center;padding:32px;font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,255,255,.25);background:var(--sb-bg);}
+.board-msg{display:flex;align-items:center;justify-content:center;padding:28px;font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,255,255,.22);background:var(--sb-bg);}
 .board-err{color:#ff8080 !important;}
 
-/* PERTURBATIONS */
+/* ═══ PERTURBATIONS ═══ */
 .dis-wrap{padding:14px 20px;display:flex;flex-direction:column;gap:10px;}
 .dis-item{background:var(--card);border-radius:7px;border-left:3px solid var(--yellow);overflow:hidden;}
 .dis-item.severe  {border-left-color:var(--red);}
@@ -122,8 +193,8 @@ td.td-t.cancelled-cell{background:rgba(228,3,46,.12);}
 .dis-test-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--yellow);opacity:.55;padding:4px 14px 0;}
 .no-dis{display:flex;align-items:center;gap:8px;padding:14px 0;color:var(--green);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:.08em;}
 
-/* CARTES — empilées verticalement, grandes */
-.map-frame{position:relative;width:100%;padding-top:48%;overflow:hidden;}
+/* CARTES */
+.map-frame{position:relative;width:100%;padding-top:50%;overflow:hidden;}
 .map-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
 .map-footer{padding:8px 16px;background:var(--card);border-top:1px solid var(--border);display:flex;align-items:center;gap:16px;}
 .map-lnk{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;}
@@ -147,12 +218,41 @@ td.td-t.cancelled-cell{background:rgba(228,3,46,.12);}
   <div class="card">
     <div class="card-h">
       <span style="font-size:15px">&#128642;</span>
-      <span class="card-t">SNCF — Prochains passages</span>
+      <span class="card-t">SNCF — Prochains trains</span>
       <div class="pill"><span class="dot"></span>LIVE</div>
       <span id="last-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:8px"></span>
-      <button class="rbtn" onclick="loadMatrix()">&#8635; Actualiser</button>
+      <button class="rbtn" onclick="loadBoard()">&#8635; Actualiser</button>
     </div>
-    <div id="matrix-body"><div class="board-msg">Chargement...</div></div>
+    <div class="stations-grid">
+    <div class="st-panel">
+      <div class="st-head">
+        <span class="st-name">Cannes</span>
+        <span class="st-dot"></span>
+      </div>
+      <div class="st-board" id="board-cannes"><div class="board-msg">Chargement...</div></div>
+    </div>
+    <div class="st-panel">
+      <div class="st-head">
+        <span class="st-name">Nice-Ville</span>
+        <span class="st-dot"></span>
+      </div>
+      <div class="st-board" id="board-nice"><div class="board-msg">Chargement...</div></div>
+    </div>
+    <div class="st-panel">
+      <div class="st-head">
+        <span class="st-name">Monaco</span>
+        <span class="st-dot"></span>
+      </div>
+      <div class="st-board" id="board-monaco"><div class="board-msg">Chargement...</div></div>
+    </div>
+    <div class="st-panel">
+      <div class="st-head">
+        <span class="st-name">Menton</span>
+        <span class="st-dot"></span>
+      </div>
+      <div class="st-board" id="board-menton"><div class="board-msg">Chargement...</div></div>
+    </div>
+    </div>
   </div>
 
   <div class="card">
@@ -184,92 +284,96 @@ td.td-t.cancelled-cell{background:rgba(228,3,46,.12);}
 
 var W = 'https://sncf-proxy.nicolas7lejeune.workers.dev';
 var TEST_MODE = false;
-var TEST_DATA = [{"id":"test-001","_trains":["881 134","86042"],"_stops":[{"name":"Cannes","effect":"DELAYED"},{"name":"Nice-Ville","effect":"DELAYED"},{"name":"Monaco","effect":"DELAYED"}],"_lines":["Marseille - Vintimille"],"severity":{"effect":"SIGNIFICANT_DELAYS"},"messages":[{"text":"Trafic perturbé sur la ligne Marseille - Ventimiglia. Retards de 20 à 40 min sur l'ensemble des trains de la ligne. Cause : incident technique entre Cannes et Nice-Ville.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T12:00:00","end":"2099-12-31T23:59:59"}]},{"id":"test-002","_trains":["17484"],"_stops":[{"name":"Monaco","effect":"CANCELLED"}],"_lines":[],"severity":{"effect":"NO_SERVICE"},"messages":[{"text":"Train TGV 17484 Monaco - Marseille Saint-Charles supprime ce jour. Greve du personnel de conduite.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T08:00:00","end":"2099-12-31T23:59:59"}]},{"id":"test-003","_trains":["881 227"],"_stops":[{"name":"Menton","effect":"MODIFIED"},{"name":"Monaco","effect":"MODIFIED"}],"_lines":[],"severity":{"effect":"MODIFIED_SERVICE"},"messages":[{"text":"Train ZOU ! 881 227 limite a Monaco. Bus de substitution Monaco - Menton.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T06:00:00","end":"2099-12-31T23:59:59"}]}];
-var KEYS  = ['cannes','nice','monaco','menton'];
-var NAMES = {cannes:'Cannes', nice:'Nice-Ville', monaco:'Monaco', menton:'Menton'};
+var TEST_DATA = [{"id":"test-001","_trains":["881 134"],"_stops":[{"name":"Cannes"},{"name":"Nice-Ville"},{"name":"Monaco"}],"_lines":[],"severity":{"effect":"SIGNIFICANT_DELAYS"},"messages":[{"text":"Retards importants sur la ligne Marseille - Vintimiglia. Cause : obstacle sur la voie entre Cannes et Nice-Ville. Trains retardes de 20 a 45 minutes.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T12:00:00","end":"2099-12-31T23:59:59"}]},{"id":"test-002","_trains":["17484"],"_stops":[{"name":"Monaco"}],"_lines":[],"severity":{"effect":"NO_SERVICE"},"messages":[{"text":"Train 17484 Monaco - Marseille Saint-Charles supprime. Cause : greve.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T08:00:00","end":"2099-12-31T23:59:59"}]}];
+var ORDER = ['cannes','nice','monaco','menton'];
 
+/* Clock */
 function tick(){var e=document.getElementById('clk');if(e)e.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});}
 setInterval(tick,1000);tick();
 
-function stOf(row){
-  if(row.cancelled)return'cancelled';
-  var e=(row.effect||'').toUpperCase();
-  if(e==='NO_SERVICE')return'cancelled';
-  if(e.indexOf('TERMINUS')!==-1)return'terminus';
-  if(e.indexOf('MODIFIED')!==-1||e.indexOf('REDUCED')!==-1)return'modified';
-  if(e.indexOf('DELAY')!==-1||row.delayMin>0)return'delayed';
-  return'ok';
-}
-var SL={cancelled:'Train supprime',delayed:'Retarde',modified:'Parcours modifie',terminus:'Terminus except.',ok:'A l\'heure'};
+/* Construire une ligne de train */
+function buildTrainRow(t){
+  var s = t.statusClass;
+  var out = s==='cancelled' ? ' x' : '';
 
-function timeCell(t, rowSt){
-  if(!t||typeof t!=='object'||!t.planned){
-    return'<td class="td-t"><span class="t-none">—</span></td>';
-  }
-  var planned=String(t.planned);
-  var display=String(t.display||t.planned);
-  var delay=Number(t.delay)||0;
-  var isCancelled=rowSt==='cancelled';
-  var isDelayed=delay>0&&!isCancelled;
-
-  if(isCancelled){
-    return'<td class="td-t cancelled-cell"><span class="t-cancelled">'+planned+'</span></td>';
-  }
-  if(isDelayed){
-    var h=Math.floor(delay/60),m=delay%60;
-    var lbl=h>0?'+'+h+'h'+(m<10?'0':'')+m:'+'+delay+' min';
-    return'<td class="td-t delayed-cell">'
+  /* Badge / flip */
+  var badgeHtml = '';
+  if(s==='cancelled'){
+    badgeHtml='<div class="tr-badge-wrap"><span class="tr-badge gone">Supprime</span></div>';
+  } else if(t.delayMin>0){
+    var h=Math.floor(t.delayMin/60),m=t.delayMin%60;
+    var lbl=h>0?'+'+h+'h'+(m<10?'0':'')+m:'+'+t.delayMin+' min';
+    badgeHtml='<div class="tr-badge-wrap delayed-cell">'
       +'<div class="t-flip">'
-      +'<span class="va">'+planned+'</span>'
-      +'<div class="vb"><span class="vb-time">'+display+'</span><span class="vb-badge">'+lbl+'</span></div>'
+      +'<span class="va">'+t.planned+'</span>'
+      +'<div class="vb"><span class="vb-lbl">'+lbl+'</span></div>'
       +'</div>'
-      +'</td>';
+      +'</div>';
+  } else if(s==='modified'){
+    badgeHtml='<div class="tr-badge-wrap"><span class="tr-badge modif">Modifie</span></div>';
+  } else {
+    badgeHtml='<div class="tr-badge-wrap"></div>';
   }
-  return'<td class="td-t"><span class="t-ok">'+planned+'</span></td>';
+
+  /* Voie */
+  var v = t.platform||'';
+  var voieHtml = v
+    ? '<div class="tr-voie"><span class="tr-voie-lbl">Voie</span><div class="tr-voie-box"><span class="tr-voie-v">'+v+'</span></div></div>'
+    : '<div class="tr-voie"><span class="tr-voie-lbl">Voie</span><div class="tr-voie-box empty"><span class="tr-voie-v">-</span></div></div>';
+
+  return '<div class="train-row">'
+    +'<div class="tr-bar '+s+'"></div>'
+    +'<div class="tr-tc">'
+    +  '<span class="tr-status '+s+'">'+t.statusLabel+'</span>'
+    +  '<span class="tr-time'+(s==='cancelled'?' cancelled':'')+'">'+t.planned+'</span>'
+    +'</div>'
+    +badgeHtml
+    +'<div class="tr-dest">'
+    +  '<span class="tr-dname'+out+'">'+t.direction+'</span>'
+    +  '<span class="tr-dsub">'+t.sub+'</span>'
+    +'</div>'
+    +voieHtml
+    +'</div>';
 }
 
-function buildRow(row){
-  var s=stOf(row);
-  var mode=row.commercial_mode||row.network||'';
-  var num=row.headsign||'';
-  var sub=mode&&num?mode+' | '+num:num||mode||'';
-  var dir=row.direction||'-';
-  var out=s==='cancelled'?' x':'';
-  var h='<tr>';
-  h+='<td class="td-bar '+s+'"></td>';
-  h+='<td class="td-info"><div class="inf-lbl '+s+'">'+SL[s]+'</div><div class="inf-num">'+sub+'</div></td>';
-  h+='<td class="td-dir"><div class="dir-name'+out+'">'+dir+'</div></td>';
-  KEYS.forEach(function(k){ h+=timeCell(row.times&&row.times[k], s); });
-  h+='</tr>';
-  return h;
+/* Rendre un panneau de gare */
+function renderStation(st, panelEl){
+  if(!st||!st.trains){
+    panelEl.innerHTML='<div class="board-msg board-err">Erreur</div>';
+    return;
+  }
+  if(st.error){
+    panelEl.innerHTML='<div class="board-msg board-err">'+st.error+'</div>';
+    return;
+  }
+  if(!st.trains.length){
+    panelEl.innerHTML='<div class="board-msg">Aucun train</div>';
+    return;
+  }
+  panelEl.innerHTML=st.trains.map(buildTrainRow).join('');
 }
 
-function buildTable(rows){
-  if(!rows||!rows.length)return'<div class="board-msg">Aucun train trouve</div>';
-  var h='<div class="mx-wrap"><table class="mx"><thead><tr>';
-  h+='<th style="width:5px;padding:0"></th>';
-  h+='<th>Etat &amp; N&#176;</th>';
-  h+='<th>Direction</th>';
-  KEYS.forEach(function(k){h+='<th class="th-st">'+NAMES[k]+'<small>Horaire</small></th>';});
-  h+='</tr></thead><tbody>';
-  h+=rows.map(buildRow).join('');
-  h+='</tbody></table></div>';
-  return h;
-}
-
-function loadMatrix(){
-  var el=document.getElementById('matrix-body');if(!el)return;
-  el.innerHTML='<div class="board-msg">Chargement...</div>';
-  fetch(W+'/matrix?count=15')
+/* Charger le board complet */
+function loadBoard(){
+  fetch(W+'/board?count=4')
     .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
-    .then(function(d){
-      el.innerHTML=buildTable(d.rows||[]);
-      var u=document.getElementById('last-upd');
-      if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
+    .then(function(data){
+      var upd=document.getElementById('last-upd');
+      if(upd)upd.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
+      ORDER.forEach(function(k){
+        var panel=document.getElementById('board-'+k);
+        if(panel) renderStation(data.board&&data.board[k], panel);
+      });
     })
-    .catch(function(e){el.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';});
+    .catch(function(e){
+      ORDER.forEach(function(k){
+        var panel=document.getElementById('board-'+k);
+        if(panel) panel.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';
+      });
+    });
 }
 
+/* Perturbations */
 function hdate(iso){if(!iso)return'';var d=new Date(iso);return isNaN(d)?iso:d.toLocaleString('fr-FR',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}
 
 function renderDis(list,isTest){
@@ -325,10 +429,10 @@ function loadDis(){
     .catch(function(e){document.getElementById('dis-body').innerHTML='<div class="no-dis" style="color:#ff8080">Erreur : '+e.message+'</div>';});
 }
 
-function testDis(){ TEST_MODE=true; renderDis(TEST_DATA,true); }
+function testDis(){TEST_MODE=true;renderDis(TEST_DATA,true);}
 
-loadMatrix(); loadDis();
-setInterval(function(){ loadMatrix(); if(!TEST_MODE) loadDis(); }, 60000);
+loadBoard();loadDis();
+setInterval(function(){loadBoard();if(!TEST_MODE)loadDis();},60000);
 
 </script>
 </body>
