@@ -23,10 +23,6 @@
   --sb-row:  #004AC0;
   --sb-alt:  #0041A8;
   --sb-sep:  rgba(255,255,255,.06);
-  /* Weather palette */
-  --sky-clear: #1A6BB5;
-  --sky-cloud: #2E4A6A;
-  --sky-rain:  #1E3347;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow',sans-serif;}
@@ -43,8 +39,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .tab-btn.active{background:#fff;color:var(--red);}
 .tab-btn .ti{font-size:16px;}
 .hdr-clock{font-family:'Share Tech Mono',monospace;font-size:30px;color:#fff;text-align:right;white-space:nowrap;}
-
-/* TABS */
 .tab-content{display:none;}
 .tab-content.active{display:block;}
 
@@ -70,7 +64,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .st-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.85);}
 .st-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:bdot 2s ease-in-out infinite;}
 .st-board{background:var(--sb-bg);}
-.train-row{display:grid;grid-template-columns:5px 130px 100px 1fr 60px;align-items:stretch;min-height:60px;border-bottom:1px solid var(--sb-sep);background:var(--sb-row);transition:filter .1s;}
+.train-row{display:grid;grid-template-columns:5px 130px 100px 1fr 60px;align-items:stretch;min-height:60px;border-bottom:1px solid var(--sb-sep);background:var(--sb-row);}
 .train-row:nth-child(even){background:var(--sb-alt);}
 .train-row:last-child{border-bottom:none;}
 .tr-bar{align-self:stretch;}
@@ -87,7 +81,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .tr-time{font-family:'Share Tech Mono',monospace;font-size:26px;font-weight:700;color:var(--yellow);line-height:1;}
 .tr-time.cancelled{color:var(--muted);text-decoration:line-through;}
 .tr-badge-wrap{display:flex;align-items:center;justify-content:center;padding:0 8px;}
-.tr-badge{display:inline-flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;padding:5px 14px;border-radius:22px;white-space:nowrap;letter-spacing:.03em;}
+.tr-badge{display:inline-flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;padding:5px 14px;border-radius:22px;white-space:nowrap;}
 .tr-badge.big{background:#B50020;color:#fff;}
 .tr-badge.minor{background:#C85800;color:#fff;}
 .tr-badge.gone{background:rgba(180,0,0,.2);color:#ff8080;border:1px solid rgba(255,80,80,.3);font-size:12px;}
@@ -96,7 +90,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .t-flip{position:relative;width:100px;height:60px;display:flex;align-items:center;justify-content:center;}
 .t-flip .va{position:absolute;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:rgba(255,255,255,.4);text-decoration:line-through;animation:va 4s ease-in-out infinite;}
 .t-flip .vb{position:absolute;display:flex;flex-direction:column;align-items:center;gap:3px;animation:vb 4s ease-in-out infinite;}
-.vb-lbl{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;background:var(--orange);color:#fff;padding:4px 12px;border-radius:16px;letter-spacing:.03em;}
+.vb-lbl{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;background:var(--orange);color:#fff;padding:4px 12px;border-radius:16px;}
 @keyframes va{0%{opacity:1;}38%{opacity:1;}48%{opacity:0;}100%{opacity:0;}}
 @keyframes vb{0%{opacity:0;}38%{opacity:0;}48%{opacity:1;}95%{opacity:1;}100%{opacity:0;}}
 .tr-dest{display:flex;flex-direction:column;justify-content:center;padding:6px 12px;overflow:hidden;}
@@ -138,136 +132,78 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .map-lnk.red{color:var(--red);}
 .map-lnk.muted{color:var(--muted);}
 
-/* ════════════════════════════════════════
-   WEATHER TOOL
-════════════════════════════════════════ */
+/* ════════════ WEATHER ════════════ */
 .w-wrap{max-width:1600px;margin:0 auto;padding:22px 28px 48px;}
 
-/* ── HERO Monaco ── */
+/* HERO */
 .w-hero{
-  background:linear-gradient(135deg, #0A2A5E 0%, #1A4A8A 50%, #0D3060 100%);
+  background:linear-gradient(135deg,#0A2A5E 0%,#1A4A8A 50%,#0D3060 100%);
   border:1px solid rgba(255,255,255,.1);
-  border-radius:14px;
-  padding:32px 40px;
-  margin-bottom:20px;
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:40px;
-  align-items:center;
-  position:relative;
-  overflow:hidden;
+  border-radius:14px;padding:28px 40px;margin-bottom:20px;
+  display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;
+  position:relative;overflow:hidden;
 }
-.w-hero::before{
-  content:'';
-  position:absolute;inset:0;
-  background:radial-gradient(ellipse at 80% 50%, rgba(100,180,255,.08) 0%, transparent 60%);
-  pointer-events:none;
-}
-.w-hero-left{}
-.w-hero-loc{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
-  color:rgba(255,255,255,.5);margin-bottom:6px;
-}
-.w-hero-cond{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:22px;font-weight:600;color:rgba(255,255,255,.85);
-  margin-bottom:20px;
-}
-.w-hero-meta{
-  display:flex;gap:28px;flex-wrap:wrap;
-}
-.w-meta-item{
-  display:flex;flex-direction:column;gap:2px;
-}
+.w-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(100,180,255,.08) 0%,transparent 60%);pointer-events:none;}
+.w-hero-loc{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:4px;}
+.w-hero-cond{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:18px;}
+.w-hero-meta{display:flex;gap:28px;flex-wrap:wrap;}
+.w-meta-item{display:flex;flex-direction:column;gap:2px;}
 .w-meta-label{font-size:10px;color:rgba(255,255,255,.4);font-family:'Share Tech Mono',monospace;letter-spacing:.06em;text-transform:uppercase;}
 .w-meta-val{font-family:'Share Tech Mono',monospace;font-size:15px;color:rgba(255,255,255,.85);}
+.w-hero-right{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;}
+.w-hero-icon{font-size:64px;line-height:1;filter:drop-shadow(0 4px 16px rgba(0,0,0,.3));}
+.w-hero-temp{font-family:'Share Tech Mono',monospace;font-size:72px;font-weight:700;color:#fff;line-height:1;}
+.w-hero-feels{font-size:12px;color:rgba(255,255,255,.45);font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em;margin-top:2px;}
 
-.w-hero-right{
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  text-align:center;
-}
-.w-hero-icon{font-size:72px;line-height:1;filter:drop-shadow(0 4px 16px rgba(0,0,0,.3));}
-.w-hero-temp{
-  font-family:'Share Tech Mono',monospace;
-  font-size:72px;font-weight:700;color:#fff;line-height:1;
-}
-.w-hero-feels{font-size:12px;color:rgba(255,255,255,.45);font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em;}
+/* CARDS J / J+1 — même format */
+.w-days-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
 
-/* ── TODAY / DEMAIN grid ── */
-.w-days-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
-  margin-bottom:20px;
-}
-
-/* ── Carte jour ── */
 .w-day-card{
   background:var(--panel);
   border:1px solid var(--border);
-  border-radius:10px;
-  overflow:hidden;
+  border-radius:10px;overflow:hidden;
 }
 .w-day-head{
-  padding:14px 20px 10px;
-  background:var(--card);
-  border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;height:44px;
+  background:var(--card);border-bottom:1px solid var(--border);
 }
-.w-day-title{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
-.w-day-badge{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  padding:3px 10px;border-radius:20px;
-  background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);
-  border:1px solid var(--border);
-}
+.w-day-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;}
+.w-day-meta{display:flex;align-items:center;gap:16px;}
+.w-day-minmax{font-family:'Share Tech Mono',monospace;font-size:16px;color:var(--yellow);}
+.w-day-minmax span{color:rgba(255,255,255,.35);font-size:13px;}
+.w-day-cond{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.06em;}
 
-/* Timeline horaire */
+/* Timeline — même mise en page pour J et J+1 */
 .w-timeline{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:0;
-  padding:16px 0 8px;
+  display:grid;grid-template-columns:repeat(6,1fr);
+  padding:20px 0 16px;
 }
 .w-slot{
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-  padding:8px 4px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:0 8px;
   border-right:1px solid var(--border);
 }
 .w-slot:last-child{border-right:none;}
-.w-slot-hour{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);}
-.w-slot-icon{font-size:24px;line-height:1;}
-.w-slot-temp{font-family:'Share Tech Mono',monospace;font-size:18px;font-weight:700;color:var(--yellow);}
-.w-slot-pop{font-size:10px;color:#6AB0FF;font-family:'Share Tech Mono',monospace;}
-
-/* Récap jour (J+1) */
-.w-day-summary{
-  display:grid;
-  grid-template-columns:auto 1fr;
-  gap:20px;
-  align-items:center;
-  padding:20px 24px;
+.w-slot-hour{
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px;color:var(--muted);letter-spacing:.04em;
 }
-.w-sum-icon{font-size:56px;line-height:1;}
-.w-sum-right{}
-.w-sum-cond{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:10px;}
-.w-sum-minmax{display:flex;align-items:center;gap:16px;margin-bottom:10px;}
-.w-sum-max{font-family:'Share Tech Mono',monospace;font-size:32px;font-weight:700;color:var(--yellow);}
-.w-sum-min{font-family:'Share Tech Mono',monospace;font-size:24px;color:rgba(255,255,255,.45);}
-.w-sum-sep{color:var(--border);font-size:20px;}
-.w-sum-metas{display:flex;gap:20px;flex-wrap:wrap;}
-.w-sum-meta{display:flex;flex-direction:column;gap:1px;}
-.w-sum-meta-lbl{font-size:9px;color:rgba(255,255,255,.35);font-family:'Share Tech Mono',monospace;letter-spacing:.06em;text-transform:uppercase;}
-.w-sum-meta-val{font-family:'Share Tech Mono',monospace;font-size:13px;color:rgba(255,255,255,.7);}
+.w-slot-icon{font-size:26px;line-height:1;}
+.w-slot-temp{
+  font-family:'Share Tech Mono',monospace;
+  font-size:22px;font-weight:700;color:var(--yellow);
+}
+.w-slot-pop{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;color:#6AB0FF;
+}
+.w-slot-pop.zero{color:var(--muted2);}
 
-/* ── BANDE 6 VILLES ── */
+/* ════ BANDE VILLES — sans icônes, lisible ════ */
 .w-cities-card{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:10px;
-  overflow:hidden;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;
 }
 .w-cities-head{
   padding:0 20px;height:48px;
@@ -275,34 +211,40 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   display:flex;align-items:center;gap:12px;
 }
 .w-cities-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;}
-.w-cities-source{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto;}
+.w-cities-date{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto;}
 
-.w-cities-grid{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:0;
-}
+.w-cities-grid{display:grid;grid-template-columns:repeat(6,1fr);}
+
 .w-city{
-  display:flex;flex-direction:column;align-items:center;
-  padding:20px 12px;
+  padding:18px 10px 20px;
   border-right:1px solid var(--border);
-  gap:10px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  position:relative;
 }
 .w-city:last-child{border-right:none;}
+
+/* Badge "fixe" ou "rotation" */
+.w-city-badge{
+  position:absolute;top:8px;right:8px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 6px;border-radius:10px;
+}
+.w-city-badge.fixed  {background:rgba(39,174,96,.15);color:rgba(39,174,96,.8);border:1px solid rgba(39,174,96,.25);}
+.w-city-badge.rotate {background:rgba(245,197,24,.1);color:rgba(245,197,24,.6);border:1px solid rgba(245,197,24,.2);}
+
 .w-city-name{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:rgba(255,255,255,.7);text-align:center;
+  font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.75);text-align:center;
 }
-.w-city-icon{font-size:32px;line-height:1;}
-.w-city-temps{
-  display:flex;flex-direction:column;gap:8px;width:100%;
-}
-.w-city-period{
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--border);
-  border-radius:6px;padding:8px;
+
+/* Deux colonnes matin / après-midi */
+.w-city-periods{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;}
+.w-period{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:8px;padding:10px 6px;
 }
 .w-period-lbl{
   font-family:'Barlow Condensed',sans-serif;
@@ -311,19 +253,23 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 }
 .w-period-temp{
   font-family:'Share Tech Mono',monospace;
-  font-size:20px;font-weight:700;color:var(--yellow);
+  font-size:24px;font-weight:700;color:var(--yellow);line-height:1;
 }
-.w-period-icon{font-size:16px;}
+/* Condition en texte court, pas d'icône */
+.w-period-cond{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px;color:rgba(255,255,255,.35);
+  text-align:center;letter-spacing:.02em;
+  line-height:1.2;
+}
 
 .w-loading{display:flex;align-items:center;justify-content:center;padding:48px;font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,255,255,.25);}
 .w-err{color:#ff8080;}
+.w-source{text-align:center;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted2);padding:12px;letter-spacing:.04em;}
 
-/* Source badge */
-.w-source{
-  text-align:center;
-  font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted2);
-  padding:12px;letter-spacing:.04em;
-}
+/* Rotation animation */
+.w-city.entering{animation:fadeInCity .4s ease;}
+@keyframes fadeInCity{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 </style>
 </head>
 <body>
@@ -335,8 +281,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     <span class="hdr-app-title">Studio Tools</span>
   </div>
   <div class="hdr-tabs">
-    <button class="tab-btn" id="tab-btn-trafic" onclick="switchTab('trafic')">      <span class="ti">&#128642;</span> Trafic Tool</button>
-    <button class="tab-btn" id="tab-btn-weather" onclick="switchTab('weather')">      <span class="ti">&#9928;&#65039;</span> Weather Tool</button>
+    <button class="tab-btn" id="tab-btn-trafic" onclick="switchTab('trafic')"><span class="ti">&#128642;</span> Trafic Tool</button>
+    <button class="tab-btn" id="tab-btn-weather" onclick="switchTab('weather')"><span class="ti">&#9928;&#65039;</span> Weather Tool</button>
   </div>
   <div class="hdr-clock" id="clk">--:--:--</div>
 </div>
@@ -401,17 +347,16 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     <div class="w-days-grid">
       <div class="w-day-card">
         <div class="w-day-head">
-          <span class="w-day-title">&#128197; Aujourd'hui</span>
-          <span class="w-day-badge" id="w-today-label">...</span>
+          <span class="w-day-title" id="w-today-title">&#128197; Aujourd'hui</span>
+          <div class="w-day-meta" id="w-today-meta"></div>
         </div>
         <div id="w-today-timeline"><div class="w-loading">Chargement...</div></div>
       </div>
       <div class="w-day-card">
         <div class="w-day-head">
-          <span class="w-day-title">&#128198; Demain (J+1)</span>
-          <span class="w-day-badge" id="w-tomorrow-label">...</span>
+          <span class="w-day-title" id="w-tomorrow-title">&#128198; Demain (J+1)</span>
+          <div class="w-day-meta" id="w-tomorrow-meta"></div>
         </div>
-        <div id="w-tomorrow-body"><div class="w-loading">Chargement...</div></div>
         <div id="w-tomorrow-timeline"><div class="w-loading">Chargement...</div></div>
       </div>
     </div>
@@ -419,45 +364,37 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     <div class="w-cities-card">
       <div class="w-cities-head">
         <span style="font-size:15px">&#127961;&#65039;</span>
-        <span class="w-cities-title">Alpes-Maritimes — Demain matin &amp; après-midi</span>
-        <span class="w-cities-source">Source : Open-Meteo (ECMWF)</span>
+        <span class="w-cities-title">Alpes-Maritimes — Prévisions J+1</span>
+        <span class="w-cities-date" id="w-cities-date"></span>
       </div>
-      <div id="w-cities-body"><div class="w-loading">Chargement des villes...</div></div>
+      <div id="w-cities-body"><div class="w-loading">Chargement...</div></div>
     </div>
 
-    <div class="w-source">Météo fournie par Open-Meteo.com &mdash; Modèle ECMWF (même source que Météo-France) &mdash; Actualisation toutes les 5 min</div>
+    <div class="w-source">Open-Meteo.com — Modèle ECMWF (même base que Météo-France) — Actualisation toutes les 5 min &mdash; &#9679; fixe &nbsp; &#8635; rotation</div>
 
   </div>
 </div>
 
 <script>
 
-/* ═══════════════════════════════════════════
-   TABS
-═══════════════════════════════════════════ */
-var traficLoaded = false;
-var weatherLoaded = false;
-
+/* ═══ TABS ═══ */
+var traficLoaded=false, weatherLoaded=false;
 function switchTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
   document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
   document.getElementById('tab-btn-'+name).classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
-  if(name==='trafic'&&!traficLoaded){ loadBoard(); loadDis(); traficLoaded=true; }
-  if(name==='weather'&&!weatherLoaded){ loadWeather(); weatherLoaded=true; }
+  if(name==='trafic'&&!traficLoaded){loadBoard();loadDis();traficLoaded=true;}
+  if(name==='weather'&&!weatherLoaded){loadWeather();weatherLoaded=true;}
 }
-
-/* Clock */
 function tick(){var e=document.getElementById('clk');if(e)e.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});}
 setInterval(tick,1000);tick();
 
-/* ═══════════════════════════════════════════
-   TRAFIC
-═══════════════════════════════════════════ */
-var W = 'https://sncf-proxy.nicolas7lejeune.workers.dev';
-var TEST_MODE = false;
-var TEST_DATA = [{"id":"test-001","_trains":["881 134"],"_stops":[{"name":"Cannes"},{"name":"Nice-Ville"},{"name":"Monaco"}],"_lines":[],"severity":{"effect":"SIGNIFICANT_DELAYS"},"messages":[{"text":"Retards importants sur la ligne Marseille - Vintimiglia. Cause : obstacle sur la voie entre Cannes et Nice-Ville. Trains retardes de 20 a 45 minutes.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T12:00:00","end":"2099-12-31T23:59:59"}]},{"id":"test-002","_trains":["17484"],"_stops":[{"name":"Monaco"}],"_lines":[],"severity":{"effect":"NO_SERVICE"},"messages":[{"text":"Train 17484 Monaco - Marseille Saint-Charles supprime. Cause : greve.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T08:00:00","end":"2099-12-31T23:59:59"}]}];
-var ORDER = ['cannes','nice','monaco','menton'];
+/* ═══ TRAFIC ═══ */
+var W='https://sncf-proxy.nicolas7lejeune.workers.dev';
+var TEST_MODE=false;
+var TEST_DATA=[{"id":"test-001","_trains":["881 134"],"_stops":[{"name":"Cannes"},{"name":"Nice-Ville"},{"name":"Monaco"}],"_lines":[],"severity":{"effect":"SIGNIFICANT_DELAYS"},"messages":[{"text":"Retards importants sur la ligne Marseille - Vintimiglia. Retards de 20 a 45 minutes.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T12:00:00","end":"2099-12-31T23:59:59"}]},{"id":"test-002","_trains":["17484"],"_stops":[{"name":"Monaco"}],"_lines":[],"severity":{"effect":"NO_SERVICE"},"messages":[{"text":"Train 17484 Monaco - Marseille Saint-Charles supprime. Greve.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T08:00:00","end":"2099-12-31T23:59:59"}]}];
+var ORDER=['cannes','nice','monaco','menton'];
 
 function buildTrainRow(t){
   var s=t.statusClass,out=s==='cancelled'?' x':'';
@@ -479,13 +416,11 @@ function buildTrainRow(t){
     +bdg+'<div class="tr-dest"><span class="tr-dname'+out+'">'+t.direction+'</span>'
     +'<span class="tr-dsub">'+t.sub+'</span></div>'+voie+'</div>';
 }
-
 function renderStation(st,el){
   if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}
   if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}
   el.innerHTML=st.trains.map(buildTrainRow).join('');
 }
-
 function loadBoard(){
   fetch(W+'/board?count=4')
     .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
@@ -495,9 +430,7 @@ function loadBoard(){
     })
     .catch(function(e){ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)p.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';});});
 }
-
 function hdate(iso){if(!iso)return'';var d=new Date(iso);return isNaN(d)?iso:d.toLocaleString('fr-FR',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}
-
 function renderDis(list,isTest){
   var el=document.getElementById('dis-body');if(!el)return;
   var cEl=document.getElementById('dis-count');
@@ -546,85 +479,79 @@ function loadDis(){
 }
 function testDis(){TEST_MODE=true;renderDis(TEST_DATA,true);}
 
-/* ═══════════════════════════════════════════
-   WEATHER — Open-Meteo (ECMWF, sans clé)
-═══════════════════════════════════════════ */
-var MONACO = {lat:43.7384, lon:7.4246, name:'Monaco'};
-var CITIES  = [{"name": "Nice", "lat": 43.7102, "lon": 7.262}, {"name": "Cannes", "lat": 43.5528, "lon": 7.0174}, {"name": "Antibes", "lat": 43.5808, "lon": 7.1239}, {"name": "Menton", "lat": 43.7765, "lon": 7.4973}, {"name": "Grasse", "lat": 43.6585, "lon": 6.9224}, {"name": "St-Martin-V\u00e9subie", "lat": 44.0663, "lon": 7.2526}];
+/* ═══ WEATHER ═══ */
+var REGION  = {"lat": 43.7102, "lon": 7.262, "name": "C\u00f4te d'Azur"};
+var FIXED   = [{"name": "Nice", "lat": 43.7102, "lon": 7.262}, {"name": "Cannes", "lat": 43.5528, "lon": 7.0174}, {"name": "Menton", "lat": 43.7765, "lon": 7.4973}];
+var ROTATING= [{"name": "Antibes", "lat": 43.5808, "lon": 7.1239}, {"name": "Grasse", "lat": 43.6585, "lon": 6.9224}, {"name": "St-Martin-V\u00e9subie", "lat": 44.0663, "lon": 7.2526}, {"name": "Vence", "lat": 43.7224, "lon": 7.1133}, {"name": "Mougins", "lat": 43.6, "lon": 7.0}, {"name": "Sospel", "lat": 43.8783, "lon": 7.4499}, {"name": "Beaulieu-sur-Mer", "lat": 43.7065, "lon": 7.3283}, {"name": "Roquebrune", "lat": 43.7704, "lon": 7.4694}, {"name": "Vallauris", "lat": 43.58, "lon": 7.054}];
 
-/* WMO weather code → emoji + label fr */
-function wmoInfo(code){
+/* WMO → emoji + label court */
+function wmo(code){
   var c=Number(code);
-  if(c===0)  return{icon:'☀️',  label:'Ciel dégagé'};
-  if(c===1)  return{icon:'🌤️', label:'Peu nuageux'};
-  if(c===2)  return{icon:'⛅',  label:'Partiellement nuageux'};
-  if(c===3)  return{icon:'☁️',  label:'Couvert'};
-  if(c<=48)  return{icon:'🌫️', label:'Brouillard'};
-  if(c<=55)  return{icon:'🌦️', label:'Bruine'};
-  if(c<=65)  return{icon:'🌧️', label:'Pluie'};
-  if(c<=75)  return{icon:'❄️',  label:'Neige'};
-  if(c<=77)  return{icon:'🌨️', label:'Grésil'};
-  if(c<=82)  return{icon:'🌦️', label:'Averses'};
-  if(c<=86)  return{icon:'🌨️', label:'Averses de neige'};
-  if(c===95) return{icon:'⛈️',  label:'Orage'};
-  return      {icon:'⛈️',       label:'Orage violent'};
+  if(c===0)  return{icon:'☀️', short:'Ensoleillé'};
+  if(c===1)  return{icon:'🌤️',short:'Peu nuageux'};
+  if(c===2)  return{icon:'⛅', short:'Mi-nuageux'};
+  if(c===3)  return{icon:'☁️', short:'Couvert'};
+  if(c<=48)  return{icon:'🌫️',short:'Brouillard'};
+  if(c<=55)  return{icon:'🌦️',short:'Bruine'};
+  if(c<=65)  return{icon:'🌧️',short:'Pluie'};
+  if(c<=75)  return{icon:'❄️', short:'Neige'};
+  if(c<=77)  return{icon:'🌨️',short:'Grésil'};
+  if(c<=82)  return{icon:'🌦️',short:'Averses'};
+  if(c<=86)  return{icon:'🌨️',short:'Neige'};
+  if(c===95) return{icon:'⛈️', short:'Orage'};
+  return      {icon:'⛈️',      short:'Orage'};
 }
 
-function windDir(deg){
-  var dirs=['N','NE','E','SE','S','SO','O','NO'];
-  return dirs[Math.round(deg/45)%8];
+function windDir(deg){return['N','NE','E','SE','S','SO','O','NO'][Math.round(deg/45)%8];}
+
+function hourIdx(times,dayOff,hr){
+  var base=new Date();base.setHours(0,0,0,0);base.setDate(base.getDate()+dayOff);
+  var target=base.getTime()+hr*3600000;
+  for(var i=0;i<times.length;i++){if(new Date(times[i]).getTime()===target)return i;}
+  return-1;
 }
 
-/* Fetch Open-Meteo pour Monaco (complet) */
-function fetchMonaco(){
+function dayLabel(off){
+  var d=new Date();d.setDate(d.getDate()+off);
+  var days=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  var months=['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  return days[d.getDay()]+' '+d.getDate()+' '+months[d.getMonth()];
+}
+
+/* Fetch région (Côte d'Azur) */
+function fetchRegion(){
   var url='https://api.open-meteo.com/v1/forecast'
-    +'?latitude='+MONACO.lat+'&longitude='+MONACO.lon
+    +'?latitude='+REGION.lat+'&longitude='+REGION.lon
     +'&hourly=temperature_2m,precipitation_probability,weathercode,windspeed_10m,relativehumidity_2m'
-    +'&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_sum,windspeed_10m_max,precipitation_probability_max,winddirection_10m_dominant'
+    +'&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_sum,windspeed_10m_max,precipitation_probability_max'
     +'&current_weather=true'
-    +'&timezone=Europe%2FParis'
-    +'&forecast_days=2';
+    +'&timezone=Europe%2FParis&forecast_days=2';
   return fetch(url).then(function(r){return r.json();});
 }
 
-/* Fetch Open-Meteo pour une ville (léger) */
+/* Fetch ville légère (J+1 seulement) */
 function fetchCity(city){
   var url='https://api.open-meteo.com/v1/forecast'
     +'?latitude='+city.lat+'&longitude='+city.lon
     +'&hourly=temperature_2m,weathercode'
-    +'&timezone=Europe%2FParis'
-    +'&forecast_days=2';
+    +'&timezone=Europe%2FParis&forecast_days=2';
   return fetch(url).then(function(r){return r.json();}).then(function(d){return{city:city,data:d};});
 }
 
-/* Trouver l'index horaire pour une heure donnée (HH) sur un jour (0=auj, 1=dem) */
-function hourIdx(times, dayOffset, targetHour){
-  for(var i=0;i<times.length;i++){
-    var t=new Date(times[i]);
-    if(t.getDate()===(new Date().getDate()+dayOffset) && t.getHours()===targetHour) return i;
-  }
-  return -1;
-}
-
-/* Rendu du hero Monaco */
-function renderMonacoHero(d){
+/* Hero */
+function renderHero(d){
+  var el=document.getElementById('w-hero');if(!el)return;
   var cw=d.current_weather||{};
-  var info=wmoInfo(cw.weathercode);
-  var h=document.getElementById('w-hero');
-  if(!h)return;
-
-  /* Chercher humidité et précip proba à l'heure courante */
+  var info=wmo(cw.weathercode);
+  var hTimes=(d.hourly&&d.hourly.time)||[];
   var nowH=new Date().getHours();
-  var hTimes=d.hourly&&d.hourly.time||[];
   var idx=hourIdx(hTimes,0,nowH);
-  var humidity = idx>=0 && d.hourly.relativehumidity_2m ? d.hourly.relativehumidity_2m[idx]+'%' : '-';
-  var pop      = idx>=0 && d.hourly.precipitation_probability ? d.hourly.precipitation_probability[idx]+'%' : '-';
-  var feelsLike= Math.round(cw.temperature)+'°'; /* approximation sans feels_like */
-
-  h.innerHTML=
+  var humidity=idx>=0&&d.hourly.relativehumidity_2m?d.hourly.relativehumidity_2m[idx]+'%':'—';
+  var pop=idx>=0&&d.hourly.precipitation_probability?d.hourly.precipitation_probability[idx]+'%':'—';
+  el.innerHTML=
     '<div class="w-hero-left">'
-    +'<div class="w-hero-loc">&#128205; Monaco &mdash; Principauté</div>'
-    +'<div class="w-hero-cond">'+info.label+'</div>'
+    +'<div class="w-hero-loc">&#127757; '+REGION.name+'</div>'
+    +'<div class="w-hero-cond">'+info.icon+' '+info.short+'</div>'
     +'<div class="w-hero-meta">'
     +'<div class="w-meta-item"><span class="w-meta-label">Vent</span><span class="w-meta-val">'+Math.round(cw.windspeed)+' km/h '+windDir(cw.winddirection||0)+'</span></div>'
     +'<div class="w-meta-item"><span class="w-meta-label">Humidité</span><span class="w-meta-val">'+humidity+'</span></div>'
@@ -634,169 +561,159 @@ function renderMonacoHero(d){
     +'<div class="w-hero-right">'
     +'<div class="w-hero-icon">'+info.icon+'</div>'
     +'<div class="w-hero-temp">'+Math.round(cw.temperature)+'°</div>'
-    +'<div class="w-hero-feels">Ressenti '+feelsLike+'</div>'
+    +'<div class="w-hero-feels">'+REGION.name+'</div>'
     +'</div>';
 }
 
-/* Rendu timeline horaire d'un jour */
-function renderTimeline(d, dayOffset, containerId){
+/* Timeline — même format pour J et J+1 */
+function renderTimeline(d,dayOff,containerId){
   var el=document.getElementById(containerId);if(!el)return;
   var hours=[7,10,13,16,19,22];
-  var hTimes=d.hourly&&d.hourly.time||[];
+  var hTimes=(d.hourly&&d.hourly.time)||[];
   var html='<div class="w-timeline">';
   hours.forEach(function(hr){
-    var idx=hourIdx(hTimes,dayOffset,hr);
-    var temp= idx>=0 ? Math.round(d.hourly.temperature_2m[idx])+'°' : '-';
-    var code= idx>=0 ? d.hourly.weathercode[idx] : 0;
-    var pop=  idx>=0 && d.hourly.precipitation_probability ? d.hourly.precipitation_probability[idx]+'%' : '';
-    var info=wmoInfo(code);
+    var idx=hourIdx(hTimes,dayOff,hr);
+    var temp=idx>=0?Math.round(d.hourly.temperature_2m[idx])+'°':'—';
+    var code=idx>=0?d.hourly.weathercode[idx]:0;
+    var pop=idx>=0&&d.hourly.precipitation_probability?d.hourly.precipitation_probability[idx]:0;
+    var info=wmo(code);
+    var popCls=pop>0?'':'zero';
     html+='<div class="w-slot">'
       +'<span class="w-slot-hour">'+(hr<10?'0':'')+hr+'h</span>'
       +'<span class="w-slot-icon">'+info.icon+'</span>'
       +'<span class="w-slot-temp">'+temp+'</span>'
-      +(pop?'<span class="w-slot-pop">'+pop+'</span>':'')
+      +'<span class="w-slot-pop '+popCls+'">'+pop+'%</span>'
       +'</div>';
   });
   html+='</div>';
   el.innerHTML=html;
 }
 
-/* Rendu récap J+1 */
-function renderTomorrow(d){
-  var el=document.getElementById('w-tomorrow-body');if(!el)return;
+/* Entête des cards jour */
+function updateDayHead(d,dayOff,titleId,metaId){
+  var tEl=document.getElementById(titleId);
+  var mEl=document.getElementById(metaId);
   var daily=d.daily||{};
-  var idx=1; /* demain */
-  var maxT=daily.temperature_2m_max&&daily.temperature_2m_max[idx]!==undefined?Math.round(daily.temperature_2m_max[idx])+'°':'-';
-  var minT=daily.temperature_2m_min&&daily.temperature_2m_min[idx]!==undefined?Math.round(daily.temperature_2m_min[idx])+'°':'-';
-  var code=daily.weathercode&&daily.weathercode[idx]||0;
-  var info=wmoInfo(code);
-  var precip=daily.precipitation_sum&&daily.precipitation_sum[idx]!==undefined?daily.precipitation_sum[idx]+' mm':'-';
-  var wind=daily.windspeed_10m_max&&daily.windspeed_10m_max[idx]!==undefined?Math.round(daily.windspeed_10m_max[idx])+' km/h':'-';
-  var pop=daily.precipitation_probability_max&&daily.precipitation_probability_max[idx]!==undefined?daily.precipitation_probability_max[idx]+'%':'-';
-
-  el.innerHTML='<div class="w-day-summary">'
-    +'<div class="w-sum-icon">'+info.icon+'</div>'
-    +'<div class="w-sum-right">'
-    +'<div class="w-sum-cond">'+info.label+'</div>'
-    +'<div class="w-sum-minmax">'
-    +'<span class="w-sum-max">'+maxT+'</span>'
-    +'<span class="w-sum-sep">/</span>'
-    +'<span class="w-sum-min">'+minT+'</span>'
-    +'</div>'
-    +'<div class="w-sum-metas">'
-    +'<div class="w-sum-meta"><span class="w-sum-meta-lbl">Pluie</span><span class="w-sum-meta-val">'+pop+'</span></div>'
-    +'<div class="w-sum-meta"><span class="w-sum-meta-lbl">Précip.</span><span class="w-sum-meta-val">'+precip+'</span></div>'
-    +'<div class="w-sum-meta"><span class="w-sum-meta-lbl">Vent max</span><span class="w-sum-meta-val">'+wind+'</span></div>'
-    +'</div>'
-    +'</div>'
-    +'</div>';
+  var maxT=daily.temperature_2m_max&&daily.temperature_2m_max[dayOff]!==undefined?Math.round(daily.temperature_2m_max[dayOff])+'°':'—';
+  var minT=daily.temperature_2m_min&&daily.temperature_2m_min[dayOff]!==undefined?Math.round(daily.temperature_2m_min[dayOff])+'°':'—';
+  var code=daily.weathercode&&daily.weathercode[dayOff]||0;
+  var info=wmo(code);
+  if(tEl) tEl.textContent=(dayOff===0?'📅 Aujourd\'hui':'📆 Demain (J+1)')+' — '+dayLabel(dayOff);
+  if(mEl) mEl.innerHTML='<span class="w-day-minmax">'+maxT+'<span> / </span>'+minT+'</span>'
+    +'<span class="w-day-cond">'+info.icon+' '+info.short+'</span>';
 }
 
-/* Nom du jour */
-function dayName(offset){
-  var days=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
-  var d=new Date();d.setDate(d.getDate()+offset);
-  return days[d.getDay()]+' '+d.getDate()+' '+'Jan.Fév.Mars Avr.Mai Juin Juil.Août Sep.Oct.Nov.Déc.'.split('.')[d.getMonth()];
+/* Bande 6 villes — J+1, sans icônes, avec label court */
+var currentRotating=[];
+var rotatingPool=ROTATING.slice();
+var rotatingIdx=0;
+
+function pickRotating(){
+  /* Choisit 3 villes en rotation séquentielle */
+  var picks=[];
+  for(var i=0;i<3;i++){
+    picks.push(rotatingPool[rotatingIdx%rotatingPool.length]);
+    rotatingIdx++;
+  }
+  return picks;
 }
 
-/* Rendu bande 6 villes */
-function renderCities(results){
+function renderCities(results,rotating){
   var el=document.getElementById('w-cities-body');if(!el)return;
+
+  /* Reconstituer l'ordre : fixed[0], fixed[1], rotating[0], fixed[2], rotating[1], rotating[2] */
+  var slots=[
+    {data:results[0],fixed:true},
+    {data:results[1],fixed:true},
+    {data:rotating[0],fixed:false},
+    {data:results[2],fixed:true},
+    {data:rotating[1],fixed:false},
+    {data:rotating[2],fixed:false},
+  ];
+
   var html='<div class="w-cities-grid">';
-  results.forEach(function(res){
+  slots.forEach(function(slot){
+    var res=slot.data;
+    if(!res){html+='<div class="w-city"><div class="w-city-name">—</div></div>';return;}
     var city=res.city;
     var d=res.data;
-    var hTimes=d.hourly&&d.hourly.time||[];
+    var hTimes=(d.hourly&&d.hourly.time)||[];
 
-    /* Matin = 9h, Après-midi = 15h — J+1 */
     var idxM=hourIdx(hTimes,1,9);
     var idxA=hourIdx(hTimes,1,15);
-    var tempM=idxM>=0?Math.round(d.hourly.temperature_2m[idxM])+'°':'-';
-    var tempA=idxA>=0?Math.round(d.hourly.temperature_2m[idxA])+'°':'-';
+    var tempM=idxM>=0?Math.round(d.hourly.temperature_2m[idxM])+'°':'—';
+    var tempA=idxA>=0?Math.round(d.hourly.temperature_2m[idxA])+'°':'—';
     var codeM=idxM>=0?d.hourly.weathercode[idxM]:0;
     var codeA=idxA>=0?d.hourly.weathercode[idxA]:0;
-    var infoM=wmoInfo(codeM);
-    var infoA=wmoInfo(codeA);
+    var condM=wmo(codeM).short;
+    var condA=wmo(codeA).short;
 
-    /* Icône représentative de la journée (code 12h) */
-    var idx12=hourIdx(hTimes,1,12);
-    var dayIcon=idx12>=0?wmoInfo(d.hourly.weathercode[idx12]).icon:infoM.icon;
+    var badgeCls=slot.fixed?'fixed':'rotate';
+    var badgeTxt=slot.fixed?'●':'↻';
 
-    html+='<div class="w-city">'
+    html+='<div class="w-city entering">'
+      +'<span class="w-city-badge '+badgeCls+'">'+badgeTxt+'</span>'
       +'<div class="w-city-name">'+city.name+'</div>'
-      +'<div class="w-city-icon">'+dayIcon+'</div>'
-      +'<div class="w-city-temps">'
-      +'<div class="w-city-period">'
+      +'<div class="w-city-periods">'
+      +'<div class="w-period">'
       +'<span class="w-period-lbl">Matin</span>'
-      +'<span class="w-period-icon">'+infoM.icon+'</span>'
       +'<span class="w-period-temp">'+tempM+'</span>'
+      +'<span class="w-period-cond">'+condM+'</span>'
       +'</div>'
-      +'<div class="w-city-period">'
+      +'<div class="w-period">'
       +'<span class="w-period-lbl">Après-midi</span>'
-      +'<span class="w-period-icon">'+infoA.icon+'</span>'
       +'<span class="w-period-temp">'+tempA+'</span>'
+      +'<span class="w-period-cond">'+condA+'</span>'
       +'</div>'
       +'</div>'
       +'</div>';
   });
   html+='</div>';
   el.innerHTML=html;
+
+  /* MAJ date */
+  var dEl=document.getElementById('w-cities-date');
+  if(dEl){var d=new Date();d.setDate(d.getDate()+1);dEl.textContent='Demain — '+d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});}
 }
 
-/* Chargement complet weather */
 function loadWeather(){
-  /* Hero */
   var heroEl=document.getElementById('w-hero');
-  if(heroEl)heroEl.innerHTML='<div class="w-loading">Chargement météo Monaco...</div>';
-
-  /* Timeline aujourd'hui */
-  var todayEl=document.getElementById('w-today-timeline');
-  if(todayEl)todayEl.innerHTML='<div class="w-loading">Chargement...</div>';
-
-  /* Timeline demain */
-  var tomEl=document.getElementById('w-tomorrow-timeline');
-  if(tomEl)tomEl.innerHTML='<div class="w-loading">Chargement...</div>';
-
-  /* Récap demain */
-  var tomBodyEl=document.getElementById('w-tomorrow-body');
-  if(tomBodyEl)tomBodyEl.innerHTML='<div class="w-loading">Chargement...</div>';
-
-  /* Cities */
+  if(heroEl)heroEl.innerHTML='<div class="w-loading">Chargement météo régionale...</div>';
   var citiesEl=document.getElementById('w-cities-body');
   if(citiesEl)citiesEl.innerHTML='<div class="w-loading">Chargement des villes...</div>';
 
-  /* 1. Monaco complet */
-  fetchMonaco()
-    .then(function(d){
-      renderMonacoHero(d);
-      renderTimeline(d,0,'w-today-timeline');
-      renderTimeline(d,1,'w-tomorrow-timeline');
-      renderTomorrow(d);
-    })
-    .catch(function(e){
-      if(heroEl)heroEl.innerHTML='<div class="w-loading w-err">Erreur météo : '+e.message+'</div>';
-    });
+  var rotating=pickRotating();
 
-  /* 2. 6 villes en parallèle */
-  Promise.allSettled(CITIES.map(fetchCity))
-    .then(function(results){
-      var valid=results.filter(function(r){return r.status==='fulfilled';}).map(function(r){return r.value;});
-      renderCities(valid);
-    })
-    .catch(function(e){
-      if(citiesEl)citiesEl.innerHTML='<div class="w-loading w-err">Erreur : '+e.message+'</div>';
-    });
+  /* Région */
+  fetchRegion().then(function(d){
+    renderHero(d);
+    updateDayHead(d,0,'w-today-title','w-today-meta');
+    updateDayHead(d,1,'w-tomorrow-title','w-tomorrow-meta');
+    renderTimeline(d,0,'w-today-timeline');
+    renderTimeline(d,1,'w-tomorrow-timeline');
+  }).catch(function(e){
+    if(heroEl)heroEl.innerHTML='<div class="w-loading w-err">Erreur : '+e.message+'</div>';
+  });
+
+  /* Fixed + rotating en parallèle */
+  var allCities=FIXED.concat(rotating);
+  Promise.allSettled(allCities.map(fetchCity)).then(function(results){
+    var valid=results.map(function(r){return r.status==='fulfilled'?r.value:null;});
+    renderCities(valid.slice(0,3), valid.slice(3));
+  });
 }
 
 /* Init */
 switchTab('trafic');
+
+/* Auto-refresh */
+setInterval(function(){if(traficLoaded){loadBoard();if(!TEST_MODE)loadDis();}},60000);
 setInterval(function(){
-  if(traficLoaded){loadBoard();if(!TEST_MODE)loadDis();}
-  if(weatherLoaded){loadWeather();}
-},300000); /* refresh météo toutes les 5 min */
-setInterval(function(){
-  if(traficLoaded){loadBoard();if(!TEST_MODE)loadDis();}
-},60000);
+  if(weatherLoaded){
+    rotatingIdx+=3; /* avancer dans le pool à chaque refresh */
+    loadWeather();
+  }
+},300000);
 
 </script>
 </body>
