@@ -39,70 +39,57 @@ body { background:var(--bg); color:var(--text); min-height:100vh; font-family:'B
 /* LAYOUT */
 .wrap { max-width:1600px; margin:0 auto; padding:22px 28px 48px; }
 .card { background:var(--panel); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:20px; }
-.card-h { display:flex; align-items:center; gap:12px; padding:0 20px; height:48px; background:var(--card); border-bottom:1px solid var(--border); flex-shrink:0; }
+.card-h { display:flex; align-items:center; gap:12px; padding:0 20px; height:48px; background:var(--card); border-bottom:1px solid var(--border); }
 .card-t { font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
 .pill { display:flex; align-items:center; gap:5px; background:rgba(39,174,96,.1); border:1px solid rgba(39,174,96,.3); border-radius:20px; padding:2px 9px; font-size:10px; color:var(--green); font-family:'Share Tech Mono',monospace; white-space:nowrap; }
-.dot  { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 2s ease-in-out infinite; }
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+.dot  { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink-dot 2s ease-in-out infinite; }
+@keyframes blink-dot{0%,100%{opacity:1}50%{opacity:.15}}
 .rbtn { margin-left:auto; background:transparent; border:1px solid var(--border); color:var(--muted); border-radius:4px; padding:4px 14px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; }
 .rbtn:hover { border-color:var(--red); color:var(--red); }
-.tbtn { background:rgba(245,197,24,.12); border:1px solid rgba(245,197,24,.4); color:var(--yellow); border-radius:4px; padding:4px 14px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; }
+.tbtn { background:rgba(245,197,24,.12); border:1px solid rgba(245,197,24,.4); color:var(--yellow); border-radius:4px; padding:4px 14px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; }
 .tbtn:hover { background:rgba(245,197,24,.22); }
 
-/* ═══════════════════════════════════
-   MATRIX TABLE — train x gare
-═══════════════════════════════════ */
+/* ═══════ MATRIX TABLE ═══════ */
 .matrix-wrap { overflow-x:auto; }
+.matrix-wrap::-webkit-scrollbar { height:4px; }
+.matrix-wrap::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 
-table.matrix {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--sb-bg);
+table.mx {
+  width:100%; border-collapse:collapse; background:var(--sb-bg);
 }
 
-/* En-tête */
-table.matrix thead tr {
-  background: var(--sb-head);
+/* Header */
+table.mx thead tr { background:var(--sb-head); }
+table.mx th {
+  padding:10px 14px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+  border-right:1px solid rgba(255,255,255,.06);
+  white-space:nowrap;
 }
-table.matrix th {
-  padding: 10px 14px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px; font-weight: 700;
-  letter-spacing: .18em; text-transform: uppercase;
-  color: rgba(255,255,255,.55);
-  border-right: 1px solid rgba(255,255,255,.07);
-  white-space: nowrap;
+table.mx th:last-child { border-right:none; }
+table.mx th.th-st {
+  color:rgba(255,255,255,.85);
+  background:rgba(0,0,0,.18);
+  text-align:center; min-width:130px;
 }
-table.matrix th:last-child { border-right:none; }
-
-/* Colonnes gares : accent bleu clair */
-table.matrix th.th-station {
-  color: rgba(255,255,255,.8);
-  background: rgba(0,0,0,.15);
-  text-align: center;
-  min-width: 110px;
+table.mx th.th-st small {
+  display:block; font-size:9px; font-weight:400;
+  letter-spacing:.05em; color:rgba(255,255,255,.35); margin-top:1px;
 }
 
-/* Lignes */
-table.matrix tbody tr {
-  border-bottom: 2px solid var(--sb-sep);
-  background: var(--sb-row);
-  transition: filter .12s;
-}
-table.matrix tbody tr:nth-child(even) { background:var(--sb-alt); }
-table.matrix tbody tr:hover { filter:brightness(1.1); }
-table.matrix tbody tr:last-child { border-bottom:none; }
+/* Rows */
+table.mx tbody tr { background:var(--sb-row); border-bottom:2px solid var(--sb-sep); transition:filter .1s; }
+table.mx tbody tr:nth-child(even) { background:var(--sb-alt); }
+table.mx tbody tr:hover { filter:brightness(1.08); }
+table.mx tbody tr:last-child { border-bottom:none; }
 
-/* Cellules générales */
-table.matrix td {
-  padding: 0 14px;
-  height: 62px;
-  border-right: 1px solid rgba(255,255,255,.06);
-  vertical-align: middle;
-}
-table.matrix td:last-child { border-right:none; }
+/* Cells */
+table.mx td { padding:0 14px; height:64px; border-right:1px solid rgba(255,255,255,.05); vertical-align:middle; }
+table.mx td:last-child { border-right:none; }
 
-/* Barre statut (1ère colonne très fine) */
+/* Barre statut */
 td.td-bar { padding:0; width:5px; }
 td.td-bar.ok       { background:var(--green); }
 td.td-bar.delayed  { background:var(--orange); }
@@ -110,88 +97,126 @@ td.td-bar.cancelled{ background:var(--red); }
 td.td-bar.modified { background:var(--orange); }
 
 /* Statut + numéro */
-td.td-status { min-width:160px; }
-.st-lbl {
+td.td-info { min-width:150px; }
+.inf-lbl {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:10px; font-weight:400; font-style:italic; line-height:1;
-  color:rgba(255,255,255,.65); margin-bottom:2px;
+  font-size:10px; font-weight:400; font-style:italic;
+  color:rgba(255,255,255,.6); line-height:1; margin-bottom:3px;
 }
-.st-lbl.delayed  { color:var(--orange); }
-.st-lbl.cancelled{ color:#ff8080; }
-.st-lbl.modified { color:var(--orange); }
-.st-lbl.ok       { color:rgba(255,255,255,.42); }
-
-.st-num {
+.inf-lbl.delayed  { color:var(--orange); }
+.inf-lbl.cancelled{ color:#ff8080; }
+.inf-lbl.modified { color:var(--orange); }
+.inf-lbl.ok       { color:rgba(255,255,255,.38); }
+.inf-num {
   font-family:'Share Tech Mono',monospace;
-  font-size:13px; font-weight:400;
-  color:rgba(255,255,255,.75);
+  font-size:12px; color:rgba(255,255,255,.65);
 }
-
-/* Badge retard */
-td.td-badge { width:100px; text-align:center; }
-.badge {
-  display:inline-flex; align-items:center; justify-content:center;
-  font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700;
-  padding:5px 14px; border-radius:22px; white-space:nowrap;
-  letter-spacing:.03em;
-}
-.badge.big   { background:#C85000; color:#fff; }
-.badge.minor { background:#C85000; color:#fff; }
-.badge.gone  { background:rgba(180,0,0,.2); color:#ff8080; border:1px solid rgba(255,80,80,.3); font-size:12px; }
-.badge.modif { background:#7B4000; color:#FFC07A; }
 
 /* Direction */
-td.td-dir { overflow:hidden; }
+td.td-dir { padding:0 18px; }
 .dir-name {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:19px; font-weight:700; line-height:1.1;
+  font-size:20px; font-weight:700; color:#fff;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  color:#fff;
 }
-.dir-name.striked { text-decoration:line-through; color:var(--muted); font-weight:400; }
-.dir-mode {
-  font-family:'Share Tech Mono',monospace;
-  font-size:9.5px; color:rgba(255,255,255,.33);
-  margin-top:3px; white-space:nowrap;
+.dir-name.x { text-decoration:line-through; color:var(--muted); font-weight:400; }
+
+/* ═══ CELLULE HEURE — le vrai sujet ═══ */
+td.td-t {
+  text-align:center;
+  min-width:130px;
+  padding:0;
+  position:relative;
+  border-left:1px solid rgba(255,255,255,.08);
+  overflow:hidden;
+  vertical-align:middle;
 }
 
-/* Cellules heures d'arrivée */
-td.td-time {
-  text-align:center;
-  min-width:110px;
-  border-left: 1px solid rgba(255,255,255,.08);
+/* Case vide — rien ne passe par cette gare */
+td.td-t .t-none {
+  font-family:'Share Tech Mono',monospace;
+  font-size:18px; color:rgba(255,255,255,.12);
 }
-.t-time {
-  display:block;
+
+/* Case à l'heure — heure jaune centrée, rien d'autre */
+td.td-t .t-ok {
+  font-family:'Share Tech Mono',monospace;
+  font-size:26px; font-weight:700; color:var(--yellow);
+  display:block; text-align:center;
+}
+
+/* Case retardée — fond orange, animation alternée */
+td.td-t.delayed-cell {
+  background:rgba(255,107,53,0.25);
+  border-left:2px solid var(--orange);
+}
+
+/* Les deux vues qui alternent dans une cellule retardée */
+.t-flip { position:relative; height:64px; display:flex; align-items:center; justify-content:center; }
+
+/* Vue A : heure initiale barrée */
+.t-flip .t-original {
   font-family:'Share Tech Mono',monospace;
   font-size:22px; font-weight:700;
-  color:var(--yellow); line-height:1;
+  color:rgba(255,255,255,.55);
+  text-decoration:line-through;
+  text-align:center;
+  position:absolute;
+  animation:flip-a 3s ease-in-out infinite;
 }
-.t-time.striked { color:var(--muted); text-decoration:line-through; }
-.t-delay {
-  display:inline-block; margin-top:3px;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px; font-weight:700;
-  color:var(--orange); background:rgba(255,107,53,.15);
-  padding:1px 7px; border-radius:10px;
-  border:1px solid rgba(255,107,53,.3);
+
+/* Vue B : heure réelle + badge retard */
+.t-flip .t-real {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  position:absolute;
+  animation:flip-b 3s ease-in-out infinite;
 }
-.t-none {
+.t-flip .t-real .t-time-val {
   font-family:'Share Tech Mono',monospace;
-  font-size:14px; color:rgba(255,255,255,.15);
+  font-size:26px; font-weight:700; color:var(--orange);
+  line-height:1;
+}
+.t-flip .t-real .t-delay-val {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px; font-weight:700; color:#fff;
+  background:var(--orange);
+  padding:1px 10px; border-radius:12px; margin-top:3px;
+  letter-spacing:.03em;
 }
 
-/* Séparateur colonnes gares */
-td.td-time:first-of-type { border-left:2px solid rgba(255,255,255,.15); }
+/* Animation alternée : 0→1.2s = A visible, 1.5→2.7s = B visible */
+@keyframes flip-a {
+  0%   { opacity:1; transform:translateY(0); }
+  30%  { opacity:1; transform:translateY(0); }
+  40%  { opacity:0; transform:translateY(-6px); }
+  70%  { opacity:0; transform:translateY(6px); }
+  80%  { opacity:0; transform:translateY(0); }
+  100% { opacity:0; }
+}
+@keyframes flip-b {
+  0%   { opacity:0; transform:translateY(6px); }
+  30%  { opacity:0; transform:translateY(0); }
+  40%  { opacity:1; transform:translateY(0); }
+  70%  { opacity:1; transform:translateY(0); }
+  80%  { opacity:0; transform:translateY(-6px); }
+  100% { opacity:0; }
+}
 
-/* Message chargement/erreur */
+/* Case supprimée */
+td.td-t.cancelled-cell {
+  background:rgba(228,3,46,0.12);
+}
+td.td-t .t-cancelled {
+  font-family:'Share Tech Mono',monospace;
+  font-size:22px; color:var(--muted);
+  text-decoration:line-through;
+}
+
+/* Première colonne gare : séparateur fort */
+td.td-t:first-of-type { border-left:2px solid rgba(255,255,255,.14); }
+
 .board-msg { display:flex; align-items:center; justify-content:center; padding:32px; font-family:'Share Tech Mono',monospace; font-size:12px; color:rgba(255,255,255,.25); background:var(--sb-bg); }
 .board-err { color:#ff8080 !important; }
-
-/* Scroll x */
-.matrix-wrap::-webkit-scrollbar { height:4px; }
-.matrix-wrap::-webkit-scrollbar-track { background:transparent; }
-.matrix-wrap::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 
 /* ═══ PERTURBATIONS ═══ */
 .dis-wrap { padding:14px 20px; display:flex; flex-direction:column; gap:10px; }
@@ -215,12 +240,11 @@ td.td-time:first-of-type { border-left:2px solid rgba(255,255,255,.15); }
 .dis-test-lbl { font-family:'Share Tech Mono',monospace; font-size:9px; color:var(--yellow); opacity:.55; padding:4px 14px 0; }
 .no-dis   { display:flex; align-items:center; gap:8px; padding:14px 0; color:var(--green); font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:600; letter-spacing:.08em; }
 
-/* ═══ CARTES ═══ */
+/* CARTES */
 .map-frame { position:relative; width:100%; padding-top:56%; overflow:hidden; }
 .map-frame iframe { position:absolute; inset:0; width:100%; height:100%; border:none; }
 .map-footer { padding:8px 16px; background:var(--card); border-top:1px solid var(--border); display:flex; align-items:center; gap:16px; }
-.map-lnk { font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; transition:opacity .2s; }
-.map-lnk:hover { opacity:.7; }
+.map-lnk { font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; }
 .map-lnk.red   { color:var(--red); }
 .map-lnk.muted { color:var(--muted); }
 </style>
@@ -238,7 +262,6 @@ td.td-time:first-of-type { border-left:2px solid rgba(255,255,255,.15); }
 
 <div class="wrap">
 
-  <!-- SNCF MATRIX -->
   <div class="card">
     <div class="card-h">
       <span style="font-size:15px">&#128642;</span>
@@ -250,7 +273,6 @@ td.td-time:first-of-type { border-left:2px solid rgba(255,255,255,.15); }
     <div id="matrix-body"><div class="board-msg">Chargement...</div></div>
   </div>
 
-  <!-- PERTURBATIONS -->
   <div class="card">
     <div class="card-h">
       <span style="font-size:15px">&#9888;&#65039;</span>
@@ -263,24 +285,18 @@ td.td-time:first-of-type { border-left:2px solid rgba(255,255,255,.15); }
     <div id="dis-body" class="dis-wrap"><p style="font-size:12px;color:#5E6474;font-family:monospace">Chargement...</p></div>
   </div>
 
-  <!-- CARTES -->
   <div class="columns is-variable is-4">
     <div class="column is-half">
       <div class="card">
         <div class="card-h"><span style="font-size:15px">&#128739;&#65039;</span><span class="card-t">Autoroute A8 — Trafic</span><div class="pill" style="margin-left:10px"><span class="dot"></span>Temps réel</div></div>
-        <div class="map-frame">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d55000!2d7.35!3d43.73!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sfr!4v1!5m2!1sfr!2sfr&layer=t" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
-        <div class="map-footer">
-          <a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; Carte APRR</a>
-          <a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener">&#128279; Bison Futé</a>
-        </div>
+        <div class="map-frame"><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d55000!2d7.35!3d43.73!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sfr!4v1!5m2!1sfr!2sfr&layer=t" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+        <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; Carte APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:12px">&#128279; Bison Futé</a></div>
       </div>
     </div>
     <div class="column is-half">
       <div class="card">
         <div class="card-h"><span style="font-size:15px">&#128506;&#65039;</span><span class="card-t">Waze — Monaco</span><div class="pill" style="margin-left:10px"><span class="dot"></span>LIVE</div></div>
-        <div class="map-frame"><iframe src="https://embed.waze.com/iframe?zoom=14&lat=43.73916&lon=7.42653&ct=livemap" allow="geolocation" allowfullscreen loading="lazy" title="Waze Monaco"></iframe></div>
+        <div class="map-frame"><iframe src="https://embed.waze.com/iframe?zoom=14&lat=43.73916&lon=7.42653&ct=livemap" allow="geolocation" allowfullscreen loading="lazy"></iframe></div>
       </div>
     </div>
   </div>
@@ -291,18 +307,15 @@ td.td-time:first-of-type { border-left:2px solid rgba(255,255,255,.15); }
 
 var W = 'https://sncf-proxy.nicolas7lejeune.workers.dev';
 var TEST_MODE = false;
-var TEST_DATA = [{"id":"test-001","_trains":["881 134","86042"],"_stops":[{"name":"Cannes","effect":"DELAYED"},{"name":"Nice-Ville","effect":"DELAYED"},{"name":"Monaco","effect":"DELAYED"}],"_lines":["Marseille - Vintimille"],"severity":{"effect":"SIGNIFICANT_DELAYS"},"messages":[{"text":"Trafic perturbé sur la ligne Marseille - Ventimiglia. Retards de 20 à 40 min sur l'ensemble des trains. Cause : incident technique entre Cannes et Nice-Ville.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T12:00:00","end":"2099-12-31T23:59:59"}]},{"id":"test-002","_trains":["17484"],"_stops":[{"name":"Monaco","effect":"CANCELLED"}],"_lines":[],"severity":{"effect":"NO_SERVICE"},"messages":[{"text":"Train TGV 17484 Monaco → Marseille Saint-Charles supprimé ce jour. Grève du personnel de conduite.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T08:00:00","end":"2099-12-31T23:59:59"}]},{"id":"test-003","_trains":["881 227"],"_stops":[{"name":"Menton","effect":"MODIFIED"},{"name":"Monaco","effect":"MODIFIED"}],"_lines":[],"severity":{"effect":"MODIFIED_SERVICE"},"messages":[{"text":"Train ZOU ! 881 227 limité à Monaco. Bus de substitution Monaco → Menton.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T06:00:00","end":"2099-12-31T23:59:59"}]}];
-
-var STATION_KEYS = ['cannes','nice','monaco','menton'];
-var STATION_NAMES = {cannes:'Cannes', nice:'Nice-Ville', monaco:'Monaco', menton:'Menton'};
+var TEST_DATA = [{"id":"test-001","_trains":["881 134","86042"],"_stops":[{"name":"Cannes","effect":"DELAYED"},{"name":"Nice-Ville","effect":"DELAYED"},{"name":"Monaco","effect":"DELAYED"}],"_lines":["Marseille - Vintimille"],"severity":{"effect":"SIGNIFICANT_DELAYS"},"messages":[{"text":"Trafic perturbé sur la ligne Marseille - Ventimiglia. Retards de 20 à 40 min sur l'ensemble des trains de la ligne. Cause : incident technique entre Cannes et Nice-Ville.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T12:00:00","end":"2099-12-31T23:59:59"}]},{"id":"test-002","_trains":["17484"],"_stops":[{"name":"Monaco","effect":"CANCELLED"}],"_lines":[],"severity":{"effect":"NO_SERVICE"},"messages":[{"text":"Train TGV 17484 Monaco → Marseille Saint-Charles supprimé ce jour. Grève du personnel de conduite.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T08:00:00","end":"2099-12-31T23:59:59"}]},{"id":"test-003","_trains":["881 227"],"_stops":[{"name":"Menton","effect":"MODIFIED"},{"name":"Monaco","effect":"MODIFIED"}],"_lines":[],"severity":{"effect":"MODIFIED_SERVICE"},"messages":[{"text":"Train ZOU ! 881 227 limité à Monaco. Bus de substitution Monaco → Menton.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T06:00:00","end":"2099-12-31T23:59:59"}]}];
+var KEYS = ['cannes','nice','monaco','menton'];
+var NAMES = {cannes:'Cannes', nice:'Nice-Ville', monaco:'Monaco', menton:'Menton'};
 
 /* Clock */
 function tick(){var e=document.getElementById('clk');if(e)e.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});}
 setInterval(tick,1000);tick();
 
-/* Helpers */
-function fmtT(dt){if(!dt||dt.length<13)return'--:--';return dt.slice(9,11)+':'+dt.slice(11,13);}
-
+/* Status */
 function stOf(row){
   if(row.cancelled)return'cancelled';
   var e=(row.effect||'').toUpperCase();
@@ -312,76 +325,82 @@ function stOf(row){
   if(e.indexOf('DELAY')!==-1||row.delayMin>0)return'delayed';
   return'ok';
 }
-var SL={cancelled:'Train supprim\u00e9',delayed:'Retard\u00e9',modified:'Parcours modifi\u00e9',terminus:'Terminus except.',ok:'\u00c0 l\'heure'};
+var SL={cancelled:'Train supprime',delayed:'Retarde',modified:'Parcours modifie',terminus:'Terminus except.',ok:'A l\'heure'};
 
-function delayBadge(row){
-  var s=stOf(row),d=row.delayMin||0;
-  if(s==='cancelled')return'<span class="badge gone">Supprim\u00e9</span>';
-  if(d>0){var h=Math.floor(d/60),m=d%60;var l=h>0?'+'+h+'h'+(m<10?'0':'')+m:'+'+d+' min';return'<span class="badge '+(d>=30?'big':'minor')+'">'+l+'</span>';}
-  if(s==='modified'||s==='terminus')return'<span class="badge modif">Modifi\u00e9</span>';
-  return'';
-}
-
-function timeCell(tObj, rowStatus){
-  if(!tObj)return'<td class="td-time"><span class="t-none">—</span></td>';
-  var time=fmtT(tObj.time);
-  var isCancelled=rowStatus==='cancelled';
-  var html='<td class="td-time">';
-  html+='<span class="t-time'+(isCancelled?' striked':'')+'">'+time+'</span>';
-  if(tObj.delay>0&&!isCancelled){
-    var h=Math.floor(tObj.delay/60),m=tObj.delay%60;
-    var l=h>0?'+'+h+'h'+(m<10?'0':'')+m:'+'+tObj.delay+' min';
-    html+='<br><span class="t-delay">'+l+'</span>';
+/* Cellule heure */
+function timeCell(t, rowSt){
+  if(!t){
+    return'<td class="td-t"><span class="t-none">—</span></td>';
   }
-  html+='</td>';
-  return html;
+
+  var isCancelled = rowSt==='cancelled';
+  var isDelayed   = t.delay>0 && !isCancelled;
+  var planned     = t.planned || t.display;
+  var real        = t.display;
+
+  if(isCancelled){
+    return'<td class="td-t cancelled-cell"><span class="t-cancelled">'+planned+'</span></td>';
+  }
+
+  if(isDelayed){
+    var h=Math.floor(t.delay/60),m=t.delay%60;
+    var lbl=h>0?'+'+h+'h'+(m<10?'0':'')+m:'+'+t.delay+' min';
+    return'<td class="td-t delayed-cell">'
+      +'<div class="t-flip">'
+      +'<span class="t-original">'+planned+'</span>'
+      +'<div class="t-real">'
+      +'<span class="t-time-val">'+real+'</span>'
+      +'<span class="t-delay-val">'+lbl+'</span>'
+      +'</div>'
+      +'</div>'
+      +'</td>';
+  }
+
+  return'<td class="td-t"><span class="t-ok">'+planned+'</span></td>';
 }
 
+/* Ligne du tableau */
 function buildRow(row){
   var s=stOf(row);
   var mode=row.commercial_mode||row.network||'';
   var num=row.headsign||'';
   var sub=mode&&num?mode+' | '+num:num||mode||'';
   var dir=row.direction||'-';
-  var out=s==='cancelled'?' striked':'';
+  var out=s==='cancelled'?' x':'';
+
   var html='<tr>';
   html+='<td class="td-bar '+s+'"></td>';
-  html+='<td class="td-status"><div class="st-lbl '+s+'">'+SL[s]+'</div><div class="st-num">'+sub+'</div></td>';
-  html+='<td class="td-badge">'+delayBadge(row)+'</td>';
+  html+='<td class="td-info"><div class="inf-lbl '+s+'">'+SL[s]+'</div><div class="inf-num">'+sub+'</div></td>';
   html+='<td class="td-dir"><div class="dir-name'+out+'">'+dir+'</div></td>';
-  STATION_KEYS.forEach(function(k){
-    html+=timeCell(row.times[k], s);
-  });
+  KEYS.forEach(function(k){ html+=timeCell(row.times[k], s); });
   html+='</tr>';
   return html;
 }
 
 function buildTable(rows){
-  if(!rows||!rows.length) return'<div class="board-msg">Aucun train trouv\u00e9</div>';
-  var h='<div class="matrix-wrap"><table class="matrix">';
-  h+='<thead><tr>';
+  if(!rows||!rows.length) return'<div class="board-msg">Aucun train trouve</div>';
+  var h='<div class="matrix-wrap"><table class="mx"><thead><tr>';
   h+='<th style="width:5px;padding:0"></th>';
-  h+='<th>\u00c9tat &amp; N\u00b0</th>';
-  h+='<th></th>';
+  h+='<th>Etat &amp; N&#176;</th>';
   h+='<th>Direction</th>';
-  STATION_KEYS.forEach(function(k){
-    h+='<th class="th-station">'+STATION_NAMES[k]+'<br><span style="font-size:9px;opacity:.5;font-weight:400;letter-spacing:.05em">Arriv\u00e9e</span></th>';
+  KEYS.forEach(function(k){
+    h+='<th class="th-st">'+NAMES[k]+'<small>Horaire</small></th>';
   });
-  h+='</tr></thead>';
-  h+='<tbody>'+rows.map(buildRow).join('')+'</tbody>';
-  h+='</table></div>';
+  h+='</tr></thead><tbody>';
+  h+=rows.map(buildRow).join('');
+  h+='</tbody></table></div>';
   return h;
 }
 
 function loadMatrix(){
   var el=document.getElementById('matrix-body');if(!el)return;
   el.innerHTML='<div class="board-msg">Chargement des passages...</div>';
-  fetch(W+'/matrix?count=15')
+  fetch(W+'/matrix?count=12')
     .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
-    .then(function(data){
-      el.innerHTML=buildTable(data.rows||[]);
-      var upd=document.getElementById('last-upd');
-      if(upd)upd.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
+    .then(function(d){
+      el.innerHTML=buildTable(d.rows||[]);
+      var u=document.getElementById('last-upd');
+      if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
     })
     .catch(function(e){el.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';});
 }
@@ -395,9 +414,9 @@ function renderDis(list,isTest){
   if(cEl)cEl.textContent=list.length?list.length+' perturbation'+(list.length>1?'s':''):'';
   if(!list.length){el.innerHTML='<div class="no-dis">&#10004; Aucune perturbation active</div>';return;}
   var bC=function(e){return{NO_SERVICE:'NO_SERVICE',SIGNIFICANT_DELAYS:'SIGNIFICANT_DELAYS',REDUCED_SERVICE:'REDUCED_SERVICE',MODIFIED_SERVICE:'MODIFIED_SERVICE'}[e]||'default';};
-  var bL=function(e){return{NO_SERVICE:'Suppression',SIGNIFICANT_DELAYS:'Retards importants',REDUCED_SERVICE:'Service r\u00e9duit',MODIFIED_SERVICE:'Parcours modifi\u00e9'}[e]||(e?e.replace(/_/g,' '):'Perturbation');};
+  var bL=function(e){return{NO_SERVICE:'Suppression',SIGNIFICANT_DELAYS:'Retards importants',REDUCED_SERVICE:'Service reduit',MODIFIED_SERVICE:'Parcours modifie'}[e]||(e?e.replace(/_/g,' '):'Perturbation');};
   var sC=function(d){var e=((d.severity&&d.severity.effect)||'').toUpperCase();return e==='NO_SERVICE'?'severe':e.indexOf('MODIFIED')!==-1||e.indexOf('REDUCED')!==-1?'modified':e.indexOf('DELAY')!==-1?'':'info';};
-  var fP=function(p){if(!p||!p.length)return'';var o=[];p.slice(0,2).forEach(function(x){var f=hdate(x.begin),t=hdate(x.end);if(f&&t)o.push('Du '+f+' au '+t);else if(f)o.push('Depuis '+f);});return o.join(' &mdash; ');};
+  var fP=function(p){if(!p||!p.length)return'';var o=[];p.slice(0,2).forEach(function(x){var f=hdate(x.begin),t=hdate(x.end);if(f&&t)o.push('Du '+f+' au '+t);else if(f)o.push('Depuis '+f);});return o.join(' — ');};
   var html='';
   list.forEach(function(d){
     var eff=(d.severity&&d.severity.effect)||'';
@@ -410,7 +429,7 @@ function renderDis(list,isTest){
     if(!best&&msgs.length)best=msgs[0];
     var txt=((best&&best.text)?best.text:'').replace(/\n/g,'<br>').slice(0,500);
     var per=fP(d.application_periods);
-    var title=trains||stops||lines||'Perturbation r\u00e9seau';
+    var title=trains||stops||lines||'Perturbation reseau';
     if(title.length>90)title=title.slice(0,87)+'...';
     var meta=trains&&stops?'<strong>Gares :</strong> '+stops:stops&&!trains?'<strong>Gares :</strong> '+stops:lines?'<strong>Ligne :</strong> '+lines:'';
     html+='<div class="dis-item '+sC(d)+(isTest?' test-mode':'')+'">'+
