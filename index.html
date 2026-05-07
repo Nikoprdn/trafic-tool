@@ -9,7 +9,6 @@
 <style>
 :root {
   --red:    #E4032E;
-  --dark:   #2A2730;
   --bg:     #0D1016;
   --panel:  #12151C;
   --card:   #181B26;
@@ -20,135 +19,186 @@
   --yellow: #F5C518;
   --orange: #FF6B35;
   --green:  #27AE60;
-  --sncf-bg:   #003080;
-  --sncf-row:  #0046B8;
-  --sncf-alt:  #003EA0;
-  --sncf-head: #002460;
+
+  /* SNCF board — couleurs exactes de l'image */
+  --sb-bg:    #0050C8;
+  --sb-row:   #0050C8;
+  --sb-alt:   #0040A8;
+  --sb-head:  #003080;
+  --sb-sep:   rgba(255,255,255,.08);
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-body { background:var(--bg); color:var(--text); min-height:100vh; font-family:'Barlow',sans-serif; font-weight:400; }
+body { background:var(--bg); color:var(--text); min-height:100vh; font-family:'Barlow',sans-serif; }
 
-/* HEADER */
+/* ═══════════ HEADER ═══════════ */
 .hdr {
-  background:var(--red); height:80px;
-  display:grid; grid-template-columns:1fr auto 1fr;
-  align-items:center; padding:0 36px;
-  position:sticky; top:0; z-index:100;
-  box-shadow:0 4px 28px rgba(0,0,0,.7);
+  background: var(--red);
+  height: 84px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 36px;
+  position: sticky; top:0; z-index:100;
+  box-shadow: 0 4px 28px rgba(0,0,0,.7);
 }
-.hdr-left { display:flex; align-items:center; gap:20px; }
-.hdr-logo { height:62px; width:auto; filter:brightness(0) invert(1); display:block; }
-.hdr-sep  { width:1px; height:38px; background:rgba(255,255,255,.25); }
-.hdr-title{ font-family:'Barlow Condensed',sans-serif; font-size:21px; font-weight:700; letter-spacing:.22em; color:rgba(255,255,255,.88); text-transform:uppercase; }
-.hdr-clock{ font-family:'Share Tech Mono',monospace; font-size:30px; color:#fff; letter-spacing:.04em; text-align:right; }
+.hdr-left  { display:flex; align-items:center; gap:20px; }
+.hdr-logo  { height:68px; width:auto; filter:brightness(0) invert(1); }
+.hdr-sep   { width:1px; height:40px; background:rgba(255,255,255,.22); }
+.hdr-title { font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:700; letter-spacing:.22em; color:rgba(255,255,255,.85); text-transform:uppercase; }
+.hdr-clock { font-family:'Share Tech Mono',monospace; font-size:32px; color:#fff; text-align:right; letter-spacing:.03em; }
 
-/* LAYOUT */
+/* ═══════════ LAYOUT ═══════════ */
 .wrap { max-width:1600px; margin:0 auto; padding:22px 28px 48px; }
-
-/* CARD */
-.card  { background:var(--panel); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:20px; }
-.card-h{ display:flex; align-items:center; gap:12px; padding:0 20px; height:48px; background:var(--card); border-bottom:1px solid var(--border); }
-.card-t{ font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
-.pill  { display:flex; align-items:center; gap:5px; background:rgba(39,174,96,.1); border:1px solid rgba(39,174,96,.3); border-radius:20px; padding:2px 9px; font-size:10px; color:var(--green); font-family:'Share Tech Mono',monospace; }
-.dot   { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 2s ease-in-out infinite; }
+.card { background:var(--panel); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:20px; }
+.card-h { display:flex; align-items:center; gap:12px; padding:0 20px; height:48px; background:var(--card); border-bottom:1px solid var(--border); flex-shrink:0; }
+.card-t { font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+.pill { display:flex; align-items:center; gap:5px; background:rgba(39,174,96,.1); border:1px solid rgba(39,174,96,.3); border-radius:20px; padding:2px 9px; font-size:10px; color:var(--green); font-family:'Share Tech Mono',monospace; white-space:nowrap; }
+.dot  { width:6px; height:6px; border-radius:50%; background:var(--green); animation:blink 2s ease-in-out infinite; }
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
-.rbtn  { margin-left:auto; background:transparent; border:1px solid var(--border); color:var(--muted); border-radius:4px; padding:4px 14px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; }
-.rbtn:hover{ border-color:var(--red); color:var(--red); }
+.rbtn { margin-left:auto; background:transparent; border:1px solid var(--border); color:var(--muted); border-radius:4px; padding:4px 14px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; }
+.rbtn:hover { border-color:var(--red); color:var(--red); }
+.tbtn { background:rgba(245,197,24,.12); border:1px solid rgba(245,197,24,.4); color:var(--yellow); border-radius:4px; padding:4px 14px; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; }
+.tbtn:hover { background:rgba(245,197,24,.22); }
 
-/* STATIONS 2x2 */
-.stations{ display:grid; grid-template-columns:1fr 1fr; }
-.st-col  { border-right:1px solid var(--border); }
-.st-col:nth-child(even){ border-right:none; }
-.st-col:nth-child(1),.st-col:nth-child(2){ border-bottom:1px solid var(--border); }
+/* ═══════════ STATIONS 2x2 ═══════════ */
+.stations { display:grid; grid-template-columns:1fr 1fr; }
+.st-col   { border-right:1px solid var(--border); }
+.st-col:nth-child(even) { border-right:none; }
+.st-col:nth-child(1), .st-col:nth-child(2) { border-bottom:1px solid var(--border); }
 
-.st-head { background:var(--sncf-head); padding:9px 0 9px 16px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,.07); }
-.st-name { font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.82); }
-.st-dot  { width:7px; height:7px; border-radius:50%; background:var(--green); margin-right:14px; animation:blink 2s ease-in-out infinite; }
-
-/* BOARD */
-.board-wrap { display:flex; background:var(--sncf-bg); }
-.dep-lbl    { width:26px; flex-shrink:0; background:var(--sncf-head); border-right:1px solid rgba(255,255,255,.07); display:flex; align-items:center; justify-content:center; }
-.dep-lbl span{ font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.38); writing-mode:vertical-rl; transform:rotate(180deg); }
-.board { flex:1; display:flex; flex-direction:column; }
-
-/* ROW */
-.dep-row{
-  display:grid;
-  grid-template-columns:4px 132px 26px 94px 1fr 62px;
-  align-items:stretch; min-height:56px;
-  border-bottom:1px solid rgba(255,255,255,.055);
-  background:var(--sncf-row);
+.st-head {
+  background:var(--sb-head);
+  padding:10px 20px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:2px solid rgba(255,255,255,.06);
 }
-.dep-row:nth-child(even){ background:var(--sncf-alt); }
-.dep-row:hover{ filter:brightness(1.1); }
-.dep-row:last-child{ border-bottom:none; }
+.st-name { font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.75); }
+.st-dot  { width:7px; height:7px; border-radius:50%; background:var(--green); animation:blink 2s ease-in-out infinite; }
 
-.d-bar { align-self:stretch; }
-.d-bar.delayed  { background:var(--yellow); }
-.d-bar.cancelled{ background:var(--red); }
-.d-bar.modified { background:var(--orange); }
-.d-bar.ok       { background:var(--green); }
+/* ═══════════ DEPARTURE BOARD — style fidèle à l'image ═══════════ */
+.board { background:var(--sb-bg); }
 
-.d-tc{ display:flex; flex-direction:column; justify-content:center; padding:5px 8px 5px 14px; gap:1px; }
-.d-st{ font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:400; font-style:italic; line-height:1; color:rgba(255,255,255,.68); }
-.d-st.delayed  { color:var(--yellow); }
-.d-st.cancelled{ color:#ff9090; }
-.d-st.modified { color:var(--orange); }
-.d-st.ok       { color:rgba(255,255,255,.38); }
+/* Chaque ligne */
+.dep {
+  display: grid;
+  /* bar couleur | statut+heure | badge | destination | voie */
+  grid-template-columns: 5px 180px 110px 1fr 80px;
+  align-items: center;
+  min-height: 64px;
+  border-bottom: 2px solid var(--sb-sep);
+  background: var(--sb-row);
+  transition: filter .12s;
+}
+.dep:nth-child(even) { background:var(--sb-alt); }
+.dep:hover { filter:brightness(1.08); }
+.dep:last-child { border-bottom:none; }
 
-.d-time{ font-family:'Share Tech Mono',monospace; font-size:24px; font-weight:700; color:var(--yellow); line-height:1; }
-.d-time.x{ color:var(--muted); text-decoration:line-through; }
+/* Barre couleur gauche */
+.dep-bar { align-self:stretch; border-radius:0; }
+.dep-bar.ok       { background:#27AE60; }
+.dep-bar.delayed  { background:#FF6B35; }
+.dep-bar.cancelled{ background:var(--red); }
+.dep-bar.modified { background:#FF6B35; }
 
-.d-warn{ display:flex; align-items:center; justify-content:center; font-size:15px; opacity:.85; }
-.d-dc  { display:flex; align-items:center; justify-content:center; padding:0 6px; }
-.d-badge{ display:inline-flex; align-items:center; justify-content:center; font-family:'Share Tech Mono',monospace; font-size:11px; font-weight:400; padding:4px 10px; border-radius:4px; white-space:nowrap; min-width:74px; text-align:center; }
-.d-badge.big  { background:#B50020; color:#fff; }
-.d-badge.minor{ background:#C85800; color:#fff; }
-.d-badge.empty{ background:transparent; }
-.d-badge.modif{ background:#C85800; color:#fff; }
-.d-badge.gone { background:transparent; color:#ff9090; font-size:10px; border:1px solid rgba(255,100,100,.25); }
+/* Statut + heure */
+.dep-tc { display:flex; flex-direction:column; justify-content:center; padding:0 16px 0 20px; gap:1px; }
+.dep-status {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; font-weight:400; font-style:italic;
+  line-height:1; letter-spacing:.02em;
+}
+.dep-status.ok       { color:#4DCC80; }
+.dep-status.delayed  { color:#FF9050; }
+.dep-status.cancelled{ color:#FF8080; }
+.dep-status.modified { color:#FF9050; }
 
-.d-dest{ display:flex; flex-direction:column; justify-content:center; padding:5px 12px; overflow:hidden; }
-.d-dname{ font-family:'Barlow Condensed',sans-serif; font-size:19px; font-weight:600; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#fff; }
-.d-dname.x{ text-decoration:line-through; color:var(--muted); font-weight:400; }
-.d-dsub { font-family:'Share Tech Mono',monospace; font-size:9.5px; color:rgba(255,255,255,.32); margin-top:3px; }
+.dep-time {
+  font-family:'Share Tech Mono',monospace;
+  font-size:28px; font-weight:700;
+  color:var(--yellow); line-height:1; margin-top:1px;
+}
+.dep-time.striked { color:var(--muted); text-decoration:line-through; }
 
-.d-voie{ display:flex; flex-direction:column; align-items:center; justify-content:center; border-left:1px solid rgba(255,255,255,.07); background:rgba(0,0,0,.18); padding:0 10px; }
-.d-voie-l{ font-size:8px; color:rgba(255,255,255,.3); font-family:'Barlow Condensed',sans-serif; letter-spacing:.07em; text-transform:uppercase; }
-.d-voie-v{ font-size:23px; font-family:'Barlow Condensed',sans-serif; font-weight:700; line-height:1; color:rgba(255,255,255,.88); }
+/* Badge retard — pill arrondie comme sur l'image */
+.dep-badge-wrap { display:flex; align-items:center; padding:0 10px; }
+.dep-badge {
+  display:inline-flex; align-items:center; justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:14px; font-weight:700;
+  padding:6px 16px; border-radius:24px;
+  white-space:nowrap; letter-spacing:.03em;
+}
+.dep-badge.big    { background:#C85000; color:#fff; }
+.dep-badge.minor  { background:#C85000; color:#fff; }
+.dep-badge.gone   { background:rgba(200,0,0,.2); color:#FF8080; border:1px solid rgba(255,80,80,.3); font-size:12px; }
+.dep-badge.modif  { background:#9B5000; color:#FFC07A; }
 
-.board-msg{ display:flex; align-items:center; justify-content:center; padding:22px; font-family:'Share Tech Mono',monospace; font-size:11px; color:rgba(255,255,255,.22); background:var(--sncf-bg); }
-.board-err{ color:#ff8080 !important; }
+/* Destination */
+.dep-dest { display:flex; flex-direction:column; justify-content:center; padding:0 16px; overflow:hidden; }
+.dep-dname {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px; font-weight:700; line-height:1.1;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  color:#fff;
+}
+.dep-dname.striked { text-decoration:line-through; color:var(--muted); font-weight:400; }
+.dep-dsub {
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px; color:rgba(255,255,255,.38);
+  margin-top:4px; letter-spacing:.03em;
+}
 
-/* PERTURBATIONS */
-.dis-wrap{ padding:14px 20px; display:flex; flex-direction:column; gap:10px; }
-.dis-item{ background:var(--card); border-radius:7px; border-left:3px solid var(--yellow); overflow:hidden; }
-.dis-item.severe  { border-left-color:var(--red); }
-.dis-item.modified{ border-left-color:var(--orange); }
-.dis-item.info    { border-left-color:#4a90e2; }
-.dis-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:12px 14px 8px; }
+/* Voie — boîte blanche avec texte sombre, exactement comme l'image */
+.dep-voie {
+  display:flex; align-items:center; justify-content:center;
+  padding:0 12px;
+}
+.dep-voie-box {
+  background:#fff; border-radius:6px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  width:52px; height:48px;
+}
+.dep-voie-lbl { font-family:'Barlow Condensed',sans-serif; font-size:9px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#555; line-height:1; margin-bottom:1px; }
+.dep-voie-val { font-family:'Barlow Condensed',sans-serif; font-size:26px; font-weight:800; color:#222; line-height:1; }
+.dep-voie-box.empty { background:rgba(255,255,255,.12); }
+.dep-voie-box.empty .dep-voie-lbl { color:rgba(255,255,255,.3); }
+.dep-voie-box.empty .dep-voie-val { color:rgba(255,255,255,.25); font-size:14px; }
+
+.board-msg { display:flex; align-items:center; justify-content:center; padding:24px; font-family:'Share Tech Mono',monospace; font-size:11px; color:rgba(255,255,255,.25); }
+.board-err { color:#ff8080 !important; }
+
+/* ═══════════ PERTURBATIONS ═══════════ */
+.dis-wrap { padding:14px 20px; display:flex; flex-direction:column; gap:10px; }
+.dis-item { background:var(--card); border-radius:7px; border-left:3px solid var(--yellow); overflow:hidden; }
+.dis-item.severe   { border-left-color:var(--red); }
+.dis-item.modified { border-left-color:var(--orange); }
+.dis-item.info     { border-left-color:#4a90e2; }
+.dis-item.test-mode{ outline:1px dashed rgba(245,197,24,.4); }
+.dis-top  { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:12px 14px 8px; }
 .dis-badge{ font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:600; letter-spacing:.08em; padding:3px 10px; border-radius:20px; text-transform:uppercase; white-space:nowrap; flex-shrink:0; }
-.dis-badge.NO_SERVICE        { background:rgba(228,3,46,.18);   color:#ff8080; border:1px solid rgba(228,3,46,.4); }
-.dis-badge.SIGNIFICANT_DELAYS{ background:rgba(245,197,24,.12); color:var(--yellow); border:1px solid rgba(245,197,24,.4); }
-.dis-badge.REDUCED_SERVICE   { background:rgba(255,107,53,.12); color:var(--orange); border:1px solid rgba(255,107,53,.4); }
-.dis-badge.MODIFIED_SERVICE  { background:rgba(108,92,231,.12); color:#a29bfe; border:1px solid rgba(108,92,231,.4); }
-.dis-badge.default           { background:rgba(255,255,255,.04); color:var(--muted); border:1px solid var(--border); }
+.dis-badge.NO_SERVICE         { background:rgba(228,3,46,.18);   color:#ff8080; border:1px solid rgba(228,3,46,.4); }
+.dis-badge.SIGNIFICANT_DELAYS { background:rgba(245,197,24,.12); color:var(--yellow); border:1px solid rgba(245,197,24,.4); }
+.dis-badge.REDUCED_SERVICE    { background:rgba(255,107,53,.12); color:var(--orange); border:1px solid rgba(255,107,53,.4); }
+.dis-badge.MODIFIED_SERVICE   { background:rgba(108,92,231,.12); color:#a29bfe; border:1px solid rgba(108,92,231,.4); }
+.dis-badge.default            { background:rgba(255,255,255,.04); color:var(--muted); border:1px solid var(--border); }
 .dis-title{ font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:600; color:var(--text); margin-bottom:3px; line-height:1.3; }
-.dis-meta { font-size:12px; color:var(--muted); }
-.dis-meta strong{ font-weight:600; color:rgba(255,255,255,.55); }
-.dis-txt  { padding:0 14px 10px; font-size:12px; color:var(--muted); line-height:1.65; border-top:1px solid var(--border); padding-top:8px; }
-.dis-per  { padding:5px 14px 10px; font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--muted2); }
+.dis-meta { font-size:12px; color:var(--muted); margin-top:2px; }
+.dis-meta strong { font-weight:600; color:rgba(255,255,255,.55); }
+.dis-txt  { padding:8px 14px 10px; font-size:12px; color:var(--muted); line-height:1.65; border-top:1px solid var(--border); }
+.dis-per  { padding:4px 14px 10px; font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--muted2); }
+.dis-test-label { font-family:'Share Tech Mono',monospace; font-size:9px; color:var(--yellow); opacity:.6; padding:4px 14px 0; }
 .no-dis   { display:flex; align-items:center; gap:8px; padding:14px 0; color:var(--green); font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:600; letter-spacing:.08em; }
 
-/* MAPS */
-.aprr-box  { background:var(--card); padding:36px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; min-height:220px; }
-.aprr-icon { font-size:42px; }
+/* ═══════════ CARTES ═══════════ */
+.map-frame { position:relative; width:100%; padding-top:56%; overflow:hidden; }
+.map-frame iframe { position:absolute; inset:0; width:100%; height:100%; border:none; }
+.aprr-box  { background:var(--card); padding:36px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; min-height:240px; }
+.aprr-icon { font-size:40px; }
 .aprr-title{ font-family:'Barlow Condensed',sans-serif; font-size:17px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
 .aprr-desc { font-size:12px; color:var(--muted); text-align:center; line-height:1.7; max-width:300px; }
 .aprr-cta  { display:inline-flex; align-items:center; gap:10px; background:var(--red); color:#fff; text-decoration:none; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; padding:12px 28px; border-radius:6px; transition:opacity .2s; }
-.aprr-cta:hover{ opacity:.82; color:#fff; }
-.map-frame{ position:relative; width:100%; padding-top:58%; overflow:hidden; }
-.map-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:none; }
+.aprr-cta:hover { opacity:.82; color:#fff; }
 </style>
 </head>
 <body>
@@ -164,55 +214,105 @@ body { background:var(--bg); color:var(--text); min-height:100vh; font-family:'B
 
 <div class="wrap">
 
+  <!-- SNCF -->
   <div class="card">
     <div class="card-h">
       <span style="font-size:15px">&#128642;</span>
-      <span class="card-t">SNCF — 5 prochains trains</span>
+      <span class="card-t">SNCF — Prochains passages</span>
       <div class="pill"><span class="dot"></span>LIVE</div>
       <button class="rbtn" onclick="loadAll()">&#8635; Actualiser</button>
     </div>
     <div class="stations" id="stations"></div>
   </div>
 
+  <!-- PERTURBATIONS -->
   <div class="card">
     <div class="card-h">
       <span style="font-size:15px">&#9888;&#65039;</span>
       <span class="card-t">Perturbations</span>
       <span id="dis-count" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:4px"></span>
       <div class="pill" style="margin-left:8px"><span class="dot"></span>Actives</div>
-      <button class="rbtn" onclick="loadDis()">&#8635; Actualiser</button>
+      <button class="tbtn" onclick="testDis()" style="margin-left:12px">&#9670; Tester</button>
+      <button class="rbtn" onclick="loadDis()">&#8635; Live</button>
     </div>
     <div id="dis-body" class="dis-wrap"><p style="font-size:12px;color:#5E6474;font-family:monospace">Chargement...</p></div>
   </div>
 
+  <!-- CARTES -->
   <div class="columns is-variable is-4">
+    <!-- A8 : Google Maps trafic en temps réel -->
     <div class="column is-half">
       <div class="card">
-        <div class="card-h"><span style="font-size:15px">&#128739;&#65039;</span><span class="card-t">Autoroute A8</span></div>
-        <div class="aprr-box"><div class="aprr-icon">&#128739;&#65039;</div><div class="aprr-title">Info trafic A8</div>
-          <div class="aprr-desc">Le site APRR bloque l'intégration dans les iframes.<br>Cliquez pour ouvrir la carte trafic en direct.</div>
-          <a class="aprr-cta" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; Ouvrir la carte APRR</a>
+        <div class="card-h"><span style="font-size:15px">&#128739;&#65039;</span><span class="card-t">Autoroute A8 — Trafic</span><div class="pill" style="margin-left:10px"><span class="dot"></span>Temps réel</div></div>
+        <div class="map-frame">
+          <!-- Google Maps centré sur A8 Nice-Menton, couche trafic activée -->
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d55000!2d7.35!3d43.73!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sfr!4v1!5m2!1sfr!2sfr&layer=t"
+            allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            title="Trafic A8">
+          </iframe>
+        </div>
+        <div style="padding:8px 16px;background:var(--card);border-top:1px solid var(--border);display:flex;align-items:center;gap:12px;">
+          <a href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);text-decoration:none;">&#128279; Carte APRR détaillée</a>
+          <a href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;">&#128279; Bison Futé</a>
         </div>
       </div>
     </div>
+
+    <!-- WAZE -->
     <div class="column is-half">
       <div class="card">
         <div class="card-h"><span style="font-size:15px">&#128506;&#65039;</span><span class="card-t">Waze — Monaco</span><div class="pill" style="margin-left:10px"><span class="dot"></span>LIVE</div></div>
-        <div class="map-frame"><iframe src="https://embed.waze.com/iframe?zoom=14&lat=43.73916&lon=7.42653&ct=livemap" allow="geolocation" allowfullscreen loading="lazy" title="Waze Monaco"></iframe></div>
+        <div class="map-frame">
+          <iframe src="https://embed.waze.com/iframe?zoom=14&lat=43.73916&lon=7.42653&ct=livemap"
+            allow="geolocation" allowfullscreen loading="lazy" title="Waze Monaco"></iframe>
+        </div>
       </div>
     </div>
-  </div>
 
+  </div>
 </div>
 
 <script>
 
 var W = 'https://sncf-proxy.nicolas7lejeune.workers.dev';
+var TEST_MODE = false;
+
 var STATIONS = [
   {id:'stop_area:SNCF:87756294', name:'Cannes'},
   {id:'stop_area:SNCF:87756403', name:'Nice-Ville'},
   {id:'stop_area:SNCF:87756478', name:'Monaco'},
   {id:'stop_area:SNCF:87756494', name:'Menton'}
+];
+
+var TEST_DISRUPTIONS = [
+  {
+    "id": "test-001",
+    "_trains": ["86042", "881 134"],
+    "_stops": [{"name": "Cannes", "effect": "DELAYED"}, {"name": "Nice-Ville", "effect": "DELAYED"}],
+    "_lines": ["Marseille - Vintimille"],
+    "severity": {"effect": "SIGNIFICANT_DELAYS", "name": "Retard important"},
+    "messages": [{"text": "Trafic perturbé sur la ligne Marseille - Ventimiglia en raison d'un incident technique entre Cannes et Nice-Ville. Retards estimés de 20 à 40 minutes sur l'ensemble des trains de la ligne.", "channel": {"types": ["web"]}}],
+    "application_periods": [{"begin": "2025-01-01T12:00:00", "end": "2099-12-31T23:59:59"}]
+  },
+  {
+    "id": "test-002",
+    "_trains": ["17484"],
+    "_stops": [{"name": "Monaco Monte-Carlo", "effect": "CANCELLED"}],
+    "_lines": ["TGV Marseille - Vintimille"],
+    "severity": {"effect": "NO_SERVICE", "name": "Suppression"},
+    "messages": [{"text": "Le train TGV 17484 Monaco Monte-Carlo → Marseille Saint-Charles est supprimé ce jour en raison d'une grève du personnel de conduite.", "channel": {"types": ["web"]}}],
+    "application_periods": [{"begin": "2025-01-01T08:00:00", "end": "2099-12-31T23:59:59"}]
+  },
+  {
+    "id": "test-003",
+    "_trains": ["881 227"],
+    "_stops": [{"name": "Menton", "effect": "MODIFIED"}, {"name": "Monaco Monte-Carlo", "effect": "MODIFIED"}],
+    "_lines": ["ZOU ! Régional"],
+    "severity": {"effect": "MODIFIED_SERVICE", "name": "Parcours modifié"},
+    "messages": [{"text": "Le train ZOU ! 881 227 Menton → Cannes est limité à Monaco Monte-Carlo en raison de travaux sur la voie entre Monaco et Cannes. Des bus de substitution sont mis en place.", "channel": {"types": ["web"]}}],
+    "application_periods": [{"begin": "2025-01-01T06:00:00", "end": "2099-12-31T23:59:59"}]
+  }
 ];
 
 /* Clock */
@@ -231,15 +331,19 @@ function stOf(dep){
   if(e.indexOf('DELAY')!==-1||dep._delayMin>0)return'delayed';
   return'ok';
 }
-var SL={cancelled:'Train supprim\u00e9',delayed:'Retard\u00e9',modified:'Parcours modifi\u00e9',terminus:'Terminus exceptionnel',ok:'\u00c0 l\'heure'};
+var SL={cancelled:'Train supprim\u00e9',delayed:'Retard\u00e9',modified:'Parcours modifi\u00e9',terminus:'Terminus except.',ok:'\u00c0 l\'heure'};
 function sc(s){return s==='terminus'?'modified':s;}
 
 function badge(dep){
   var s=stOf(dep),d=dep._delayMin||0;
-  if(s==='cancelled')return'<span class="d-badge gone">Supprim\u00e9</span>';
-  if(d>0){var h=Math.floor(d/60),m=d%60;var l=h>0?'+'+h+'h'+(m<10?'0':'')+m:'+'+d+' min';return'<span class="d-badge '+(d>=30?'big':'minor')+'">'+l+'</span>';}
-  if(s==='modified'||s==='terminus')return'<span class="d-badge modif">Modifi\u00e9</span>';
-  return'<span class="d-badge empty"></span>';
+  if(s==='cancelled')return'<span class="dep-badge gone">Supprim\u00e9</span>';
+  if(d>0){
+    var h=Math.floor(d/60),m=d%60;
+    var l=h>0?'+'+h+'h'+(m<10?'0':'')+m:'+'+d+' min';
+    return'<span class="dep-badge '+(d>=30?'big':'minor')+'">'+l+'</span>';
+  }
+  if(s==='modified'||s==='terminus')return'<span class="dep-badge modif">Modifi\u00e9</span>';
+  return'';
 }
 
 function row(dep){
@@ -249,28 +353,34 @@ function row(dep){
   var dest=di.direction||di.headsign||'-';
   var num=di.trip_short_name||di.headsign||'';
   var mode=di.commercial_mode||di.network||'';
-  var sub=mode&&num?mode+' | '+num:num?num:'';
+  /* Format exact "ZOU ! | 881 134" */
+  var sub='';
+  if(mode&&num) sub=mode+' | '+num;
+  else if(num)  sub=num;
   var voie=dep._platform||'';
-  var out=s==='cancelled'?' x':'';
-  var warn=(s==='cancelled'||s==='modified'||s==='terminus')?'&#9888;':'';
-  return'<div class="dep-row">'
-    +'<div class="d-bar '+cl+'"></div>'
-    +'<div class="d-tc"><span class="d-st '+cl+'">'+SL[s]+'</span><span class="d-time'+(s==='cancelled'?' x':'')+'">'+time+'</span></div>'
-    +'<div class="d-warn">'+warn+'</div>'
-    +'<div class="d-dc">'+badge(dep)+'</div>'
-    +'<div class="d-dest"><span class="d-dname'+out+'">'+dest+'</span><span class="d-dsub">'+sub+'</span></div>'
-    +'<div class="d-voie"><span class="d-voie-l">Voie</span><span class="d-voie-v">'+(voie||'-')+'</span></div>'
+  var out=s==='cancelled'?' striked':'';
+  var bdg=badge(dep);
+
+  var voieHtml=voie
+    ?'<div class="dep-voie-box"><span class="dep-voie-lbl">Voie</span><span class="dep-voie-val">'+voie+'</span></div>'
+    :'<div class="dep-voie-box empty"><span class="dep-voie-lbl">Voie</span><span class="dep-voie-val">-</span></div>';
+
+  return'<div class="dep">'
+    +'<div class="dep-bar '+cl+'"></div>'
+    +'<div class="dep-tc"><span class="dep-status '+cl+'">'+SL[s]+'</span><span class="dep-time'+(s==='cancelled'?' striked':'')+'">'+time+'</span></div>'
+    +'<div class="dep-badge-wrap">'+bdg+'</div>'
+    +'<div class="dep-dest"><span class="dep-dname'+out+'">'+dest+'</span><span class="dep-dsub">'+sub+'</span></div>'
+    +'<div class="dep-voie">'+voieHtml+'</div>'
     +'</div>';
 }
 
 function loadStation(st,el){
   el.innerHTML='<div class="board-msg">Chargement...</div>';
-  /* count=5 : uniquement les 5 prochains trains */
   fetch(W+'/passages?stopId='+encodeURIComponent(st.id)+'&count=5')
     .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
     .then(function(d){
       var deps=(d.departures||[]).slice(0,5);
-      el.innerHTML=deps.length?deps.map(row).join(''):'<div class="board-msg">Aucun d\u00e9part</div>';
+      el.innerHTML=deps.length?deps.map(row).join(''):'<div class="board-msg">Aucun passage</div>';
     })
     .catch(function(e){el.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';});
 }
@@ -282,27 +392,86 @@ function loadAll(){
     var col=document.createElement('div');col.className='st-col';
     var sid=s.id.replace(/[:.]/g,'_');
     col.innerHTML='<div class="st-head"><span class="st-name">'+s.name+'</span><span class="st-dot"></span></div>'
-      +'<div class="board-wrap"><div class="dep-lbl"><span>D\u00e9parts</span></div><div class="board" id="b_'+sid+'"></div></div>';
+      +'<div class="board" id="b_'+sid+'"></div>';
     g.appendChild(col);
     loadStation(s,col.querySelector('.board'));
   });
 }
 
-/* Perturbations — sans filtre horaire strict, toutes les actives */
+/* ═══ PERTURBATIONS ═══ */
 function hdate(iso){
   if(!iso)return'';var d=new Date(iso);
   return isNaN(d)?iso:d.toLocaleString('fr-FR',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
 }
 
+function renderDisruptions(list,isTest){
+  var el=document.getElementById('dis-body');if(!el)return;
+  if(!list.length){
+    el.innerHTML='<div class="no-dis">&#10004; Aucune perturbation active</div>';
+    var cEl=document.getElementById('dis-count');if(cEl)cEl.textContent='';
+    return;
+  }
+  var cEl=document.getElementById('dis-count');
+  if(cEl)cEl.textContent=list.length+' perturbation'+(list.length>1?'s':'');
+
+  var bC=function(e){return{NO_SERVICE:'NO_SERVICE',SIGNIFICANT_DELAYS:'SIGNIFICANT_DELAYS',REDUCED_SERVICE:'REDUCED_SERVICE',MODIFIED_SERVICE:'MODIFIED_SERVICE'}[e]||'default';};
+  var bL=function(e){return{NO_SERVICE:'Suppression',SIGNIFICANT_DELAYS:'Retards importants',REDUCED_SERVICE:'Service r\u00e9duit',MODIFIED_SERVICE:'Parcours modifi\u00e9'}[e]||(e?e.replace(/_/g,' '):'Perturbation');};
+  var sC2=function(d){
+    var e=((d.severity&&d.severity.effect)||'').toUpperCase();
+    return e==='NO_SERVICE'?'severe':e.indexOf('MODIFIED')!==-1||e.indexOf('REDUCED')!==-1?'modified':e.indexOf('DELAY')!==-1?'':'info';
+  };
+  var fP=function(p){
+    if(!p||!p.length)return'';
+    var out=[];
+    p.slice(0,2).forEach(function(x){
+      var f=hdate(x.begin),t=hdate(x.end);
+      if(f&&t)out.push('Du '+f+' au '+t);
+      else if(f)out.push('Depuis '+f);
+    });
+    return out.join(' &mdash; ');
+  };
+
+  var html='';
+  list.forEach(function(d){
+    var eff=(d.severity&&d.severity.effect)||'';
+    var trains=(d._trains||[]).slice(0,6).join(', ');
+    var stops=(d._stops||[]).slice(0,5).map(function(x){return x.name;}).join(', ');
+    var lines=(d._lines||[]).slice(0,3).join(', ');
+    var msgs=d.messages||[],best=null;
+    var prio=['web','notification','long_sms','sms'];
+    for(var p=0;p<prio.length&&!best;p++)
+      for(var i=0;i<msgs.length;i++){var ch=(msgs[i].channel&&msgs[i].channel.types)||[];if(ch.indexOf(prio[p])!==-1){best=msgs[i];break;}}
+    if(!best&&msgs.length)best=msgs[0];
+    var txt=((best&&best.text)?best.text:'').replace(/\n/g,'<br>').slice(0,500);
+    var per=fP(d.application_periods);
+    var title=trains||stops||lines||'Perturbation r\u00e9seau';
+    if(title.length>80)title=title.slice(0,77)+'...';
+    var meta='';
+    if(trains&&stops)meta='<strong>Gares affect\u00e9es :</strong> '+stops;
+    else if(trains&&lines)meta='<strong>Ligne :</strong> '+lines;
+    else if(stops&&!trains)meta='<strong>Gares :</strong> '+stops;
+
+    html+='<div class="dis-item '+sC2(d)+(isTest?' test-mode':'')+'">'+
+      (isTest?'<div class="dis-test-label">&#9670; MODE TEST</div>':'')+
+      '<div class="dis-top">'+
+        '<div><div class="dis-title">'+title+'</div>'+(meta?'<div class="dis-meta">'+meta+'</div>':'')+
+        '</div><span class="dis-badge '+bC(eff)+'">'+bL(eff)+'</span>'+
+      '</div>'+
+      (txt?'<div class="dis-txt">'+txt+'</div>':'')+
+      (per?'<div class="dis-per">&#128337; '+per+'</div>':'')+
+      '</div>';
+  });
+  el.innerHTML=html;
+}
+
 function loadDis(){
+  TEST_MODE=false;
   var el=document.getElementById('dis-body');if(!el)return;
   el.innerHTML='<p style="padding:10px 0;font-size:12px;color:#5E6474;font-family:monospace">Chargement...</p>';
   fetch(W+'/disruptions')
     .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
     .then(function(data){
       var all=data.disruptions||[];
-
-      /* Garder toutes les perturbations dont la période n'est pas encore terminée */
       var now=Date.now();
       var list=all.filter(function(d){
         var p=d.application_periods||[];
@@ -313,72 +482,20 @@ function loadDis(){
         }
         return false;
       });
-
-      var cEl=document.getElementById('dis-count');
-      if(cEl)cEl.textContent=list.length?list.length+' perturbation'+(list.length>1?'s':''):'';
-
-      if(!list.length){
-        el.innerHTML='<div class="no-dis">&#10004; Aucune perturbation active</div>';
-        return;
-      }
-
-      var bC=function(e){return{NO_SERVICE:'NO_SERVICE',SIGNIFICANT_DELAYS:'SIGNIFICANT_DELAYS',REDUCED_SERVICE:'REDUCED_SERVICE',MODIFIED_SERVICE:'MODIFIED_SERVICE'}[e]||'default';};
-      var bL=function(e){return{NO_SERVICE:'Suppression',SIGNIFICANT_DELAYS:'Retards importants',REDUCED_SERVICE:'Service r\u00e9duit',MODIFIED_SERVICE:'Parcours modifi\u00e9'}[e]||(e?e.replace(/_/g,' '):'Perturbation');};
-      var sC2=function(d){var e=((d.severity&&d.severity.effect)||'').toUpperCase();return e==='NO_SERVICE'?'severe':e.indexOf('MODIFIED')!==-1||e.indexOf('REDUCED')!==-1?'modified':e.indexOf('DELAY')!==-1?'':'info';};
-      var fP=function(p){
-        if(!p||!p.length)return'';
-        var out=[];
-        p.slice(0,2).forEach(function(x){
-          var f=hdate(x.begin),t=hdate(x.end);
-          if(f&&t)out.push('Du '+f+' au '+t);
-          else if(f)out.push('Depuis '+f);
-          else if(t)out.push('Jusqu\'au '+t);
-        });
-        return out.join(' &mdash; ');
-      };
-
-      var html='';
-      list.forEach(function(d){
-        var eff=(d.severity&&d.severity.effect)||'';
-        var trains=(d._trains||[]).slice(0,6).join(', ');
-        var stops=(d._stops||[]).slice(0,5).map(function(x){return x.name;}).join(', ');
-        var lines=(d._lines||[]).slice(0,3).join(', ');
-
-        /* Meilleur message disponible */
-        var msgs=d.messages||[],best=null;
-        var prio=['web','notification','long_sms','sms'];
-        for(var p=0;p<prio.length&&!best;p++)
-          for(var i=0;i<msgs.length;i++){var ch=(msgs[i].channel&&msgs[i].channel.types)||[];if(ch.indexOf(prio[p])!==-1){best=msgs[i];break;}}
-        if(!best&&msgs.length)best=msgs[0];
-        var txt=((best&&best.text)?best.text:'').replace(/\n/g,'<br>').slice(0,500);
-        var per=fP(d.application_periods);
-
-        /* Construire un titre lisible */
-        var title=trains||stops||lines||'Perturbation r\u00e9seau';
-        if(title.length>80)title=title.slice(0,77)+'...';
-
-        /* Sous-info contextuelle */
-        var meta='';
-        if(trains&&stops)meta='<strong>Gares affect\u00e9es :</strong> '+stops;
-        else if(trains&&lines)meta='<strong>Ligne :</strong> '+lines;
-        else if(stops&&!trains)meta='<strong>Gares :</strong> '+stops;
-
-        html+='<div class="dis-item '+sC2(d)+'">'
-          +'<div class="dis-top">'
-          +  '<div><div class="dis-title">'+title+'</div>'+(meta?'<div class="dis-meta">'+meta+'</div>':'')+'</div>'
-          +  '<span class="dis-badge '+bC(eff)+'">'+bL(eff)+'</span>'
-          +'</div>'
-          +(txt?'<div class="dis-txt">'+txt+'</div>':'')
-          +(per?'<div class="dis-per">&#128337; '+per+'</div>':'')
-          +'</div>';
-      });
-      el.innerHTML=html;
+      renderDisruptions(list,false);
     })
-    .catch(function(e){el.innerHTML='<div class="no-dis" style="color:#ff8080">Erreur : '+e.message+'</div>';});
+    .catch(function(e){
+      document.getElementById('dis-body').innerHTML='<div class="no-dis" style="color:#ff8080">Erreur : '+e.message+'</div>';
+    });
+}
+
+function testDis(){
+  TEST_MODE=true;
+  renderDisruptions(TEST_DISRUPTIONS,true);
 }
 
 loadAll();loadDis();
-setInterval(function(){loadAll();loadDis();},60000);
+setInterval(function(){if(!TEST_MODE){loadAll();loadDis();}else{loadAll();}},60000);
 
 </script>
 </body>
