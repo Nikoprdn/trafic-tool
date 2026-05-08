@@ -25,7 +25,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .wrap{max-width:1600px;margin:0 auto;padding:22px 28px 48px;}
 
 /* BLUE CARD */
-.bc{background:linear-gradient(135deg,var(--blue-deep) 0%,var(--blue-mid) 55%,#0D3060 100%);border:1px solid rgba(255,255,255,.1);border-radius:12px;position:relative;overflow:hidden;margin-bottom:20px;}
+.bc{background:var(--hero-grad);border:1px solid var(--hero-border);border-radius:12px;position:relative;overflow:hidden;margin-bottom:20px;}
 .bc::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 30%,rgba(80,160,255,.07) 0%,transparent 60%);pointer-events:none;}
 .bc-head{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:46px;border-bottom:1px solid rgba(255,255,255,.08);position:relative;}
 .bc-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.7);}
@@ -47,7 +47,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .w-sub-content.active{display:block;}
 
 /* WEATHER */
-.w-hero{background:linear-gradient(135deg,var(--blue-deep) 0%,var(--blue-mid) 55%,#0D3060 100%);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:28px 36px;margin-bottom:20px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;position:relative;overflow:hidden;}
+.w-hero{background:var(--hero-grad);border:1px solid var(--hero-border);border-radius:12px;padding:28px 36px;margin-bottom:20px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;position:relative;overflow:hidden;}
 .w-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 40%,rgba(100,180,255,.08) 0%,transparent 60%);pointer-events:none;}
 .w-hero-loc{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px;}
 .w-hero-cond{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:18px;}
@@ -104,7 +104,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .w-source{text-align:center;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,255,255,.2);padding:12px;margin-top:4px;}
 
 /* TRAFIC */
-.section-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.section-card{background:var(--sc-bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
 .card-h{display:flex;align-items:center;gap:12px;padding:0 20px;height:48px;background:var(--card);border-bottom:1px solid var(--border);}
 .card-t{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;}
 .pill{display:flex;align-items:center;gap:5px;background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);border-radius:20px;padding:2px 9px;font-size:10px;color:var(--green);font-family:'Share Tech Mono',monospace;white-space:nowrap;}
@@ -157,7 +157,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 /* dis inside sncf card */
 .dis-merge-head{display:flex;align-items:center;gap:12px;padding:0 20px;height:44px;background:var(--card);border-bottom:1px solid var(--border);border-top:2px solid var(--border);}
 .dis-wrap{padding:14px 20px;display:flex;flex-direction:column;gap:10px;}
-.dis-item{background:var(--card);border-radius:7px;border-left:3px solid var(--yellow);overflow:hidden;}
+.dis-item{background:var(--dis-bg);border-radius:7px;border-left:3px solid var(--yellow);overflow:hidden;}
 .dis-item.severe{border-left-color:var(--red);}.dis-item.modified{border-left-color:var(--orange);}.dis-item.info{border-left-color:#4a90e2;}.dis-item.test-mode{outline:1px dashed rgba(245,197,24,.35);}
 .dis-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px 14px 8px;}
 .dis-badge{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:.08em;padding:3px 10px;border-radius:20px;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
@@ -317,6 +317,38 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .dir-btn:hover{color:#fff;background:rgba(255,255,255,.06);}
 .dir-btn.active{background:rgba(255,255,255,.15);color:#fff;}
 .travel-upd{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);}
+
+/* Light mode overrides */
+[data-theme="light"] .board-msg{color:rgba(0,0,128,.3);}
+[data-theme="light"] .hdr{box-shadow:0 4px 20px rgba(228,3,46,.25);}
+[data-theme="light"] .section-card,.travel-row,[data-theme="light"] .section-card{box-shadow:0 2px 12px var(--shadow);}
+[data-theme="light"] .card-h{background:#F0F2F7;}
+[data-theme="light"] .dis-item{box-shadow:0 1px 4px rgba(0,0,0,.06);}
+[data-theme="light"] .t-city-name{color:var(--text);}
+[data-theme="light"] .t-city-hint{color:var(--muted);}
+[data-theme="light"] .travel-dir-dest{color:var(--text);}
+[data-theme="light"] .bc-title{color:rgba(255,255,255,.85);}
+[data-theme="light"] .bc-head{border-bottom:1px solid rgba(255,255,255,.15);}
+[data-theme="light"] .w-day-toggle{background:rgba(0,0,0,.08);border-color:rgba(0,0,0,.12);}
+[data-theme="light"] .w-day-btn{color:rgba(0,0,0,.4);}
+[data-theme="light"] .w-day-btn.active{background:rgba(0,0,0,.1);color:var(--text);}
+[data-theme="light"] .w-sub-tabs{background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.1);}
+[data-theme="light"] .w-sub-btn{color:rgba(0,0,0,.4);}
+[data-theme="light"] .w-sub-btn.active{background:rgba(0,0,0,.08);color:var(--text);}
+[data-theme="light"] .hdr-tabs{background:rgba(0,0,0,.15);border-color:rgba(255,255,255,.15);}
+[data-theme="light"] .tab-btn{color:rgba(255,255,255,.65);}
+[data-theme="light"] .tab-btn.active{background:#fff;color:var(--red);}
+[data-theme="light"] .travel-col-head{background:#F0F2F7;}
+[data-theme="light"] .travel-dir-header{background:rgba(0,0,0,.04);}
+[data-theme="light"] .dis-merge-head{background:#F0F2F7;}
+[data-theme="light"] .map-footer{background:#F0F2F7;}
+[data-theme="light"] .no-dis{color:var(--green);}
+[data-theme="light"] .rbtn{border-color:var(--border);color:var(--muted);}
+[data-theme="light"] .rbtn:hover{border-color:var(--red);color:var(--red);}
+[data-theme="light"] .dir-toggle{background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.12);}
+[data-theme="light"] .dir-btn{color:rgba(0,0,0,.4);}
+[data-theme="light"] .dir-btn.active{background:rgba(0,0,0,.1);color:var(--text);}
+
 </style>
 </head>
 <body>
@@ -331,7 +363,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     <button class="tab-btn" id="tab-btn-trafic" onclick="switchTab('trafic')"><span class="ti">&#128642;</span> Trafic Tool</button>
     <button class="tab-btn" id="tab-btn-weather" onclick="switchTab('weather')"><span class="ti">&#9928;&#65039;</span> Weather Tool</button>
   </div>
-  <div class="hdr-clock" id="clk">--:--:--</div>
+  <div style="display:flex;align-items:center;gap:12px;justify-content:flex-end;">
+    <button id="theme-toggle" onclick="toggleTheme()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:6px 12px;color:#fff;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transition:background .2s;" title="Changer de thème">&#9790; Sombre</button>
+    <div class="hdr-clock" id="clk">--:--:--</div>
+  </div>
 </div>
 
 <div class="tab-content" id="tab-trafic">
@@ -500,7 +535,49 @@ function renderDis(list,isTest){
   list.forEach(function(d){var eff=(d.severity&&d.severity.effect)||'';var trains=(d._trains||[]).slice(0,6).join(', ');var stops=(d._stops||[]).slice(0,5).map(function(x){return x.name;}).join(', ');var lines=(d._lines||[]).slice(0,3).join(', ');var msgs=d.messages||[],best=null;var prio=['web','notification','long_sms','sms'];for(var p=0;p<prio.length&&!best;p++)for(var i=0;i<msgs.length;i++){var ch=(msgs[i].channel&&msgs[i].channel.types)||[];if(ch.indexOf(prio[p])!==-1){best=msgs[i];break;}}if(!best&&msgs.length)best=msgs[0];var txt=((best&&best.text)?best.text:'').replace(/\n/g,'<br>').slice(0,500);var per=fP(d.application_periods);var title=trains||stops||lines||'Perturbation reseau';if(title.length>90)title=title.slice(0,87)+'...';var meta=trains&&stops?'<strong>Gares :</strong> '+stops:stops&&!trains?'<strong>Gares :</strong> '+stops:lines?'<strong>Ligne :</strong> '+lines:'';html+='<div class="dis-item '+sC(d)+(isTest?' test-mode':'')+'">'+( isTest?'<div class="dis-test-lbl">&#9670; MODE TEST</div>':'')+'<div class="dis-top"><div><div class="dis-title">'+title+'</div>'+(meta?'<div class="dis-meta">'+meta+'</div>':'')+'</div><span class="dis-badge '+bC(eff)+'">'+bL(eff)+'</span></div>'+(txt?'<div class="dis-txt">'+txt+'</div>':'')+(per?'<div class="dis-per">&#128337; '+per+'</div>':'')+'</div>';});
   el.innerHTML=html;
 }
-function loadDis(){TEST_MODE=false;var el=document.getElementById('dis-body');if(!el)return;el.innerHTML='<p style="padding:10px 0;font-size:12px;color:#5E6474;font-family:monospace">Chargement...</p>';fetch(W+'/disruptions').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(data){var now=Date.now();var all=data.disruptions||[];var list=all.filter(function(d){var p=d.application_periods||[];if(!p.length)return true;for(var i=0;i<p.length;i++){var b=p[i].begin?new Date(p[i].begin).getTime():0;var e=p[i].end?new Date(p[i].end).getTime():Infinity;if(e>=now)return true;}return false;});var cEl=document.getElementById('dis-count');if(cEl)cEl.textContent=list.length?list.length+' perturbation'+(list.length>1?'s':'')+' active'+(list.length>1?'s':''): '';renderDis(list,false);}).catch(function(e){document.getElementById('dis-body').innerHTML='<div class="no-dis" style="color:#ff8080">Erreur : '+e.message+'</div>';});}
+function loadDis(){
+  TEST_MODE=false;
+  var el=document.getElementById('dis-body');
+  if(!el)return;
+  el.innerHTML='<p style="padding:10px 0;font-size:12px;color:var(--muted);font-family:monospace">Chargement perturbations...</p>';
+  fetch(W+'/disruptions')
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(data){
+      var now=Date.now();
+      var all=data.disruptions||[];
+
+      /* Filtre souple : garder toute perturbation dont la période n'est pas encore terminée */
+      var list=all.filter(function(d){
+        /* Status "active" ou "future" = toujours afficher */
+        if(d.status==='active'||d.status==='future') return true;
+        var p=d.application_periods||[];
+        if(!p.length) return true;
+        for(var i=0;i<p.length;i++){
+          var e=p[i].end?new Date(p[i].end).getTime():Infinity;
+          if(e>=now) return true;
+        }
+        return false;
+      });
+
+      /* Debug info dans le header */
+      var cEl=document.getElementById('dis-count');
+      if(cEl){
+        var srcInfo='';
+        if(data._sources){
+          var total=data._sources.reduce(function(acc,s){return acc+(s.count>0?s.count:0);},0);
+          srcInfo=' ('+total+' brutes, '+list.length+' actives)';
+        }
+        cEl.textContent=list.length
+          ?list.length+' perturbation'+(list.length>1?'s':'')+' active'+(list.length>1?'s':'')+srcInfo
+          :'0 perturbation'+srcInfo;
+      }
+      renderDis(list,false);
+    })
+    .catch(function(e){
+      var el=document.getElementById('dis-body');
+      if(el) el.innerHTML='<div class="no-dis" style="color:#ff8080">Erreur Worker : '+e.message+'<br><small style="opacity:.6">Vérifiez que NAVITIA_KEY est définie dans les variables du Worker sncf-proxy</small></div>';
+    });
+}
 function testDis(){TEST_MODE=true;renderDis(TEST_DATA,true);}
 
 /* ═ TRAVEL TIMES — TomTom avec/sans autoroute, tri rapide→lent ═ */
