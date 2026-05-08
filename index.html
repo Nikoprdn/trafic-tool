@@ -180,117 +180,114 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .map-lnk.red{color:var(--red);}.map-lnk.muted{color:var(--muted);}
 
 /* TRAVEL TIMES */
-.travel-header-sub{display:flex;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto;}
-.travel-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);}
-.travel-route{
-  padding:0;
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  overflow:hidden;
-  transition:background .15s;
-}
-.travel-route:last-child{border-right:none;}
-.travel-route:hover{background:rgba(255,255,255,.02);}
+.travel-wrap{padding:0;}
 
-/* Origin label */
-.travel-origin{
-  padding:12px 18px 10px;
-  display:flex;align-items:center;gap:8px;
+/* Direction header */
+.travel-dir-header{
+  display:flex;align-items:center;
+  padding:14px 20px;
+  background:rgba(0,0,0,.12);
   border-bottom:1px solid var(--border);
-  background:rgba(0,0,0,.15);
+  gap:10px;
 }
-.travel-origin-dot{
-  width:20px;height:20px;border-radius:50%;
-  background:rgba(39,174,96,.15);border:1.5px solid rgba(39,174,96,.4);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;
-  color:var(--green);flex-shrink:0;
-}
-.travel-origin-text{
-  display:flex;flex-direction:column;gap:1px;
-}
-.travel-origin-name{
+.travel-dir-label{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+}
+.travel-dir-arrow{
+  font-size:18px;color:rgba(255,255,255,.2);
+}
+.travel-dir-dest{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
   color:rgba(255,255,255,.85);
 }
-.travel-origin-hint{
-  font-family:'Share Tech Mono',monospace;
-  font-size:9.5px;color:var(--muted);letter-spacing:.03em;
-}
 
-/* Arrow separator */
-.travel-arrow-row{
-  padding:8px 18px;
-  display:flex;align-items:center;gap:8px;
-  color:rgba(255,255,255,.12);
-  font-size:12px;letter-spacing:.05em;
+/* Routes list */
+.travel-list{
+  display:flex;flex-direction:column;
 }
-.travel-arrow-row::before,.travel-arrow-row::after{
-  content:'';flex:1;height:1px;background:var(--border);
+.travel-row{
+  display:grid;
+  grid-template-columns:20px 1fr auto auto;
+  align-items:center;
+  gap:14px;
+  padding:14px 20px;
+  border-bottom:1px solid var(--border);
+  transition:background .12s;
+  min-height:68px;
 }
-.travel-arrow-icon{font-size:14px;color:rgba(255,255,255,.15);}
+.travel-row:last-child{border-bottom:none;}
+.travel-row:hover{background:rgba(255,255,255,.02);}
 
-/* Destination */
-.travel-dest{
-  padding:0 18px 10px;
-  display:flex;align-items:center;gap:8px;
+/* Status bar */
+.travel-row-bar{
+  width:4px;height:100%;align-self:stretch;
+  border-radius:2px;min-height:40px;
 }
-.travel-dest-dot{
-  width:20px;height:20px;border-radius:50%;
-  background:rgba(228,3,46,.15);border:1.5px solid rgba(228,3,46,.4);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;
-  color:var(--red);flex-shrink:0;
+.travel-row-bar.g{background:var(--green);}
+.travel-row-bar.y{background:var(--yellow);}
+.travel-row-bar.o{background:var(--orange);}
+.travel-row-bar.r{background:var(--red);}
+.travel-row-bar.loading{background:var(--border);}
+
+/* City name */
+.travel-row-city{
+  display:flex;flex-direction:column;gap:2px;
 }
-.travel-dest-name{
+.travel-row-name{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:14px;font-weight:700;letter-spacing:.06em;
-  color:rgba(255,255,255,.7);
+  font-size:17px;font-weight:700;letter-spacing:.05em;
+  color:rgba(255,255,255,.9);
 }
-
-/* Separator */
-.travel-sep-line{
-  height:1px;background:var(--border);margin:0 18px;
-}
-
-/* Time block */
-.travel-time-wrap{
-  padding:18px 18px 14px;
-  display:flex;flex-direction:column;gap:10px;
-}
-.travel-time-main{
-  display:flex;align-items:flex-end;gap:6px;
-}
-.travel-time{
+.travel-row-hint{
   font-family:'Share Tech Mono',monospace;
-  font-size:48px;font-weight:700;color:#fff;line-height:1;
+  font-size:10px;color:var(--muted);letter-spacing:.03em;
 }
-.travel-time-unit{
+
+/* Time */
+.travel-row-time{
+  display:flex;flex-direction:column;align-items:flex-end;gap:4px;
+}
+.travel-row-mins{
+  font-family:'Share Tech Mono',monospace;
+  font-size:32px;font-weight:700;color:#fff;line-height:1;
+  white-space:nowrap;
+}
+.travel-row-mins span{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:16px;font-weight:600;color:var(--muted);
-  margin-bottom:8px;letter-spacing:.06em;text-transform:uppercase;
+  font-size:14px;font-weight:600;color:var(--muted);
+  margin-left:3px;text-transform:uppercase;
 }
-.travel-time.loading{font-size:16px;color:var(--muted);font-weight:400;}
-.travel-time.err{font-size:14px;color:#ff8080;font-weight:400;}
-
-.travel-dist{
+.travel-row-dist{
   font-family:'Share Tech Mono',monospace;
-  font-size:11px;color:var(--muted);
+  font-size:10px;color:var(--muted2);
 }
+.travel-row-mins.loading{font-size:14px;color:var(--muted);font-weight:400;}
+.travel-row-mins.err{font-size:13px;color:#ff8080;font-weight:400;}
 
-/* Traffic pill */
-.travel-trf{
-  display:inline-flex;align-items:center;gap:6px;
+/* Traffic badge */
+.travel-row-trf{
+  display:flex;flex-direction:column;align-items:flex-end;gap:4px;
+  min-width:120px;
+}
+.travel-trf-pill{
+  display:inline-flex;align-items:center;gap:5px;
   font-family:'Barlow Condensed',sans-serif;
   font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  padding:4px 10px;border-radius:20px;width:fit-content;
+  padding:4px 10px;border-radius:20px;white-space:nowrap;
 }
-.travel-trf.g{background:rgba(39,174,96,.1); color:var(--green);  border:1px solid rgba(39,174,96,.22);}
-.travel-trf.y{background:rgba(245,197,24,.1);color:var(--yellow); border:1px solid rgba(245,197,24,.2);}
-.travel-trf.o{background:rgba(255,107,53,.1);color:var(--orange); border:1px solid rgba(255,107,53,.22);}
-.travel-trf.r{background:rgba(228,3,46,.1);  color:#ff8080;       border:1px solid rgba(228,3,46,.22);}
+.travel-trf-pill.g{background:rgba(39,174,96,.1); color:var(--green);  border:1px solid rgba(39,174,96,.22);}
+.travel-trf-pill.y{background:rgba(245,197,24,.1);color:var(--yellow); border:1px solid rgba(245,197,24,.2);}
+.travel-trf-pill.o{background:rgba(255,107,53,.1);color:var(--orange); border:1px solid rgba(255,107,53,.22);}
+.travel-trf-pill.r{background:rgba(228,3,46,.1);  color:#ff8080;       border:1px solid rgba(228,3,46,.22);}
+.travel-trf-delta{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;color:var(--muted);
+}
 
+/* Direction toggle */
 /* Direction toggle */
 .dir-toggle{display:flex;gap:3px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:3px;margin-left:8px;}
 .dir-btn{padding:5px 14px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);cursor:pointer;border:none;background:transparent;transition:all .2s;}
@@ -367,16 +364,16 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     <div class="section-card">
       <div class="card-h">
         <span style="font-size:15px">&#128663;</span>
-        <span class="card-t">Temps de parcours</span>
+        <span class="card-t">Temps de parcours — Fontvieille, Monaco</span>
         <div class="dir-toggle" style="margin-left:12px">
-          <button class="dir-btn active" onclick="setTravelDir('to',this)">&#8594;&nbsp; Vers Monaco</button>
-          <button class="dir-btn" onclick="setTravelDir('from',this)">&#8592;&nbsp; Depuis Monaco</button>
+          <button class="dir-btn active" onclick="setTravelDir('to',this)">&#8594; Vers Monaco</button>
+          <button class="dir-btn" onclick="setTravelDir('from',this)">&#8592; Depuis Monaco</button>
         </div>
-        <div class="pill" style="margin-left:8px"><span class="dot"></span>TomTom Live</div>
-        <span class="travel-upd" id="travel-upd" style="margin-left:auto"></span>
-        <button class="rbtn" onclick="loadTravel()">&#8635;</button>
+        <div class="pill" style="margin-left:8px"><span class="dot"></span>TomTom</div>
+        <span class="travel-upd" id="travel-upd" style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);"></span>
+        <button class="rbtn" onclick="loadTravel()">&#8635; Actualiser</button>
       </div>
-      <div class="travel-grid" id="travel-grid"></div>
+      <div id="travel-grid"><div class="travel-dir-header"><span class="travel-dir-label">Chargement...</span></div></div>
     </div>
 
     <div class="section-card">
@@ -453,7 +450,7 @@ function switchTab(n){
   document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
   document.getElementById('tab-btn-'+n).classList.add('active');
   document.getElementById('tab-'+n).classList.add('active');
-  if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();loadTravel();traficLoaded=true;}
+  if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();traficLoaded=true;}
   if(n==='weather'&&!weatherLoaded){switchWeather('am');loadWeatherAM();loadWeatherIDF();loadVigilance();weatherLoaded=true;}
 }
 function switchWeather(z){
@@ -508,119 +505,108 @@ function renderDis(list,isTest){
 function loadDis(){TEST_MODE=false;var el=document.getElementById('dis-body');if(!el)return;el.innerHTML='<p style="padding:10px 0;font-size:12px;color:#5E6474;font-family:monospace">Chargement...</p>';fetch(W+'/disruptions').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(data){var now=Date.now();var list=(data.disruptions||[]).filter(function(d){var p=d.application_periods||[];if(!p.length)return true;for(var i=0;i<p.length;i++){var e=p[i].end?new Date(p[i].end).getTime():Infinity;if(e>=now)return true;}return false;});renderDis(list,false);}).catch(function(e){document.getElementById('dis-body').innerHTML='<div class="no-dis" style="color:#ff8080">Erreur : '+e.message+'</div>';});}
 function testDis(){TEST_MODE=true;renderDis(TEST_DATA,true);}
 
-/* ═ TRAVEL TIMES — via Worker proxy (CORS fix) ═ */
+/* ═ TRAVEL TIMES — via Worker proxy ═ */
 var W_TRAVEL = 'https://apitom.nicolas7lejeune.workers.dev';
-var FONTVIEILLE = {"lat": 43.7272, "lon": 7.4142, "name": "Fontvieille, Monaco"};
-var ROUTES = [
-  {from:'Port de Nice',    hint:'Quai des Docks',       lat:43.7033, lon:7.2742},
-  {from:'Aéroport de Nice',hint:'Nice Côte d\'Azur',    lat:43.6584, lon:7.2159},
-  {from:'Antibes',         hint:'Centre-ville / Port',  lat:43.5795, lon:7.1282},
-  {from:'Cannes',          hint:'Palais des Festivals',  lat:43.5513, lon:7.0128}
-];
-var travelDir='to';
+var FONTVIEILLE = {"lat": 43.7272, "lon": 7.4142, "name": "Fontvieille"};
+var ROUTES = [{"from": "Port de Nice", "hint": "Quai des Docks", "lat": 43.7033, "lon": 7.2742}, {"from": "A\u00e9roport de Nice", "hint": "Nice C\u00f4te d'Azur", "lat": 43.6584, "lon": 7.2159}, {"from": "Antibes", "hint": "Centre-ville / Port", "lat": 43.5795, "lon": 7.1282}, {"from": "Cannes", "hint": "Palais des Festivals", "lat": 43.5513, "lon": 7.0128}, {"from": "Roquebrune-Cap-Martin", "hint": "Cap Martin", "lat": 43.7651, "lon": 7.4756}, {"from": "Menton", "hint": "Centre-ville", "lat": 43.7765, "lon": 7.4973}];
+var travelDir = 'to';
 
-function setTravelDir(dir,btn){
-  travelDir=dir;
+function setTravelDir(dir, btn){
+  travelDir = dir;
   document.querySelectorAll('.dir-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
+  renderTravelSkeleton();
   loadTravel();
 }
 
 function fmtDur(sec){
-  var m=Math.round(sec/60);
-  if(m<60)return{val:m,unit:'min'};
-  var h=Math.floor(m/60),r=m%60;
-  return{val:h+'h'+(r<10?'0':'')+r,unit:''};
+  var m = Math.round(sec/60);
+  if(m < 60) return {val: m, unit: 'min'};
+  var h = Math.floor(m/60), r = m%60;
+  return {val: h+'h'+(r<10?'0':'')+r, unit: ''};
 }
-function fmtDist(m){return m<1000?Math.round(m)+' m':(m/1000).toFixed(1)+' km';}
-function trafSt(noT,withT){
-  if(!noT||noT===0)return{cls:'g',lbl:'Trafic fluide',delta:''};
-  var ratio=withT/noT,delta=Math.round((withT-noT)/60);
-  var ds=delta>0?'+'+delta+' min':'';
-  if(ratio<1.1)  return{cls:'g',lbl:'Trafic fluide',   delta:ds};
-  if(ratio<1.3)  return{cls:'y',lbl:'Trafic ralenti',  delta:ds};
-  if(ratio<1.6)  return{cls:'o',lbl:'Trafic dense',    delta:ds};
-  return          {cls:'r',lbl:'Embouteillages',        delta:ds};
+function fmtDist(m){ return m < 1000 ? Math.round(m)+' m' : (m/1000).toFixed(1)+' km'; }
+function trafSt(noT, withT){
+  if(!noT || noT === 0) return {cls:'g', lbl:'Trafic fluide', delta:''};
+  var ratio = withT/noT, delta = Math.round((withT - noT)/60);
+  var ds = delta > 0 ? '+'+delta+' min' : '';
+  if(ratio < 1.1)  return {cls:'g', lbl:'Fluide',        delta: ds};
+  if(ratio < 1.3)  return {cls:'y', lbl:'Ralenti',       delta: ds};
+  if(ratio < 1.6)  return {cls:'o', lbl:'Dense',         delta: ds};
+  return              {cls:'r', lbl:'Embouteillages',    delta: ds};
 }
 
-function buildRouteCard(r,data){
-  var isTo=travelDir==='to';
-  var origName = isTo ? r.from      : 'Fontvieille';
-  var origHint = isTo ? r.hint      : 'Monaco';
-  var destName = isTo ? 'Fontvieille': r.from;
-  var destHint = isTo ? 'Monaco'    : r.hint;
+function buildRow(route, data, isLoading){
+  var isTo = travelDir === 'to';
+  var cityName = route.from;
+  var cityHint = route.hint;
 
-  var timeHtml='';
-  var trfHtml='';
-  var distHtml='';
+  var barCls = 'loading';
+  var timeHtml = '<span class="travel-row-mins loading">&#128663; Calcul en cours...</span>';
+  var trfHtml  = '';
+  var distHtml = '';
 
-  if(!data||!data.routes||!data.routes[0]){
-    timeHtml='<div class="travel-time err">Indisponible</div>';
-  } else {
-    var s=data.routes[0].summary;
-    var dur=fmtDur(s.travelTimeInSeconds);
-    var trf=trafSt(s.noTrafficTravelTimeInSeconds,s.travelTimeInSeconds);
-    timeHtml='<div class="travel-time-main">'
-      +'<span class="travel-time">'+dur.val+'</span>'
-      +(dur.unit?'<span class="travel-time-unit">'+dur.unit+'</span>':'')
-      +'</div>';
-    distHtml='<div class="travel-dist">&#128205; '+fmtDist(s.lengthInMeters||0)+'</div>';
-    trfHtml='<div class="travel-trf '+trf.cls+'">&#9679; '+trf.lbl+(trf.delta?' &mdash; '+trf.delta:'')+'</div>';
+  if(!isLoading){
+    if(!data || !data.routes || !data.routes[0]){
+      timeHtml = '<span class="travel-row-mins err">Indisponible</span>';
+    } else {
+      var s   = data.routes[0].summary;
+      var dur = fmtDur(s.travelTimeInSeconds);
+      var trf = trafSt(s.noTrafficTravelTimeInSeconds, s.travelTimeInSeconds);
+      barCls  = trf.cls;
+      timeHtml = '<span class="travel-row-mins">'+dur.val+(dur.unit?'<span>'+dur.unit+'</span>':'')+'</span>';
+      distHtml = '<span class="travel-row-dist">&#128205; '+fmtDist(s.lengthInMeters||0)+'</span>';
+      trfHtml  = '<span class="travel-trf-pill '+trf.cls+'">&#9679; '+trf.lbl+'</span>'
+               + (trf.delta ? '<span class="travel-trf-delta">'+trf.delta+'</span>' : '');
+    }
   }
 
-  return '<div class="travel-route">'
-    /* Origin */
-    +'<div class="travel-origin">'
-    +  '<div class="travel-origin-dot">A</div>'
-    +  '<div class="travel-origin-text">'
-    +    '<span class="travel-origin-name">'+origName+'</span>'
-    +    '<span class="travel-origin-hint">'+origHint+'</span>'
-    +  '</div>'
-    +'</div>'
-    /* Arrow */
-    +'<div class="travel-arrow-row"><span class="travel-arrow-icon">&#8595;</span></div>'
-    /* Destination */
-    +'<div class="travel-dest">'
-    +  '<div class="travel-dest-dot">B</div>'
-    +  '<span class="travel-dest-name">'+destName+'</span>'
-    +'</div>'
-    +'<div class="travel-sep-line"></div>'
-    /* Time + traffic */
-    +'<div class="travel-time-wrap">'
-    +  timeHtml
-    +  distHtml
-    +  trfHtml
-    +'</div>'
-    +'</div>';
+  return '<div class="travel-row">'
+    + '<div class="travel-row-bar '+barCls+'"></div>'
+    + '<div class="travel-row-city"><span class="travel-row-name">'+cityName+'</span><span class="travel-row-hint">'+cityHint+'</span></div>'
+    + '<div class="travel-row-time">'+timeHtml+distHtml+'</div>'
+    + '<div class="travel-row-trf">'+trfHtml+'</div>'
+    + '</div>';
+}
+
+function renderTravelSkeleton(){
+  var grid = document.getElementById('travel-grid');
+  if(!grid) return;
+  var isTo = travelDir === 'to';
+  var destLabel = isTo ? 'Fontvieille — Monaco' : 'Votre destination';
+  grid.innerHTML =
+    '<div class="travel-dir-header">'
+    + '<span class="travel-dir-label">'+(isTo?'Depuis':'Vers')+'</span>'
+    + '<span class="travel-dir-arrow">&#8594;</span>'
+    + '<span class="travel-dir-dest">Fontvieille — Monaco</span>'
+    + '</div>'
+    + '<div class="travel-list">'
+    + ROUTES.map(function(r){ return buildRow(r, null, true); }).join('')
+    + '</div>';
 }
 
 function loadTravel(){
-  var grid=document.getElementById('travel-grid');
-  if(!grid)return;
-  /* Skeleton */
-  grid.innerHTML=ROUTES.map(function(r){
-    var isTo=travelDir==='to';
-    return'<div class="travel-route">'
-      +'<div class="travel-origin"><div class="travel-origin-dot">A</div><div class="travel-origin-text"><span class="travel-origin-name">'+(isTo?r.from:'Fontvieille')+'</span><span class="travel-origin-hint">'+(isTo?r.hint:'Monaco')+'</span></div></div>'
-      +'<div class="travel-arrow-row"><span class="travel-arrow-icon">&#8595;</span></div>'
-      +'<div class="travel-dest"><div class="travel-dest-dot">B</div><span class="travel-dest-name">'+(isTo?'Fontvieille':r.from)+'</span></div>'
-      +'<div class="travel-sep-line"></div>'
-      +'<div class="travel-time-wrap"><div class="travel-time loading">&#128663; Calcul...</div></div>'
-      +'</div>';
-  }).join('');
+  var grid = document.getElementById('travel-grid');
+  if(!grid) return;
+  renderTravelSkeleton();
+  var isTo = travelDir === 'to';
 
-  var isTo=travelDir==='to';
   Promise.allSettled(ROUTES.map(function(r){
-    var orig=isTo?(r.lat+','+r.lon):(FONTVIEILLE.lat+','+FONTVIEILLE.lon);
-    var dest=isTo?(FONTVIEILLE.lat+','+FONTVIEILLE.lon):(r.lat+','+r.lon);
-    var url=W_TRAVEL+'/travel?orig='+encodeURIComponent(orig)+'&dest='+encodeURIComponent(dest);
-    return fetch(url).then(function(res){if(!res.ok)throw new Error('HTTP '+res.status);return res.json();});
+    var orig = isTo ? (r.lat+','+r.lon) : (FONTVIEILLE.lat+','+FONTVIEILLE.lon);
+    var dest = isTo ? (FONTVIEILLE.lat+','+FONTVIEILLE.lon) : (r.lat+','+r.lon);
+    var url  = W_TRAVEL+'/travel?orig='+encodeURIComponent(orig)+'&dest='+encodeURIComponent(dest);
+    return fetch(url).then(function(res){
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      return res.json();
+    });
   })).then(function(results){
-    grid.innerHTML=ROUTES.map(function(r,i){
-      return buildRouteCard(r,results[i].status==='fulfilled'?results[i].value:null);
+    var listEl = grid.querySelector('.travel-list');
+    if(!listEl) return;
+    listEl.innerHTML = ROUTES.map(function(r, i){
+      return buildRow(r, results[i].status==='fulfilled' ? results[i].value : null, false);
     }).join('');
-    var u=document.getElementById('travel-upd');
-    if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
+    var u = document.getElementById('travel-upd');
+    if(u) u.textContent = new Date().toLocaleTimeString('fr-FR',{hour12:false});
   });
 }
 
