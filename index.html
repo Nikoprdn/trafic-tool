@@ -594,177 +594,180 @@ function setTravelDir(dir, btn){
 }
 
 function fmtDur(sec){
-  if(!sec && sec !== 0) return {val:'—', unit:''};
-  var m = Math.round(sec/60);
-  if(m < 60) return {val:m, unit:'min'};
-  var h = Math.floor(m/60), r = m%60;
-  return {val: h+'h'+(r<10?'0':'')+r, unit:''};
+  if(sec===null||sec===undefined) return {val:'—',unit:''};
+  var m=Math.round(sec/60);
+  if(m<60) return {val:m,unit:'min'};
+  var h=Math.floor(m/60),r=m%60;
+  return {val:h+'h'+(r<10?'0':'')+r,unit:''};
 }
-function trafSt(noT, withT){
-  if(!noT || noT===0) return {cls:'g', lbl:'Fluide', delta:''};
-  var ratio = withT/noT, delta = Math.round((withT-noT)/60);
-  var ds = delta>0 ? '+'+delta+' min' : '';
-  if(ratio < 1.1) return {cls:'g', lbl:'Fluide',         delta:ds};
-  if(ratio < 1.3) return {cls:'y', lbl:'Ralenti',        delta:ds};
-  if(ratio < 1.6) return {cls:'o', lbl:'Dense',          delta:ds};
-  return              {cls:'r', lbl:'Embouteillages',    delta:ds};
+function trafSt(noT,withT){
+  if(!noT||noT===0) return {cls:'g',lbl:'Fluide',delta:''};
+  var ratio=withT/noT,delta=Math.round((withT-noT)/60);
+  var ds=delta>0?'+'+delta+' min':'';
+  if(ratio<1.1) return {cls:'g',lbl:'Fluide',    delta:ds};
+  if(ratio<1.3) return {cls:'y',lbl:'Ralenti',   delta:ds};
+  if(ratio<1.6) return {cls:'o',lbl:'Dense',     delta:ds};
+  return           {cls:'r',lbl:'Embouteillages',delta:ds};
 }
 
-/* TomTom : avoid vide = avec autoroute, avoid=motorways = sans */
-function fetchTomTomRoute(oLat, oLon, dLat, dLon, avoidMotorways){
-  var avoid = avoidMotorways ? '&avoid=motorways' : '';
-  var url = 'https://api.tomtom.com/routing/1/calculateRoute/'
-    + oLat+','+oLon+':'+dLat+','+dLon
-    + '/json?traffic=true&travelMode=car&computeTravelTimeFor=all'+avoid+'&key='+TOMTOM_KEY;
-  return fetch(url, {headers:{Accept:'application/json'}})
-    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+/* ── Appel TomTom unique avec retry ── */
+function callTomTom(oLat,oLon,dLat,dLon,avoidMotorways,attempt){
+  attempt=attempt||1;
+  var avoid=avoidMotorways?'&avoid=motorways':'';
+  var url='https://api.tomtom.com/routing/1/calculateRoute/'
+    +oLat+','+oLon+':'+dLat+','+dLon
+    +'/json?traffic=true&travelMode=car&computeTravelTimeFor=all'+avoid+'&key='+TOMTOM_KEY;
+
+  return fetch(url,{headers:{Accept:'application/json'}})
+    .then(function(r){
+      if(r.status===429&&attempt<3){
+        /* Rate limit : attendre 1s et réessayer */
+        return new Promise(function(res){setTimeout(res,1000*attempt);})
+          .then(function(){return callTomTom(oLat,oLon,dLat,dLon,avoidMotorways,attempt+1);});
+      }
+      if(!r.ok) return r.json().then(function(d){throw new Error('TomTom '+r.status+': '+(d.detailedError&&d.detailedError.message||d.error||r.status));});
+      return r.json();
+    })
     .then(function(d){
-      if(!d.routes||!d.routes[0]) throw new Error('Pas de route');
-      var s = d.routes[0].summary;
+      if(!d.routes||!d.routes[0]) throw new Error('Pas de route ('+JSON.stringify(d).slice(0,80)+')');
+      var s=d.routes[0].summary;
       return {
-        duration:         s.travelTimeInSeconds,
-        noTrafDuration:   s.noTrafficTravelTimeInSeconds || s.travelTimeInSeconds,
-        distance:         s.lengthInMeters
+        duration:       s.travelTimeInSeconds,
+        noTrafDuration: s.noTrafficTravelTimeInSeconds||s.travelTimeInSeconds,
+        distance:       s.lengthInMeters,
+        ok:             true
       };
     });
 }
 
-/* Fetch Worker proxy fallback */
-function fetchViaWorker(oLat, oLon, dLat, dLon, avoidMotorways){
-  var avoid = avoidMotorways ? '&avoid=motorways' : '';
-  var url = 'https://apitom.nicolas7lejeune.workers.dev/travel'
-    +'?orig='+encodeURIComponent(oLat+','+oLon)
-    +'&dest='+encodeURIComponent(dLat+','+dLon)
-    +'&avoid='+(avoidMotorways?'motorways':'');
-  return fetch(url)
-    .then(function(r){ if(!r.ok) throw new Error('Worker HTTP '+r.status); return r.json(); })
-    .then(function(d){
-      if(!d.routes||!d.routes[0]) throw new Error('Worker: pas de route');
-      var s = d.routes[0].summary;
-      return {duration:s.travelTimeInSeconds, noTrafDuration:s.noTrafficTravelTimeInSeconds||s.travelTimeInSeconds, distance:s.lengthInMeters};
-    });
-}
-
-function fetchRoute(oLat, oLon, dLat, dLon, avoidMotorways){
-  return fetchTomTomRoute(oLat, oLon, dLat, dLon, avoidMotorways)
+/* Essai direct → Worker proxy */
+function fetchRoute(oLat,oLon,dLat,dLon,avoid){
+  return callTomTom(oLat,oLon,dLat,dLon,avoid)
     .catch(function(e1){
-      console.warn('TomTom direct:', e1.message, '→ essai Worker');
-      return fetchViaWorker(oLat, oLon, dLat, dLon, avoidMotorways);
+      /* Worker fallback */
+      var url='https://apitom.nicolas7lejeune.workers.dev/travel'
+        +'?orig='+encodeURIComponent(oLat+','+oLon)
+        +'&dest='+encodeURIComponent(dLat+','+dLon)
+        +(avoid?'&avoid=motorways':'');
+      return fetch(url).then(function(r){
+        if(!r.ok) throw new Error('Worker '+r.status);
+        return r.json();
+      }).then(function(d){
+        if(!d.routes||!d.routes[0]) throw new Error('Worker: pas de route');
+        var s=d.routes[0].summary;
+        return {duration:s.travelTimeInSeconds,noTrafDuration:s.noTrafficTravelTimeInSeconds||s.travelTimeInSeconds,distance:s.lengthInMeters,ok:true};
+      }).catch(function(e2){
+        console.warn('Trajet '+(avoid?'sans':'avec')+' autoroute indispo (',e1.message,'/',e2.message,')');
+        return null; /* Vraiment pas de route */
+      });
     });
 }
 
-/* Si "sans autoroute" échoue, on retente sans le paramètre avoid */
-function fetchRouteWithFallback(oLat, oLon, dLat, dLon, avoidMotorways){
-  return fetchRoute(oLat, oLon, dLat, dLon, avoidMotorways)
-    .catch(function(){
-      if(avoidMotorways){
-        /* Pas d'itinéraire sans autoroute disponible : retourner null */
-        return null;
-      }
-      return null;
+/* Chargement séquentiel par groupes pour éviter rate-limit */
+function fetchAllRoutes(isTo){
+  var pairs=ROUTES.map(function(r){
+    return {
+      oLat:isTo?r.lat:FONTVIEILLE.lat, oLon:isTo?r.lon:FONTVIEILLE.lon,
+      dLat:isTo?FONTVIEILLE.lat:r.lat, dLon:isTo?FONTVIEILLE.lon:r.lon
+    };
+  });
+
+  /* Appels avec autoroute d'abord, puis sans — avec 200ms entre chaque lot */
+  var withP=pairs.map(function(p){ return fetchRoute(p.oLat,p.oLon,p.dLat,p.dLon,false); });
+
+  return Promise.all(withP).then(function(withResults){
+    /* Petit délai avant les appels "sans autoroute" */
+    return new Promise(function(res){setTimeout(res,300);}).then(function(){
+      var withoutP=pairs.map(function(p){ return fetchRoute(p.oLat,p.oLon,p.dLat,p.dLon,true); });
+      return Promise.all(withoutP).then(function(withoutResults){
+        return {withResults:withResults,withoutResults:withoutResults};
+      });
     });
+  });
 }
 
-function optCell(result, withResult){
+/* ── Rendu ── */
+function optCell(result,refResult){
   if(!result){
-    /* Si même durée que "avec autoroute", afficher "=" au lieu de "—" */
-    if(withResult){
-      return '<div class="t-opt"><span class="t-same">= Même durée</span></div>';
+    if(refResult){
+      return '<div class="t-opt"><span class="t-same">Pas de via\u00a0alternative</span></div>';
     }
     return '<div class="t-opt"><span class="t-time na">—</span></div>';
   }
-  var dur = fmtDur(result.duration);
-  var trf = trafSt(result.noTrafDuration, result.duration);
-  var trfHtml = '<span class="t-trf '+trf.cls+'">'
-    + trf.lbl
-    + (trf.delta ? ' ' + trf.delta : '')
-    + '</span>';
+  var dur=fmtDur(result.duration);
+  var trf=trafSt(result.noTrafDuration,result.duration);
   return '<div class="t-opt">'
-    + '<span class="t-time">'+dur.val+(dur.unit?'<span>'+dur.unit+'</span>':'')+'</span>'
-    + trfHtml
-    + '</div>';
+    +'<span class="t-time">'+dur.val+(dur.unit?'<span>'+dur.unit+'</span>':'')+'</span>'
+    +'<span class="t-trf '+trf.cls+'">'+trf.lbl+(trf.delta?' '+trf.delta:'')+'</span>'
+    +'</div>';
 }
 
-function buildTableRow(route, withResult, withoutResult){
-  var barCls = 'x';
-  if(withResult){
-    barCls = trafSt(withResult.noTrafDuration, withResult.duration).cls;
-  }
+function buildTableRow(route,withR,withoutR){
+  var barCls='x';
+  if(withR){barCls=trafSt(withR.noTrafDuration,withR.duration).cls;}
   return '<div class="travel-row">'
-    + '<div class="t-bar '+barCls+'"></div>'
-    + '<div class="t-city">'
-    +   '<span class="t-city-name">'+route.from+'</span>'
-    +   '<span class="t-city-hint">'+route.hint+'</span>'
-    + '</div>'
-    + optCell(withResult, null)
-    + optCell(withoutResult, withResult)
-    + '</div>';
+    +'<div class="t-bar '+barCls+'"></div>'
+    +'<div class="t-city"><span class="t-city-name">'+route.from+'</span><span class="t-city-hint">'+route.hint+'</span></div>'
+    +optCell(withR,null)
+    +optCell(withoutR,withR)
+    +'</div>';
 }
 
 function renderSkeleton(){
-  var isTo = travelDir === 'to';
-  var grid = document.getElementById('travel-grid');
-  if(!grid) return;
-  var skelRow = ROUTES.map(function(r){
-    return '<div class="travel-row">'
-      +'<div class="t-bar x"></div>'
-      +'<div class="t-city"><span class="t-city-name">'+r.from+'</span><span class="t-city-hint">'+r.hint+'</span></div>'
-      +'<div class="t-opt"><span class="t-time loading">&#128663; Calcul...</span></div>'
-      +'<div class="t-opt"><span class="t-time loading">&#128663; Calcul...</span></div>'
-      +'</div>';
-  }).join('');
-
-  grid.innerHTML =
+  var isTo=travelDir==='to';
+  var grid=document.getElementById('travel-grid');
+  if(!grid)return;
+  grid.innerHTML=
     '<div class="travel-dir-header">'
-    + (isTo
-        ? '<span class="travel-dir-label">Depuis</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-dest">Fontvieille &mdash; Monaco</span>'
-        : '<span class="travel-dir-dest">Fontvieille &mdash; Monaco</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-label">Vers</span>'
+    +(isTo
+      ?'<span class="travel-dir-label">Depuis</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-dest">Fontvieille &mdash; Monaco</span>'
+      :'<span class="travel-dir-dest">Fontvieille &mdash; Monaco</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-label">Vers</span>'
     )
-    + '</div>'
-    + '<div class="travel-col-head">'
-    +   '<div class="tch-city">Ville</div>'
-    +   '<div class="tch-opt with"><span class="tch-icon">&#128694;</span><span class="tch-lbl">Avec autoroute</span></div>'
-    +   '<div class="tch-opt noaut"><span class="tch-icon">&#128246;</span><span class="tch-lbl">Sans autoroute</span></div>'
-    + '</div>'
-    + '<div class="travel-list">'+skelRow+'</div>';
+    +'</div>'
+    +'<div class="travel-col-head">'
+    +'<div class="tch-city">Ville</div>'
+    +'<div class="tch-opt with"><span class="tch-icon">&#128694;</span><span class="tch-lbl">Avec autoroute</span></div>'
+    +'<div class="tch-opt noaut"><span class="tch-icon">&#128246;</span><span class="tch-lbl">Sans autoroute</span></div>'
+    +'</div>'
+    +'<div class="travel-list">'
+    +ROUTES.map(function(r){
+      return '<div class="travel-row">'
+        +'<div class="t-bar x"></div>'
+        +'<div class="t-city"><span class="t-city-name">'+r.from+'</span><span class="t-city-hint">'+r.hint+'</span></div>'
+        +'<div class="t-opt"><span class="t-time loading">...</span></div>'
+        +'<div class="t-opt"><span class="t-time loading">...</span></div>'
+        +'</div>';
+    }).join('')
+    +'</div>';
 }
 
 function loadTravel(){
   renderSkeleton();
-  var isTo = travelDir === 'to';
+  var isTo=travelDir==='to';
 
-  var allFetches = ROUTES.map(function(r){
-    var oLat = isTo ? r.lat           : FONTVIEILLE.lat;
-    var oLon = isTo ? r.lon           : FONTVIEILLE.lon;
-    var dLat = isTo ? FONTVIEILLE.lat : r.lat;
-    var dLon = isTo ? FONTVIEILLE.lon : r.lon;
-    return Promise.allSettled([
-      fetchRouteWithFallback(oLat, oLon, dLat, dLon, false),
-      fetchRouteWithFallback(oLat, oLon, dLat, dLon, true)
-    ]);
-  });
+  fetchAllRoutes(isTo).then(function(res){
+    var withResults=res.withResults, withoutResults=res.withoutResults;
 
-  Promise.all(allFetches).then(function(allResults){
-    var rows = ROUTES.map(function(r, i){
-      var withRes = allResults[i][0].status==='fulfilled' ? allResults[i][0].value : null;
-      var woRes   = allResults[i][1].status==='fulfilled' ? allResults[i][1].value : null;
-      return {route:r, with:withRes, without:woRes, sortKey: withRes ? withRes.duration : 999999};
+    /* Trier par durée "avec autoroute" */
+    var rows=ROUTES.map(function(r,i){
+      return {route:r,withR:withResults[i],withoutR:withoutResults[i],
+              sort:withResults[i]?withResults[i].duration:999999};
     });
-    rows.sort(function(a,b){ return a.sortKey - b.sortKey; });
+    rows.sort(function(a,b){return a.sort-b.sort;});
 
-    var listEl = document.querySelector('#travel-grid .travel-list');
-    if(listEl) listEl.innerHTML = rows.map(function(row){
-      return buildTableRow(row.route, row.with, row.without);
+    var listEl=document.querySelector('#travel-grid .travel-list');
+    if(listEl) listEl.innerHTML=rows.map(function(row){
+      return buildTableRow(row.route,row.withR,row.withoutR);
     }).join('');
 
-    var srcEl = document.getElementById('travel-source');
-    if(srcEl) srcEl.innerHTML = '&#128994; TomTom &mdash; Trafic temps r\u00e9el';
-    var u = document.getElementById('travel-upd');
-    if(u) u.textContent = new Date().toLocaleTimeString('fr-FR',{hour12:false});
+    var srcEl=document.getElementById('travel-source');
+    if(srcEl) srcEl.innerHTML='&#128994; TomTom &mdash; Trafic temps r\u00e9el';
+    var u=document.getElementById('travel-upd');
+    if(u) u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
   });
 }
 
-var renderTravelSkeleton = renderSkeleton;
+var renderTravelSkeleton=renderSkeleton;
 
 /* ═ WEATHER ═ */
 var REGION_AM={"lat": 43.7102, "lon": 7.262, "name": "C\u00f4te d'Azur"};
