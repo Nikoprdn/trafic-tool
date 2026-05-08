@@ -441,7 +441,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
         <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto">Cannes &rarr; Frontière italienne</span>
       </div>
       <div class="a8-map-wrap">
-        <div id="a8-map"></div>
+        <div id="a8-map" style="width:100%;height:460px;"></div>
         <!-- Légende trafic -->
         <div class="a8-map-legend">
           <div class="a8-legend-title">État du trafic A8</div>
@@ -919,64 +919,89 @@ setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM(
 
 <script>
 /* ═ TomTom A8 Map ═ */
-var a8Map = null;
-var a8Layers = {flow: true, inc: true};
-var A8_KEY   = 'Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
-var A8_BOUNDS = [[6.95, 43.50], [7.65, 43.85]];
-var A8_CENTER = [7.27, 43.665];
+var a8Map  = null;
+var A8_KEY = 'Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
+
+/* Bounds : Cannes → Frontière italienne */
+var A8_SW = [6.95, 43.50]; /* [lon, lat] */
+var A8_NE = [7.65, 43.85];
 
 function initA8Map(){
-  if(a8Map || typeof tt === 'undefined'){
-    if(typeof tt === 'undefined') console.warn('TomTom SDK non charge');
+  var container = document.getElementById('a8-map');
+  if(!container){ console.warn('a8-map container introuvable'); return; }
+  if(a8Map){ return; } /* déjà initialisé */
+
+  if(typeof tt === 'undefined'){
+    console.warn('TomTom SDK pas encore chargé, retry dans 1s...');
+    setTimeout(initA8Map, 1000);
     return;
   }
+
   try {
     a8Map = tt.map({
       key:       A8_KEY,
       container: 'a8-map',
-      center:    A8_CENTER,
+      center:    [7.27, 43.665], /* [lon, lat] */
       zoom:      10,
       language:  'fr-FR',
-      stylesVisibility: { trafficFlow: true, trafficIncidents: true },
-      style: 'tomtom://vector/1/basic-night',
+      stylesVisibility: {
+        trafficFlow:      true,
+        trafficIncidents: true,
+      },
     });
-    a8Map.addControl(new tt.NavigationControl({showZoom:true,showCompass:false}), 'bottom-right');
+
+    /* Navigation control */
+    a8Map.addControl(new tt.NavigationControl(), 'bottom-right');
+
+    /* Une fois la carte chargée, cadrer sur la A8 */
     a8Map.on('load', function(){
-      a8Map.fitBounds(A8_BOUNDS, {padding:30, animate:false});
+      a8Map.fitBounds([A8_SW, A8_NE], { padding: 30, maxZoom: 12 });
     });
-  } catch(e){ console.error('TomTom map init error:', e); }
+
+    a8Map.on('error', function(e){
+      console.error('TomTom map error:', e);
+    });
+
+  } catch(err){
+    console.error('TomTom map init failed:', err);
+    /* Fallback : afficher un message dans le container */
+    if(container){
+      container.style.display = 'flex';
+      container.style.alignItems = 'center';
+      container.style.justifyContent = 'center';
+      container.innerHTML = '<div style="font-family:monospace;font-size:12px;color:#ff8080;text-align:center;">Carte TomTom indisponible<br><small>'+err.message+'</small></div>';
+    }
+  }
 }
 
 function toggleMapLayer(layer){
   if(!a8Map) return;
-  a8Layers[layer] = !a8Layers[layer];
   var btn = document.getElementById('btn-'+layer);
-  if(btn) btn.classList.toggle('active', a8Layers[layer]);
+  var active = btn ? btn.classList.toggle('active') : true;
   try {
-    a8Map.setStylesVisibility({
-      trafficFlow:      a8Layers.flow,
-      trafficIncidents: a8Layers.inc,
-    });
-  } catch(e){}
+    if(layer === 'flow')
+      a8Map.setStylesVisibility({ trafficFlow: active });
+    else
+      a8Map.setStylesVisibility({ trafficIncidents: active });
+  } catch(e){ console.warn('toggleMapLayer:', e.message); }
 }
 
 function resetMapView(){
   if(!a8Map) return;
-  a8Map.fitBounds(A8_BOUNDS, {padding:30, animate:true});
+  a8Map.fitBounds([A8_SW, A8_NE], { padding: 30, animate: true });
 }
 
-/* Adapter le thème de la carte au thème de l'interface */
 function syncMapTheme(){
   if(!a8Map) return;
-  var t = document.documentElement.getAttribute('data-theme') || 'dark';
-  try {
-    a8Map.setStyle(t === 'dark'
-      ? 'tomtom://vector/1/basic-night'
-      : 'tomtom://vector/1/basic-main'
-    );
-  } catch(e){}
+  /* Le thème de la carte suit le thème de l'interface */
+  /* (pas de changement de style pour éviter de recharger les tuiles) */
+}
+
+/* Lancer quand le DOM est prêt */
+if(document.readyState === 'complete'){
+  setTimeout(initA8Map, 500);
+} else {
+  window.addEventListener('load', function(){ setTimeout(initA8Map, 200); });
 }
 </script>
-
 </body>
-</html>
