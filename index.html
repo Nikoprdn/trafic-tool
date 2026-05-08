@@ -5,7 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Radio Monaco — Studio Tools</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- TomTom Maps SDK -->
+<link rel="stylesheet" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps.css">
+<script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js"></script>
 <style>
+
 :root{--red:#E4032E;--bg:#0D1016;--panel:#12151C;--card:#181B26;--border:#232730;--text:#E8EAF0;--muted:#5E6474;--muted2:#42465A;--yellow:#F5C518;--orange:#FF6B35;--green:#27AE60;--sb-bg:#003580;--sb-head:#002055;--sb-row:#004AC0;--sb-alt:#0041A8;--sb-sep:rgba(255,255,255,.06);--blue-deep:#071830;--blue-mid:#0A2A5E;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow',sans-serif;}
@@ -349,6 +353,26 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 [data-theme="light"] .dir-btn{color:rgba(0,0,0,.4);}
 [data-theme="light"] .dir-btn.active{background:rgba(0,0,0,.1);color:var(--text);}
 
+
+/* TomTom A8 Map */
+.a8-map-wrap{position:relative;width:100%;height:460px;background:var(--card);}
+#a8-map{width:100%;height:100%;}
+.a8-map-legend{
+  position:absolute;bottom:12px;left:12px;z-index:10;
+  background:rgba(13,16,22,.88);border:1px solid var(--border);
+  border-radius:8px;padding:10px 14px;
+  display:flex;flex-direction:column;gap:6px;
+  backdrop-filter:blur(8px);
+}
+.a8-legend-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:2px;}
+.a8-legend-row{display:flex;align-items:center;gap:8px;}
+.a8-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.a8-legend-lbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.7);}
+.a8-overlay{position:absolute;top:12px;right:12px;z-index:10;display:flex;flex-direction:column;gap:6px;}
+.a8-btn{background:rgba(13,16,22,.88);border:1px solid var(--border);border-radius:6px;padding:6px 12px;color:rgba(255,255,255,.7);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.a8-btn:hover{border-color:var(--red);color:#fff;}
+.a8-btn.active{background:rgba(228,3,46,.15);border-color:var(--red);color:var(--red);}
+
 </style>
 </head>
 <body>
@@ -410,9 +434,34 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     </div>
 
     <div class="section-card">
-      <div class="card-h"><span style="font-size:15px">&#128739;&#65039;</span><span class="card-t">Autoroute A8 — Trafic</span><div class="pill" style="margin-left:10px"><span class="dot"></span>Temps réel</div></div>
-      <div class="map-frame"><iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d55000!2d7.35!3d43.73!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sfr!4v1!5m2!1sfr!2sfr&layer=t" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
-      <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; Carte APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a></div>
+      <div class="card-h">
+        <span style="font-size:15px">&#128739;&#65039;</span>
+        <span class="card-t">Autoroute A8 — Trafic temps réel</span>
+        <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
+        <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto">Cannes &rarr; Frontière italienne</span>
+      </div>
+      <div class="a8-map-wrap">
+        <div id="a8-map"></div>
+        <!-- Légende trafic -->
+        <div class="a8-map-legend">
+          <div class="a8-legend-title">État du trafic A8</div>
+          <div class="a8-legend-row"><div class="a8-legend-dot" style="background:#00cc00"></div><span class="a8-legend-lbl">Fluide</span></div>
+          <div class="a8-legend-row"><div class="a8-legend-dot" style="background:#ff8c00"></div><span class="a8-legend-lbl">Ralenti</span></div>
+          <div class="a8-legend-row"><div class="a8-legend-dot" style="background:#cc0000"></div><span class="a8-legend-lbl">Bloqué</span></div>
+          <div class="a8-legend-row"><div class="a8-legend-dot" style="background:#800080"></div><span class="a8-legend-lbl">Travaux</span></div>
+        </div>
+        <!-- Contrôles -->
+        <div class="a8-overlay">
+          <button class="a8-btn active" id="btn-flow"    onclick="toggleMapLayer('flow')"   >&#128660; Trafic</button>
+          <button class="a8-btn active" id="btn-inc"     onclick="toggleMapLayer('inc')"    >&#9888; Incidents</button>
+          <button class="a8-btn"        id="btn-reset"   onclick="resetMapView()"            >&#8982; Centrer</button>
+        </div>
+      </div>
+      <div class="map-footer">
+        <a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; Carte APRR</a>
+        <a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a>
+        <span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Maps SDK v6</span>
+      </div>
     </div>
 
     <div class="section-card">
@@ -861,10 +910,73 @@ function loadVigilance(){
 
 /* ═ INIT ═ */
 switchTab('trafic');
+setTimeout(function(){ if(typeof initA8Map==='function') initA8Map(); },800);
 setInterval(function(){if(traficLoaded){loadBoard();if(!TEST_MODE)loadDis();}},60000);
 setInterval(function(){if(traficLoaded)loadTravel();},600000);
 setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM();loadWeatherIDF();loadVigilance();}},300000);
 
 </script>
+
+<script>
+/* ═ TomTom A8 Map ═ */
+var a8Map = null;
+var a8Layers = {flow: true, inc: true};
+var A8_KEY   = 'Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
+var A8_BOUNDS = [[6.95, 43.50], [7.65, 43.85]];
+var A8_CENTER = [7.27, 43.665];
+
+function initA8Map(){
+  if(a8Map || typeof tt === 'undefined'){
+    if(typeof tt === 'undefined') console.warn('TomTom SDK non charge');
+    return;
+  }
+  try {
+    a8Map = tt.map({
+      key:       A8_KEY,
+      container: 'a8-map',
+      center:    A8_CENTER,
+      zoom:      10,
+      language:  'fr-FR',
+      stylesVisibility: { trafficFlow: true, trafficIncidents: true },
+      style: 'tomtom://vector/1/basic-night',
+    });
+    a8Map.addControl(new tt.NavigationControl({showZoom:true,showCompass:false}), 'bottom-right');
+    a8Map.on('load', function(){
+      a8Map.fitBounds(A8_BOUNDS, {padding:30, animate:false});
+    });
+  } catch(e){ console.error('TomTom map init error:', e); }
+}
+
+function toggleMapLayer(layer){
+  if(!a8Map) return;
+  a8Layers[layer] = !a8Layers[layer];
+  var btn = document.getElementById('btn-'+layer);
+  if(btn) btn.classList.toggle('active', a8Layers[layer]);
+  try {
+    a8Map.setStylesVisibility({
+      trafficFlow:      a8Layers.flow,
+      trafficIncidents: a8Layers.inc,
+    });
+  } catch(e){}
+}
+
+function resetMapView(){
+  if(!a8Map) return;
+  a8Map.fitBounds(A8_BOUNDS, {padding:30, animate:true});
+}
+
+/* Adapter le thème de la carte au thème de l'interface */
+function syncMapTheme(){
+  if(!a8Map) return;
+  var t = document.documentElement.getAttribute('data-theme') || 'dark';
+  try {
+    a8Map.setStyle(t === 'dark'
+      ? 'tomtom://vector/1/basic-night'
+      : 'tomtom://vector/1/basic-main'
+    );
+  } catch(e){}
+}
+</script>
+
 </body>
 </html>
