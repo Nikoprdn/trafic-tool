@@ -180,88 +180,109 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .map-lnk.red{color:var(--red);}.map-lnk.muted{color:var(--muted);}
 
 /* TRAVEL TIMES */
-.travel-dir-header{display:flex;align-items:center;gap:10px;padding:12px 20px;background:rgba(0,0,0,.15);border-bottom:1px solid var(--border);}
-.travel-dir-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4);}
-.travel-dir-arrow{font-size:14px;color:rgba(255,255,255,.18);}
-.travel-dir-dest{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.85);}
-
-/* Table header */
-.travel-table-head{
-  display:grid;
-  grid-template-columns:5px 1fr 150px 150px;
-  align-items:center;gap:0;
-  padding:8px 20px;
-  background:var(--card);
+.travel-dir-header{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 24px;
+  background:linear-gradient(90deg,rgba(255,255,255,.03) 0%,transparent 100%);
   border-bottom:1px solid var(--border);
 }
-.tth-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
-.tth-col{text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
-.tth-col.with{color:rgba(39,174,96,.7);}
-.tth-col.without{color:rgba(245,197,24,.6);}
+.travel-dir-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);}
+.travel-dir-arrow{font-size:16px;color:rgba(255,255,255,.2);}
+.travel-dir-dest{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#fff;}
 
-/* Table rows */
+/* Column headers */
+.travel-col-head{
+  display:grid;
+  grid-template-columns:1fr 200px 200px;
+  padding:8px 24px 8px 28px;
+  background:var(--card);
+  border-bottom:1px solid var(--border);
+  gap:0;
+}
+.tch-city{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);}
+.tch-opt{
+  text-align:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.tch-opt .tch-icon{font-size:14px;}
+.tch-opt .tch-lbl{color:var(--muted);}
+.tch-opt.with  .tch-lbl{color:rgba(39,174,96,.7);}
+.tch-opt.noaut .tch-lbl{color:rgba(245,197,24,.6);}
+
+/* Route rows */
+.travel-list{display:flex;flex-direction:column;}
 .travel-row{
   display:grid;
-  grid-template-columns:5px 1fr 150px 150px;
-  align-items:center;gap:0;
-  padding:14px 20px;
-  border-bottom:1px solid var(--border);
+  grid-template-columns:4px 1fr 200px 200px;
+  align-items:center;
+  min-height:72px;
+  border-bottom:1px solid rgba(255,255,255,.04);
   transition:background .12s;
 }
 .travel-row:last-child{border-bottom:none;}
-.travel-row:hover{background:rgba(255,255,255,.02);}
+.travel-row:hover{background:rgba(255,255,255,.025);}
 
-/* Status bar */
-.travel-bar{align-self:stretch;width:4px;border-radius:2px;margin-right:16px;}
-.travel-bar.g{background:var(--green);}
-.travel-bar.y{background:var(--yellow);}
-.travel-bar.o{background:var(--orange);}
-.travel-bar.r{background:var(--red);}
-.travel-bar.x{background:var(--border);}
+/* Left color bar */
+.t-bar{align-self:stretch;border-radius:0 2px 2px 0;flex-shrink:0;}
+.t-bar.g{background:var(--green);}
+.t-bar.y{background:var(--yellow);}
+.t-bar.o{background:var(--orange);}
+.t-bar.r{background:var(--red);}
+.t-bar.x{background:var(--border);}
 
-/* City */
-.travel-city{display:flex;flex-direction:column;gap:2px;}
-.travel-city-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;letter-spacing:.04em;color:rgba(255,255,255,.9);}
-.travel-city-hint{font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);}
-
-/* Time cell */
-.travel-time-cell{
-  display:flex;flex-direction:column;align-items:center;gap:5px;
-  padding:0 12px;
+/* City column */
+.t-city{
+  padding:0 16px 0 20px;
+  display:flex;flex-direction:column;gap:2px;
 }
-.travel-time-val{
-  font-family:'Share Tech Mono',monospace;
-  font-size:30px;font-weight:700;color:#fff;line-height:1;
-  white-space:nowrap;
-}
-.travel-time-val span{
+.t-city-name{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:14px;font-weight:600;color:var(--muted);margin-left:2px;
+  font-size:18px;font-weight:700;letter-spacing:.04em;
+  color:rgba(255,255,255,.9);
 }
-.travel-time-val.loading{font-size:14px;color:var(--muted);font-weight:400;}
-.travel-time-val.err{font-size:12px;color:#ff8080;font-weight:400;}
+.t-city-hint{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9.5px;color:var(--muted);
+}
 
-.travel-trf-pill{
+/* Time option cell */
+.t-opt{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:12px 16px;
+  gap:7px;
+  border-left:1px solid rgba(255,255,255,.05);
+  height:100%;
+}
+
+/* The big time number */
+.t-time{
+  font-family:'Share Tech Mono',monospace;
+  font-size:34px;font-weight:700;color:#fff;
+  line-height:1;white-space:nowrap;
+}
+.t-time span{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;font-weight:600;color:rgba(255,255,255,.45);
+  margin-left:2px;letter-spacing:.04em;
+}
+.t-time.na{font-size:20px;color:var(--muted2);font-weight:400;}
+.t-time.loading{font-size:14px;color:var(--muted);font-weight:400;}
+
+/* Traffic pill */
+.t-trf{
   display:inline-flex;align-items:center;gap:4px;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
-  padding:2px 8px;border-radius:12px;white-space:nowrap;
+  font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 9px;border-radius:12px;white-space:nowrap;
 }
-.travel-trf-pill.g{background:rgba(39,174,96,.1); color:var(--green);  border:1px solid rgba(39,174,96,.22);}
-.travel-trf-pill.y{background:rgba(245,197,24,.1);color:var(--yellow); border:1px solid rgba(245,197,24,.2);}
-.travel-trf-pill.o{background:rgba(255,107,53,.1);color:var(--orange); border:1px solid rgba(255,107,53,.22);}
-.travel-trf-pill.r{background:rgba(228,3,46,.1);  color:#ff8080;       border:1px solid rgba(228,3,46,.22);}
+.t-trf.g{background:rgba(39,174,96,.1); color:rgba(39,174,96,.9);  border:1px solid rgba(39,174,96,.2);}
+.t-trf.y{background:rgba(245,197,24,.1);color:rgba(245,197,24,.9); border:1px solid rgba(245,197,24,.2);}
+.t-trf.o{background:rgba(255,107,53,.1);color:rgba(255,107,53,.9); border:1px solid rgba(255,107,53,.2);}
+.t-trf.r{background:rgba(228,3,46,.1);  color:rgba(255,120,120,.9);border:1px solid rgba(228,3,46,.2);}
 
-/* Fastest tag */
-.travel-fastest{
-  display:inline-flex;align-items:center;gap:3px;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  padding:2px 7px;border-radius:10px;
-  background:rgba(39,174,96,.12);color:rgba(39,174,96,.8);border:1px solid rgba(39,174,96,.2);
-}
-.travel-col-divider{width:1px;background:var(--border);align-self:stretch;margin:0 4px;}
-
+/* Direction toggle */
 /* Direction toggle */
 /* Direction toggle */
 /* Direction toggle */
@@ -553,32 +574,35 @@ function fetchRoute(oLat, oLon, dLat, dLon, avoidMotorways){
     });
 }
 
-function timeCell(result, isFirst){
-  if(!result) return '<div class="travel-time-cell"><span class="travel-time-val err">—</span></div>';
+function optCell(result){
+  if(!result){
+    return '<div class="t-opt"><span class="t-time na">—</span></div>';
+  }
   var dur = fmtDur(result.duration);
   var trf = trafSt(result.noTrafDuration, result.duration);
-  return '<div class="travel-time-cell">'
-    + '<span class="travel-time-val">'+dur.val+(dur.unit?'<span>'+dur.unit+'</span>':'')+'</span>'
-    + '<span class="travel-trf-pill '+trf.cls+'">'+trf.lbl+(trf.delta?' '+trf.delta:'')+'</span>'
+  var trfHtml = '<span class="t-trf '+trf.cls+'">'
+    + trf.lbl
+    + (trf.delta ? ' ' + trf.delta : '')
+    + '</span>';
+  return '<div class="t-opt">'
+    + '<span class="t-time">'+dur.val+(dur.unit?'<span>'+dur.unit+'</span>':'')+'</span>'
+    + trfHtml
     + '</div>';
 }
 
-function buildTableRow(route, withResult, withoutResult, isFirst){
-  /* Status bar color = couleur trafic avec autoroute */
+function buildTableRow(route, withResult, withoutResult){
   var barCls = 'x';
   if(withResult){
-    var trf = trafSt(withResult.noTrafDuration, withResult.duration);
-    barCls = trf.cls;
+    barCls = trafSt(withResult.noTrafDuration, withResult.duration).cls;
   }
   return '<div class="travel-row">'
-    + '<div class="travel-bar '+barCls+'"></div>'
-    + '<div class="travel-city">'
-    +   (isFirst ? '<span class="travel-fastest">&#9650; Le plus rapide</span>' : '')
-    +   '<span class="travel-city-name">'+route.from+'</span>'
-    +   '<span class="travel-city-hint">'+route.hint+'</span>'
+    + '<div class="t-bar '+barCls+'"></div>'
+    + '<div class="t-city">'
+    +   '<span class="t-city-name">'+route.from+'</span>'
+    +   '<span class="t-city-hint">'+route.hint+'</span>'
     + '</div>'
-    + timeCell(withResult, isFirst)
-    + timeCell(withoutResult, false)
+    + optCell(withResult)
+    + optCell(withoutResult)
     + '</div>';
 }
 
@@ -586,6 +610,15 @@ function renderSkeleton(){
   var isTo = travelDir === 'to';
   var grid = document.getElementById('travel-grid');
   if(!grid) return;
+  var skelRow = ROUTES.map(function(r){
+    return '<div class="travel-row">'
+      +'<div class="t-bar x"></div>'
+      +'<div class="t-city"><span class="t-city-name">'+r.from+'</span><span class="t-city-hint">'+r.hint+'</span></div>'
+      +'<div class="t-opt"><span class="t-time loading">&#128663; Calcul...</span></div>'
+      +'<div class="t-opt"><span class="t-time loading">&#128663; Calcul...</span></div>'
+      +'</div>';
+  }).join('');
+
   grid.innerHTML =
     '<div class="travel-dir-header">'
     + (isTo
@@ -593,60 +626,44 @@ function renderSkeleton(){
         : '<span class="travel-dir-dest">Fontvieille &mdash; Monaco</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-label">Vers</span>'
     )
     + '</div>'
-    + '<div class="travel-table-head">'
-    +   '<div></div>'
-    +   '<div class="tth-label">Ville</div>'
-    +   '<div class="tth-col with">&#128694; Avec autoroute</div>'
-    +   '<div class="tth-col without">&#128246; Sans autoroute</div>'
+    + '<div class="travel-col-head">'
+    +   '<div class="tch-city">Ville</div>'
+    +   '<div class="tch-opt with"><span class="tch-icon">&#128694;</span><span class="tch-lbl">Avec autoroute</span></div>'
+    +   '<div class="tch-opt noaut"><span class="tch-icon">&#128246;</span><span class="tch-lbl">Sans autoroute</span></div>'
     + '</div>'
-    + '<div class="travel-list">'
-    + ROUTES.map(function(r){
-        return '<div class="travel-row">'
-          +'<div class="travel-bar x"></div>'
-          +'<div class="travel-city"><span class="travel-city-name">'+r.from+'</span><span class="travel-city-hint">'+r.hint+'</span></div>'
-          +'<div class="travel-time-cell"><span class="travel-time-val loading">Calcul...</span></div>'
-          +'<div class="travel-time-cell"><span class="travel-time-val loading">Calcul...</span></div>'
-          +'</div>';
-      }).join('')
-    + '</div>';
+    + '<div class="travel-list">'+skelRow+'</div>';
 }
 
 function loadTravel(){
   renderSkeleton();
   var isTo = travelDir === 'to';
 
-  /* Pour chaque ville : 2 appels (avec et sans autoroute) */
   var allFetches = ROUTES.map(function(r){
     var oLat = isTo ? r.lat           : FONTVIEILLE.lat;
     var oLon = isTo ? r.lon           : FONTVIEILLE.lon;
     var dLat = isTo ? FONTVIEILLE.lat : r.lat;
     var dLon = isTo ? FONTVIEILLE.lon : r.lon;
     return Promise.allSettled([
-      fetchRoute(oLat, oLon, dLat, dLon, false),  /* avec autoroute */
-      fetchRoute(oLat, oLon, dLat, dLon, true)     /* sans autoroute */
+      fetchRoute(oLat, oLon, dLat, dLon, false),
+      fetchRoute(oLat, oLon, dLat, dLon, true)
     ]);
   });
 
   Promise.all(allFetches).then(function(allResults){
-    /* Construire les données + trier par durée avec autoroute */
     var rows = ROUTES.map(function(r, i){
-      var withRes  = allResults[i][0].status==='fulfilled' ? allResults[i][0].value : null;
-      var woRes    = allResults[i][1].status==='fulfilled' ? allResults[i][1].value : null;
+      var withRes = allResults[i][0].status==='fulfilled' ? allResults[i][0].value : null;
+      var woRes   = allResults[i][1].status==='fulfilled' ? allResults[i][1].value : null;
       return {route:r, with:withRes, without:woRes, sortKey: withRes ? withRes.duration : 999999};
     });
     rows.sort(function(a,b){ return a.sortKey - b.sortKey; });
 
-    /* Render */
     var listEl = document.querySelector('#travel-grid .travel-list');
-    if(!listEl) return;
-    listEl.innerHTML = rows.map(function(row, i){
-      return buildTableRow(row.route, row.with, row.without, i===0);
+    if(listEl) listEl.innerHTML = rows.map(function(row){
+      return buildTableRow(row.route, row.with, row.without);
     }).join('');
 
-    /* Source indicator */
     var srcEl = document.getElementById('travel-source');
-    if(srcEl) srcEl.innerHTML = '&#128994; TomTom — Trafic temps r\u00e9el';
-
+    if(srcEl) srcEl.innerHTML = '&#128994; TomTom &mdash; Trafic temps r\u00e9el';
     var u = document.getElementById('travel-upd');
     if(u) u.textContent = new Date().toLocaleTimeString('fr-FR',{hour12:false});
   });
