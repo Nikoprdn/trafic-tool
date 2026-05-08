@@ -210,7 +210,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 }
 .travel-row{
   display:grid;
-  grid-template-columns:20px 1fr auto auto;
+  grid-template-columns:20px 1fr auto;
   align-items:center;
   gap:14px;
   padding:14px 20px;
@@ -369,7 +369,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
           <button class="dir-btn active" onclick="setTravelDir('to',this)">&#8594; Vers Monaco</button>
           <button class="dir-btn" onclick="setTravelDir('from',this)">&#8592; Depuis Monaco</button>
         </div>
-        <div class="pill" style="margin-left:8px"><span class="dot"></span>TomTom</div>
+        <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:8px">Temps hors trafic &mdash; OpenStreetMap</span>
         <span class="travel-upd" id="travel-upd" style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);"></span>
         <button class="rbtn" onclick="loadTravel()">&#8635; Actualiser</button>
       </div>
@@ -505,81 +505,95 @@ function renderDis(list,isTest){
 function loadDis(){TEST_MODE=false;var el=document.getElementById('dis-body');if(!el)return;el.innerHTML='<p style="padding:10px 0;font-size:12px;color:#5E6474;font-family:monospace">Chargement...</p>';fetch(W+'/disruptions').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(data){var now=Date.now();var list=(data.disruptions||[]).filter(function(d){var p=d.application_periods||[];if(!p.length)return true;for(var i=0;i<p.length;i++){var e=p[i].end?new Date(p[i].end).getTime():Infinity;if(e>=now)return true;}return false;});renderDis(list,false);}).catch(function(e){document.getElementById('dis-body').innerHTML='<div class="no-dis" style="color:#ff8080">Erreur : '+e.message+'</div>';});}
 function testDis(){TEST_MODE=true;renderDis(TEST_DATA,true);}
 
-/* ═ TRAVEL TIMES — via Worker proxy ═ */
-var W_TRAVEL = 'https://apitom.nicolas7lejeune.workers.dev';
-var FONTVIEILLE = {"lat": 43.7272, "lon": 7.4142, "name": "Fontvieille"};
+/* ═ TRAVEL TIMES — OSRM (Open Source Routing, sans clé, CORS OK) ═ */
+var FONTVIEILLE = {"lat": 43.7272, "lon": 7.4142};
 var ROUTES = [{"from": "Port de Nice", "hint": "Quai des Docks", "lat": 43.7033, "lon": 7.2742}, {"from": "A\u00e9roport de Nice", "hint": "Nice C\u00f4te d'Azur", "lat": 43.6584, "lon": 7.2159}, {"from": "Antibes", "hint": "Centre-ville / Port", "lat": 43.5795, "lon": 7.1282}, {"from": "Cannes", "hint": "Palais des Festivals", "lat": 43.5513, "lon": 7.0128}, {"from": "Roquebrune-Cap-Martin", "hint": "Cap Martin", "lat": 43.7651, "lon": 7.4756}, {"from": "Menton", "hint": "Centre-ville", "lat": 43.7765, "lon": 7.4973}];
 var travelDir = 'to';
 
 function setTravelDir(dir, btn){
   travelDir = dir;
-  document.querySelectorAll('.dir-btn').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.dir-btn').forEach(function(b){ b.classList.remove('active'); });
   btn.classList.add('active');
-  renderTravelSkeleton();
   loadTravel();
 }
 
 function fmtDur(sec){
-  var m = Math.round(sec/60);
-  if(m < 60) return {val: m, unit: 'min'};
+  var m = Math.round(sec / 60);
+  if(m < 60) return { val: m, unit: 'min' };
   var h = Math.floor(m/60), r = m%60;
-  return {val: h+'h'+(r<10?'0':'')+r, unit: ''};
+  return { val: h+'h'+(r<10?'0':'')+r, unit: '' };
 }
-function fmtDist(m){ return m < 1000 ? Math.round(m)+' m' : (m/1000).toFixed(1)+' km'; }
-function trafSt(noT, withT){
-  if(!noT || noT === 0) return {cls:'g', lbl:'Trafic fluide', delta:''};
-  var ratio = withT/noT, delta = Math.round((withT - noT)/60);
-  var ds = delta > 0 ? '+'+delta+' min' : '';
-  if(ratio < 1.1)  return {cls:'g', lbl:'Fluide',        delta: ds};
-  if(ratio < 1.3)  return {cls:'y', lbl:'Ralenti',       delta: ds};
-  if(ratio < 1.6)  return {cls:'o', lbl:'Dense',         delta: ds};
-  return              {cls:'r', lbl:'Embouteillages',    delta: ds};
+function fmtDist(m){
+  return m < 1000 ? Math.round(m)+' m' : (m/1000).toFixed(1)+' km';
 }
 
-function buildRow(route, data, isLoading){
+/* OSRM : sans trafic temps réel — temps de référence */
+function fetchOSRM(origLat, origLon, destLat, destLon){
+  /* OSRM attend longitude,latitude (ordre inverse) */
+  var url = 'https://router.project-osrm.org/route/v1/driving/'
+    + origLon+','+origLat+';'
+    + destLon+','+destLat
+    + '?overview=false&annotations=false';
+  return fetch(url)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(d){
+      if(!d.routes || !d.routes[0]) throw new Error('Pas de route');
+      return {
+        duration: d.routes[0].duration,  /* secondes */
+        distance: d.routes[0].distance   /* mètres */
+      };
+    });
+}
+
+function buildRow(route, result, isLoading){
   var isTo = travelDir === 'to';
-  var cityName = route.from;
-  var cityHint = route.hint;
-
   var barCls = 'loading';
-  var timeHtml = '<span class="travel-row-mins loading">&#128663; Calcul en cours...</span>';
-  var trfHtml  = '';
+  var timeHtml = '<span class="travel-row-mins loading">Calcul...</span>';
   var distHtml = '';
+  var noteHtml = '';
 
   if(!isLoading){
-    if(!data || !data.routes || !data.routes[0]){
-      var errMsg = data && data.error ? data.error : 'Indisponible';
-      timeHtml = '<span class="travel-row-mins err">'+errMsg+'</span>';
+    if(!result){
+      timeHtml = '<span class="travel-row-mins err">Indisponible</span>';
     } else {
-      var s   = data.routes[0].summary;
-      var dur = fmtDur(s.travelTimeInSeconds);
-      var trf = trafSt(s.noTrafficTravelTimeInSeconds, s.travelTimeInSeconds);
-      barCls  = trf.cls;
+      var dur = fmtDur(result.duration);
+      barCls = 'g';
       timeHtml = '<span class="travel-row-mins">'+dur.val+(dur.unit?'<span>'+dur.unit+'</span>':'')+'</span>';
-      distHtml = '<span class="travel-row-dist">&#128205; '+fmtDist(s.lengthInMeters||0)+'</span>';
-      trfHtml  = '<span class="travel-trf-pill '+trf.cls+'">&#9679; '+trf.lbl+'</span>'
-               + (trf.delta ? '<span class="travel-trf-delta">'+trf.delta+'</span>' : '');
+      distHtml = '<span class="travel-row-dist">&#128205; '+fmtDist(result.distance)+'</span>';
     }
   }
 
   return '<div class="travel-row">'
     + '<div class="travel-row-bar '+barCls+'"></div>'
-    + '<div class="travel-row-city"><span class="travel-row-name">'+cityName+'</span><span class="travel-row-hint">'+cityHint+'</span></div>'
+    + '<div class="travel-row-city">'
+    +   '<span class="travel-row-name">'+route.from+'</span>'
+    +   '<span class="travel-row-hint">'+route.hint+'</span>'
+    + '</div>'
     + '<div class="travel-row-time">'+timeHtml+distHtml+'</div>'
-    + '<div class="travel-row-trf">'+trfHtml+'</div>'
     + '</div>';
 }
 
-function renderTravelSkeleton(){
+function renderDir(){
+  var isTo = travelDir === 'to';
   var grid = document.getElementById('travel-grid');
   if(!grid) return;
+  var header = grid.querySelector('.travel-dir-header');
+  if(!header) return;
+  header.innerHTML = isTo
+    ? '<span class="travel-dir-label">Depuis</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-dest">Fontvieille &mdash; Monaco</span>'
+    : '<span class="travel-dir-dest">Fontvieille &mdash; Monaco</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-label">Vers</span>';
+}
+
+function renderTravelSkeleton(){
   var isTo = travelDir === 'to';
-  var destLabel = isTo ? 'Fontvieille — Monaco' : 'Votre destination';
+  var grid = document.getElementById('travel-grid');
+  if(!grid) return;
   grid.innerHTML =
     '<div class="travel-dir-header">'
-    + '<span class="travel-dir-label">'+(isTo?'Depuis':'Vers')+'</span>'
-    + '<span class="travel-dir-arrow">&#8594;</span>'
-    + '<span class="travel-dir-dest">Fontvieille — Monaco</span>'
+    + (isTo
+        ? '<span class="travel-dir-label">Depuis</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-dest">Fontvieille &mdash; Monaco</span>'
+        : '<span class="travel-dir-dest">Fontvieille &mdash; Monaco</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-label">Vers</span>'
+    )
     + '</div>'
     + '<div class="travel-list">'
     + ROUTES.map(function(r){ return buildRow(r, null, true); }).join('')
@@ -587,24 +601,17 @@ function renderTravelSkeleton(){
 }
 
 function loadTravel(){
-  var grid = document.getElementById('travel-grid');
-  if(!grid) return;
   renderTravelSkeleton();
   var isTo = travelDir === 'to';
 
   Promise.allSettled(ROUTES.map(function(r){
-    var orig = isTo ? (r.lat+','+r.lon) : (FONTVIEILLE.lat+','+FONTVIEILLE.lon);
-    var dest = isTo ? (FONTVIEILLE.lat+','+FONTVIEILLE.lon) : (r.lat+','+r.lon);
-    var url  = W_TRAVEL+'/travel?orig='+encodeURIComponent(orig)+'&dest='+encodeURIComponent(dest);
-    return fetch(url).then(function(res){
-      if(!res.ok) throw new Error('HTTP '+res.status);
-      return res.json();
-    }).catch(function(err){
-      console.error('Travel fetch error for '+r.from+':', err.message, url);
-      throw err;
-    });
+    var oLat = isTo ? r.lat            : FONTVIEILLE.lat;
+    var oLon = isTo ? r.lon            : FONTVIEILLE.lon;
+    var dLat = isTo ? FONTVIEILLE.lat  : r.lat;
+    var dLon = isTo ? FONTVIEILLE.lon  : r.lon;
+    return fetchOSRM(oLat, oLon, dLat, dLon);
   })).then(function(results){
-    var listEl = grid.querySelector('.travel-list');
+    var listEl = document.querySelector('#travel-grid .travel-list');
     if(!listEl) return;
     listEl.innerHTML = ROUTES.map(function(r, i){
       return buildRow(r, results[i].status==='fulfilled' ? results[i].value : null, false);
@@ -707,7 +714,7 @@ function loadVigilance(){
 /* ═ INIT ═ */
 switchTab('trafic');
 setInterval(function(){if(traficLoaded){loadBoard();if(!TEST_MODE)loadDis();}},60000);
-setInterval(function(){if(traficLoaded)loadTravel();},600000); /* refresh travel toutes les 10 min */
+setInterval(function(){if(traficLoaded)loadTravel();},600000);
 setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM();loadWeatherIDF();loadVigilance();}},300000);
 
 </script>
