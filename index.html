@@ -236,6 +236,13 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .map-lnk{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;}
 .map-lnk.red{color:var(--red);}
 .map-lnk.muted{color:var(--muted);}
+
+.w-section-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:8px;margin-top:4px;padding-left:2px;display:flex;align-items:center;gap:10px;}
+.w-section-label::before{content:'';display:inline-block;width:22px;height:1px;background:rgba(255,255,255,.18);}
+.w-day-toggle{display:flex;gap:4px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:3px;margin-bottom:12px;width:fit-content;}
+.w-day-btn{padding:6px 20px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);cursor:pointer;border:none;background:transparent;transition:all .2s;white-space:nowrap;}
+.w-day-btn:hover{color:#fff;background:rgba(255,255,255,.06);}
+.w-day-btn.active{background:rgba(255,255,255,.12);color:#fff;}
 </style>
 </head>
 <body>
@@ -314,8 +321,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     </div>
 
     <div class="w-sub-content" id="wsub-am">
+    <div class="w-section-label">Météo actuelle — Côte d'Azur</div>
     <div class="w-hero" id="w-hero-am"><div class="w-loading">Chargement...</div></div>
 
+    <div class="w-section-label">Prévisions horaires</div>
     <div class="w-days-grid">
       <div class="bc">
         <div class="bc-head">
@@ -333,6 +342,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       </div>
     </div>
 
+    <div class="w-section-label">Villes des Alpes-Maritimes</div>
+    <div class="w-day-toggle"><button class="w-day-btn active" onclick="setCitiesDay('am',0,this)">&#128197; Aujourd'hui</button><button class="w-day-btn" onclick="setCitiesDay('am',1,this)">&#128198; Demain (J+1)</button></div>
     <div class="bc" style="margin-bottom:20px">
       <div class="bc-head">
         <span class="bc-title">Alpes-Maritimes — Prévisions J+1 (matin / après-midi)</span>
@@ -344,8 +355,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     </div>
 
     <div class="w-sub-content" id="wsub-idf">
+    <div class="w-section-label">Météo actuelle — Île-de-France</div>
     <div class="w-hero" id="w-hero-idf"><div class="w-loading">Chargement...</div></div>
 
+    <div class="w-section-label">Prévisions horaires</div>
     <div class="w-days-grid">
       <div class="bc">
         <div class="bc-head">
@@ -363,6 +376,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       </div>
     </div>
 
+    <div class="w-section-label">Villes d'Île-de-France</div>
+    <div class="w-day-toggle"><button class="w-day-btn active" onclick="setCitiesDay('idf',0,this)">&#128197; Aujourd'hui</button><button class="w-day-btn" onclick="setCitiesDay('idf',1,this)">&#128198; Demain (J+1)</button></div>
     <div class="bc" style="margin-bottom:20px">
       <div class="bc-head">
         <span class="bc-title">Paris — Île-de-France — Prévisions J+1 (matin / après-midi)</span>
@@ -373,6 +388,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
     </div>
 
+    <div class="w-section-label">Vigilances Météo-France</div>
     <div class="bc">
       <div class="bc-head">
         <span class="bc-title">&#9888;&#65039; Vigilances Météo-France</span>
@@ -540,7 +556,19 @@ function updateHead(d,dayOff,titleId,metaId){
 
 function pickRotating(pool,idx,n){var picks=[];for(var i=0;i<n;i++){picks.push(pool[(idx+i)%pool.length]);}return picks;}
 
-function renderCities(fixedResults,rotResults,gridId){
+var citiesDayAM=0,citiesDayIDF=0;
+var lastFixedAM=null,lastRotAM=null,lastFixedIDF=null,lastRotIDF=null;
+function setCitiesDay(suffix,day,btn){
+  if(suffix==='am') citiesDayAM=day; else citiesDayIDF=day;
+  var bs=btn.parentElement.querySelectorAll('.w-day-btn');
+  bs.forEach(function(b){b.classList.remove('active');});btn.classList.add('active');
+  if(suffix==='am'&&lastFixedAM) renderCities(lastFixedAM,lastRotAM,'w-cities-body-am',citiesDayAM);
+  else if(lastFixedIDF) renderCities(lastFixedIDF,lastRotIDF,'w-cities-body-idf',citiesDayIDF);
+}
+function renderCities(fixedResults,rotResults,gridId,dayOff){
+  if(dayOff===undefined)dayOff=0;
+  if(gridId==='w-cities-body-am'){lastFixedAM=fixedResults;lastRotAM=rotResults;}
+  if(gridId==='w-cities-body-idf'){lastFixedIDF=fixedResults;lastRotIDF=rotResults;}
   var el=document.getElementById(gridId);if(!el)return;
   var slots=[
     {r:fixedResults[0],fixed:true},
@@ -556,7 +584,7 @@ function renderCities(fixedResults,rotResults,gridId){
     if(!res){html+='<div class="w-city"><div class="w-city-name">—</div></div>';return;}
     var city=res.city,d=res.data;
     var hTimes=(d.hourly&&d.hourly.time)||[];
-    var idxM=hourIdx(hTimes,1,9),idxA=hourIdx(hTimes,1,15);
+    var idxM=hourIdx(hTimes,dayOff,9),idxA=hourIdx(hTimes,dayOff,15);
     var tempM=idxM>=0?Math.round(d.hourly.temperature_2m[idxM])+'°':'—';
     var tempA=idxA>=0?Math.round(d.hourly.temperature_2m[idxA])+'°':'—';
     var condM=wmo(idxM>=0?d.hourly.weathercode[idxM]:0).short;
@@ -586,7 +614,7 @@ function loadWeatherAM(){
   var allCities=FIXED_AM.concat(rot);
   Promise.allSettled(allCities.map(fetchCity)).then(function(res){
     var vals=res.map(function(r){return r.status==='fulfilled'?r.value:null;});
-    renderCities(vals.slice(0,3),vals.slice(3),'w-cities-body-am');
+    renderCities(vals.slice(0,3),vals.slice(3),'w-cities-body-am',citiesDayAM);
   });
 }
 
@@ -604,7 +632,7 @@ function loadWeatherIDF(){
   var allCities=FIXED_IDF.concat(rot);
   Promise.allSettled(allCities.map(fetchCity)).then(function(res){
     var vals=res.map(function(r){return r.status==='fulfilled'?r.value:null;});
-    renderCities(vals.slice(0,3),vals.slice(3),'w-cities-body-idf');
+    renderCities(vals.slice(0,3),vals.slice(3),'w-cities-body-idf',citiesDayIDF);
   });
 }
 
