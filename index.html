@@ -373,7 +373,173 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 
 /* A8 TIMELINE */
-.a8-wrap{padding:16px 20px 24px;}
+.a8-wrap{padding:0;}
+
+/* Zoom bar */
+.a8-zoom-bar{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  padding:12px 20px;
+  border-bottom:1px solid var(--border);
+  background:var(--card);
+}
+.a8-zoom-lbl{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);margin-right:4px;
+}
+.a8-zoom-btn{
+  padding:5px 16px;border-radius:5px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);cursor:pointer;
+  border:1px solid var(--border);background:transparent;
+  transition:all .18s;white-space:nowrap;
+}
+.a8-zoom-btn:hover{color:#fff;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.05);}
+.a8-zoom-btn.active{background:rgba(228,3,46,.12);color:var(--red);border-color:rgba(228,3,46,.35);}
+
+/* En-tête de tableau */
+.a8-table-head{
+  display:grid;
+  grid-template-columns:80px 1fr 1fr 1fr;
+  align-items:center;
+  padding:8px 20px;
+  background:var(--card);
+  border-bottom:2px solid var(--border);
+  gap:12px;
+}
+.a8-th{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted2);
+}
+.a8-th.center{text-align:center;}
+.a8-th.dir{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  font-size:11px;
+}
+.a8-th-arrow{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;border-radius:50%;
+  font-size:12px;font-weight:700;
+}
+.a8-th-arrow.it {background:rgba(39,174,96,.15); color:var(--green); border:1px solid rgba(39,174,96,.3);}
+.a8-th-arrow.st {background:rgba(245,197,24,.12);color:var(--yellow);border:1px solid rgba(245,197,24,.25);}
+.a8-th-name{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+
+/* Lignes du tableau */
+.a8-row{
+  display:grid;
+  grid-template-columns:80px 1fr 1fr 1fr;
+  align-items:center;
+  border-bottom:1px solid var(--border);
+  gap:12px;
+  min-height:56px;
+  transition:background .1s;
+}
+.a8-row:last-child{border-bottom:none;}
+.a8-row:hover{background:rgba(255,255,255,.02);}
+
+/* Échangeurs (colonne gauche) */
+.a8-exits-col{
+  display:flex;flex-direction:column;align-items:center;
+  padding:8px 12px;gap:3px;
+}
+.a8-exit-a,.a8-exit-b{
+  display:flex;align-items:center;gap:5px;width:100%;
+}
+.a8-exit-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:30px;height:20px;padding:0 5px;
+  border-radius:4px;
+  font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.8);flex-shrink:0;white-space:nowrap;
+}
+.a8-exit-num.frontier{
+  background:rgba(228,3,46,.1);border-color:rgba(228,3,46,.3);color:var(--red);
+  font-size:8px;letter-spacing:.04em;
+}
+.a8-arrow-connector{
+  font-size:10px;color:var(--muted2);margin:1px 0;
+  width:100%;text-align:center;
+}
+
+/* Nom de la section */
+.a8-section-col{
+  padding:0 8px;
+}
+.a8-section-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;font-weight:700;letter-spacing:.04em;
+  color:rgba(255,255,255,.85);line-height:1.2;
+}
+.a8-section-km{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;color:var(--muted);margin-top:2px;
+}
+
+/* Cellule trafic */
+.a8-traf{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:8px 12px;gap:5px;
+  height:100%;
+  border-left:1px solid var(--border);
+}
+.a8-traf-pill{
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  padding:5px 14px;border-radius:20px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  width:100%;max-width:160px;
+  white-space:nowrap;
+}
+.a8-traf-pill.fluide {background:rgba(34,192,94,.15); color:#22C05E;border:1px solid rgba(34,192,94,.3);}
+.a8-traf-pill.ralenti{background:rgba(255,214,0,.12); color:#FFD600;border:1px solid rgba(255,214,0,.3);}
+.a8-traf-pill.dense  {background:rgba(255,107,0,.15); color:#FF8C00;border:1px solid rgba(255,107,0,.3);}
+.a8-traf-pill.bloque {background:rgba(232,16,16,.15); color:#ff5252;border:1px solid rgba(232,16,16,.3);}
+.a8-traf-pill.inconnu{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--border);}
+.a8-traf-speed{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;color:var(--muted);
+}
+.a8-traf-speed strong{color:rgba(255,255,255,.6);font-weight:700;}
+
+/* Couleur de fond subtile sur la ligne selon le pire statut */
+.a8-row.row-bloque {background:rgba(232,16,16,.04);}
+.a8-row.row-bloque:hover{background:rgba(232,16,16,.07);}
+.a8-row.row-dense  {background:rgba(255,107,0,.03);}
+.a8-row.row-dense:hover{background:rgba(255,107,0,.06);}
+
+/* Résumé global */
+.a8-summary{
+  display:grid;grid-template-columns:1fr 1fr;
+  border-top:2px solid var(--border);
+  background:var(--card);
+}
+.a8-sum-dir{
+  padding:12px 20px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.a8-sum-dir+.a8-sum-dir{border-left:1px solid var(--border);}
+.a8-sum-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin-right:4px;
+}
+.a8-sum-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 9px;border-radius:10px;
+}
+.a8-sum-pill.fluide {background:rgba(34,192,94,.12);color:#22C05E;}
+.a8-sum-pill.ralenti{background:rgba(255,214,0,.1); color:#FFD600;}
+.a8-sum-pill.dense  {background:rgba(255,107,0,.12);color:#FF8C00;}
+.a8-sum-pill.bloque {background:rgba(232,16,16,.12);color:#ff5252;}
+
+/* Loading */
+.a8-loading{padding:32px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);}
+
 
 /* Zoom bar */
 .a8-zoom-bar{
@@ -806,114 +972,88 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 
 
+
 <script>
-/* ═ A8 Timeline v4 — double voie nord/sud, zoom prédéfini ═ */
+/* ═ A8 Traffic — tableau de sections lisible ═ */
 var A8_KEY  = 'Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
 var A8_ZOOM = 'full';
-var A8_TOTAL_KM = 112;
+var A8_EXITS= [{"n": 36, "lbl": "Le Muy / St-Tropez", "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725}, {"n": 37, "lbl": "Puget / Fréjus O.", "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82}, {"n": 38, "lbl": "Fréjus / St-Raph", "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89}, {"n": 39, "lbl": "Les Adrets", "short": "Les Adrets", "km": 28, "lat": 43.52, "lon": 6.95}, {"n": 40, "lbl": "Mandelieu", "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01}, {"n": 41, "lbl": "Cannes La Bocca", "short": "Cns La Bocca", "km": 44, "lat": 43.553, "lon": 7.04}, {"n": 42, "lbl": "Cannes / Mougins", "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07}, {"n": 44, "lbl": "Antibes / Sophia", "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12}, {"n": 46, "lbl": "VL Plage", "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16}, {"n": 47, "lbl": "VL Centre", "short": "VL Centre", "km": 67, "lat": 43.635, "lon": 7.18}, {"n": 48, "lbl": "Cagnes Est", "short": "Cagnes Est", "km": 70, "lat": 43.655, "lon": 7.195}, {"n": 49, "lbl": "St-Laurent-du-Var", "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205}, {"n": 50, "lbl": "Nice Ouest", "short": "Nice Ouest", "km": 77, "lat": 43.675, "lon": 7.215}, {"n": 51, "lbl": "Nice Aéroport", "short": "Nice Aéroport", "km": 80, "lat": 43.665, "lon": 7.235}, {"n": 52, "lbl": "Nice St-Isidore", "short": "Nice St-Isid.", "km": 83, "lat": 43.705, "lon": 7.265}, {"n": 54, "lbl": "Nice Nord", "short": "Nice Nord", "km": 86, "lat": 43.72, "lon": 7.285}, {"n": 55, "lbl": "Nice l'Ariane", "short": "Nice Ariane", "km": 89, "lat": 43.73, "lon": 7.31}, {"n": 56, "lbl": "Monaco", "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39}, {"n": 57, "lbl": "La Turbie", "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42}, {"n": 58, "lbl": "Roquebrune CM", "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47}, {"n": 59, "lbl": "Menton", "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5}, {"n": 0, "lbl": "Frontière italienne", "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57}];
+var A8_ZOOMS= [{"id": "full", "label": "A8 complète", "from": 36, "to": 0}, {"id": "cannes", "label": "Cannes (40→44)", "from": 40, "to": 44}, {"id": "antibes", "label": "Antibes (44→46)", "from": 44, "to": 46}, {"id": "nice", "label": "Nice (49→55)", "from": 49, "to": 55}, {"id": "monaco", "label": "Monaco/Menton (56→)", "from": 56, "to": 0}];
 
-var A8_EXITS = [{"n": 36, "lbl": "Le Muy / St-Tropez", "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725, "bear": 90}, {"n": 37, "lbl": "Puget / Fréjus O.", "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82, "bear": 80}, {"n": 38, "lbl": "Fréjus / St-Raph", "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89, "bear": 80}, {"n": 39, "lbl": "Les Adrets", "short": "Adrets", "km": 28, "lat": 43.52, "lon": 6.95, "bear": 75}, {"n": 40, "lbl": "Mandelieu", "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01, "bear": 70}, {"n": 41, "lbl": "Cannes La Bocca", "short": "Cns Bocca", "km": 44, "lat": 43.553, "lon": 7.04, "bear": 65}, {"n": 42, "lbl": "Cannes / Mougins", "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07, "bear": 60}, {"n": 44, "lbl": "Antibes / Sophia", "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12, "bear": 55}, {"n": 46, "lbl": "VL Plage", "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16, "bear": 50}, {"n": 47, "lbl": "VL Centre", "short": "VL Ctr", "km": 67, "lat": 43.635, "lon": 7.18, "bear": 50}, {"n": 48, "lbl": "Cagnes Est", "short": "Cagnes E.", "km": 70, "lat": 43.655, "lon": 7.195, "bear": 50}, {"n": 49, "lbl": "St-Laurent-Var", "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205, "bear": 50}, {"n": 50, "lbl": "Nice Ouest", "short": "Nice O.", "km": 77, "lat": 43.675, "lon": 7.215, "bear": 50}, {"n": 51, "lbl": "Nice Aéroport", "short": "Nice Aéro", "km": 80, "lat": 43.665, "lon": 7.235, "bear": 55}, {"n": 52, "lbl": "Nice St-Isidore", "short": "N.St-Isid", "km": 83, "lat": 43.705, "lon": 7.265, "bear": 60}, {"n": 54, "lbl": "Nice Nord", "short": "Nice N.", "km": 86, "lat": 43.72, "lon": 7.285, "bear": 65}, {"n": 55, "lbl": "Nice l'Ariane", "short": "Ariane", "km": 89, "lat": 43.73, "lon": 7.31, "bear": 70}, {"n": 56, "lbl": "Monaco", "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39, "bear": 70}, {"n": 57, "lbl": "La Turbie", "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42, "bear": 65}, {"n": 58, "lbl": "Roquebrune CM", "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47, "bear": 60}, {"n": 59, "lbl": "Menton", "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5, "bear": 55}, {"n": 0, "lbl": "Frontière", "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57, "bear": 50}];
-var A8_ZOOMS = [{"id": "full", "label": "Vue complète", "from": 36, "to": 0}, {"id": "cannes", "label": "Cannes 40→44", "from": 40, "to": 44}, {"id": "antibes", "label": "Antibes 44→46", "from": 44, "to": 46}, {"id": "nice", "label": "Nice 49→55", "from": 49, "to": 55}, {"id": "monaco", "label": "Monaco/Menton 56→", "from": 56, "to": 0}];
-
-/* Sections de l'A8 avec sondes pour chaque sens
- * L'A8 va grossièrement vers l'est/nord-est.
- * Voie nord (vers St-Tropez) = offset perpendiculaire nord
- * Voie sud (vers Italie)     = offset perpendiculaire sud
- * On utilise zoom=12 pour différencier les voies
- */
-var A8_SECTIONS = (function(){
-  var DEG=Math.PI/180;
+/* Sondes : une par section, décalées perpendiculairement à la route */
+var A8_PROBES = (function(){
   return A8_EXITS.slice(0,-1).map(function(ex,i){
-    var nx=A8_EXITS[i+1];
-    var midLat=(ex.lat+nx.lat)/2, midLon=(ex.lon+nx.lon)/2;
-    /* Direction perpendiculaire à la route */
-    var dLat=nx.lat-ex.lat, dLon=nx.lon-ex.lon;
-    var len=Math.sqrt(dLat*dLat+dLon*dLon)||1;
-    /* Perpendiculaire = (-dLon, dLat)/len * offset */
-    var off=0.0025; /* ~250m */
-    var perpLat=(-dLon/len)*off, perpLon=(dLat/len)*off;
-    return{
-      from:ex.lbl, to:nx.lbl,
-      /* Voie nord : +perp (vers gauche de la route) */
-      north:{lat:midLat+perpLat, lon:midLon+perpLon},
-      /* Voie sud  : -perp (vers droite de la route) */
-      south:{lat:midLat-perpLat, lon:midLon-perpLon},
+    var nx  = A8_EXITS[i+1];
+    var mLat= (ex.lat+nx.lat)/2, mLon= (ex.lon+nx.lon)/2;
+    var dLat= nx.lat-ex.lat,     dLon= nx.lon-ex.lon;
+    var len = Math.sqrt(dLat*dLat+dLon*dLon)||1;
+    var off = 0.0025;
+    var pLat= (-dLon/len)*off,   pLon= (dLat/len)*off;
+    return {
+      south:{lat:mLat-pLat, lon:mLon-pLon}, /* vers Italie — voie la plus sud */
+      north:{lat:mLat+pLat, lon:mLon+pLon}, /* vers St-Tropez — voie la plus nord */
     };
   });
 })();
 
-function speedCls(cur,ff){if(!ff)return'inconnu';var r=cur/ff;if(r>=0.85)return'fluide';if(r>=0.65)return'ralenti';if(r>=0.45)return'dense';return'bloque';}
-function speedTxt(cur,ff,from,to){
-  var st=speedCls(cur,ff);
-  var label={fluide:'Fluide',ralenti:'Ralenti',dense:'Dense',bloque:'Bloqué',inconnu:'Données indisponibles'}[st];
-  var pct=ff&&ff>0?Math.round((1-cur/ff)*100):0;
-  return from+' → '+to+' — '+label+(cur>0?' ('+cur+' km/h / '+ff+' km/h libre)'+(pct>0?' -'+pct+'%':''):'');
+var LABELS={fluide:'Fluide',ralenti:'Ralenti',dense:'Dense',bloque:'Bloqué',inconnu:'N/A'};
+
+function cls(cur,ff){
+  if(!ff||ff===0)return'inconnu';
+  var r=cur/ff;
+  if(r>=0.85)return'fluide';
+  if(r>=0.65)return'ralenti';
+  if(r>=0.45)return'dense';
+  return'bloque';
+}
+function worstCls(a,b){
+  var rank={bloque:4,dense:3,ralenti:2,fluide:1,inconnu:0};
+  return (rank[a]||0)>=(rank[b]||0)?a:b;
 }
 
 function fetchSeg(lat,lon){
-  /* zoom=12 pour différencier les voies séparées */
   var url='https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/12/json'
     +'?point='+lat+','+lon+'&unit=KMPH&key='+A8_KEY;
   return fetch(url,{headers:{Accept:'application/json'}})
     .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
-    .then(function(d){var fd=d.flowSegmentData;if(!fd)throw new Error('nodata');return{cur:fd.currentSpeed,ff:fd.freeFlowSpeed};})
+    .then(function(d){
+      var fd=d.flowSegmentData;
+      if(!fd)throw new Error('nodata');
+      return{cur:fd.currentSpeed,ff:fd.freeFlowSpeed};
+    })
     .catch(function(){return{cur:0,ff:0};});
 }
 
-function getZoomedExits(){
+function getZoomedIdxs(){
   var z=A8_ZOOMS.find(function(z){return z.id===A8_ZOOM;})||A8_ZOOMS[0];
-  if(z.id==='full')return A8_EXITS;
-  return A8_EXITS.filter(function(ex){
-    if(z.to===0) return ex.n===0||ex.n>=z.from;
-    return ex.n===0?false:(ex.n>=z.from&&ex.n<=z.to);
-  });
-}
-
-function buildLane(cls,arrow,label,exits,segData,kmStart,kmTotal,dir){
-  var lane=document.createElement('div');
-  lane.className='a8-lane '+cls;
-
-  /* Label latéral */
-  var lbl=document.createElement('div');
-  lbl.className='a8-lane-lbl';
-  lbl.innerHTML='<span class="a8-lane-arrow '+cls+'">'+arrow+'</span>'
-    +'<span class="a8-lane-name">'+label+'</span>';
-  lane.appendChild(lbl);
-
-  /* Segments */
-  for(var i=0;i<exits.length-1;i++){
-    var ex0=exits[i],ex1=exits[i+1];
-    var w=((ex1.km-ex0.km)/kmTotal*100).toFixed(3)+'%';
-    /* Trouver la section correspondante */
-    var secIdx=A8_EXITS.indexOf(ex0);
-    var d=(segData[secIdx])||{cur:0,ff:0};
-    var c=speedCls(d.cur,d.ff);
-    var tip=dir==='north'
-      ?speedTxt(d.cur,d.ff,ex1.lbl,ex0.lbl)  /* nord = vers St-Tropez = va de ex1 vers ex0 */
-      :speedTxt(d.cur,d.ff,ex0.lbl,ex1.lbl); /* sud = vers Italie = va de ex0 vers ex1 */
-    var seg=document.createElement('div');
-    seg.className='a8-seg '+c;
-    seg.style.width=w;
-    seg.setAttribute('data-tip',tip);
-    if(i===0){seg.style.borderRadius=cls==='north'?'6px 0 0 0':'0 0 0 6px';}
-    if(i===exits.length-2){seg.style.borderRadius=cls==='north'?'0 6px 0 0':'0 0 6px 0';}
-    lane.appendChild(seg);
+  var result=[];
+  for(var i=0;i<A8_EXITS.length-1;i++){
+    var ex=A8_EXITS[i];
+    if(z.id==='full'){result.push(i);continue;}
+    var inRange=z.to===0 ? ex.n>=z.from : (ex.n>=z.from&&ex.n<z.to);
+    if(inRange)result.push(i);
   }
-  return lane;
+  return result;
 }
 
-function renderTimeline(exits,northData,southData){
+function trafficCell(d){
+  var c=cls(d.cur,d.ff);
+  var speedTxt=d.cur>0?'<span class="a8-traf-speed"><strong>'+d.cur+'</strong> km/h</span>':'';
+  return'<div class="a8-traf">'
+    +'<span class="a8-traf-pill '+c+'">&#9679; '+LABELS[c]+'</span>'
+    +speedTxt
+    +'</div>';
+}
+
+function renderTable(idxs,southData,northData){
   var wrap=document.getElementById('a8-timeline-wrap');
   if(!wrap)return;
-  var km0=exits[0].km, km1=exits[exits.length-1].km;
-  var kmTotal=km1-km0||1;
-
   wrap.innerHTML='';
 
-  /* Zoom buttons */
+  /* Zoom */
   var zBar=document.createElement('div');
   zBar.className='a8-zoom-bar';
-  zBar.innerHTML='<span class="a8-zoom-lbl">Zoom</span>';
+  zBar.innerHTML='<span class="a8-zoom-lbl">Zone</span>';
   A8_ZOOMS.forEach(function(z){
     var btn=document.createElement('button');
     btn.className='a8-zoom-btn'+(z.id===A8_ZOOM?' active':'');
@@ -928,61 +1068,65 @@ function renderTimeline(exits,northData,southData){
   });
   wrap.appendChild(zBar);
 
-  /* Route */
-  var outer=document.createElement('div');
-  outer.className='a8-road-outer';
-  var road=document.createElement('div');
-  road.className='a8-road';
+  /* Header tableau */
+  var head=document.createElement('div');
+  head.className='a8-table-head';
+  head.innerHTML='<div class="a8-th">Sorties</div>'
+    +'<div class="a8-th">Section</div>'
+    +'<div class="a8-th dir"><span class="a8-th-arrow it">&#8594;</span><span class="a8-th-name">Vers Italie</span></div>'
+    +'<div class="a8-th dir"><span class="a8-th-arrow st">&#8592;</span><span class="a8-th-name">Vers St-Tropez</span></div>';
+  wrap.appendChild(head);
 
-  /* Voie NORD (vers St-Tropez) — en haut */
-  var laneN=buildLane('north','&#8592;','St-Tropez',exits,northData,km0,kmTotal,'north');
-  /* Voie SUD (vers Italie) — en bas */
-  var laneS=buildLane('south','&#8594;','Italie',   exits,southData,km0,kmTotal,'south');
+  /* Lignes */
+  var statsSouth={fluide:0,ralenti:0,dense:0,bloque:0};
+  var statsNorth={fluide:0,ralenti:0,dense:0,bloque:0};
 
-  road.appendChild(laneN);
-  road.appendChild(laneS);
+  idxs.forEach(function(idx){
+    var ex0=A8_EXITS[idx], ex1=A8_EXITS[idx+1];
+    var dS=southData[idx]||{cur:0,ff:0};
+    var dN=northData[idx]||{cur:0,ff:0};
+    var clsS=cls(dS.cur,dS.ff), clsN=cls(dN.cur,dN.ff);
+    if(statsSouth[clsS]!==undefined)statsSouth[clsS]++;
+    if(statsNorth[clsN]!==undefined)statsNorth[clsN]++;
+    var worst=worstCls(clsS,clsN);
+    var rowBg=worst==='bloque'?'row-bloque':worst==='dense'?'row-dense':'';
 
-  /* Échangeurs */
-  var exitsEl=document.createElement('div');
-  exitsEl.className='a8-exits-container';
-  exits.forEach(function(ex){
-    var pct=((ex.km-km0)/kmTotal*100).toFixed(3)+'%';
-    var el=document.createElement('div');
-    el.className='a8-exit';
-    el.style.left=pct;
-    var num=ex.n||'';
-    el.innerHTML='<div class="a8-exit-tick"></div>'
-      +'<span class="a8-exit-badge">'+(num||ex.short)+'</span>'
-      +'<span class="a8-exit-name">'+ex.short+'</span>';
-    exitsEl.appendChild(el);
+    var numA=ex0.n?ex0.n:'';
+    var numB=ex1.n?ex1.n:'';
+    var exitsHtml='<div class="a8-exits-col">'
+      +'<div class="a8-exit-a"><span class="a8-exit-num">'+(numA||ex0.short)+'</span></div>'
+      +'<div class="a8-arrow-connector">&#8597;</div>'
+      +'<div class="a8-exit-b"><span class="a8-exit-num'+(ex1.n===0?' frontier':'')+'">'+(!ex1.n?'FR':numB)+'</span></div>'
+      +'</div>';
+
+    var km=ex1.km-ex0.km;
+    var sectionHtml='<div class="a8-section-col">'
+      +'<div class="a8-section-name">'+ex0.lbl+'</div>'
+      +'<div class="a8-section-name" style="color:var(--muted);font-weight:400;font-size:12px;">→ '+ex1.lbl+'</div>'
+      +'<div class="a8-section-km">'+km+' km</div>'
+      +'</div>';
+
+    var row=document.createElement('div');
+    row.className='a8-row '+(rowBg);
+    row.innerHTML=exitsHtml+sectionHtml+trafficCell(dS)+trafficCell(dN);
+    wrap.appendChild(row);
   });
 
-  outer.appendChild(road);
-  outer.appendChild(exitsEl);
-  wrap.appendChild(outer);
-
   /* Résumé */
-  var sum=document.createElement('div');
-  sum.className='a8-summary';
-
-  function dirSummary(data,exits,label,arrowCls){
-    var counts={fluide:0,ralenti:0,dense:0,bloque:0};
-    for(var i=0;i<exits.length-1;i++){
-      var idx=A8_EXITS.indexOf(exits[i]);
-      var d=data[idx]||{cur:0,ff:0};
-      var c=speedCls(d.cur,d.ff);
-      if(counts[c]!==undefined)counts[c]++;
-    }
-    var h='<div class="a8-sum-dir"><span class="a8-sum-arrow '+arrowCls+'">'+label+'</span>';
-    if(counts.bloque >0)h+='<span class="a8-stat bloque">&#9679; '+counts.bloque+' bloqué'+(counts.bloque>1?'s':'')+'</span>';
-    if(counts.dense  >0)h+='<span class="a8-stat dense">&#9679; '+counts.dense+' dense'+(counts.dense>1?'s':'')+'</span>';
-    if(counts.ralenti>0)h+='<span class="a8-stat ralenti">&#9679; '+counts.ralenti+' ralenti'+(counts.ralenti>1?'s':'')+'</span>';
-    if(!counts.bloque&&!counts.dense&&!counts.ralenti)h+='<span class="a8-stat fluide">&#9679; Trafic fluide</span>';
+  function sumHtml(stats,dir,arrowCls,arrow){
+    var h='<div class="a8-sum-dir">'
+      +'<span class="a8-th-arrow '+arrowCls+'" style="width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">'+arrow+'</span>'
+      +'<span class="a8-sum-label">'+dir+'</span>';
+    if(stats.bloque >0)h+='<span class="a8-sum-pill bloque">'+stats.bloque+' bloqué'+(stats.bloque>1?'s':'')+'</span>';
+    if(stats.dense  >0)h+='<span class="a8-sum-pill dense">'+stats.dense+' dense'+(stats.dense>1?'s':'')+'</span>';
+    if(stats.ralenti>0)h+='<span class="a8-sum-pill ralenti">'+stats.ralenti+' ralenti'+(stats.ralenti>1?'s':'')+'</span>';
+    if(!stats.bloque&&!stats.dense&&!stats.ralenti)h+='<span class="a8-sum-pill fluide">Trafic fluide</span>';
     h+='</div>';
     return h;
   }
-  sum.innerHTML=dirSummary(northData,exits,'&#8592; Vers Saint-Tropez','north')
-    +dirSummary(southData,exits,'&#8594; Vers Italie','south');
+  var sum=document.createElement('div');
+  sum.className='a8-summary';
+  sum.innerHTML=sumHtml(statsSouth,'Vers Italie','it','&#8594;')+sumHtml(statsNorth,'Vers Saint-Tropez','st','&#8592;');
   wrap.appendChild(sum);
 
   var u=document.getElementById('a8-upd');
@@ -992,16 +1136,16 @@ function renderTimeline(exits,northData,southData){
 function loadA8Traffic(){
   var wrap=document.getElementById('a8-timeline-wrap');
   if(!wrap)return;
-  wrap.innerHTML='<div class="a8-tl-loading">Chargement trafic A8…</div>';
+  wrap.innerHTML='<div class="a8-loading">Chargement du trafic A8…</div>';
 
-  var exits=getZoomedExits();
+  var idxs=getZoomedIdxs();
 
-  /* Fetch toutes les sections en parallèle */
-  var northFetches=A8_SECTIONS.map(function(s){return fetchSeg(s.north.lat,s.north.lon);});
-  var southFetches=A8_SECTIONS.map(function(s){return fetchSeg(s.south.lat,s.south.lon);});
+  /* On fetch TOUTES les sections (pour les stats et le zoom rapide) */
+  var southF=A8_PROBES.map(function(p){return fetchSeg(p.south.lat,p.south.lon);});
+  var northF=A8_PROBES.map(function(p){return fetchSeg(p.north.lat,p.north.lon);});
 
-  Promise.all([Promise.all(northFetches),Promise.all(southFetches)])
-    .then(function(res){renderTimeline(exits,res[0],res[1]);});
+  Promise.all([Promise.all(southF),Promise.all(northF)])
+    .then(function(res){renderTable(idxs,res[0],res[1]);});
 }
 
 document.addEventListener('DOMContentLoaded',function(){setTimeout(loadA8Traffic,500);});
