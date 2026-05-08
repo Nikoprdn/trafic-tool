@@ -6,6 +6,8 @@
 <title>Radio Monaco — Studio Tools</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+
+
 :root{--red:#E4032E;--bg:#0D1016;--panel:#12151C;--card:#181B26;--border:#232730;--text:#E8EAF0;--muted:#5E6474;--muted2:#42465A;--yellow:#F5C518;--orange:#FF6B35;--green:#27AE60;--sb-bg:#003580;--sb-head:#002055;--sb-row:#004AC0;--sb-alt:#0041A8;--sb-sep:rgba(255,255,255,.06);--blue-deep:#071830;--blue-mid:#0A2A5E;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow',sans-serif;}
@@ -1123,249 +1125,46 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 
 
-/* COLLAPSIBLE CARDS */
-.section-card.collapsed > *:not(.card-h){display:none;}
-.card-h{position:relative;}
-.card-collapse-btn{
-  display:flex;align-items:center;justify-content:center;
-  width:26px;height:26px;border-radius:5px;
-  background:transparent;border:1px solid var(--border);
-  color:var(--muted);cursor:pointer;font-size:14px;
-  transition:all .15s;flex-shrink:0;
-  margin-left:4px;
-}
-.card-collapse-btn:hover{border-color:var(--red);color:var(--red);}
-.section-card.collapsed .card-collapse-btn{background:rgba(255,255,255,.05);color:var(--text);}
-/* Icon rotates when collapsed */
-.card-collapse-btn .chevron{display:inline-block;transition:transform .2s;}
-.section-card.collapsed .card-collapse-btn .chevron{transform:rotate(180deg);}
-
-/* TEXT EDITOR POPUP */
-.editor-btn{
-  position:fixed;
-  bottom:24px;right:24px;
-  width:52px;height:52px;border-radius:50%;
-  background:var(--red);border:none;
-  color:#fff;font-size:22px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 20px rgba(228,3,46,.4);
-  transition:transform .15s,box-shadow .15s;
-  z-index:1000;
-}
-.editor-btn:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(228,3,46,.6);}
-
-.editor-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.7);
-  z-index:2000;display:none;align-items:center;justify-content:center;
-  backdrop-filter:blur(4px);
-}
-.editor-overlay.open{display:flex;}
-.editor-modal{
-  background:var(--panel);border:1px solid var(--border);border-radius:14px;
-  width:min(860px,92vw);max-height:85vh;
-  display:flex;flex-direction:column;
-  box-shadow:0 24px 80px rgba(0,0,0,.7);
-  overflow:hidden;
-}
-.editor-modal-head{
-  display:flex;align-items:center;gap:10px;
-  padding:0 18px;height:48px;
-  background:var(--card);border-bottom:1px solid var(--border);
-  flex-shrink:0;
-}
-.editor-modal-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text);}
-.editor-close{margin-left:auto;background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:20px;padding:4px 8px;border-radius:4px;transition:color .15s;}
-.editor-close:hover{color:var(--red);}
-
-/* Toolbar */
-.editor-toolbar{
-  display:flex;align-items:center;gap:2px;flex-wrap:wrap;
-  padding:8px 12px;
-  border-bottom:1px solid var(--border);
-  background:var(--card);
-  flex-shrink:0;
-}
-.ed-btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-width:30px;height:28px;padding:0 6px;
-  border-radius:4px;border:none;background:transparent;
-  color:var(--muted);cursor:pointer;font-size:13px;font-weight:600;
-  transition:all .12s;white-space:nowrap;
-}
-.ed-btn:hover{background:rgba(255,255,255,.08);color:var(--text);}
-.ed-btn.active{background:rgba(228,3,46,.15);color:var(--red);}
-.ed-sep{width:1px;height:20px;background:var(--border);margin:0 4px;flex-shrink:0;}
-.ed-select{
-  background:var(--card);border:1px solid var(--border);color:var(--text);
-  border-radius:4px;padding:2px 6px;font-family:'Barlow',sans-serif;font-size:12px;
-  cursor:pointer;height:28px;
-}
-
-/* Content area */
-.editor-body{
-  flex:1;overflow-y:auto;padding:0;
-  min-height:300px;
-}
-#editor-content{
-  min-height:300px;
-  padding:20px 24px;
-  outline:none;
-  font-family:'Barlow',sans-serif;font-size:15px;line-height:1.7;
-  color:var(--text);
-  caret-color:var(--red);
-}
-#editor-content:empty::before{
-  content:'Commencez à rédiger votre texte...';
-  color:var(--muted);pointer-events:none;
-}
-#editor-content h1{font-size:2em;font-weight:800;margin-bottom:.5em;}
-#editor-content h2{font-size:1.5em;font-weight:700;margin-bottom:.4em;}
-#editor-content h3{font-size:1.2em;font-weight:700;margin-bottom:.3em;}
-#editor-content p{margin-bottom:.8em;}
-#editor-content ul,#editor-content ol{padding-left:1.5em;margin-bottom:.8em;}
-#editor-content blockquote{border-left:3px solid var(--red);padding-left:12px;color:var(--muted);margin:0 0 .8em;}
-#editor-content a{color:var(--red);}
-#editor-content table{border-collapse:collapse;width:100%;margin-bottom:.8em;}
-#editor-content td,#editor-content th{border:1px solid var(--border);padding:6px 10px;}
-
-/* Editor footer */
-.editor-footer{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 18px;
-  background:var(--card);border-top:1px solid var(--border);
-  flex-shrink:0;
-}
-.ed-word-count{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);}
-.ed-save-btn{
-  margin-left:auto;
-  background:var(--red);color:#fff;border:none;
-  padding:7px 20px;border-radius:5px;
-  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  cursor:pointer;transition:opacity .15s;
-}
-.ed-save-btn:hover{opacity:.85;}
-
-
-/* COLLAPSE */
-.section-card.collapsed>.card-body,
 .section-card.collapsed>.stations-grid,
-.section-card.collapsed>.dis-wrap,
-.section-card.collapsed>.dis-merge-head,
-.section-card.collapsed>#travel-grid,
-.section-card.collapsed>.a8-tl-wrap,
-.section-card.collapsed>.map-frame,
-.section-card.collapsed>.map-footer,
-.section-card.collapsed>[id="a8-timeline-wrap"]{display:none;}
-.collapse-btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:24px;height:24px;border-radius:4px;
-  background:transparent;border:1px solid var(--border);
-  color:var(--muted);cursor:pointer;font-size:13px;
-  transition:all .15s;flex-shrink:0;margin-left:auto;
-}
+.section-card.collapsed>.dis-wrap,.section-card.collapsed>.dis-merge-head,
+.section-card.collapsed>#travel-grid,.section-card.collapsed>.a8-tl-wrap,
+.section-card.collapsed>[id="a8-timeline-wrap"],.section-card.collapsed>.map-frame,
+.section-card.collapsed>.map-footer{display:none;}
+.collapse-btn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:4px;background:transparent;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:14px;flex-shrink:0;transition:all .15s;margin-left:4px;}
 .collapse-btn:hover{border-color:var(--red);color:var(--red);}
-.collapse-btn svg{transition:transform .2s;}
-.section-card.collapsed .collapse-btn svg{transform:rotate(180deg);}
-
-/* EDITOR */
-.ed-fab{
-  position:fixed;bottom:28px;right:28px;z-index:1000;
-  width:50px;height:50px;border-radius:50%;
-  background:var(--red);border:none;color:#fff;
-  font-size:20px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 20px rgba(228,3,46,.45);
-  transition:transform .15s,box-shadow .15s;
-}
-.ed-fab:hover{transform:scale(1.1);box-shadow:0 8px 30px rgba(228,3,46,.6);}
-
-.ed-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.75);
-  z-index:2000;display:none;
-  align-items:center;justify-content:center;
-  backdrop-filter:blur(6px);
-}
-.ed-overlay.open{display:flex;}
-
-.ed-modal{
-  background:var(--panel);border:1px solid var(--border);
-  border-radius:14px;
-  width:min(900px,94vw);max-height:88vh;
-  display:flex;flex-direction:column;
-  box-shadow:0 32px 80px rgba(0,0,0,.8);
-  overflow:hidden;
-  resize:both;
-}
-.ed-head{
-  display:flex;align-items:center;gap:10px;
-  padding:0 18px;height:46px;
-  background:var(--card);border-bottom:1px solid var(--border);
-  flex-shrink:0;cursor:move;user-select:none;
-}
-.ed-head-title{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--muted);
-}
-.ed-x{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:4px 8px;border-radius:4px;}
-.ed-x:hover{color:var(--red);}
-
-.ed-toolbar{
-  display:flex;align-items:center;flex-wrap:wrap;gap:1px;
-  padding:6px 10px;
-  border-bottom:1px solid var(--border);
-  background:var(--card);flex-shrink:0;
-}
-.eb{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-width:28px;height:26px;padding:0 5px;
-  border-radius:4px;border:none;background:transparent;
-  color:var(--muted);cursor:pointer;font-size:12px;font-weight:600;
-  transition:all .1s;
-}
+.collapse-btn .chv{display:inline-block;transition:transform .2s;}
+.section-card.collapsed .collapse-btn .chv{transform:rotate(180deg);}
+.ed-fab{position:fixed;bottom:28px;right:28px;z-index:1000;width:50px;height:50px;border-radius:50%;background:var(--red);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(228,3,46,.45);transition:transform .15s;}
+.ed-fab:hover{transform:scale(1.1);}
+.ed-ov{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.ed-ov.open{display:flex;}
+.ed-modal{background:var(--panel);border:1px solid var(--border);border-radius:14px;width:min(880px,95vw);max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.8);}
+.ed-head{display:flex;align-items:center;gap:10px;padding:0 18px;height:46px;background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0;cursor:move;user-select:none;}
+.ed-head-t{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+.ed-close{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:4px 8px;border-radius:4px;}
+.ed-close:hover{color:var(--red);}
+.ed-tb{display:flex;align-items:center;flex-wrap:wrap;gap:1px;padding:6px 10px;border-bottom:1px solid var(--border);background:var(--card);flex-shrink:0;}
+.eb{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 5px;border-radius:4px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-weight:600;transition:all .1s;}
 .eb:hover{background:rgba(255,255,255,.08);color:var(--text);}
-.eb.on{background:rgba(228,3,46,.15);color:var(--red);}
 .ed-div{width:1px;height:18px;background:var(--border);margin:0 3px;flex-shrink:0;}
-.ed-sel{
-  background:var(--card);border:1px solid var(--border);color:var(--text);
-  border-radius:4px;padding:0 5px;height:26px;font-size:11px;cursor:pointer;
-}
-
-.ed-area{
-  flex:1;overflow-y:auto;
-}
-#ed-doc{
-  min-height:280px;padding:22px 28px;outline:none;
-  font-family:'Barlow',sans-serif;font-size:15px;line-height:1.75;color:var(--text);
-  caret-color:var(--red);
-}
+.ed-sel{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:0 5px;height:26px;font-size:11px;cursor:pointer;}
+.ed-body{flex:1;overflow-y:auto;}
+#ed-doc{min-height:300px;padding:22px 28px;outline:none;font-family:'Barlow',sans-serif;font-size:15px;line-height:1.75;color:var(--text);caret-color:var(--red);}
 #ed-doc:empty::before{content:'Commencez à écrire...';color:var(--muted2);pointer-events:none;}
 #ed-doc h1{font-size:2em;font-weight:800;margin-bottom:.4em;}
 #ed-doc h2{font-size:1.5em;font-weight:700;margin-bottom:.35em;}
 #ed-doc h3{font-size:1.2em;font-weight:700;margin-bottom:.3em;}
 #ed-doc ul,#ed-doc ol{padding-left:1.6em;margin-bottom:.6em;}
 #ed-doc blockquote{border-left:3px solid var(--red);padding-left:14px;color:var(--muted);margin:.5em 0;}
-#ed-doc a{color:var(--red);}
 #ed-doc table{border-collapse:collapse;width:100%;margin:.5em 0;}
 #ed-doc td,#ed-doc th{border:1px solid var(--border);padding:6px 10px;min-width:60px;}
-
-.ed-foot{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 18px;
-  background:var(--card);border-top:1px solid var(--border);
-  flex-shrink:0;
-}
+#ed-doc a{color:var(--red);}
+.ed-foot{display:flex;align-items:center;gap:8px;padding:8px 18px;background:var(--card);border-top:1px solid var(--border);flex-shrink:0;}
 .ed-wc{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted2);}
-.ed-action{
-  padding:6px 18px;border-radius:5px;border:none;cursor:pointer;
-  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  transition:opacity .15s;
-}
-.ed-action.save{background:var(--red);color:#fff;margin-left:auto;}
-.ed-action.save:hover{opacity:.85;}
-.ed-action.print{background:rgba(255,255,255,.07);color:var(--muted);}
-.ed-action.copy{background:rgba(255,255,255,.07);color:var(--muted);}
-input[type=color]#ed-color{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;}
+.ed-act{padding:6px 16px;border-radius:5px;border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transition:opacity .15s;}
+.ed-act.sv{background:var(--red);color:#fff;margin-left:auto;}
+.ed-act.sv:hover{opacity:.85;}
+.ed-act.pr,.ed-act.cp{background:rgba(255,255,255,.07);color:var(--muted);}
 
 </style>
 </head>
@@ -1505,7 +1304,60 @@ input[type=color]#ed-color{position:absolute;opacity:0;pointer-events:none;width
 
 
 
+
+
+<!-- FAB -->
+
+<button class="ed-fab" onclick="edOpen()">&#9998;</button>
+<div class="ed-ov" id="ed-ov" onclick="if(event.target===this)edClose()">
+  <div class="ed-modal" id="ed-modal">
+    <div class="ed-head" id="ed-drag"><span>&#9998;</span><span class="ed-head-t">Editeur de texte</span><button class="ed-close" onclick="edClose()">&#10005;</button></div>
+    <div class="ed-tb">
+      <select class="ed-sel" onchange="edc('formatBlock',this.value);this.blur()"><option value="p">Paragraphe</option><option value="h1">Titre 1</option><option value="h2">Titre 2</option><option value="h3">Titre 3</option><option value="blockquote">Citation</option><option value="pre">Code</option></select>
+      <select class="ed-sel" style="width:54px" onchange="edc('fontSize',this.value);this.blur()"><option value="2">10</option><option value="3">12</option><option value="4" selected>14</option><option value="5">18</option><option value="6">24</option><option value="7">36</option></select>
+      <div class="ed-div"></div>
+      <button class="eb" onclick="edc('bold')"><b>G</b></button>
+      <button class="eb" onclick="edc('italic')"><i>I</i></button>
+      <button class="eb" onclick="edc('underline')"><u>S</u></button>
+      <button class="eb" onclick="edc('strikeThrough')"><s>R</s></button>
+      <button class="eb" onclick="edc('superscript')">x&#178;</button>
+      <button class="eb" onclick="edc('subscript')">x&#8322;</button>
+      <div class="ed-div"></div>
+      <button class="eb" onclick="edPick('foreColor')" style="border-bottom:2px solid #E4032E">A</button>
+      <button class="eb" onclick="edPick('hiliteColor')" style="background:rgba(255,214,0,.2)">&#9646;</button>
+      <div class="ed-div"></div>
+      <button class="eb" onclick="edc('justifyLeft')">&#8676;</button>
+      <button class="eb" onclick="edc('justifyCenter')">&#9632;</button>
+      <button class="eb" onclick="edc('justifyRight')">&#8677;</button>
+      <button class="eb" onclick="edc('justifyFull')">&#9644;</button>
+      <div class="ed-div"></div>
+      <button class="eb" onclick="edc('insertUnorderedList')">&#8226;</button>
+      <button class="eb" onclick="edc('insertOrderedList')">1.</button>
+      <button class="eb" onclick="edc('outdent')">&#8676;&#8676;</button>
+      <button class="eb" onclick="edc('indent')">&#8677;&#8677;</button>
+      <div class="ed-div"></div>
+      <button class="eb" onclick="edLink()">&#128279;</button>
+      <button class="eb" onclick="edTable()">&#9783;</button>
+      <button class="eb" onclick="edImg()">&#128247;</button>
+      <div class="ed-div"></div>
+      <button class="eb" onclick="edc('undo')">&#8630;</button>
+      <button class="eb" onclick="edc('redo')">&#8631;</button>
+      <button class="eb" onclick="edc('removeFormat')">&#9003;</button>
+      <button class="eb" onclick="edClear()" style="color:#ff8080">&#10060;</button>
+    </div>
+    <input type="color" id="ed-cp" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;">
+    <div class="ed-body"><div id="ed-doc" contenteditable="true" spellcheck="true"></div></div>
+    <div class="ed-foot">
+      <span class="ed-wc" id="ed-wc">0 mot</span>
+      <button class="ed-act pr" onclick="edPrint()">&#128438; Imprimer</button>
+      <button class="ed-act cp" onclick="edCopy()">&#128203; Copier</button>
+      <button class="ed-act sv" onclick="edSave()">&#128190; Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
 <script>
+
 
 /* THEME */
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
@@ -1736,9 +1588,11 @@ setInterval(function(){if(traficLoaded)loadTravel();},600000);
 setInterval(function(){if(traficLoaded)loadA8Traffic();},300000);
 setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM();loadWeatherIDF();loadVigilance();}},300000);
 
+
 </script>
 
 <script>
+
 /* == A8 Traffic == */
 var A8K='nFt8c40zRLaLYYghcApBurt0ZyK7FIbA',A8Z='full';
 var AX=[{"n": 36, "lbl": "St-Tropez", "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725}, {"n": 37, "lbl": "Puget/Fréjus O.", "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82}, {"n": 38, "lbl": "Fréjus/St-Raph", "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89}, {"n": 39, "lbl": "Les Adrets", "short": "Adrets", "km": 28, "lat": 43.52, "lon": 6.95}, {"n": 40, "lbl": "Mandelieu", "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01}, {"n": 41, "lbl": "Cannes La Bocca", "short": "Cns Bocca", "km": 44, "lat": 43.553, "lon": 7.04}, {"n": 42, "lbl": "Cannes/Mougins", "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07}, {"n": 44, "lbl": "Antibes/Sophia", "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12}, {"n": 46, "lbl": "VL Plage", "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16}, {"n": 47, "lbl": "VL Centre", "short": "VL Ctr", "km": 67, "lat": 43.635, "lon": 7.18}, {"n": 48, "lbl": "Cagnes Est", "short": "Cagnes E.", "km": 70, "lat": 43.655, "lon": 7.195}, {"n": 49, "lbl": "St-Laurent", "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205}, {"n": 50, "lbl": "Nice Ouest", "short": "Nice O.", "km": 77, "lat": 43.675, "lon": 7.215}, {"n": 51, "lbl": "Nice Aéroport", "short": "Nice Aéro", "km": 80, "lat": 43.665, "lon": 7.235}, {"n": 52, "lbl": "Nice St-Isidore", "short": "N.Isid.", "km": 83, "lat": 43.705, "lon": 7.265}, {"n": 54, "lbl": "Nice Nord", "short": "Nice Nord", "km": 86, "lat": 43.72, "lon": 7.285}, {"n": 55, "lbl": "Nice l'Ariane", "short": "Ariane", "km": 89, "lat": 43.73, "lon": 7.31}, {"n": 56, "lbl": "Monaco", "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39}, {"n": 57, "lbl": "La Turbie", "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42}, {"n": 58, "lbl": "Roquebrune CM", "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47}, {"n": 59, "lbl": "Menton", "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5}, {"n": 0, "lbl": "Frontière", "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57}],AZM=[{"id": "full", "label": "A8 complète", "from": 36, "to": 0}, {"id": "cannes", "label": "Cannes (40→44)", "from": 40, "to": 44}, {"id": "antibes", "label": "Antibes (44→46)", "from": 44, "to": 46}, {"id": "nice", "label": "Nice (49→55)", "from": 49, "to": 55}, {"id": "monaco", "label": "Monaco/Menton (56→)", "from": 56, "to": 0}];
@@ -1909,331 +1763,47 @@ function loadA8Traffic(){
 
 function refreshA8Traffic(){loadA8Traffic();}
 function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
+
 </script>
 
-
-<!-- Bouton éditeur flottant -->
-<button class="editor-btn" onclick="openEditor()" title="Éditeur de texte">&#9998;</button>
-
-<!-- Popup éditeur -->
-<div class="editor-overlay" id="editor-overlay" onclick="closeEditorIfBg(event)">
-  <div class="editor-modal">
-    <div class="editor-modal-head">
-      <span>&#9998;</span>
-      <span class="editor-modal-title">Éditeur de texte</span>
-      <button class="editor-close" onclick="closeEditor()">&#10005;</button>
-    </div>
-    <div class="editor-toolbar">
-      <!-- Texte -->
-      <select class="ed-select" id="ed-format" onchange="edCmd('formatBlock',this.value);this.blur();">
-        <option value="p">Paragraphe</option>
-        <option value="h1">Titre 1</option>
-        <option value="h2">Titre 2</option>
-        <option value="h3">Titre 3</option>
-        <option value="blockquote">Citation</option>
-      </select>
-      <select class="ed-select" id="ed-font-size" onchange="edCmd('fontSize',this.value);this.blur();" style="width:60px;">
-        <option value="3">12pt</option>
-        <option value="4" selected>14pt</option>
-        <option value="5">18pt</option>
-        <option value="6">24pt</option>
-        <option value="7">36pt</option>
-      </select>
-      <div class="ed-sep"></div>
-      <!-- Mise en forme -->
-      <button class="ed-btn" onclick="edCmd('bold')" title="Gras"><b>G</b></button>
-      <button class="ed-btn" onclick="edCmd('italic')" title="Italique"><i>I</i></button>
-      <button class="ed-btn" onclick="edCmd('underline')" title="Souligné"><u>S</u></button>
-      <button class="ed-btn" onclick="edCmd('strikeThrough')" title="Barré"><s>B</s></button>
-      <div class="ed-sep"></div>
-      <!-- Couleur -->
-      <button class="ed-btn" onclick="pickColor('foreColor')" title="Couleur texte" style="font-size:16px;">A&#x0332;</button>
-      <button class="ed-btn" onclick="pickColor('hiliteColor')" title="Surligneur" style="font-size:16px;">&#9616;</button>
-      <div class="ed-sep"></div>
-      <!-- Alignement -->
-      <button class="ed-btn" onclick="edCmd('justifyLeft')" title="Gauche">&#8676;</button>
-      <button class="ed-btn" onclick="edCmd('justifyCenter')" title="Centre">&#9776;</button>
-      <button class="ed-btn" onclick="edCmd('justifyRight')" title="Droite">&#8677;</button>
-      <button class="ed-btn" onclick="edCmd('justifyFull')" title="Justifié">&#9644;</button>
-      <div class="ed-sep"></div>
-      <!-- Listes -->
-      <button class="ed-btn" onclick="edCmd('insertUnorderedList')" title="Liste à puces">&#8226;&#8212;</button>
-      <button class="ed-btn" onclick="edCmd('insertOrderedList')" title="Liste numérotée">1&#8212;</button>
-      <div class="ed-sep"></div>
-      <!-- Indentation -->
-      <button class="ed-btn" onclick="edCmd('outdent')" title="Désindenter">&#8676;&#8676;</button>
-      <button class="ed-btn" onclick="edCmd('indent')" title="Indenter">&#8677;&#8677;</button>
-      <div class="ed-sep"></div>
-      <!-- Lien -->
-      <button class="ed-btn" onclick="edLink()" title="Lien">&#128279;</button>
-      <!-- Tableau -->
-      <button class="ed-btn" onclick="edTable()" title="Tableau">&#9999;</button>
-      <div class="ed-sep"></div>
-      <!-- Undo/redo -->
-      <button class="ed-btn" onclick="edCmd('undo')" title="Annuler">&#8630;</button>
-      <button class="ed-btn" onclick="edCmd('redo')" title="Rétablir">&#8631;</button>
-      <button class="ed-btn" onclick="edCmd('removeFormat')" title="Effacer formatage">&#9003;</button>
-      <div class="ed-sep"></div>
-      <!-- Imprimer / copier -->
-      <button class="ed-btn" onclick="edPrint()" title="Imprimer">&#128438;</button>
-      <button class="ed-btn" onclick="edCopy()" title="Copier tout">&#128203;</button>
-      <button class="ed-btn" onclick="edClear()" title="Vider" style="color:#ff8080;">&#10060;</button>
-    </div>
-    <!-- Hidden color picker -->
-    <input type="color" id="ed-color-picker" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;">
-    <div class="editor-body">
-      <div id="editor-content" contenteditable="true" spellcheck="true"></div>
-    </div>
-    <div class="editor-footer">
-      <span class="ed-word-count" id="ed-wc">0 mot &middot; 0 caract&egrave;re</span>
-      <button class="ed-save-btn" onclick="edSave()">&#128190; Sauvegarder</button>
-    </div>
-  </div>
-</div>
-
 <script>
 
-/* ── Collapse cards ── */
-(function(){
-  document.querySelectorAll('.section-card').forEach(function(card){
-    var h = card.querySelector('.card-h');
-    if(!h)return;
-    var btn = document.createElement('button');
-    btn.className = 'card-collapse-btn';
-    btn.innerHTML = '<span class="chevron">&#8964;</span>';
-    btn.title = 'Réduire / Agrandir';
-    btn.onclick = function(e){
-      e.stopPropagation();
-      card.classList.toggle('collapsed');
-    };
-    h.appendChild(btn);
-  });
-})();
-
-/* ── Text editor ── */
-function openEditor(){document.getElementById('editor-overlay').classList.add('open');document.getElementById('editor-content').focus();}
-function closeEditor(){document.getElementById('editor-overlay').classList.remove('open');}
-function closeEditorIfBg(e){if(e.target===document.getElementById('editor-overlay'))closeEditor();}
-function edCmd(cmd,val){document.getElementById('editor-content').focus();document.execCommand(cmd,false,val||null);}
-
-var edColorMode='foreColor';
-function pickColor(mode){
-  edColorMode=mode;
-  var p=document.getElementById('ed-color-picker');
-  p.onchange=function(){edCmd(edColorMode,p.value);};
-  p.click();
-}
-function edLink(){
-  var url=prompt('URL du lien :','https://');
-  if(url)edCmd('createLink',url);
-}
-function edTable(){
-  var rows=parseInt(prompt('Nombre de lignes :','3'));
-  var cols=parseInt(prompt('Nombre de colonnes :','3'));
-  if(!rows||!cols)return;
-  var html='<table>';
-  for(var r=0;r<rows;r++){html+='<tr>';for(var c=0;c<cols;c++)html+='<td>&nbsp;</td>';html+='</tr>';}
-  html+='</table>';
-  document.getElementById('editor-content').focus();
-  document.execCommand('insertHTML',false,html);
-}
-function edPrint(){
-  var w=window.open('','_blank');
-  w.document.write('<html><head><title>Impression</title></head><body style="font-family:sans-serif;padding:24px;">'+document.getElementById('editor-content').innerHTML+'
-<!-- ── FAB éditeur ── -->
-<button class="ed-fab" onclick="edOpen()" title="Éditeur de texte">&#9998;</button>
-
-<!-- ── Popup éditeur ── -->
-<div class="ed-overlay" id="ed-overlay" onclick="if(event.target===this)edClose()">
-<div class="ed-modal" id="ed-modal">
-  <div class="ed-head" id="ed-head">
-    <span style="font-size:15px;">&#9998;</span>
-    <span class="ed-head-title">Éditeur de texte</span>
-    <button class="ed-x" onclick="edClose()">&#10005;</button>
-  </div>
-
-  <div class="ed-toolbar">
-    <!-- Format + taille -->
-    <select class="ed-sel" onchange="edc('formatBlock',this.value);this.blur()">
-      <option value="p">Paragraphe</option>
-      <option value="h1">Titre 1</option>
-      <option value="h2">Titre 2</option>
-      <option value="h3">Titre 3</option>
-      <option value="blockquote">Citation</option>
-      <option value="pre">Code</option>
-    </select>
-    <select class="ed-sel" style="width:56px" onchange="edc('fontSize',this.value);this.blur()">
-      <option value="2">10</option><option value="3">12</option>
-      <option value="4" selected>14</option><option value="5">18</option>
-      <option value="6">24</option><option value="7">36</option>
-    </select>
-    <div class="ed-div"></div>
-    <!-- Style -->
-    <button class="eb" onclick="edc('bold')"          title="Gras (Ctrl+B)"><b>G</b></button>
-    <button class="eb" onclick="edc('italic')"         title="Italique (Ctrl+I)"><i>I</i></button>
-    <button class="eb" onclick="edc('underline')"      title="Souligné (Ctrl+U)"><u>S</u></button>
-    <button class="eb" onclick="edc('strikeThrough')"  title="Barré"><s>R</s></button>
-    <button class="eb" onclick="edc('superscript')"    title="Exposant">x<sup>2</sup></button>
-    <button class="eb" onclick="edc('subscript')"      title="Indice">x<sub>2</sub></button>
-    <div class="ed-div"></div>
-    <!-- Couleurs -->
-    <button class="eb" onclick="edColor('fore')" title="Couleur du texte" style="font-size:15px;text-decoration:underline;text-decoration-color:var(--red);">A</button>
-    <button class="eb" onclick="edColor('back')" title="Surligneur" style="background:rgba(255,214,0,.2)">&#9646;</button>
-    <div class="ed-div"></div>
-    <!-- Alignement -->
-    <button class="eb" onclick="edc('justifyLeft')"   title="Aligner à gauche">&#8676;</button>
-    <button class="eb" onclick="edc('justifyCenter')" title="Centrer">&#9632;</button>
-    <button class="eb" onclick="edc('justifyRight')"  title="Aligner à droite">&#8677;</button>
-    <button class="eb" onclick="edc('justifyFull')"   title="Justifier">&#9644;</button>
-    <div class="ed-div"></div>
-    <!-- Listes -->
-    <button class="eb" onclick="edc('insertUnorderedList')" title="Liste à puces">&#8226;&#9135;</button>
-    <button class="eb" onclick="edc('insertOrderedList')"   title="Liste numérotée">1&#9135;</button>
-    <button class="eb" onclick="edc('outdent')"  title="Désindenter">&#8676;&#8676;</button>
-    <button class="eb" onclick="edc('indent')"   title="Indenter">&#8677;&#8677;</button>
-    <div class="ed-div"></div>
-    <!-- Insertion -->
-    <button class="eb" onclick="edLink()"  title="Insérer un lien">&#128279;</button>
-    <button class="eb" onclick="edTable()" title="Insérer un tableau">&#9998;</button>
-    <button class="eb" onclick="edImg()"   title="Insérer une image URL">&#128247;</button>
-    <div class="ed-div"></div>
-    <!-- Edition -->
-    <button class="eb" onclick="edc('undo')"         title="Annuler (Ctrl+Z)">&#8630;</button>
-    <button class="eb" onclick="edc('redo')"         title="Rétablir">&#8631;</button>
-    <button class="eb" onclick="edc('removeFormat')" title="Effacer le formatage">&#9003;</button>
-    <button class="eb" onclick="edClear()" title="Tout effacer" style="color:#ff8080;">&#10060;</button>
-  </div>
-
-  <input type="color" id="ed-color" value="#E4032E">
-  <div class="ed-area"><div id="ed-doc" contenteditable="true" spellcheck="true"></div></div>
-
-  <div class="ed-foot">
-    <span class="ed-wc" id="ed-wc">0 mot · 0 caractère</span>
-    <button class="ed-action print" onclick="edPrint()">&#128438; Imprimer</button>
-    <button class="ed-action copy"  onclick="edCopyAll()">&#128203; Copier</button>
-    <button class="ed-action save"  onclick="edSave()">&#128190; Sauvegarder</button>
-  </div>
-</div>
-</div>
-
-<script>
-
-/* ── Collapse ── */
 document.querySelectorAll('.section-card').forEach(function(card){
-  var h=card.querySelector('.card-h');
-  if(!h)return;
-  /* Déplacer le rbtn avant le collapse btn */
+  var h=card.querySelector('.card-h');if(!h)return;
   var btn=document.createElement('button');
-  btn.className='collapse-btn';
-  btn.title='Réduire / Agrandir';
-  btn.innerHTML='<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4 6,9 11,4"/></svg>';
+  btn.className='collapse-btn';btn.title='Reduire/Agrandir';
+  btn.innerHTML='<span class="chv">&#8964;</span>';
   btn.onclick=function(e){e.stopPropagation();card.classList.toggle('collapsed');};
   h.appendChild(btn);
 });
-
-/* ── Éditeur ── */
-var ED_COLOR_MODE='fore';
+var edColorMode='foreColor';
 function edOpen(){
-  document.getElementById('ed-overlay').classList.add('open');
-  document.getElementById('ed-doc').focus();
-  edRestoreDraft();
-}
-function edClose(){document.getElementById('ed-overlay').classList.remove('open');}
-function edc(cmd,val){document.getElementById('ed-doc').focus();document.execCommand(cmd,false,val||null);}
-
-function edColor(mode){
-  ED_COLOR_MODE=mode;
-  var p=document.getElementById('ed-color');
-  p.onchange=function(){
-    edc(mode==='fore'?'foreColor':'hiliteColor',p.value);
-  };
-  p.click();
-}
-function edLink(){
-  var url=prompt('URL :','https://');
-  if(url&&url!=='https://')edc('createLink',url);
-}
-function edTable(){
-  var r=parseInt(prompt('Lignes :','3'));
-  var col=parseInt(prompt('Colonnes :','3'));
-  if(isNaN(r)||isNaN(col))return;
-  var html='<table>';
-  for(var i=0;i<r;i++){html+='<tr>';for(var j=0;j<col;j++)html+='<td>&nbsp;</td>';html+='</tr>';}
-  html+='</table><p></p>';
-  edc('insertHTML',html);
-}
-function edImg(){
-  var url=prompt('URL de l'image :','https://');
-  if(url&&url!=='https://')edc('insertHTML','<img src="'+url+'" style="max-width:100%">');
-}
-function edPrint(){
-  var w=window.open('','_blank','width=800,height=700');
-  w.document.write('<!DOCTYPE html><html><head><title>Impression</title><style>body{font-family:sans-serif;max-width:800px;margin:40px auto;font-size:14px;line-height:1.7}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:6px 10px}blockquote{border-left:3px solid #E4032E;padding-left:14px;color:#666}</style></head><body>'+document.getElementById('ed-doc').innerHTML+'</body></html>');
-  w.document.close();w.focus();setTimeout(function(){w.print();},300);
-}
-function edCopyAll(){
-  var t=document.getElementById('ed-doc').innerText;
-  navigator.clipboard.writeText(t).catch(function(){});
-}
-function edSave(){
-  localStorage.setItem('rm_draft',document.getElementById('ed-doc').innerHTML);
-}
-function edRestoreDraft(){
+  document.getElementById('ed-ov').classList.add('open');
+  setTimeout(function(){document.getElementById('ed-doc').focus();},100);
   var d=localStorage.getItem('rm_draft');
   if(d&&!document.getElementById('ed-doc').innerHTML)document.getElementById('ed-doc').innerHTML=d;
 }
+function edClose(){document.getElementById('ed-ov').classList.remove('open');}
+function edc(cmd,val){document.getElementById('ed-doc').focus();document.execCommand(cmd,false,val||null);}
+function edPick(mode){edColorMode=mode;var p=document.getElementById('ed-cp');p.onchange=function(){edc(mode,p.value);};p.click();}
+function edLink(){var u=prompt('URL :','https://');if(u)edc('createLink',u);}
+function edTable(){var r=parseInt(prompt('Lignes :','3'));var col=parseInt(prompt('Colonnes :','3'));if(!r||!col)return;var h='<table>';for(var i=0;i<r;i++){h+='<tr>';for(var j=0;j<col;j++)h+='<td>&nbsp;</td>';h+='</tr>';}h+='</table><p></p>';edc('insertHTML',h);}
+function edImg(){var u=prompt('URL image :','https://');if(u)edc('insertHTML','<img src="'+u+'" style="max-width:100%"><p></p>');}
+function edPrint(){var w=window.open('','_blank');w.document.write('<html><head><style>body{font-family:sans-serif;max-width:800px;margin:40px auto;font-size:14px;line-height:1.7}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px}blockquote{border-left:3px solid #E4032E;padding-left:12px;color:#666}</style></head><body>'+document.getElementById('ed-doc').innerHTML+'</body></html>');w.document.close();w.focus();setTimeout(function(){w.print();},300);}
+function edCopy(){navigator.clipboard.writeText(document.getElementById('ed-doc').innerText).catch(function(){});}
+function edSave(){localStorage.setItem('rm_draft',document.getElementById('ed-doc').innerHTML);}
 function edClear(){if(confirm('Vider le contenu ?')){document.getElementById('ed-doc').innerHTML='';localStorage.removeItem('rm_draft');}}
-
 document.getElementById('ed-doc').addEventListener('input',function(){
-  var t=this.innerText.trim();
-  var w=t?t.split(/\s+/).length:0;
+  var t=this.innerText.trim();var w=t?t.split(/\s+/).length:0;
   document.getElementById('ed-wc').textContent=w+' mot'+(w>1?'s':'')+' \u00b7 '+t.length+' caract\u00e8re'+(t.length>1?'s':'');
 });
-
-/* Drag modal */
-(function(){
-  var modal=document.getElementById('ed-modal');
-  var head=document.getElementById('ed-head');
-  var dx=0,dy=0,mx=0,my=0,dragging=false;
-  head.addEventListener('mousedown',function(e){
-    dragging=true;dx=modal.offsetLeft||0;dy=modal.offsetTop||0;mx=e.clientX;my=e.clientY;
-    document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);
-  });
-  function onMove(e){
-    if(!dragging)return;
-    var nx=dx+(e.clientX-mx),ny=dy+(e.clientY-my);
-    modal.style.position='fixed';modal.style.left=nx+'px';modal.style.top=ny+'px';modal.style.transform='none';
-  }
-  function onUp(){dragging=false;document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);}
+(function(){var m=document.getElementById('ed-modal'),hd=document.getElementById('ed-drag'),ox=0,oy=0,lx=0,ly=0,on=false;
+hd.addEventListener('mousedown',function(e){on=true;ox=e.clientX-lx;oy=e.clientY-ly;document.addEventListener('mousemove',mv);document.addEventListener('mouseup',mu);});
+function mv(e){if(!on)return;lx=e.clientX-ox;ly=e.clientY-oy;m.style.position='fixed';m.style.left=lx+'px';m.style.top=ly+'px';m.style.transform='none';}
+function mu(){on=false;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',mu);}
 })();
 
 </script>
-</body></html>');
-  w.document.close();w.print();
-}
-function edCopy(){
-  var text=document.getElementById('editor-content').innerText;
-  navigator.clipboard.writeText(text).then(function(){alert('Texte copié dans le presse-papiers.');});
-}
-function edClear(){if(confirm('Vider le contenu ?'))document.getElementById('editor-content').innerHTML='';}
-function edSave(){
-  var content=document.getElementById('editor-content').innerHTML;
-  localStorage.setItem('rm_editor_draft',content);
-  alert('Brouillon sauvegardé dans le navigateur.');
-}
-/* Restaurer le brouillon */
-(function(){
-  var draft=localStorage.getItem('rm_editor_draft');
-  if(draft)document.getElementById('editor-content').innerHTML=draft;
-})();
-/* Compteur de mots */
-document.getElementById('editor-content').addEventListener('input',function(){
-  var text=this.innerText.trim();
-  var words=text?text.split(/\s+/).length:0;
-  var chars=text.length;
-  document.getElementById('ed-wc').textContent=words+' mot'+(words>1?'s':'')+' · '+chars+' caractère'+(chars>1?'s':'');
-});
 
-</script>
 </body>
 </html>
