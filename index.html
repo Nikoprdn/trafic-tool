@@ -373,6 +373,122 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .a8-btn:hover{border-color:var(--red);color:#fff;}
 .a8-btn.active{background:rgba(228,3,46,.15);border-color:var(--red);color:var(--red);}
 
+
+/* A8 TIMELINE */
+.a8-tl-wrap{padding:20px 28px 28px;}
+.a8-tl-loading{padding:28px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);}
+
+/* Une direction */
+.a8-tl-dir{margin-bottom:24px;}
+.a8-tl-dir:last-child{margin-bottom:0;}
+
+/* Label direction */
+.a8-tl-dir-lbl{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:10px;
+}
+.a8-tl-arrow{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:28px;height:28px;border-radius:50%;
+  font-size:14px;font-weight:700;flex-shrink:0;
+}
+.a8-tl-arrow.east{background:rgba(39,174,96,.15);color:var(--green);border:1px solid rgba(39,174,96,.3);}
+.a8-tl-arrow.west{background:rgba(245,197,24,.1); color:var(--yellow);border:1px solid rgba(245,197,24,.25);}
+.a8-tl-dir-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.6);
+}
+
+/* Conteneur de la barre + échangeurs */
+.a8-tl-body{position:relative;padding:0 0 36px 0;}
+
+/* Échangeurs (labels en dessous) */
+.a8-tl-exits{
+  position:absolute;bottom:0;left:0;right:0;
+  height:32px;
+}
+.a8-tl-exit{
+  position:absolute;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  pointer-events:none;
+}
+.a8-tl-exit-tick{width:1px;height:8px;background:var(--border);}
+.a8-tl-exit-lbl{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);white-space:nowrap;
+  transform:rotate(-30deg) translateY(2px);
+  transform-origin:top center;
+}
+
+/* La barre principale */
+.a8-tl-bar{
+  height:32px;
+  border-radius:8px;
+  overflow:hidden;
+  display:flex;
+  position:relative;
+  background:var(--border);
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+
+/* Segment de trafic */
+.a8-seg{
+  height:100%;
+  position:relative;
+  cursor:pointer;
+  transition:filter .15s, transform .15s;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.a8-seg:hover{filter:brightness(1.25);z-index:2;}
+.a8-seg::after{
+  content:attr(data-tooltip);
+  position:absolute;
+  bottom:calc(100% + 8px);
+  left:50%;transform:translateX(-50%);
+  background:rgba(13,16,22,.95);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:6px 10px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:600;letter-spacing:.05em;
+  color:#fff;
+  white-space:nowrap;
+  opacity:0;pointer-events:none;
+  transition:opacity .15s;
+  z-index:10;
+  box-shadow:0 4px 16px rgba(0,0,0,.5);
+}
+.a8-seg:hover::after{opacity:1;}
+
+/* Vitesse dans le segment */
+.a8-seg-spd{
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px;font-weight:700;
+  color:rgba(0,0,0,.6);
+  mix-blend-mode:multiply;
+  pointer-events:none;
+  white-space:nowrap;
+}
+[data-theme="dark"] .a8-seg-spd{color:rgba(255,255,255,.55);mix-blend-mode:normal;}
+
+/* Couleurs trafic */
+.a8-seg.fluide    {background:linear-gradient(180deg,#1DB954,#17a34a);}
+.a8-seg.ralenti   {background:linear-gradient(180deg,#FFD600,#e6b800);}
+.a8-seg.dense     {background:linear-gradient(180deg,#FF6D00,#e05e00);}
+.a8-seg.bloque    {background:linear-gradient(180deg,#D50000,#b00000);}
+.a8-seg.inconnu   {background:var(--border);}
+
+/* Tick échangeur sur la barre */
+.a8-tl-bar-tick{
+  position:absolute;top:0;bottom:0;
+  width:2px;background:rgba(0,0,0,.2);
+  pointer-events:none;z-index:1;
+}
+
 </style>
 </head>
 <body>
@@ -436,30 +552,20 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     <div class="section-card">
       <div class="card-h">
         <span style="font-size:15px">&#128739;&#65039;</span>
-        <span class="card-t">Autoroute A8 — Trafic temps réel</span>
+        <span class="card-t">A8 — Trafic par section</span>
         <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
-        <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto">Cannes &rarr; Frontière italienne</span>
+        <span id="a8-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
+        <button class="rbtn" onclick="loadA8Traffic()">&#8635; Actualiser</button>
       </div>
-      <div class="a8-map-wrap">
-        <div id="a8-map" style="width:100%;height:460px;"></div>
-        <!-- Légende trafic -->
-        <div class="a8-map-legend" style="min-width:200px;">
-          <div class="a8-legend-title">Trafic A8 — Secteur par secteur</div>
-          <div id="a8-legend-body" style="display:flex;flex-direction:column;gap:2px;margin-top:6px;">
-            <span style="font-size:11px;color:rgba(255,255,255,.3);font-family:monospace">Chargement...</span>
-          </div>
-        </div>
-        <!-- Contrôles -->
-        <div class="a8-overlay">
-          <button class="a8-btn" onclick="resetMapView()">&#8982; Centrer</button>
-          <button class="a8-btn" onclick="refreshA8Traffic()">&#8635; Actualiser</button>
-        </div>
+      <div id="a8-timeline-wrap" class="a8-tl-wrap">
+        <div class="a8-tl-loading">Chargement du trafic A8...</div>
       </div>
       <div class="map-footer">
-        <a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; Carte APRR</a>
+        <a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a>
         <a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a>
-        <span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Maps SDK v6</span>
+        <span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span>
       </div>
+    </div>
     </div>
 
     <div class="section-card">
@@ -916,216 +1022,219 @@ setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM(
 </script>
 
 <script>
-/* ═ TomTom A8 Map — Traffic Flow par segment ═ */
-var a8Map  = null;
+/* ═ A8 Traffic Timeline ═ */
 var A8_KEY = 'Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
 
-/* Bounds : Cannes → Frontière italienne */
-var A8_SW = [6.92, 43.48];
-var A8_NE = [7.66, 43.88];
+/*
+ * Échangeurs de l'A8 — axe Saint-Tropez/Fréjus → Frontière italienne
+ * km: distance approximative depuis le début de l'axe (Fréjus ≈ 0)
+ */
+var A8_EXITS = [
+  { lbl:'Fréjus',           km:0   },
+  { lbl:'Mandelieu',        km:20  },
+  { lbl:'Cannes Ouest',     km:27  },
+  { lbl:'Antibes',          km:40  },
+  { lbl:'Villeneuve-Loubet',km:48  },
+  { lbl:'Nice Ouest',       km:57  },
+  { lbl:'Nice Centre',      km:62  },
+  { lbl:'Nice Est/Aéroport',km:67  },
+  { lbl:'Eze',              km:78  },
+  { lbl:'Monaco',           km:84  },
+  { lbl:'Roquebrune',       km:89  },
+  { lbl:'Menton',           km:95  },
+  { lbl:'Frontière',        km:102 },
+];
+var A8_TOTAL_KM = 102;
 
 /*
- * Points de sondage le long de l'A8
- * TomTom Traffic Flow Segment retourne la géométrie + vitesse du tronçon
- * lat, lon, label
+ * Sections avec point de sondage TomTom
+ * Pour le sens Est (vers Italie) et Ouest (vers Saint-Tropez),
+ * on utilise des points légèrement décalés sur chaque voie
  */
-var A8_PROBES = [
-  { lat:43.5520, lon:7.0250, lbl:'Cannes' },
-  { lat:43.5750, lon:7.1050, lbl:'Antibes' },
-  { lat:43.6100, lon:7.1700, lbl:'Villeneuve-Loubet' },
-  { lat:43.6650, lon:7.2050, lbl:'Nice Ouest' },
-  { lat:43.7000, lon:7.2700, lbl:'Nice Est' },
-  { lat:43.7250, lon:7.3700, lbl:'Eze' },
-  { lat:43.7380, lon:7.4100, lbl:'Cap-d'Ail' },
-  { lat:43.7500, lon:7.4600, lbl:'Roquebrune' },
-  { lat:43.7750, lon:7.5100, lbl:'Menton' },
-  { lat:43.7900, lon:7.5800, lbl:'Frontière' },
+var A8_SECTIONS = [
+  { from:'Fréjus',             to:'Mandelieu',         east:{lat:43.5350,lon:6.9800}, west:{lat:43.5370,lon:6.9900} },
+  { from:'Mandelieu',          to:'Cannes Ouest',      east:{lat:43.5520,lon:7.0200}, west:{lat:43.5540,lon:7.0250} },
+  { from:'Cannes Ouest',       to:'Antibes',           east:{lat:43.5750,lon:7.0750}, west:{lat:43.5770,lon:7.0800} },
+  { from:'Antibes',            to:'Villeneuve-Loubet', east:{lat:43.6000,lon:7.1500}, west:{lat:43.6020,lon:7.1550} },
+  { from:'Villeneuve-Loubet',  to:'Nice Ouest',        east:{lat:43.6450,lon:7.1950}, west:{lat:43.6470,lon:7.2000} },
+  { from:'Nice Ouest',         to:'Nice Centre',       east:{lat:43.6700,lon:7.2150}, west:{lat:43.6720,lon:7.2200} },
+  { from:'Nice Centre',        to:'Nice Est/Aéroport', east:{lat:43.6950,lon:7.2450}, west:{lat:43.6970,lon:7.2500} },
+  { from:'Nice Est/Aéroport',  to:'Eze',               east:{lat:43.7200,lon:7.3200}, west:{lat:43.7220,lon:7.3250} },
+  { from:'Eze',                to:'Monaco',            east:{lat:43.7350,lon:7.3900}, west:{lat:43.7370,lon:7.3950} },
+  { from:'Monaco',             to:'Roquebrune',        east:{lat:43.7550,lon:7.4600}, west:{lat:43.7570,lon:7.4650} },
+  { from:'Roquebrune',         to:'Menton',            east:{lat:43.7700,lon:7.4900}, west:{lat:43.7720,lon:7.4950} },
+  { from:'Menton',             to:'Frontière',         east:{lat:43.7850,lon:7.5400}, west:{lat:43.7870,lon:7.5450} },
 ];
 
-/* Couleur selon ratio vitesse actuelle / vitesse libre */
-function speedColor(current, freeflow){
-  if(!freeflow || freeflow === 0) return '#888888';
-  var ratio = current / freeflow;
-  if(ratio >= 0.85) return '#00C853'; /* Fluide */
-  if(ratio >= 0.65) return '#FFD600'; /* Ralenti */
-  if(ratio >= 0.45) return '#FF6D00'; /* Dense */
-  return '#D50000';                   /* Bloqué */
+function speedToClass(current, freeflow){
+  if(!freeflow||freeflow===0) return 'inconnu';
+  var r = current/freeflow;
+  if(r >= 0.85) return 'fluide';
+  if(r >= 0.65) return 'ralenti';
+  if(r >= 0.45) return 'dense';
+  return 'bloque';
 }
-function speedLabel(current, freeflow){
-  if(!freeflow || freeflow === 0) return 'Inconnu';
-  var ratio = current / freeflow;
-  if(ratio >= 0.85) return 'Fluide';
-  if(ratio >= 0.65) return 'Ralenti';
-  if(ratio >= 0.45) return 'Dense';
+function speedToLabel(current, freeflow){
+  if(!freeflow||freeflow===0) return 'Inconnu';
+  var r = current/freeflow;
+  if(r >= 0.85) return 'Fluide';
+  if(r >= 0.65) return 'Ralenti';
+  if(r >= 0.45) return 'Dense';
   return 'Bloqué';
 }
 
-/* Fetch Traffic Flow Segment pour un point */
-function fetchFlowSegment(lat, lon){
+function fetchSegment(lat, lon){
   var url = 'https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json'
-    + '?point=' + lat + ',' + lon
-    + '&unit=KMPH&openLr=false'
-    + '&key=' + A8_KEY;
-  return fetch(url, { headers:{ Accept:'application/json' } })
+    + '?point='+lat+','+lon+'&unit=KMPH&key='+A8_KEY;
+  return fetch(url, {headers:{Accept:'application/json'}})
     .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
     .then(function(d){
       var fd = d.flowSegmentData;
-      if(!fd) throw new Error('Pas de données');
-      return {
-        currentSpeed:  fd.currentSpeed,
-        freeFlowSpeed: fd.freeFlowSpeed,
-        confidence:    fd.confidence,
-        /* Coordonnées du segment [lon, lat] pour GeoJSON */
-        coords: (fd.coordinates && fd.coordinates.coordinate)
-          ? fd.coordinates.coordinate.map(function(c){ return [c.longitude, c.latitude]; })
-          : [[lon, lat]],
-      };
-    });
+      if(!fd) throw new Error('no data');
+      return { current: fd.currentSpeed, freeflow: fd.freeFlowSpeed, confidence: fd.confidence };
+    })
+    .catch(function(){ return { current:0, freeflow:0, confidence:0 }; });
 }
 
-/* Dessiner tous les segments sur la carte */
-function drawA8Traffic(){
-  if(!a8Map) return;
-  var now = Date.now();
+function buildTimeline(sections, direction){
+  var isEast = direction === 'east';
+  var wrap = document.createElement('div');
+  wrap.className = 'a8-tl-dir';
 
-  Promise.allSettled(A8_PROBES.map(function(p){
-    return fetchFlowSegment(p.lat, p.lon).then(function(r){ return { probe:p, data:r }; });
-  })).then(function(results){
-    /* Supprimer les couches précédentes */
-    results.forEach(function(_, i){
-      try { if(a8Map.getLayer('a8-seg-'+i)) a8Map.removeLayer('a8-seg-'+i); } catch(e){}
-      try { if(a8Map.getSource('a8-src-'+i)) a8Map.removeSource('a8-src-'+i); } catch(e){}
+  /* Label direction */
+  var lbl = document.createElement('div');
+  lbl.className = 'a8-tl-dir-lbl';
+  lbl.innerHTML = '<span class="a8-tl-arrow '+(isEast?'east':'west')+'">'
+    +(isEast?'&#8594;':'&#8592;')+'</span>'
+    +'<span class="a8-tl-dir-name">'
+    +(isEast?'Saint-Tropez &#8594; Frontière italienne':'Frontière italienne &#8592; Saint-Tropez')
+    +'</span>';
+  wrap.appendChild(lbl);
+
+  /* Body */
+  var body = document.createElement('div');
+  body.className = 'a8-tl-body';
+
+  /* Barre */
+  var bar = document.createElement('div');
+  bar.className = 'a8-tl-bar';
+  bar.id = 'a8-bar-'+(isEast?'e':'w');
+
+  /* Échangeurs (label container) */
+  var exitsEl = document.createElement('div');
+  exitsEl.className = 'a8-tl-exits';
+
+  /* Segments */
+  var segs = isEast ? sections : sections.slice().reverse();
+  segs.forEach(function(s, i){
+    var seg = s;
+    var exitFrom = isEast ? seg.from : seg.to;
+    var exitTo   = isEast ? seg.to   : seg.from;
+    /* Trouver la position en % */
+    var kmFrom = A8_EXITS.find(function(e){ return e.lbl===exitFrom; });
+    var kmTo   = A8_EXITS.find(function(e){ return e.lbl===exitTo; });
+    if(!kmFrom||!kmTo) return;
+    var km0 = isEast ? kmFrom.km : (A8_TOTAL_KM - kmTo.km);
+    var km1 = isEast ? kmTo.km   : (A8_TOTAL_KM - kmFrom.km);
+    var w   = ((km1-km0)/A8_TOTAL_KM*100).toFixed(2)+'%';
+    var data = s._data || {};
+    var current  = isEast ? (data.east&&data.east.current||0)  : (data.west&&data.west.current||0);
+    var freeflow = isEast ? (data.east&&data.east.freeflow||0) : (data.west&&data.west.freeflow||0);
+    var cls    = speedToClass(current, freeflow);
+    var status = speedToLabel(current, freeflow);
+    var tooltip = (exitFrom)+' → '+(exitTo)+' | '+status+(current>0?' — '+current+' km/h':'');
+
+    /* Segment HTML */
+    var segEl = document.createElement('div');
+    segEl.className = 'a8-seg '+cls;
+    segEl.style.width = w;
+    segEl.setAttribute('data-tooltip', tooltip);
+    segEl.id = 'seg-'+(isEast?'e':'w')+'-'+i;
+    if(current>0){
+      var spdEl = document.createElement('span');
+      spdEl.className = 'a8-seg-spd';
+      spdEl.textContent = current+' km/h';
+      segEl.appendChild(spdEl);
+    }
+    bar.appendChild(segEl);
+
+    /* Tick échangeur */
+    var tickPct = (isEast ? km0 : km0) / A8_TOTAL_KM * 100;
+    var tick = document.createElement('div');
+    tick.className = 'a8-tl-bar-tick';
+    tick.style.left = tickPct+'%';
+    bar.appendChild(tick);
+
+    /* Label échangeur */
+    if(i === 0 || true){
+      var exitEl = document.createElement('div');
+      exitEl.className = 'a8-tl-exit';
+      exitEl.style.left = tickPct+'%';
+      exitEl.innerHTML = '<div class="a8-tl-exit-tick"></div>'
+        +'<span class="a8-tl-exit-lbl">'+(isEast?exitFrom:exitTo)+'</span>';
+      exitsEl.appendChild(exitEl);
+    }
+  });
+
+  /* Dernier échangeur */
+  var lastExit = isEast ? A8_EXITS[A8_EXITS.length-1] : A8_EXITS[0];
+  var lastEl = document.createElement('div');
+  lastEl.className = 'a8-tl-exit';
+  lastEl.style.left = '100%';
+  lastEl.innerHTML = '<div class="a8-tl-exit-tick"></div>'
+    +'<span class="a8-tl-exit-lbl">'+(isEast?lastExit.lbl:A8_EXITS[0].lbl)+'</span>';
+  exitsEl.appendChild(lastEl);
+
+  body.appendChild(bar);
+  body.appendChild(exitsEl);
+  wrap.appendChild(body);
+  return wrap;
+}
+
+function loadA8Traffic(){
+  var wrap = document.getElementById('a8-timeline-wrap');
+  if(!wrap) return;
+  wrap.innerHTML = '<div class="a8-tl-loading">Chargement du trafic A8...</div>';
+
+  /* Fetch sens Est + Ouest en parallèle pour chaque section */
+  var fetches = A8_SECTIONS.map(function(s){
+    return Promise.all([
+      fetchSegment(s.east.lat, s.east.lon),
+      fetchSegment(s.west.lat, s.west.lon),
+    ]).then(function(res){
+      return Object.assign({}, s, { _data: { east: res[0], west: res[1] } });
     });
+  });
 
-    results.forEach(function(res, i){
-      if(res.status !== 'fulfilled') return;
-      var d = res.value.data;
-      var p = res.value.probe;
-      var color = speedColor(d.currentSpeed, d.freeFlowSpeed);
+  Promise.all(fetches).then(function(sections){
+    wrap.innerHTML = '';
 
-      /* Source GeoJSON */
-      a8Map.addSource('a8-src-'+i, {
-        type: 'geojson',
-        data: {
-          type: 'Feature',
-          properties: {
-            label: p.lbl,
-            current: d.currentSpeed,
-            freeflow: d.freeFlowSpeed,
-            status: speedLabel(d.currentSpeed, d.freeFlowSpeed),
-          },
-          geometry: { type:'LineString', coordinates: d.coords }
-        }
-      });
+    /* Séparateur visuel entre les deux sens */
+    var tlEast = buildTimeline(sections, 'east');
+    var tlWest = buildTimeline(sections, 'west');
+    var sep = document.createElement('div');
+    sep.style.cssText = 'height:1px;background:var(--border);margin:8px 0 20px;';
 
-      /* Contour blanc (lisibilité) */
-      a8Map.addLayer({
-        id: 'a8-seg-'+i+'-outline',
-        type: 'line',
-        source: 'a8-src-'+i,
-        layout: { 'line-cap':'round', 'line-join':'round' },
-        paint: { 'line-color':'#ffffff', 'line-width':12, 'line-opacity':0.25 }
-      });
+    wrap.appendChild(tlEast);
+    wrap.appendChild(sep);
+    wrap.appendChild(tlWest);
 
-      /* Ligne de trafic colorée */
-      a8Map.addLayer({
-        id: 'a8-seg-'+i,
-        type: 'line',
-        source: 'a8-src-'+i,
-        layout: { 'line-cap':'round', 'line-join':'round' },
-        paint: { 'line-color':color, 'line-width':8, 'line-opacity':0.92 }
-      });
-    });
-
-    /* Mettre à jour la légende avec les vitesses */
-    updateLegend(results);
+    var u = document.getElementById('a8-upd');
+    if(u) u.textContent = new Date().toLocaleTimeString('fr-FR',{hour12:false});
   });
 }
 
-function updateLegend(results){
-  var el = document.getElementById('a8-legend-body');
-  if(!el) return;
-  var html = '';
-  results.forEach(function(res){
-    if(res.status !== 'fulfilled') return;
-    var d = res.value.data;
-    var p = res.value.probe;
-    var color = speedColor(d.currentSpeed, d.freeFlowSpeed);
-    var lbl   = speedLabel(d.currentSpeed, d.freeFlowSpeed);
-    html += '<div style="display:flex;align-items:center;gap:8px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.06);">'
-      + '<div style="width:10px;height:10px;border-radius:50%;background:'+color+';flex-shrink:0;"></div>'
-      + '<span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.75);flex:1">'+p.lbl+'</span>'
-      + '<span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,255,255,.45);">'+d.currentSpeed+' km/h</span>'
-      + '</div>';
-  });
-  el.innerHTML = html || '<span style="font-size:11px;color:rgba(255,255,255,.3)">Chargement...</span>';
-}
+/* Init + auto-refresh */
+document.addEventListener('DOMContentLoaded', function(){
+  setTimeout(loadA8Traffic, 600);
+});
+setInterval(loadA8Traffic, 300000);
 
-function initA8Map(){
-  var container = document.getElementById('a8-map');
-  if(!container || a8Map) return;
-  if(typeof tt === 'undefined'){
-    setTimeout(initA8Map, 800);
-    return;
-  }
-  try {
-    a8Map = tt.map({
-      key:       A8_KEY,
-      container: 'a8-map',
-      center:    [7.27, 43.665],
-      zoom:      10,
-      language:  'fr-FR',
-      /* Style sombre minimaliste — met en valeur nos couches A8 */
-      style: 'tomtom://vector/1/basic-night',
-      /* Pas de trafic générique : on dessine le nôtre */
-      stylesVisibility: {
-        trafficFlow:      false,
-        trafficIncidents: false,
-      },
-    });
-    a8Map.addControl(new tt.NavigationControl(), 'bottom-right');
-    a8Map.on('load', function(){
-      a8Map.fitBounds([A8_SW, A8_NE], { padding:30, maxZoom:12, animate:false });
-      /* Masquer un max de couches non-autoroute pour ne garder que l'A8 visible */
-      var layers = a8Map.getStyle().layers;
-      layers.forEach(function(layer){
-        var id = layer.id.toLowerCase();
-        /* Garder : fond, eau, labels autoroute, notre A8 */
-        var keep =
-          id.includes('background') || id.includes('water') || id.includes('land') ||
-          id.includes('motorway')   || id.includes('coastline') || id.includes('border') ||
-          id.includes('label') && id.includes('motorway');
-        if(!keep){
-          try { a8Map.setLayoutProperty(layer.id, 'visibility', 'none'); } catch(e){}
-        }
-      });
-      drawA8Traffic();
-    });
-  } catch(err){
-    console.error('TomTom map init error:', err);
-    container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:monospace;font-size:12px;color:#ff8080;">'+err.message+'</div>';
-  }
-}
-
-function refreshA8Traffic(){
-  if(a8Map && a8Map.loaded()) drawA8Traffic();
-}
-
-function resetMapView(){
-  if(!a8Map) return;
-  a8Map.fitBounds([A8_SW, A8_NE], { padding:30, animate:true });
-}
-
+/* Compat avec l'ancien code */
+function initA8Map(){}
+function resetMapView(){}
 function syncMapTheme(){}
-
-if(document.readyState === 'complete'){
-  setTimeout(initA8Map, 400);
-} else {
-  window.addEventListener('load', function(){ setTimeout(initA8Map, 400); });
-}
-
-/* Refresh traffic toutes les 5 min */
-setInterval(refreshA8Traffic, 300000);
+function refreshA8Traffic(){ loadA8Traffic(); }
 </script>
 </body>
 </html>
