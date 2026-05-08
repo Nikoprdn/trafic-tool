@@ -373,8 +373,160 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 
 /* A8 TIMELINE */
-.a8-tl-wrap{padding:24px 24px 20px;}
+.a8-tl-wrap{padding:20px 24px 28px;}
 .a8-tl-loading{padding:28px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);}
+
+/* Zoom controls */
+.a8-zoom-bar{
+  display:flex;align-items:center;gap:6px;
+  margin-bottom:20px;flex-wrap:wrap;
+}
+.a8-zoom-lbl{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);margin-right:4px;
+}
+.a8-zoom-btn{
+  padding:5px 14px;border-radius:5px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);cursor:pointer;
+  border:1px solid var(--border);background:transparent;
+  transition:all .2s;
+}
+.a8-zoom-btn:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.a8-zoom-btn.active{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.4);}
+
+/* Double-voie */
+.a8-track-wrap{
+  position:relative;
+  padding-bottom:52px; /* espace pour les noms */
+  overflow:hidden;
+}
+
+/* Barre EAST (sens Frontière) */
+.a8-bar-east{
+  height:14px;
+  border-radius:4px 4px 0 0;
+  display:flex;
+  background:var(--border);
+  position:relative;
+  overflow:visible;
+}
+/* Barre WEST (sens St-Tropez) */
+.a8-bar-west{
+  height:14px;
+  border-radius:0 0 4px 4px;
+  display:flex;
+  background:var(--border);
+  margin-top:3px;
+  position:relative;
+  overflow:visible;
+}
+
+/* Labels des sens */
+.a8-dir-labels{
+  display:flex;flex-direction:column;gap:3px;
+  margin-bottom:4px;
+}
+.a8-dir-lbl{
+  display:flex;align-items:center;gap:6px;
+  height:14px;
+}
+.a8-dir-arrow{
+  font-size:11px;font-weight:700;
+  width:16px;text-align:center;flex-shrink:0;
+}
+.a8-dir-arrow.east{color:var(--green);}
+.a8-dir-arrow.west{color:var(--yellow);}
+.a8-dir-name-lbl{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);
+}
+
+/* Segments colorés */
+.a8-seg{
+  height:100%;position:relative;cursor:pointer;
+  transition:filter .1s;
+}
+.a8-seg:hover{filter:brightness(1.3);z-index:2;}
+.a8-seg::after{
+  content:attr(data-tooltip);
+  position:absolute;bottom:calc(100% + 10px);left:50%;
+  transform:translateX(-50%);
+  background:rgba(13,16,22,.96);border:1px solid var(--border);
+  border-radius:7px;padding:7px 12px;
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;
+  color:#fff;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .12s;z-index:100;
+  box-shadow:0 4px 20px rgba(0,0,0,.6);
+}
+.a8-bar-west .a8-seg::after{bottom:auto;top:calc(100% + 10px);}
+.a8-seg:hover::after{opacity:1;}
+
+/* Couleurs */
+.a8-seg.fluide {background:#1DB954;}
+.a8-seg.ralenti{background:#FFD600;}
+.a8-seg.dense  {background:#FF6D00;}
+.a8-seg.bloque {background:#D50000;}
+.a8-seg.inconnu{background:#3A3D4A;}
+
+/* Ticks + noms d'échangeurs */
+.a8-exits-layer{
+  position:absolute;
+  top:0;left:0;right:0;
+  height:100%;
+  pointer-events:none;
+}
+.a8-exit-mark{
+  position:absolute;
+  top:0;bottom:52px;
+  width:2px;
+  background:rgba(0,0,0,.3);
+  z-index:3;
+}
+.a8-exit-info{
+  position:absolute;
+  bottom:0;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  pointer-events:none;
+}
+.a8-exit-num-badge{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;font-weight:700;
+  background:var(--card);border:1px solid var(--border);
+  color:rgba(255,255,255,.65);
+  padding:1px 5px;border-radius:3px;
+  white-space:nowrap;
+}
+.a8-exit-name-lbl{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px;font-weight:600;letter-spacing:.04em;
+  color:var(--muted);
+  white-space:nowrap;
+  transform:rotate(-35deg) translateX(4px);
+  transform-origin:top left;
+  max-width:70px;overflow:hidden;text-overflow:ellipsis;
+}
+
+/* Stats */
+.a8-stats{
+  display:flex;gap:8px;flex-wrap:wrap;
+  margin-top:12px;
+}
+.a8-stat{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  padding:3px 9px;border-radius:10px;
+}
+.a8-stat.fluide {background:rgba(29,185,84,.12);color:#1DB954;}
+.a8-stat.ralenti{background:rgba(255,214,0,.10);color:#FFD600;}
+.a8-stat.dense  {background:rgba(255,109,0,.12);color:#FF6D00;}
+.a8-stat.bloque {background:rgba(213,0,0,.12);color:#ff5252;}
+.a8-no-data{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted2);}
 
 /* Direction */
 .a8-tl-dir{margin-bottom:36px;}
@@ -525,172 +677,185 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .a8-stat.dense  {background:rgba(255,109,0,.12);  color:#FF6D00;}
 .a8-stat.bloque {background:rgba(213,0,0,.12);    color:#ff5252;}
 
+
 <script>
-/* ═ A8 Traffic Timeline v2 — échangeurs réels ═ */
+/* ═ A8 Traffic Timeline v3 — double voie, zoom, direction fix ═ */
 var A8_KEY = 'Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
 var A8_TOTAL_KM = 112;
+var A8_CURRENT_ZOOM = 'full';
 
-var A8_EXITS = [{"n": 36, "lbl": "St-Tropez", "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725}, {"n": 37, "lbl": "Puget/Fréjus O.", "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82}, {"n": 38, "lbl": "Fréjus/St-Raph", "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89}, {"n": 39, "lbl": "Les Adrets", "short": "Adrets", "km": 28, "lat": 43.52, "lon": 6.95}, {"n": 40, "lbl": "Mandelieu", "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01}, {"n": 41, "lbl": "Cannes La Bocca", "short": "Cns La Bocca", "km": 44, "lat": 43.553, "lon": 7.04}, {"n": 42, "lbl": "Cannes/Mougins", "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07}, {"n": 44, "lbl": "Antibes/Sophia", "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12}, {"n": 46, "lbl": "VL Plage", "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16}, {"n": 47, "lbl": "VL Centre/Cagnes O.", "short": "VL Ctr", "km": 67, "lat": 43.635, "lon": 7.18}, {"n": 48, "lbl": "Cagnes Est", "short": "Cagnes E.", "km": 70, "lat": 43.655, "lon": 7.195}, {"n": 49, "lbl": "St-Laurent-Var", "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205}, {"n": 50, "lbl": "Nice Ouest/Prom.", "short": "Nice O.", "km": 77, "lat": 43.675, "lon": 7.215}, {"n": 51, "lbl": "Nice Aéroport", "short": "Nice Aéro", "km": 80, "lat": 43.665, "lon": 7.235}, {"n": 52, "lbl": "Nice St-Isidore", "short": "Nice N-I", "km": 83, "lat": 43.705, "lon": 7.265}, {"n": 54, "lbl": "Nice Nord", "short": "Nice N.", "km": 86, "lat": 43.72, "lon": 7.285}, {"n": 55, "lbl": "Nice l'Ariane", "short": "Ariane", "km": 89, "lat": 43.73, "lon": 7.31}, {"n": 56, "lbl": "Monaco", "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39}, {"n": 57, "lbl": "La Turbie", "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42}, {"n": 58, "lbl": "Roquebrune CM", "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47}, {"n": 59, "lbl": "Menton", "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5}, {"n": 0, "lbl": "Frontière", "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57}];
+var A8_EXITS = [{"n": 36, "lbl": "Le Muy/St-Tropez", "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725}, {"n": 37, "lbl": "Puget/Fréjus O.", "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82}, {"n": 38, "lbl": "Fréjus/St-Raph", "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89}, {"n": 39, "lbl": "Les Adrets", "short": "Adrets", "km": 28, "lat": 43.52, "lon": 6.95}, {"n": 40, "lbl": "Mandelieu", "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01}, {"n": 41, "lbl": "Cannes La Bocca", "short": "Cns Bocca", "km": 44, "lat": 43.553, "lon": 7.04}, {"n": 42, "lbl": "Cannes/Mougins", "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07}, {"n": 44, "lbl": "Antibes/Sophia", "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12}, {"n": 46, "lbl": "VL Plage", "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16}, {"n": 47, "lbl": "VL Centre", "short": "VL Ctr", "km": 67, "lat": 43.635, "lon": 7.18}, {"n": 48, "lbl": "Cagnes Est", "short": "Cagnes E.", "km": 70, "lat": 43.655, "lon": 7.195}, {"n": 49, "lbl": "St-Laurent-Var", "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205}, {"n": 50, "lbl": "Nice Ouest", "short": "Nice O.", "km": 77, "lat": 43.675, "lon": 7.215}, {"n": 51, "lbl": "Nice Aéroport", "short": "Nice Aéro", "km": 80, "lat": 43.665, "lon": 7.235}, {"n": 52, "lbl": "Nice St-Isidore", "short": "N.St-Isid", "km": 83, "lat": 43.705, "lon": 7.265}, {"n": 54, "lbl": "Nice Nord", "short": "Nice N.", "km": 86, "lat": 43.72, "lon": 7.285}, {"n": 55, "lbl": "Nice l'Ariane", "short": "Ariane", "km": 89, "lat": 43.73, "lon": 7.31}, {"n": 56, "lbl": "Monaco", "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39}, {"n": 57, "lbl": "La Turbie", "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42}, {"n": 58, "lbl": "Roquebrune CM", "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47}, {"n": 59, "lbl": "Menton", "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5}, {"n": 0, "lbl": "Frontière", "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57}];
+var A8_ZOOMS = [{"id": "full", "label": "Vue complète", "from": 36, "to": 0}, {"id": "cannes", "label": "Cannes", "from": 40, "to": 44}, {"id": "antibes", "label": "Antibes", "from": 44, "to": 46}, {"id": "nice", "label": "Nice", "from": 49, "to": 55}, {"id": "monaco", "label": "Monaco/Menton", "from": 56, "to": 0}];
 
-function speedClass(cur, ff){
-  if(!ff||ff===0) return 'inconnu';
-  var r=cur/ff;
-  if(r>=0.85) return 'fluide';
-  if(r>=0.65) return 'ralenti';
-  if(r>=0.45) return 'dense';
-  return 'bloque';
-}
-function speedLabel(cur, ff){
-  if(!ff||ff===0) return 'Inconnu';
-  var r=cur/ff;
-  if(r>=0.85) return 'Fluide';
-  if(r>=0.65) return 'Ralenti '+Math.round((1-r)*100)+'%';
-  if(r>=0.45) return 'Dense '+Math.round((1-r)*100)+'%';
-  return 'Bloqué '+Math.round((1-r)*100)+'%';
-}
+/* Sections : une sonde PAR direction, offset lat pour chaque voie */
+var A8_SECTIONS = A8_EXITS.slice(0,-1).map(function(ex,i){
+  var next = A8_EXITS[i+1];
+  var midLat = (ex.lat+next.lat)/2;
+  var midLon = (ex.lon+next.lon)/2;
+  /* Offset ~80m pour chaque voie séparée :
+     A8 oriente O→E : voie est (vers Italie) = légèrement sud (+0.0007 lat),
+     voie ouest (vers St-Tropez) = légèrement nord (-0.0007 lat) */
+  return {
+    from: ex.lbl, to: next.lbl,
+    east: {lat: midLat-0.0006, lon: midLon},
+    west: {lat: midLat+0.0006, lon: midLon},
+  };
+});
 
-function fetchSeg(lat, lon){
-  var url='https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json'
-    +'?point='+lat+','+lon+'&unit=KMPH&key='+A8_KEY;
-  return fetch(url,{headers:{Accept:'application/json'}})
-    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
-    .then(function(d){
-      var fd=d.flowSegmentData;
-      if(!fd) throw new Error('no data');
-      return {cur:fd.currentSpeed,ff:fd.freeFlowSpeed};
-    })
-    .catch(function(){return {cur:0,ff:0};});
+function speedClass(cur,ff){if(!ff||ff===0)return'inconnu';var r=cur/ff;if(r>=0.85)return'fluide';if(r>=0.65)return'ralenti';if(r>=0.45)return'dense';return'bloque';}
+function speedLabel(cur,ff){if(!ff||ff===0)return'Inconnu';var r=cur/ff;if(r>=0.85)return'Fluide';if(r>=0.65)return'Ralenti '+Math.round((1-r)*100)+'%';if(r>=0.45)return'Dense '+Math.round((1-r)*100)+'%';return'Bloqué '+Math.round((1-r)*100)+'%';}
+
+function fetchSeg(lat,lon){
+  var url='https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json?point='+lat+','+lon+'&unit=KMPH&key='+A8_KEY;
+  return fetch(url,{headers:{Accept:'application/json'}}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();}).then(function(d){var fd=d.flowSegmentData;if(!fd)throw new Error('no data');return{cur:fd.currentSpeed,ff:fd.freeFlowSpeed};}).catch(function(){return{cur:0,ff:0};});
 }
 
-function buildDir(exits, segData, isEast){
-  var wrap=document.createElement('div');
-  wrap.className='a8-tl-dir';
+/* Filtrer exits selon le zoom actif */
+function getZoomedExits(){
+  var z=A8_ZOOMS.find(function(z){return z.id===A8_CURRENT_ZOOM;});
+  if(!z||z.id==='full') return A8_EXITS;
+  return A8_EXITS.filter(function(ex){
+    var fromN=z.from, toN=z.to;
+    if(toN===0){
+      /* jusqu'à la frontière */
+      return ex.n===0 || ex.n>=fromN;
+    }
+    return ex.n===0 ? false : (ex.n>=fromN && ex.n<=toN);
+  });
+}
+function getZoomedSections(){
+  var exits=getZoomedExits();
+  var result=[];
+  for(var i=0;i<exits.length-1;i++){
+    var idx=A8_EXITS.indexOf(exits[i]);
+    if(idx>=0 && idx<A8_SECTIONS.length) result.push(A8_SECTIONS[idx]);
+  }
+  return result;
+}
 
-  /* Header */
-  var hdr=document.createElement('div');
-  hdr.className='a8-tl-dir-hdr';
-  hdr.innerHTML='<span class="a8-tl-arrow '+(isEast?'east':'west')+'">'
-    +(isEast?'&#8594;':'&#8592;')+'</span>'
-    +'<span class="a8-tl-dir-name">'
-    +(isEast
-      ?'Saint-Tropez &#8594; Frontière Italienne'
-      :'Frontière Italienne &#8592; Saint-Tropez')
-    +'</span>';
-  wrap.appendChild(hdr);
+function renderDoubleTrack(exits,eastData,westData){
+  var wrap=document.getElementById('a8-timeline-wrap');
+  if(!wrap)return;
+  var total=exits[exits.length-1].km-exits[0].km;
+  if(total===0)total=1;
+  var km0=exits[0].km;
 
-  var body=document.createElement('div');
-  body.className='a8-tl-body';
+  wrap.innerHTML='';
 
-  /* Rangée numéros (au-dessus de la barre) */
-  var numsRow=document.createElement('div');
-  numsRow.className='a8-tl-nums';
+  /* Zoom buttons */
+  var zBar=document.createElement('div');
+  zBar.className='a8-zoom-bar';
+  zBar.innerHTML='<span class="a8-zoom-lbl">Zoom</span>';
+  A8_ZOOMS.forEach(function(z){
+    var btn=document.createElement('button');
+    btn.className='a8-zoom-btn'+(z.id===A8_CURRENT_ZOOM?' active':'');
+    btn.textContent=z.label;
+    btn.onclick=function(){A8_CURRENT_ZOOM=z.id;document.querySelectorAll('.a8-zoom-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');loadA8Traffic();};
+    zBar.appendChild(btn);
+  });
+  wrap.appendChild(zBar);
 
-  /* Barre */
-  var bar=document.createElement('div');
-  bar.className='a8-tl-bar';
+  /* Direction labels */
+  var dirLabels=document.createElement('div');
+  dirLabels.className='a8-dir-labels';
+  dirLabels.innerHTML='<div class="a8-dir-lbl"><span class="a8-dir-arrow east">&#8594;</span><span class="a8-dir-name-lbl">Saint-Tropez &#8594; Frontière Italienne</span></div>'
+    +'<div class="a8-dir-lbl" style="margin-top:3px"><span class="a8-dir-arrow west">&#8592;</span><span class="a8-dir-name-lbl">Frontière Italienne &#8592; Saint-Tropez</span></div>';
+  wrap.appendChild(dirLabels);
 
-  /* Rangée noms (en dessous) */
-  var namesRow=document.createElement('div');
-  namesRow.className='a8-tl-names';
+  /* Conteneur des barres */
+  var trackWrap=document.createElement('div');
+  trackWrap.className='a8-track-wrap';
+  trackWrap.style.position='relative';
+
+  /* Barre EST */
+  var barE=document.createElement('div');
+  barE.className='a8-bar-east';
+
+  /* Barre OUEST */
+  var barW=document.createElement('div');
+  barW.className='a8-bar-west';
+
+  /* Layer des noms */
+  var exitsLayer=document.createElement('div');
+  exitsLayer.style.cssText='position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;';
 
   /* Stats */
-  var statsRow=document.createElement('div');
-  statsRow.className='a8-stat-row';
-  var counts={fluide:0,ralenti:0,dense:0,bloque:0};
+  var statsE={fluide:0,ralenti:0,dense:0,bloque:0};
+  var statsW={fluide:0,ralenti:0,dense:0,bloque:0};
 
-  var displayExits = isEast ? exits : exits.slice().reverse();
+  /* Construire les segments */
+  var sections=getZoomedSections();
+  sections.forEach(function(sec,i){
+    var ex0=exits[i], ex1=exits[i+1];
+    if(!ex0||!ex1)return;
+    var pct0=((ex0.km-km0)/total*100).toFixed(2)+'%';
+    var w   =((ex1.km-ex0.km)/total*100).toFixed(2)+'%';
 
-  for(var i=0;i<displayExits.length-1;i++){
-    var ex0 = displayExits[i];
-    var ex1 = displayExits[i+1];
+    var dE=eastData[A8_EXITS.indexOf(ex0)]||{cur:0,ff:0};
+    var dW=westData[A8_EXITS.indexOf(ex0)]||{cur:0,ff:0};
+    var clsE=speedClass(dE.cur,dE.ff);
+    var clsW=speedClass(dW.cur,dW.ff);
+    if(statsE[clsE]!==undefined)statsE[clsE]++;
+    if(statsW[clsW]!==undefined)statsW[clsW]++;
 
-    /* Position % du début de ce segment */
-    var km0 = isEast ? ex0.km : (A8_TOTAL_KM - ex1.km);
-    var km1 = isEast ? ex1.km : (A8_TOTAL_KM - ex0.km);
-    var pct0 = (km0/A8_TOTAL_KM*100).toFixed(3)+'%';
-    var pct1 = (km1/A8_TOTAL_KM*100).toFixed(3)+'%';
-    var w    = ((km1-km0)/A8_TOTAL_KM*100).toFixed(3)+'%';
+    var tE=ex0.lbl+' → '+ex1.lbl+' | '+speedLabel(dE.cur,dE.ff)+(dE.cur>0?' — '+dE.cur+' km/h':'');
+    var tW=ex1.lbl+' → '+ex0.lbl+' | '+speedLabel(dW.cur,dW.ff)+(dW.cur>0?' — '+dW.cur+' km/h':'');
 
-    /* Données trafic pour ce segment */
-    var segIdx = isEast ? i : (exits.length-2-i);
-    var d = segData[segIdx] || {cur:0,ff:0};
-    var cls  = speedClass(d.cur, d.ff);
-    var lbl  = speedLabel(d.cur, d.ff);
-    if(counts[cls]!==undefined) counts[cls]++;
+    var sE=document.createElement('div');
+    sE.className='a8-seg '+clsE;sE.style.width=w;sE.setAttribute('data-tooltip',tE);
+    barE.appendChild(sE);
 
-    var exitLbl = isEast ? ex0.lbl : ex1.lbl;
-    var exitNum = isEast ? (ex0.n||'') : (ex1.n||'');
-    var tooltip = 'Sortie '+(exitNum?exitNum+' — ':'')+exitLbl
-      +' | '+lbl+(d.cur>0?' — '+d.cur+' km/h':'');
+    var sW=document.createElement('div');
+    sW.className='a8-seg '+clsW;sW.style.width=w;sW.setAttribute('data-tooltip',tW);
+    barW.appendChild(sW);
+  });
 
-    /* Segment de la barre */
-    var seg=document.createElement('div');
-    seg.className='a8-seg '+cls;
-    seg.style.width=w;
-    seg.setAttribute('data-tooltip', tooltip);
-    bar.appendChild(seg);
+  /* Échangeurs */
+  exits.forEach(function(ex,i){
+    var pct=((ex.km-km0)/total*100).toFixed(2)+'%';
+    /* Tick vertical */
+    var tick=document.createElement('div');
+    tick.className='a8-exit-mark';
+    tick.style.left=pct;
+    /* Hauteur = couvre les 2 barres + gap */
+    tick.style.cssText='position:absolute;left:'+pct+';top:0;width:2px;background:rgba(0,0,0,.35);z-index:3;height:31px;';
+    exitsLayer.appendChild(tick);
 
-    /* Tick + badge numéro au-dessus */
-    var numEl=document.createElement('div');
-    numEl.className='a8-exit-num';
-    numEl.style.left=pct0;
-    var badge=isEast?ex0.n:ex1.n;
-    numEl.innerHTML='<span class="a8-exit-badge">'+(badge||'')+'</span>'
-      +'<div class="a8-exit-tick-top"></div>';
-    numsRow.appendChild(numEl);
+    /* Info */
+    var info=document.createElement('div');
+    info.className='a8-exit-info';
+    info.style.left=pct;
+    info.style.bottom='0';
+    info.style.cssText='position:absolute;left:'+pct+';bottom:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none;';
+    var numBadge=ex.n||'';
+    info.innerHTML='<span class="a8-exit-num-badge">'+(numBadge||ex.short)+'</span>'
+      +'<span class="a8-exit-name-lbl">'+ex.short+'</span>';
+    exitsLayer.appendChild(info);
+  });
 
-    /* Nom en dessous */
-    var nameEl=document.createElement('div');
-    nameEl.className='a8-exit-name';
-    nameEl.style.left=pct0;
-    var nameStr=isEast?ex0.short:ex1.short;
-    nameEl.innerHTML='<div class="a8-exit-tick-bot"></div>'
-      +'<span class="a8-exit-lbl">'+nameStr+'</span>';
-    namesRow.appendChild(nameEl);
-
-    /* Tick sur la barre */
-    if(i>0){
-      var t=document.createElement('div');
-      t.className='a8-bar-tick';
-      t.style.left=pct0;
-      bar.appendChild(t);
-    }
-  }
-
-  /* Dernier échangeur */
-  var lastEx = isEast ? displayExits[displayExits.length-1] : displayExits[0];
-  var lastNumEl=document.createElement('div');
-  lastNumEl.className='a8-exit-num';
-  lastNumEl.style.left='100%';
-  lastNumEl.innerHTML='<span class="a8-exit-badge" style="background:rgba(228,3,46,.15);border-color:rgba(228,3,46,.4);color:var(--red);">'+(lastEx.lbl)+'</span>'
-    +'<div class="a8-exit-tick-top"></div>';
-  numsRow.appendChild(lastNumEl);
-
-  var lastNameEl=document.createElement('div');
-  lastNameEl.className='a8-exit-name';
-  lastNameEl.style.left='100%';
-  lastNameEl.innerHTML='<div class="a8-exit-tick-bot"></div>'
-    +'<span class="a8-exit-lbl">'+lastEx.short+'</span>';
-  namesRow.appendChild(lastNameEl);
-
-  body.appendChild(numsRow);
-  body.appendChild(bar);
-  body.appendChild(namesRow);
+  trackWrap.appendChild(barE);
+  trackWrap.appendChild(barW);
+  trackWrap.appendChild(exitsLayer);
+  wrap.appendChild(trackWrap);
 
   /* Stats résumé */
-  var statHtml='';
-  if(counts.bloque >0) statHtml+='<span class="a8-stat bloque">&#9679; '+counts.bloque+' section'+(counts.bloque>1?'s':'')+' bloquée'+(counts.bloque>1?'s':'')+'</span>';
-  if(counts.dense  >0) statHtml+='<span class="a8-stat dense">&#9679; '+counts.dense+' dense'+(counts.dense>1?'s':'')+'</span>';
-  if(counts.ralenti>0) statHtml+='<span class="a8-stat ralenti">&#9679; '+counts.ralenti+' ralentie'+(counts.ralenti>1?'s':'')+'</span>';
-  if(counts.fluide >0 && !counts.bloque && !counts.dense && !counts.ralenti)
-    statHtml='<span class="a8-stat fluide">&#9679; Trafic fluide sur tout le tronçon</span>';
-  if(statHtml){
-    statsRow.innerHTML=statHtml;
-    body.appendChild(statsRow);
+  function makeStats(stats,dir){
+    var h='<div class="a8-stats" style="margin-top:8px">';
+    h+='<span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);margin-right:4px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;">'+dir+'</span>';
+    if(stats.bloque >0)h+='<span class="a8-stat bloque">&#9679; '+stats.bloque+' bloqué'+(stats.bloque>1?'s':'')+'</span>';
+    if(stats.dense  >0)h+='<span class="a8-stat dense">&#9679; '+stats.dense+' dense'+(stats.dense>1?'s':'')+'</span>';
+    if(stats.ralenti>0)h+='<span class="a8-stat ralenti">&#9679; '+stats.ralenti+' ralenti'+(stats.ralenti>1?'s':'')+'</span>';
+    if(!stats.bloque&&!stats.dense&&!stats.ralenti)h+='<span class="a8-stat fluide">&#9679; Fluide</span>';
+    h+='</div>';
+    return h;
   }
+  var statsEl=document.createElement('div');
+  statsEl.innerHTML=makeStats(statsE,'&#8594; Vers Frontière')+makeStats(statsW,'&#8592; Vers St-Tropez');
+  wrap.appendChild(statsEl);
 
-  wrap.appendChild(body);
-  return wrap;
+  /* Heure MAJ */
+  var u=document.getElementById('a8-upd');
+  if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
 }
 
 function loadA8Traffic(){
@@ -698,33 +863,24 @@ function loadA8Traffic(){
   if(!wrap)return;
   wrap.innerHTML='<div class="a8-tl-loading">Chargement trafic A8...</div>';
 
-  /* Une sonde par section (entre exit[i] et exit[i+1]) */
-  var probes=[];
-  for(var i=0;i<A8_EXITS.length-1;i++){
-    var e0=A8_EXITS[i], e1=A8_EXITS[i+1];
-    /* Point milieu approximatif */
-    probes.push({lat:(e0.lat+e1.lat)/2, lon:(e0.lon+e1.lon)/2});
-  }
+  var exits=getZoomedExits();
+  var sections=getZoomedSections();
 
-  Promise.all(probes.map(function(p){return fetchSeg(p.lat,p.lon);}))
-    .then(function(segData){
-      wrap.innerHTML='';
-      var divider=document.createElement('div');
-      divider.style.cssText='height:1px;background:var(--border);margin:6px 0 28px;';
-      wrap.appendChild(buildDir(A8_EXITS, segData, true));
-      wrap.appendChild(divider);
-      wrap.appendChild(buildDir(A8_EXITS, segData, false));
-      var u=document.getElementById('a8-upd');
-      if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
-    });
+  /* Fetch EST + OUEST en parallèle pour chaque section */
+  var eastFetches=sections.map(function(s){return fetchSeg(s.east.lat,s.east.lon);});
+  var westFetches=sections.map(function(s){return fetchSeg(s.west.lat,s.west.lon);});
+
+  Promise.all([Promise.all(eastFetches),Promise.all(westFetches)]).then(function(res){
+    renderDoubleTrack(exits,res[0],res[1]);
+  });
 }
 
 document.addEventListener('DOMContentLoaded',function(){setTimeout(loadA8Traffic,500);});
 setInterval(loadA8Traffic,300000);
-function initA8Map(){}
-function resetMapView(){}
-function syncMapTheme(){}
 function refreshA8Traffic(){loadA8Traffic();}
+function initA8Map(){}
+function syncMapTheme(){}
+function resetMapView(){}
 </script>E html>
 <html lang="fr">
 <head>
