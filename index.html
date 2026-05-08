@@ -443,18 +443,16 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <div class="a8-map-wrap">
         <div id="a8-map" style="width:100%;height:460px;"></div>
         <!-- Légende trafic -->
-        <div class="a8-map-legend">
-          <div class="a8-legend-title">État du trafic A8</div>
-          <div class="a8-legend-row"><div class="a8-legend-dot" style="background:#00cc00"></div><span class="a8-legend-lbl">Fluide</span></div>
-          <div class="a8-legend-row"><div class="a8-legend-dot" style="background:#ff8c00"></div><span class="a8-legend-lbl">Ralenti</span></div>
-          <div class="a8-legend-row"><div class="a8-legend-dot" style="background:#cc0000"></div><span class="a8-legend-lbl">Bloqué</span></div>
-          <div class="a8-legend-row"><div class="a8-legend-dot" style="background:#800080"></div><span class="a8-legend-lbl">Travaux</span></div>
+        <div class="a8-map-legend" style="min-width:200px;">
+          <div class="a8-legend-title">Trafic A8 — Secteur par secteur</div>
+          <div id="a8-legend-body" style="display:flex;flex-direction:column;gap:2px;margin-top:6px;">
+            <span style="font-size:11px;color:rgba(255,255,255,.3);font-family:monospace">Chargement...</span>
+          </div>
         </div>
         <!-- Contrôles -->
         <div class="a8-overlay">
-          <button class="a8-btn active" id="btn-flow"    onclick="toggleMapLayer('flow')"   >&#128660; Trafic</button>
-          <button class="a8-btn active" id="btn-inc"     onclick="toggleMapLayer('inc')"    >&#9888; Incidents</button>
-          <button class="a8-btn"        id="btn-reset"   onclick="resetMapView()"            >&#8982; Centrer</button>
+          <button class="a8-btn" onclick="resetMapView()">&#8982; Centrer</button>
+          <button class="a8-btn" onclick="refreshA8Traffic()">&#8635; Actualiser</button>
         </div>
       </div>
       <div class="map-footer">
@@ -918,90 +916,216 @@ setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM(
 </script>
 
 <script>
-/* ═ TomTom A8 Map ═ */
+/* ═ TomTom A8 Map — Traffic Flow par segment ═ */
 var a8Map  = null;
 var A8_KEY = 'Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
 
 /* Bounds : Cannes → Frontière italienne */
-var A8_SW = [6.95, 43.50]; /* [lon, lat] */
-var A8_NE = [7.65, 43.85];
+var A8_SW = [6.92, 43.48];
+var A8_NE = [7.66, 43.88];
+
+/*
+ * Points de sondage le long de l'A8
+ * TomTom Traffic Flow Segment retourne la géométrie + vitesse du tronçon
+ * lat, lon, label
+ */
+var A8_PROBES = [
+  { lat:43.5520, lon:7.0250, lbl:'Cannes' },
+  { lat:43.5750, lon:7.1050, lbl:'Antibes' },
+  { lat:43.6100, lon:7.1700, lbl:'Villeneuve-Loubet' },
+  { lat:43.6650, lon:7.2050, lbl:'Nice Ouest' },
+  { lat:43.7000, lon:7.2700, lbl:'Nice Est' },
+  { lat:43.7250, lon:7.3700, lbl:'Eze' },
+  { lat:43.7380, lon:7.4100, lbl:'Cap-d'Ail' },
+  { lat:43.7500, lon:7.4600, lbl:'Roquebrune' },
+  { lat:43.7750, lon:7.5100, lbl:'Menton' },
+  { lat:43.7900, lon:7.5800, lbl:'Frontière' },
+];
+
+/* Couleur selon ratio vitesse actuelle / vitesse libre */
+function speedColor(current, freeflow){
+  if(!freeflow || freeflow === 0) return '#888888';
+  var ratio = current / freeflow;
+  if(ratio >= 0.85) return '#00C853'; /* Fluide */
+  if(ratio >= 0.65) return '#FFD600'; /* Ralenti */
+  if(ratio >= 0.45) return '#FF6D00'; /* Dense */
+  return '#D50000';                   /* Bloqué */
+}
+function speedLabel(current, freeflow){
+  if(!freeflow || freeflow === 0) return 'Inconnu';
+  var ratio = current / freeflow;
+  if(ratio >= 0.85) return 'Fluide';
+  if(ratio >= 0.65) return 'Ralenti';
+  if(ratio >= 0.45) return 'Dense';
+  return 'Bloqué';
+}
+
+/* Fetch Traffic Flow Segment pour un point */
+function fetchFlowSegment(lat, lon){
+  var url = 'https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json'
+    + '?point=' + lat + ',' + lon
+    + '&unit=KMPH&openLr=false'
+    + '&key=' + A8_KEY;
+  return fetch(url, { headers:{ Accept:'application/json' } })
+    .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(d){
+      var fd = d.flowSegmentData;
+      if(!fd) throw new Error('Pas de données');
+      return {
+        currentSpeed:  fd.currentSpeed,
+        freeFlowSpeed: fd.freeFlowSpeed,
+        confidence:    fd.confidence,
+        /* Coordonnées du segment [lon, lat] pour GeoJSON */
+        coords: (fd.coordinates && fd.coordinates.coordinate)
+          ? fd.coordinates.coordinate.map(function(c){ return [c.longitude, c.latitude]; })
+          : [[lon, lat]],
+      };
+    });
+}
+
+/* Dessiner tous les segments sur la carte */
+function drawA8Traffic(){
+  if(!a8Map) return;
+  var now = Date.now();
+
+  Promise.allSettled(A8_PROBES.map(function(p){
+    return fetchFlowSegment(p.lat, p.lon).then(function(r){ return { probe:p, data:r }; });
+  })).then(function(results){
+    /* Supprimer les couches précédentes */
+    results.forEach(function(_, i){
+      try { if(a8Map.getLayer('a8-seg-'+i)) a8Map.removeLayer('a8-seg-'+i); } catch(e){}
+      try { if(a8Map.getSource('a8-src-'+i)) a8Map.removeSource('a8-src-'+i); } catch(e){}
+    });
+
+    results.forEach(function(res, i){
+      if(res.status !== 'fulfilled') return;
+      var d = res.value.data;
+      var p = res.value.probe;
+      var color = speedColor(d.currentSpeed, d.freeFlowSpeed);
+
+      /* Source GeoJSON */
+      a8Map.addSource('a8-src-'+i, {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {
+            label: p.lbl,
+            current: d.currentSpeed,
+            freeflow: d.freeFlowSpeed,
+            status: speedLabel(d.currentSpeed, d.freeFlowSpeed),
+          },
+          geometry: { type:'LineString', coordinates: d.coords }
+        }
+      });
+
+      /* Contour blanc (lisibilité) */
+      a8Map.addLayer({
+        id: 'a8-seg-'+i+'-outline',
+        type: 'line',
+        source: 'a8-src-'+i,
+        layout: { 'line-cap':'round', 'line-join':'round' },
+        paint: { 'line-color':'#ffffff', 'line-width':12, 'line-opacity':0.25 }
+      });
+
+      /* Ligne de trafic colorée */
+      a8Map.addLayer({
+        id: 'a8-seg-'+i,
+        type: 'line',
+        source: 'a8-src-'+i,
+        layout: { 'line-cap':'round', 'line-join':'round' },
+        paint: { 'line-color':color, 'line-width':8, 'line-opacity':0.92 }
+      });
+    });
+
+    /* Mettre à jour la légende avec les vitesses */
+    updateLegend(results);
+  });
+}
+
+function updateLegend(results){
+  var el = document.getElementById('a8-legend-body');
+  if(!el) return;
+  var html = '';
+  results.forEach(function(res){
+    if(res.status !== 'fulfilled') return;
+    var d = res.value.data;
+    var p = res.value.probe;
+    var color = speedColor(d.currentSpeed, d.freeFlowSpeed);
+    var lbl   = speedLabel(d.currentSpeed, d.freeFlowSpeed);
+    html += '<div style="display:flex;align-items:center;gap:8px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.06);">'
+      + '<div style="width:10px;height:10px;border-radius:50%;background:'+color+';flex-shrink:0;"></div>'
+      + '<span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.75);flex:1">'+p.lbl+'</span>'
+      + '<span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,255,255,.45);">'+d.currentSpeed+' km/h</span>'
+      + '</div>';
+  });
+  el.innerHTML = html || '<span style="font-size:11px;color:rgba(255,255,255,.3)">Chargement...</span>';
+}
 
 function initA8Map(){
   var container = document.getElementById('a8-map');
-  if(!container){ console.warn('a8-map container introuvable'); return; }
-  if(a8Map){ return; } /* déjà initialisé */
-
+  if(!container || a8Map) return;
   if(typeof tt === 'undefined'){
-    console.warn('TomTom SDK pas encore chargé, retry dans 1s...');
-    setTimeout(initA8Map, 1000);
+    setTimeout(initA8Map, 800);
     return;
   }
-
   try {
     a8Map = tt.map({
       key:       A8_KEY,
       container: 'a8-map',
-      center:    [7.27, 43.665], /* [lon, lat] */
+      center:    [7.27, 43.665],
       zoom:      10,
       language:  'fr-FR',
+      /* Style sombre minimaliste — met en valeur nos couches A8 */
+      style: 'tomtom://vector/1/basic-night',
+      /* Pas de trafic générique : on dessine le nôtre */
       stylesVisibility: {
-        trafficFlow:      true,
-        trafficIncidents: true,
+        trafficFlow:      false,
+        trafficIncidents: false,
       },
     });
-
-    /* Navigation control */
     a8Map.addControl(new tt.NavigationControl(), 'bottom-right');
-
-    /* Une fois la carte chargée, cadrer sur la A8 */
     a8Map.on('load', function(){
-      a8Map.fitBounds([A8_SW, A8_NE], { padding: 30, maxZoom: 12 });
+      a8Map.fitBounds([A8_SW, A8_NE], { padding:30, maxZoom:12, animate:false });
+      /* Masquer un max de couches non-autoroute pour ne garder que l'A8 visible */
+      var layers = a8Map.getStyle().layers;
+      layers.forEach(function(layer){
+        var id = layer.id.toLowerCase();
+        /* Garder : fond, eau, labels autoroute, notre A8 */
+        var keep =
+          id.includes('background') || id.includes('water') || id.includes('land') ||
+          id.includes('motorway')   || id.includes('coastline') || id.includes('border') ||
+          id.includes('label') && id.includes('motorway');
+        if(!keep){
+          try { a8Map.setLayoutProperty(layer.id, 'visibility', 'none'); } catch(e){}
+        }
+      });
+      drawA8Traffic();
     });
-
-    a8Map.on('error', function(e){
-      console.error('TomTom map error:', e);
-    });
-
   } catch(err){
-    console.error('TomTom map init failed:', err);
-    /* Fallback : afficher un message dans le container */
-    if(container){
-      container.style.display = 'flex';
-      container.style.alignItems = 'center';
-      container.style.justifyContent = 'center';
-      container.innerHTML = '<div style="font-family:monospace;font-size:12px;color:#ff8080;text-align:center;">Carte TomTom indisponible<br><small>'+err.message+'</small></div>';
-    }
+    console.error('TomTom map init error:', err);
+    container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:monospace;font-size:12px;color:#ff8080;">'+err.message+'</div>';
   }
 }
 
-function toggleMapLayer(layer){
-  if(!a8Map) return;
-  var btn = document.getElementById('btn-'+layer);
-  var active = btn ? btn.classList.toggle('active') : true;
-  try {
-    if(layer === 'flow')
-      a8Map.setStylesVisibility({ trafficFlow: active });
-    else
-      a8Map.setStylesVisibility({ trafficIncidents: active });
-  } catch(e){ console.warn('toggleMapLayer:', e.message); }
+function refreshA8Traffic(){
+  if(a8Map && a8Map.loaded()) drawA8Traffic();
 }
 
 function resetMapView(){
   if(!a8Map) return;
-  a8Map.fitBounds([A8_SW, A8_NE], { padding: 30, animate: true });
+  a8Map.fitBounds([A8_SW, A8_NE], { padding:30, animate:true });
 }
 
-function syncMapTheme(){
-  if(!a8Map) return;
-  /* Le thème de la carte suit le thème de l'interface */
-  /* (pas de changement de style pour éviter de recharger les tuiles) */
-}
+function syncMapTheme(){}
 
-/* Lancer quand le DOM est prêt */
 if(document.readyState === 'complete'){
-  setTimeout(initA8Map, 500);
+  setTimeout(initA8Map, 400);
 } else {
-  window.addEventListener('load', function(){ setTimeout(initA8Map, 200); });
+  window.addEventListener('load', function(){ setTimeout(initA8Map, 400); });
 }
+
+/* Refresh traffic toutes les 5 min */
+setInterval(refreshA8Traffic, 300000);
 </script>
 </body>
+</html>
