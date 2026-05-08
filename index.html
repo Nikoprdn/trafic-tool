@@ -269,6 +269,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 }
 .t-time.na{font-size:20px;color:var(--muted2);font-weight:400;}
 .t-time.loading{font-size:14px;color:var(--muted);font-weight:400;}
+.t-same{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--muted2);letter-spacing:.06em;text-transform:uppercase;}
 
 /* Traffic pill */
 .t-trf{
@@ -569,13 +570,30 @@ function fetchViaWorker(oLat, oLon, dLat, dLon, avoidMotorways){
 
 function fetchRoute(oLat, oLon, dLat, dLon, avoidMotorways){
   return fetchTomTomRoute(oLat, oLon, dLat, dLon, avoidMotorways)
-    .catch(function(){
+    .catch(function(e1){
+      console.warn('TomTom direct:', e1.message, '→ essai Worker');
       return fetchViaWorker(oLat, oLon, dLat, dLon, avoidMotorways);
     });
 }
 
-function optCell(result){
+/* Si "sans autoroute" échoue, on retente sans le paramètre avoid */
+function fetchRouteWithFallback(oLat, oLon, dLat, dLon, avoidMotorways){
+  return fetchRoute(oLat, oLon, dLat, dLon, avoidMotorways)
+    .catch(function(){
+      if(avoidMotorways){
+        /* Pas d'itinéraire sans autoroute disponible : retourner null */
+        return null;
+      }
+      return null;
+    });
+}
+
+function optCell(result, withResult){
   if(!result){
+    /* Si même durée que "avec autoroute", afficher "=" au lieu de "—" */
+    if(withResult){
+      return '<div class="t-opt"><span class="t-same">= Même durée</span></div>';
+    }
     return '<div class="t-opt"><span class="t-time na">—</span></div>';
   }
   var dur = fmtDur(result.duration);
@@ -601,8 +619,8 @@ function buildTableRow(route, withResult, withoutResult){
     +   '<span class="t-city-name">'+route.from+'</span>'
     +   '<span class="t-city-hint">'+route.hint+'</span>'
     + '</div>'
-    + optCell(withResult)
-    + optCell(withoutResult)
+    + optCell(withResult, null)
+    + optCell(withoutResult, withResult)
     + '</div>';
 }
 
@@ -644,8 +662,8 @@ function loadTravel(){
     var dLat = isTo ? FONTVIEILLE.lat : r.lat;
     var dLon = isTo ? FONTVIEILLE.lon : r.lon;
     return Promise.allSettled([
-      fetchRoute(oLat, oLon, dLat, dLon, false),
-      fetchRoute(oLat, oLon, dLat, dLon, true)
+      fetchRouteWithFallback(oLat, oLon, dLat, dLon, false),
+      fetchRouteWithFallback(oLat, oLon, dLat, dLon, true)
     ]);
   });
 
