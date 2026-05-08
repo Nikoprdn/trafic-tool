@@ -180,113 +180,89 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .map-lnk.red{color:var(--red);}.map-lnk.muted{color:var(--muted);}
 
 /* TRAVEL TIMES */
-.travel-wrap{padding:0;}
+.travel-dir-header{display:flex;align-items:center;gap:10px;padding:12px 20px;background:rgba(0,0,0,.15);border-bottom:1px solid var(--border);}
+.travel-dir-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4);}
+.travel-dir-arrow{font-size:14px;color:rgba(255,255,255,.18);}
+.travel-dir-dest{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.85);}
 
-/* Direction header */
-.travel-dir-header{
-  display:flex;align-items:center;
-  padding:14px 20px;
-  background:rgba(0,0,0,.12);
+/* Table header */
+.travel-table-head{
+  display:grid;
+  grid-template-columns:5px 1fr 150px 150px;
+  align-items:center;gap:0;
+  padding:8px 20px;
+  background:var(--card);
   border-bottom:1px solid var(--border);
-  gap:10px;
 }
-.travel-dir-label{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
-  color:rgba(255,255,255,.5);
-}
-.travel-dir-arrow{
-  font-size:18px;color:rgba(255,255,255,.2);
-}
-.travel-dir-dest{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:16px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
-  color:rgba(255,255,255,.85);
-}
+.tth-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+.tth-col{text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.tth-col.with{color:rgba(39,174,96,.7);}
+.tth-col.without{color:rgba(245,197,24,.6);}
 
-/* Routes list */
-.travel-list{
-  display:flex;flex-direction:column;
-}
+/* Table rows */
 .travel-row{
   display:grid;
-  grid-template-columns:20px 1fr auto auto;
-  align-items:center;
-  gap:14px;
+  grid-template-columns:5px 1fr 150px 150px;
+  align-items:center;gap:0;
   padding:14px 20px;
   border-bottom:1px solid var(--border);
   transition:background .12s;
-  min-height:68px;
 }
 .travel-row:last-child{border-bottom:none;}
 .travel-row:hover{background:rgba(255,255,255,.02);}
 
 /* Status bar */
-.travel-row-bar{
-  width:4px;height:100%;align-self:stretch;
-  border-radius:2px;min-height:40px;
-}
-.travel-row-bar.g{background:var(--green);}
-.travel-row-bar.y{background:var(--yellow);}
-.travel-row-bar.o{background:var(--orange);}
-.travel-row-bar.r{background:var(--red);}
-.travel-row-bar.loading{background:var(--border);}
+.travel-bar{align-self:stretch;width:4px;border-radius:2px;margin-right:16px;}
+.travel-bar.g{background:var(--green);}
+.travel-bar.y{background:var(--yellow);}
+.travel-bar.o{background:var(--orange);}
+.travel-bar.r{background:var(--red);}
+.travel-bar.x{background:var(--border);}
 
-/* City name */
-.travel-row-city{
-  display:flex;flex-direction:column;gap:2px;
-}
-.travel-row-name{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:17px;font-weight:700;letter-spacing:.05em;
-  color:rgba(255,255,255,.9);
-}
-.travel-row-hint{
-  font-family:'Share Tech Mono',monospace;
-  font-size:10px;color:var(--muted);letter-spacing:.03em;
-}
+/* City */
+.travel-city{display:flex;flex-direction:column;gap:2px;}
+.travel-city-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;letter-spacing:.04em;color:rgba(255,255,255,.9);}
+.travel-city-hint{font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--muted);}
 
-/* Time */
-.travel-row-time{
-  display:flex;flex-direction:column;align-items:flex-end;gap:4px;
+/* Time cell */
+.travel-time-cell{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:0 12px;
 }
-.travel-row-mins{
+.travel-time-val{
   font-family:'Share Tech Mono',monospace;
-  font-size:32px;font-weight:700;color:#fff;line-height:1;
+  font-size:30px;font-weight:700;color:#fff;line-height:1;
   white-space:nowrap;
 }
-.travel-row-mins span{
+.travel-time-val span{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:14px;font-weight:600;color:var(--muted);
-  margin-left:3px;text-transform:uppercase;
+  font-size:14px;font-weight:600;color:var(--muted);margin-left:2px;
 }
-.travel-row-dist{
-  font-family:'Share Tech Mono',monospace;
-  font-size:10px;color:var(--muted2);
-}
-.travel-row-mins.loading{font-size:14px;color:var(--muted);font-weight:400;}
-.travel-row-mins.err{font-size:13px;color:#ff8080;font-weight:400;}
+.travel-time-val.loading{font-size:14px;color:var(--muted);font-weight:400;}
+.travel-time-val.err{font-size:12px;color:#ff8080;font-weight:400;}
 
-/* Traffic badge */
-.travel-row-trf{
-  display:flex;flex-direction:column;align-items:flex-end;gap:4px;
-  min-width:120px;
-}
 .travel-trf-pill{
-  display:inline-flex;align-items:center;gap:5px;
+  display:inline-flex;align-items:center;gap:4px;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  padding:4px 10px;border-radius:20px;white-space:nowrap;
+  font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  padding:2px 8px;border-radius:12px;white-space:nowrap;
 }
 .travel-trf-pill.g{background:rgba(39,174,96,.1); color:var(--green);  border:1px solid rgba(39,174,96,.22);}
 .travel-trf-pill.y{background:rgba(245,197,24,.1);color:var(--yellow); border:1px solid rgba(245,197,24,.2);}
 .travel-trf-pill.o{background:rgba(255,107,53,.1);color:var(--orange); border:1px solid rgba(255,107,53,.22);}
 .travel-trf-pill.r{background:rgba(228,3,46,.1);  color:#ff8080;       border:1px solid rgba(228,3,46,.22);}
-.travel-trf-delta{
-  font-family:'Share Tech Mono',monospace;
-  font-size:10px;color:var(--muted);
-}
 
+/* Fastest tag */
+.travel-fastest{
+  display:inline-flex;align-items:center;gap:3px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:2px 7px;border-radius:10px;
+  background:rgba(39,174,96,.12);color:rgba(39,174,96,.8);border:1px solid rgba(39,174,96,.2);
+}
+.travel-col-divider{width:1px;background:var(--border);align-self:stretch;margin:0 4px;}
+
+/* Direction toggle */
 /* Direction toggle */
 /* Direction toggle */
 .dir-toggle{display:flex;gap:3px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:3px;margin-left:8px;}
@@ -505,12 +481,11 @@ function renderDis(list,isTest){
 function loadDis(){TEST_MODE=false;var el=document.getElementById('dis-body');if(!el)return;el.innerHTML='<p style="padding:10px 0;font-size:12px;color:#5E6474;font-family:monospace">Chargement...</p>';fetch(W+'/disruptions').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(data){var now=Date.now();var list=(data.disruptions||[]).filter(function(d){var p=d.application_periods||[];if(!p.length)return true;for(var i=0;i<p.length;i++){var e=p[i].end?new Date(p[i].end).getTime():Infinity;if(e>=now)return true;}return false;});renderDis(list,false);}).catch(function(e){document.getElementById('dis-body').innerHTML='<div class="no-dis" style="color:#ff8080">Erreur : '+e.message+'</div>';});}
 function testDis(){TEST_MODE=true;renderDis(TEST_DATA,true);}
 
-/* ═ TRAVEL TIMES — TomTom direct (CORS natif) + fallback OSRM ═ */
-var TOMTOM_KEY = 'nFt8c40zRLaLYYghcApBurt0ZyK7FIbA';
-var WORKER_URL = 'https://apitom.nicolas7lejeune.workers.dev';
+/* ═ TRAVEL TIMES — TomTom avec/sans autoroute, tri rapide→lent ═ */
+var TOMTOM_KEY  = 'nFt8c40zRLaLYYghcApBurt0ZyK7FIbA';
 var FONTVIEILLE = {"lat": 43.7272, "lon": 7.4142};
-var ROUTES = [{"from": "Port de Nice", "hint": "Quai des Docks", "lat": 43.7033, "lon": 7.2742}, {"from": "A\u00e9roport de Nice", "hint": "Nice C\u00f4te d'Azur", "lat": 43.6584, "lon": 7.2159}, {"from": "Antibes", "hint": "Centre-ville / Port", "lat": 43.5795, "lon": 7.1282}, {"from": "Cannes", "hint": "Palais des Festivals", "lat": 43.5513, "lon": 7.0128}, {"from": "Roquebrune-Cap-Martin", "hint": "Cap Martin", "lat": 43.7651, "lon": 7.4756}, {"from": "Menton", "hint": "Centre-ville", "lat": 43.7765, "lon": 7.4973}];
-var travelDir = 'to';
+var ROUTES      = [{"from": "Port de Nice", "hint": "Quai des Docks", "lat": 43.7033, "lon": 7.2742}, {"from": "A\u00e9roport de Nice", "hint": "Nice C\u00f4te d'Azur", "lat": 43.6584, "lon": 7.2159}, {"from": "Antibes", "hint": "Centre-ville / Port", "lat": 43.5795, "lon": 7.1282}, {"from": "Cannes", "hint": "Palais des Festivals", "lat": 43.5513, "lon": 7.0128}, {"from": "Roquebrune-Cap-Martin", "hint": "Cap Martin", "lat": 43.7651, "lon": 7.4756}, {"from": "Menton", "hint": "Centre-ville", "lat": 43.7765, "lon": 7.4973}];
+var travelDir   = 'to';
 
 function setTravelDir(dir, btn){
   travelDir = dir;
@@ -520,139 +495,94 @@ function setTravelDir(dir, btn){
 }
 
 function fmtDur(sec){
+  if(!sec && sec !== 0) return {val:'—', unit:''};
   var m = Math.round(sec/60);
-  if(m < 60) return {val: m, unit: 'min'};
+  if(m < 60) return {val:m, unit:'min'};
   var h = Math.floor(m/60), r = m%60;
-  return {val: h+'h'+(r<10?'0':'')+r, unit: ''};
-}
-function fmtDist(m){
-  return m < 1000 ? Math.round(m)+' m' : (m/1000).toFixed(1)+' km';
+  return {val: h+'h'+(r<10?'0':'')+r, unit:''};
 }
 function trafSt(noT, withT){
-  if(!noT || noT === 0) return {cls:'g', lbl:'Trafic fluide', delta:''};
-  var ratio = withT/noT, delta = Math.round((withT - noT)/60);
-  var ds = delta > 0 ? '+'+delta+' min' : '';
-  if(ratio < 1.1) return {cls:'g', lbl:'Fluide',         delta: ds};
-  if(ratio < 1.3) return {cls:'y', lbl:'Ralenti',        delta: ds};
-  if(ratio < 1.6) return {cls:'o', lbl:'Dense',          delta: ds};
-  return              {cls:'r', lbl:'Embouteillages',    delta: ds};
+  if(!noT || noT===0) return {cls:'g', lbl:'Fluide', delta:''};
+  var ratio = withT/noT, delta = Math.round((withT-noT)/60);
+  var ds = delta>0 ? '+'+delta+' min' : '';
+  if(ratio < 1.1) return {cls:'g', lbl:'Fluide',         delta:ds};
+  if(ratio < 1.3) return {cls:'y', lbl:'Ralenti',        delta:ds};
+  if(ratio < 1.6) return {cls:'o', lbl:'Dense',          delta:ds};
+  return              {cls:'r', lbl:'Embouteillages',    delta:ds};
 }
 
-/* Méthode 1 : TomTom direct depuis le navigateur */
-function fetchTomTom(oLat, oLon, dLat, dLon){
+/* TomTom : avoid vide = avec autoroute, avoid=motorways = sans */
+function fetchTomTomRoute(oLat, oLon, dLat, dLon, avoidMotorways){
+  var avoid = avoidMotorways ? '&avoid=motorways' : '';
   var url = 'https://api.tomtom.com/routing/1/calculateRoute/'
     + oLat+','+oLon+':'+dLat+','+dLon
-    + '/json?traffic=true&travelMode=car&computeTravelTimeFor=all&key='+TOMTOM_KEY;
-  return fetch(url, {method:'GET', headers:{Accept:'application/json'}})
-    .then(function(r){
-      if(!r.ok) throw new Error('TomTom direct HTTP '+r.status);
-      return r.json();
-    })
+    + '/json?traffic=true&travelMode=car&computeTravelTimeFor=all'+avoid+'&key='+TOMTOM_KEY;
+  return fetch(url, {headers:{Accept:'application/json'}})
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(function(d){
-      if(!d.routes || !d.routes[0]) throw new Error('Pas de route TomTom');
+      if(!d.routes||!d.routes[0]) throw new Error('Pas de route');
       var s = d.routes[0].summary;
       return {
-        duration: s.travelTimeInSeconds,
-        noTrafficDuration: s.noTrafficTravelTimeInSeconds || s.travelTimeInSeconds,
-        distance: s.lengthInMeters,
-        source: 'tomtom'
+        duration:         s.travelTimeInSeconds,
+        noTrafDuration:   s.noTrafficTravelTimeInSeconds || s.travelTimeInSeconds,
+        distance:         s.lengthInMeters
       };
     });
 }
 
-/* Méthode 2 : Worker proxy (si TomTom direct bloqué) */
-function fetchViaWorker(oLat, oLon, dLat, dLon){
-  var url = WORKER_URL+'/travel'
+/* Fetch Worker proxy fallback */
+function fetchViaWorker(oLat, oLon, dLat, dLon, avoidMotorways){
+  var avoid = avoidMotorways ? '&avoid=motorways' : '';
+  var url = 'https://apitom.nicolas7lejeune.workers.dev/travel'
     +'?orig='+encodeURIComponent(oLat+','+oLon)
-    +'&dest='+encodeURIComponent(dLat+','+dLon);
+    +'&dest='+encodeURIComponent(dLat+','+dLon)
+    +'&avoid='+(avoidMotorways?'motorways':'');
   return fetch(url)
-    .then(function(r){
-      if(!r.ok) throw new Error('Worker HTTP '+r.status);
-      return r.json();
-    })
+    .then(function(r){ if(!r.ok) throw new Error('Worker HTTP '+r.status); return r.json(); })
     .then(function(d){
-      if(!d.routes || !d.routes[0]) throw new Error('Pas de route Worker');
+      if(!d.routes||!d.routes[0]) throw new Error('Worker: pas de route');
       var s = d.routes[0].summary;
-      return {
-        duration: s.travelTimeInSeconds,
-        noTrafficDuration: s.noTrafficTravelTimeInSeconds || s.travelTimeInSeconds,
-        distance: s.lengthInMeters,
-        source: 'worker'
-      };
+      return {duration:s.travelTimeInSeconds, noTrafDuration:s.noTrafficTravelTimeInSeconds||s.travelTimeInSeconds, distance:s.lengthInMeters};
     });
 }
 
-/* Méthode 3 : OSRM (sans trafic, toujours dispo) */
-function fetchOSRM(oLat, oLon, dLat, dLon){
-  var url = 'https://router.project-osrm.org/route/v1/driving/'
-    + oLon+','+oLat+';'+dLon+','+dLat+'?overview=false';
-  return fetch(url)
-    .then(function(r){ if(!r.ok) throw new Error('OSRM HTTP '+r.status); return r.json(); })
-    .then(function(d){
-      if(!d.routes || !d.routes[0]) throw new Error('Pas de route OSRM');
-      return {
-        duration: d.routes[0].duration,
-        noTrafficDuration: d.routes[0].duration,
-        distance: d.routes[0].distance,
-        source: 'osrm'
-      };
+function fetchRoute(oLat, oLon, dLat, dLon, avoidMotorways){
+  return fetchTomTomRoute(oLat, oLon, dLat, dLon, avoidMotorways)
+    .catch(function(){
+      return fetchViaWorker(oLat, oLon, dLat, dLon, avoidMotorways);
     });
 }
 
-/* Chaîne de fallback : TomTom direct → Worker → OSRM */
-function fetchRoute(oLat, oLon, dLat, dLon){
-  return fetchTomTom(oLat, oLon, dLat, dLon)
-    .catch(function(e1){
-      console.warn('TomTom direct echoue ('+e1.message+'), essai Worker...');
-      return fetchViaWorker(oLat, oLon, dLat, dLon)
-        .catch(function(e2){
-          console.warn('Worker echoue ('+e2.message+'), fallback OSRM (sans trafic)');
-          return fetchOSRM(oLat, oLon, dLat, dLon);
-        });
-    });
-}
-
-var travelSource = '';
-
-function buildRow(route, result, isLoading){
-  var barCls  = 'loading';
-  var timeHtml = '<span class="travel-row-mins loading">Calcul...</span>';
-  var distHtml = '';
-  var trfHtml  = '';
-
-  if(!isLoading){
-    if(!result){
-      timeHtml = '<span class="travel-row-mins err">Indisponible</span>';
-    } else {
-      var dur = fmtDur(result.duration);
-      var isOSRM = result.source === 'osrm';
-
-      if(isOSRM){
-        barCls = 'g';
-        timeHtml = '<span class="travel-row-mins">'+dur.val+(dur.unit?'<span>'+dur.unit+'</span>':'')+'</span>';
-        trfHtml  = '<div class="travel-trf-pill g" style="font-size:9px;padding:2px 8px;">Sans trafic</div>';
-      } else {
-        var trf = trafSt(result.noTrafficDuration, result.duration);
-        barCls  = trf.cls;
-        timeHtml = '<span class="travel-row-mins">'+dur.val+(dur.unit?'<span>'+dur.unit+'</span>':'')+'</span>';
-        trfHtml  = '<div class="travel-trf-pill '+trf.cls+'">&#9679; '+trf.lbl+(trf.delta?' &mdash; '+trf.delta:'')+'</div>';
-      }
-      distHtml = '<span class="travel-row-dist">&#128205; '+fmtDist(result.distance)+'</span>';
-    }
-  }
-
-  return '<div class="travel-row">'
-    + '<div class="travel-row-bar '+barCls+'"></div>'
-    + '<div class="travel-row-city">'
-    +   '<span class="travel-row-name">'+route.from+'</span>'
-    +   '<span class="travel-row-hint">'+route.hint+'</span>'
-    + '</div>'
-    + '<div class="travel-row-time">'+timeHtml+distHtml+'</div>'
-    + '<div class="travel-row-trf">'+trfHtml+'</div>'
+function timeCell(result, isFirst){
+  if(!result) return '<div class="travel-time-cell"><span class="travel-time-val err">—</span></div>';
+  var dur = fmtDur(result.duration);
+  var trf = trafSt(result.noTrafDuration, result.duration);
+  return '<div class="travel-time-cell">'
+    + '<span class="travel-time-val">'+dur.val+(dur.unit?'<span>'+dur.unit+'</span>':'')+'</span>'
+    + '<span class="travel-trf-pill '+trf.cls+'">'+trf.lbl+(trf.delta?' '+trf.delta:'')+'</span>'
     + '</div>';
 }
 
-function renderTravelSkeleton(){
+function buildTableRow(route, withResult, withoutResult, isFirst){
+  /* Status bar color = couleur trafic avec autoroute */
+  var barCls = 'x';
+  if(withResult){
+    var trf = trafSt(withResult.noTrafDuration, withResult.duration);
+    barCls = trf.cls;
+  }
+  return '<div class="travel-row">'
+    + '<div class="travel-bar '+barCls+'"></div>'
+    + '<div class="travel-city">'
+    +   (isFirst ? '<span class="travel-fastest">&#9650; Le plus rapide</span>' : '')
+    +   '<span class="travel-city-name">'+route.from+'</span>'
+    +   '<span class="travel-city-hint">'+route.hint+'</span>'
+    + '</div>'
+    + timeCell(withResult, isFirst)
+    + timeCell(withoutResult, false)
+    + '</div>';
+}
+
+function renderSkeleton(){
   var isTo = travelDir === 'to';
   var grid = document.getElementById('travel-grid');
   if(!grid) return;
@@ -663,42 +593,66 @@ function renderTravelSkeleton(){
         : '<span class="travel-dir-dest">Fontvieille &mdash; Monaco</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-label">Vers</span>'
     )
     + '</div>'
+    + '<div class="travel-table-head">'
+    +   '<div></div>'
+    +   '<div class="tth-label">Ville</div>'
+    +   '<div class="tth-col with">&#128694; Avec autoroute</div>'
+    +   '<div class="tth-col without">&#128246; Sans autoroute</div>'
+    + '</div>'
     + '<div class="travel-list">'
-    + ROUTES.map(function(r){ return buildRow(r, null, true); }).join('')
+    + ROUTES.map(function(r){
+        return '<div class="travel-row">'
+          +'<div class="travel-bar x"></div>'
+          +'<div class="travel-city"><span class="travel-city-name">'+r.from+'</span><span class="travel-city-hint">'+r.hint+'</span></div>'
+          +'<div class="travel-time-cell"><span class="travel-time-val loading">Calcul...</span></div>'
+          +'<div class="travel-time-cell"><span class="travel-time-val loading">Calcul...</span></div>'
+          +'</div>';
+      }).join('')
     + '</div>';
 }
 
 function loadTravel(){
-  renderTravelSkeleton();
+  renderSkeleton();
   var isTo = travelDir === 'to';
 
-  Promise.allSettled(ROUTES.map(function(r){
-    var oLat = isTo ? r.lat            : FONTVIEILLE.lat;
-    var oLon = isTo ? r.lon            : FONTVIEILLE.lon;
-    var dLat = isTo ? FONTVIEILLE.lat  : r.lat;
-    var dLon = isTo ? FONTVIEILLE.lon  : r.lon;
-    return fetchRoute(oLat, oLon, dLat, dLon);
-  })).then(function(results){
+  /* Pour chaque ville : 2 appels (avec et sans autoroute) */
+  var allFetches = ROUTES.map(function(r){
+    var oLat = isTo ? r.lat           : FONTVIEILLE.lat;
+    var oLon = isTo ? r.lon           : FONTVIEILLE.lon;
+    var dLat = isTo ? FONTVIEILLE.lat : r.lat;
+    var dLon = isTo ? FONTVIEILLE.lon : r.lon;
+    return Promise.allSettled([
+      fetchRoute(oLat, oLon, dLat, dLon, false),  /* avec autoroute */
+      fetchRoute(oLat, oLon, dLat, dLon, true)     /* sans autoroute */
+    ]);
+  });
+
+  Promise.all(allFetches).then(function(allResults){
+    /* Construire les données + trier par durée avec autoroute */
+    var rows = ROUTES.map(function(r, i){
+      var withRes  = allResults[i][0].status==='fulfilled' ? allResults[i][0].value : null;
+      var woRes    = allResults[i][1].status==='fulfilled' ? allResults[i][1].value : null;
+      return {route:r, with:withRes, without:woRes, sortKey: withRes ? withRes.duration : 999999};
+    });
+    rows.sort(function(a,b){ return a.sortKey - b.sortKey; });
+
+    /* Render */
     var listEl = document.querySelector('#travel-grid .travel-list');
     if(!listEl) return;
-
-    /* Détecter la source utilisée */
-    var sources = results.filter(function(r){ return r.status==='fulfilled'; }).map(function(r){ return r.value.source; });
-    var src = sources.length > 0 ? sources[0] : 'inconnu';
-    var srcLabel = src==='tomtom' ? 'TomTom &#128994; Trafic temps réel'
-                 : src==='worker' ? 'TomTom (proxy) &#128994; Trafic temps réel'
-                 : 'OpenStreetMap &#128993; Sans trafic';
-    var srcEl = document.getElementById('travel-source');
-    if(srcEl) srcEl.innerHTML = srcLabel;
-
-    listEl.innerHTML = ROUTES.map(function(r, i){
-      return buildRow(r, results[i].status==='fulfilled' ? results[i].value : null, false);
+    listEl.innerHTML = rows.map(function(row, i){
+      return buildTableRow(row.route, row.with, row.without, i===0);
     }).join('');
+
+    /* Source indicator */
+    var srcEl = document.getElementById('travel-source');
+    if(srcEl) srcEl.innerHTML = '&#128994; TomTom — Trafic temps r\u00e9el';
 
     var u = document.getElementById('travel-upd');
     if(u) u.textContent = new Date().toLocaleTimeString('fr-FR',{hour12:false});
   });
 }
+
+var renderTravelSkeleton = renderSkeleton;
 
 /* ═ WEATHER ═ */
 var REGION_AM={"lat": 43.7102, "lon": 7.262, "name": "C\u00f4te d'Azur"};
