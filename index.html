@@ -548,7 +548,8 @@ function buildRow(route, data, isLoading){
 
   if(!isLoading){
     if(!data || !data.routes || !data.routes[0]){
-      timeHtml = '<span class="travel-row-mins err">Indisponible</span>';
+      var errMsg = data && data.error ? data.error : 'Indisponible';
+      timeHtml = '<span class="travel-row-mins err">'+errMsg+'</span>';
     } else {
       var s   = data.routes[0].summary;
       var dur = fmtDur(s.travelTimeInSeconds);
@@ -598,6 +599,9 @@ function loadTravel(){
     return fetch(url).then(function(res){
       if(!res.ok) throw new Error('HTTP '+res.status);
       return res.json();
+    }).catch(function(err){
+      console.error('Travel fetch error for '+r.from+':', err.message, url);
+      throw err;
     });
   })).then(function(results){
     var listEl = grid.querySelector('.travel-list');
@@ -703,7 +707,7 @@ function loadVigilance(){
 /* ═ INIT ═ */
 switchTab('trafic');
 setInterval(function(){if(traficLoaded){loadBoard();if(!TEST_MODE)loadDis();}},60000);
-setInterval(function(){if(traficLoaded)loadTravel();},300000);
+setInterval(function(){if(traficLoaded)loadTravel();},600000); /* refresh travel toutes les 10 min */
 setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM();loadWeatherIDF();loadVigilance();}},300000);
 
 </script>
