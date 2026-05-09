@@ -1185,7 +1185,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .ed-body{flex:1;overflow-y:auto;}
 #ed-doc{min-height:200px;padding:20px 24px;outline:none;font-family:'Barlow',sans-serif;font-size:15px;line-height:1.75;color:var(--text);caret-color:var(--red);}
 #ed-doc:empty::before{content:'Commencez \00e0 \00e9crire...';color:var(--muted2);pointer-events:none;}
-#ed-doc h1{font-size:2em;font-weight:800;}.#ed-doc h2{font-size:1.5em;font-weight:700;}
+#ed-doc h1{font-size:2em;font-weight:800;}#ed-doc h2{font-size:1.5em;font-weight:700;}
 #ed-doc ul,#ed-doc ol{padding-left:1.6em;margin-bottom:.6em;}
 #ed-doc blockquote{border-left:3px solid var(--red);padding-left:14px;color:var(--muted);}
 #ed-doc table{border-collapse:collapse;width:100%;}
@@ -1271,7 +1271,7 @@ div>
         <span class="card-t">A8 — Trafic par section</span>
         <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
         <span id="a8-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
-        <button class="rbtn" onclick="loadA8Traffic()">&#8635; Actualiser</button>
+        <button class="rbtn" onclick="if(typeof loadA8Traffic==='function')loadA8Traffic();">&#8635; Actualiser</button>
       </div>
       <div id="a8-timeline-wrap" class="a8-tl-wrap"><div class="a8-tl-loading">Chargement trafic A8...</div></div>
       <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a><span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span></div>
@@ -1550,6 +1550,8 @@ var VIG_PHENO={1:'Vent',2:'Pluie-Inondation',3:'Orage',4:'Inondation',5:'Neige-V
 var VIG_COLOR={1:'vert',2:'jaune',3:'orange',4:'rouge'};
 function loadVigilance(){var el=document.getElementById('vig-body');if(!el)return;el.innerHTML='<div class="w-loading">Chargement...</div>';fetch('https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/mf-vigilance-color-bulletins-departments/records?limit=100&select=department_id,phenomenon_id,phenomenon_max_color_id&order_by=phenomenon_max_color_id%20DESC').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(data){var records=data.results||[];var idx={};records.forEach(function(rec){var dept=(rec.department_id||'').toString().padStart(2,'0');var pheno=Number(rec.phenomenon_id||0);var color=Number(rec.phenomenon_max_color_id||1);if(color>1){if(!idx[dept])idx[dept]=[];idx[dept].push({pheno:pheno,color:color});}});var html='<div class="vig-grid">';Object.keys(VIG_DEPTS).forEach(function(label){var depts=VIG_DEPTS[label],active=[];depts.forEach(function(d){if(idx[d])idx[d].forEach(function(item){var ex=active.find(function(a){return a.pheno===item.pheno;});if(ex){if(item.color>ex.color)ex.color=item.color;}else active.push({pheno:item.pheno,color:item.color});});});active.sort(function(a,b){return b.color-a.color;});html+='<div class="vig-dept"><div class="vig-dept-name">'+label+'</div>';if(!active.length){html+='<div class="vig-ok">&#10004; Aucune vigilance</div>';}else{html+='<div class="vig-list">';active.forEach(function(item){var cn=VIG_COLOR[item.color]||'vert';var pn=VIG_PHENO[item.pheno]||('Ph\u00e9nom\u00e8ne '+item.pheno);html+='<div class="vig-item"><div class="vig-color '+cn+'"></div><span class="vig-pheno '+cn+'">'+pn+'</span></div>';});html+='</div>';}html+='</div>';});html+='</div>';el.innerHTML=html;}).catch(function(e){el.innerHTML='<div class="w-loading w-err">Vigilances : '+e.message+'</div>';});}
 
+/* Stubs — les vrais scripts les surchargent */
+if(typeof loadA8Traffic==="undefined")window.loadA8Traffic=function(){setTimeout(function(){if(typeof loadA8Traffic._impl==="function")loadA8Traffic._impl();},200);};
 /* INIT */
 /* Lire le paramètre URL ?tab=weather ou ?tab=trafic */
 (function(){
@@ -1712,11 +1714,23 @@ function renderRoad(idxs,southData,northData){
     overlay.appendChild(mk);
     var badge=document.createElement('div');
     badge.textContent=ex.n||'FR';
-    badge.style.cssText='position:absolute;left:'+pct+';top:50%;transform:translate(-50%,-50%);'
-      +'font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;'
-      +'background:var(--panel);border:1.5px solid var(--border);color:rgba(255,255,255,.8);'
-      +'padding:2px 5px;border-radius:4px;white-space:nowrap;min-width:22px;text-align:center;z-index:11;';
-    if(!ex.n)badge.style.cssText+=';background:rgba(228,3,46,.12);border-color:rgba(228,3,46,.35);color:var(--red);font-size:8px;';
+    var isFr=!ex.n;
+    badge.style.position='absolute';
+    badge.style.left=pct;
+    badge.style.top='50%';
+    badge.style.transform='translate(-50%,-50%)';
+    badge.style.fontFamily='Share Tech Mono,monospace';
+    badge.style.fontSize='10px';
+    badge.style.fontWeight='700';
+    badge.style.background=isFr?'rgba(228,3,46,.12)':'var(--panel,#12151C)';
+    badge.style.border='1.5px solid '+(isFr?'rgba(228,3,46,.35)':'rgba(255,255,255,.18)');
+    badge.style.color=isFr?'var(--red)':'rgba(255,255,255,.85)';
+    badge.style.padding='2px 5px';
+    badge.style.borderRadius='4px';
+    badge.style.whiteSpace='nowrap';
+    badge.style.minWidth='22px';
+    badge.style.textAlign='center';
+    badge.style.zIndex='11';
     overlay.appendChild(badge);
   });
 
