@@ -6,7 +6,7 @@
 <title>Radio Monaco — Studio Tools</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--red:#E4032E;--bg:#0D1016;--panel:#12151C;--card:#181B26;--border:#232730;--text:#E8EAF0;--muted:#5E6474;--muted2:#42465A;--yellow:#F5C518;--orange:#FF6B35;--green:#27AE60;--sb-bg:#003580;--sb-head:#002055;--sb-row:#004AC0;--sb-alt:#0041A8;--sb-sep:rgba(255,255,255,.06);--blue-deep:#071830;--blue-mid:#0A2A5E;}
+:root{--red:#E4032E;--bg:#0D1016;--panel:#12151C;--card:#181B26;--border:#232730;--text:#E8EAF0;--muted:#5E6474;--muted2:#42465A;--yellow:#F5C518;--orange:#FF6B35;--green:#27AE60;--sb-bg:#003580;--sb-head:#002055;--sb-row:#004AC0;--sb-alt:#0041A8;--sb-sep:rgba(255,255,255,.06);--blue-deep:#071830;--blue-mid:#0A2A5E;--hero-grad:linear-gradient(135deg,#071830 0%,#0A2A5E 55%,#0D3060 100%);--hero-border:rgba(255,255,255,.1);}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow',sans-serif;}
 .hdr{background:var(--red);height:84px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:0 36px;gap:32px;position:sticky;top:0;z-index:100;box-shadow:0 4px 28px rgba(0,0,0,.7);}
@@ -433,7 +433,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .a8-seg.ralenti{background:#FFD600;}
 .a8-seg.dense  {background:#FF6B00;}
 .a8-seg.bloque {background:#E81010;}
-.a8-seg.inconnu{background:#2A2D3A;}
+.a8-seg.inconnu{background:#1c1f2e;border:1px dashed rgba(255,255,255,.08);opacity:.7;}
 
 /* Sorties À CHEVAL sur les deux barres */
 .a8-exits-row{
@@ -764,7 +764,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .a8-seg.ralenti{background:linear-gradient(180deg,#FFD600,#e6c400);}
 .a8-seg.dense  {background:linear-gradient(180deg,#FF6B00,#e05800);}
 .a8-seg.bloque {background:linear-gradient(180deg,#E81010,#c00000);}
-.a8-seg.inconnu{background:#2A2D3A;}
+.a8-seg.inconnu{background:#1c1f2e;border:1px dashed rgba(255,255,255,.08);opacity:.7;}
 
 /* Ticks échangeurs */
 .a8-exits-container{
@@ -1151,7 +1151,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .mco-row{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);}
 .mco-row:last-child{border-bottom:none;}
 .mco-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.mco-dot.fluide{background:#22C05E;}.mco-dot.ralenti{background:#FFD600;}.mco-dot.dense{background:#FF8C00;}.mco-dot.bloque{background:#E81010;}.mco-dot.inconnu{background:var(--muted2);}
+.mco-dot.fluide{background:#22C05E;}.mco-dot.ralenti{background:#FFD600;}.mco-dot.dense{background:#FF8C00;}.mco-dot.bloque{background:#E81010;}.mco-dot.inconnu{background:#3a3d4a;}
 .mco-name{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,.75);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .mco-flu{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;min-width:54px;text-align:right;flex-shrink:0;}
 .mco-flu.fluide{color:#22C05E;}.mco-flu.ralenti{color:#FFD600;}.mco-flu.dense{color:#FF8C00;}.mco-flu.bloque{color:#ff5252;}.mco-flu.inconnu{color:var(--muted2);}
@@ -1594,9 +1594,9 @@ var A8_PROBES=(function(){
 function cls(cur,ff){
   if(!ff||ff===0||cur===0)return'inconnu';
   var r=cur/ff;
-  if(r>=0.85)return'fluide';
-  if(r>=0.65)return'ralenti';
-  if(r>=0.45)return'dense';
+  if(r>=0.75)return'fluide';
+  if(r>=0.55)return'ralenti';
+  if(r>=0.35)return'dense';
   return'bloque';
 }
 var CLS_LBL={fluide:'Fluide',ralenti:'Ralenti',dense:'Dense',bloque:'Bloqué',inconnu:'N/A'};
