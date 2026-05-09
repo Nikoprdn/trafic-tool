@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Radio Monaco — Studio Tools</title>
+<link rel="stylesheet" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps.css">
+<script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 
@@ -1256,46 +1258,50 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .a8-zc-reset:hover{border-color:var(--red);color:var(--red);}
 
 
-/* COMPACT TRAVEL TIMES */
-.travel-compact{padding:0 0 4px;}
+/* COMPACT TRAVEL TIMES — 6 chips en ligne */
+.travel-compact{padding:0;}
 .travel-dir-compact{
-  display:flex;align-items:center;gap:8px;
-  padding:8px 16px 6px;
-  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+  padding:8px 16px 8px;
 }
 .tdc-label{
   font-family:'Barlow Condensed',sans-serif;
   font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--muted);margin-right:4px;
+  color:var(--muted);
 }
 .travel-chips-row{
-  display:flex;flex-wrap:wrap;gap:6px;
-  padding:8px 16px 10px;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:6px;
+  padding:0 12px 12px;
 }
 .travel-chip{
-  display:inline-flex;align-items:center;gap:7px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;
   background:var(--card);
   border:1px solid var(--border);
+  border-top:3px solid var(--border);
   border-radius:8px;
-  padding:6px 12px 6px 10px;
+  padding:10px 8px 8px;
   cursor:default;transition:border-color .15s;
-  border-left-width:3px;
+  min-height:72px;
+  text-align:center;
 }
-.travel-chip:hover{border-color:rgba(255,255,255,.2);}
-.travel-chip.g{border-left-color:var(--green);}
-.travel-chip.y{border-left-color:var(--yellow);}
-.travel-chip.o{border-left-color:var(--orange);}
-.travel-chip.r{border-left-color:var(--red);}
-.travel-chip.x{border-left-color:var(--muted2);}
+.travel-chip.g{border-top-color:var(--green);}
+.travel-chip.y{border-top-color:var(--yellow);}
+.travel-chip.o{border-top-color:var(--orange);}
+.travel-chip.r{border-top-color:var(--red);}
+.travel-chip.x{border-top-color:var(--muted2);}
 .tc-city{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;font-weight:700;letter-spacing:.04em;
-  color:rgba(255,255,255,.8);
+  font-size:11px;font-weight:700;letter-spacing:.03em;
+  color:rgba(255,255,255,.65);
+  line-height:1.2;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;max-width:100%;
 }
 .tc-time{
   font-family:'Share Tech Mono',monospace;
-  font-size:16px;font-weight:700;
-  line-height:1;
+  font-size:22px;font-weight:700;line-height:1;
 }
 .tc-time.g{color:var(--green);}
 .tc-time.y{color:var(--yellow);}
@@ -1305,11 +1311,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .tc-unit{
   font-family:'Barlow Condensed',sans-serif;
   font-size:10px;color:var(--muted);
-  margin-left:1px;
 }
 .tc-via{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   color:var(--muted2);
 }
 
@@ -1370,22 +1375,37 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <div id="travel-grid"></div>
     </
 
-    <!-- MONACO TRAFFIC -->
-    <div class="section-card" style="padding-bottom:0">
+    <!-- MONACO MAP -->
+    <div class="section-card" style="padding-bottom:0;overflow:hidden;">
       <div class="card-h">
         <span style="font-size:15px">&#127467;&#127462;</span>
-        <span class="card-t">Trafic Monaco — Axes principaux</span>
+        <span class="card-t">Trafic Monaco &mdash; Carte en temps réel</span>
         <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
-        <span id="monaco-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
-        <button class="rbtn" onclick="fetchMonaco()">&#8635; Actualiser</button>
+        <!-- Légende -->
+        <div style="display:flex;align-items:center;gap:10px;margin-left:16px;">
+          <span style="display:flex;align-items:center;gap:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#22C05E;display:inline-block;"></span>Fluide
+          </span>
+          <span style="display:flex;align-items:center;gap:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#FFD600;display:inline-block;"></span>Ralenti
+          </span>
+          <span style="display:flex;align-items:center;gap:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#FF6B00;display:inline-block;"></span>Dense
+          </span>
+          <span style="display:flex;align-items:center;gap:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);">
+            <span style="width:10px;height:10px;border-radius:50%;background:#E81010;display:inline-block;"></span>Bloqué
+          </span>
+        </div>
+        <span id="monaco-map-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
+        <button class="rbtn" onclick="refreshMonacoMap()">&#8635; Actualiser</button>
       </div>
-      <div id="monaco-traffic-body">
-        <div class="a8-loading">Chargement…</div>
+      <!-- Carte TomTom Monaco -->
+      <div style="position:relative;height:480px;background:#0a0c12;">
+        <div id="monaco-map" style="width:100%;height:100%;"></div>
+        <!-- Overlay axes en surbrillance (données TomTom) -->
+        <div id="monaco-map-axes" style="position:absolute;bottom:12px;left:12px;z-index:10;display:flex;flex-direction:column;gap:6px;max-width:220px;"></div>
       </div>
     </div>
-
-div>
-div>
 
     <div class="section-card">
       <div class="card-h">
@@ -2103,7 +2123,75 @@ function edPick(mode){edColorMode=mode;var p=document.getElementById('ed-cp');p.
 function edLink(){var u=prompt('URL :','https://');if(u)edc('createLink',u);}
 function edTable(){var r=parseInt(prompt('Lignes :','3'));var col=parseInt(prompt('Colonnes :','3'));if(!r||!col)return;var h='<table>';for(var i=0;i<r;i++){h+='<tr>';for(var j=0;j<col;j++)h+='<td>&nbsp;</td>';h+='</tr>';}h+='</table><p></p>';edc('insertHTML',h);}
 function edImg(){var u=prompt('URL image :','https://');if(u)edc('insertHTML','<img src="'+u+'" style="max-width:100%"><p></p>');}
-function edPrint(){var w=window.open('','_blank');w.document.write('<html><head><style>body{font-family:sans-serif;max-width:800px;margin:40px auto;font-size:14px;line-height:1.7}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px}blockquote{border-left:3px solid #E4032E;padding-left:12px;color:#666}</style></head><body>'+document.getElementById('ed-doc').innerHTML+'</body></html>');w.document.close();w.focus();setTimeout(function(){w.print();},300);}
+function edPrint(){var w=window.open('','_blank');w.document.write('<html><head><style>body{font-family:sans-serif;max-width:800px;margin:40px auto;font-size:14px;line-height:1.7}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px}blockquote{border-left:3px solid #E4032E;padding-left:12px;color:#666}</style></head><body>'+document.getElementById('ed-doc').innerHTML+'
+<script>
+/* == Monaco Map == */
+var MONACO_MAP = null;
+var MONACO_MAP_KEY = 'Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
+
+function initMonacoMap(){
+  var container = document.getElementById('monaco-map');
+  if(!container || MONACO_MAP) return;
+  if(typeof tt === 'undefined'){
+    setTimeout(initMonacoMap, 800);
+    return;
+  }
+  try {
+    MONACO_MAP = tt.map({
+      key: MONACO_MAP_KEY,
+      container: 'monaco-map',
+      center: [7.4246, 43.7384], /* [lon, lat] Monaco */
+      zoom: 14,
+      language: 'fr-FR',
+      style: 'tomtom://vector/1/basic-night',
+      stylesVisibility: {
+        trafficFlow:      true,
+        trafficIncidents: true,
+      },
+    });
+    MONACO_MAP.addControl(new tt.NavigationControl(), 'bottom-right');
+    MONACO_MAP.on('load', function(){
+      /* Zoomer sur toute la principauté */
+      MONACO_MAP.fitBounds([[7.4060, 43.7240],[7.4430, 43.7510]], {padding: 20, animate: false});
+    });
+    var u = document.getElementById('monaco-map-upd');
+    if(u) u.textContent = new Date().toLocaleTimeString('fr-FR', {hour12:false});
+  } catch(err) {
+    var el = document.getElementById('monaco-map');
+    if(el) el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:monospace;font-size:12px;color:#ff8080;flex-direction:column;gap:8px;"><span>Carte indisponible</span><small>'+err.message+'</small></div>';
+  }
+}
+
+function refreshMonacoMap(){
+  if(!MONACO_MAP) { initMonacoMap(); return; }
+  /* Forcer le rechargement des tuiles trafic */
+  try {
+    MONACO_MAP.setStylesVisibility({ trafficFlow: false, trafficIncidents: false });
+    setTimeout(function(){
+      MONACO_MAP.setStylesVisibility({ trafficFlow: true, trafficIncidents: true });
+      var u = document.getElementById('monaco-map-upd');
+      if(u) u.textContent = new Date().toLocaleTimeString('fr-FR', {hour12:false});
+    }, 200);
+  } catch(e) {}
+}
+
+/* Démarrer quand le tab trafic est visible */
+var _monacoMapInitDone = false;
+function maybeInitMonacoMap(){
+  if(_monacoMapInitDone) return;
+  var el = document.getElementById('monaco-map');
+  if(el && el.offsetParent !== null){
+    _monacoMapInitDone = true;
+    initMonacoMap();
+  }
+}
+document.addEventListener('DOMContentLoaded', function(){
+  setTimeout(maybeInitMonacoMap, 1200);
+});
+setInterval(maybeInitMonacoMap, 500);
+setInterval(refreshMonacoMap, 300000);
+</script>
+</body></html>');w.document.close();w.focus();setTimeout(function(){w.print();},300);}
 function edCopy(){navigator.clipboard.writeText(document.getElementById('ed-doc').innerText).catch(function(){});}
 function edSave(){
   var html=document.getElementById('ed-doc').innerHTML;
