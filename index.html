@@ -1255,6 +1255,64 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 }
 .a8-zc-reset:hover{border-color:var(--red);color:var(--red);}
 
+
+/* COMPACT TRAVEL TIMES */
+.travel-compact{padding:0 0 4px;}
+.travel-dir-compact{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 16px 6px;
+  border-bottom:1px solid var(--border);
+}
+.tdc-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);margin-right:4px;
+}
+.travel-chips-row{
+  display:flex;flex-wrap:wrap;gap:6px;
+  padding:8px 16px 10px;
+}
+.travel-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:6px 12px 6px 10px;
+  cursor:default;transition:border-color .15s;
+  border-left-width:3px;
+}
+.travel-chip:hover{border-color:rgba(255,255,255,.2);}
+.travel-chip.g{border-left-color:var(--green);}
+.travel-chip.y{border-left-color:var(--yellow);}
+.travel-chip.o{border-left-color:var(--orange);}
+.travel-chip.r{border-left-color:var(--red);}
+.travel-chip.x{border-left-color:var(--muted2);}
+.tc-city{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:700;letter-spacing:.04em;
+  color:rgba(255,255,255,.8);
+}
+.tc-time{
+  font-family:'Share Tech Mono',monospace;
+  font-size:16px;font-weight:700;
+  line-height:1;
+}
+.tc-time.g{color:var(--green);}
+.tc-time.y{color:var(--yellow);}
+.tc-time.o{color:var(--orange);}
+.tc-time.r{color:var(--red);}
+.tc-time.x{color:var(--muted);}
+.tc-unit{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;color:var(--muted);
+  margin-left:1px;
+}
+.tc-via{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted2);
+}
+
 </style>
 </head>
 <body>
@@ -1310,19 +1368,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
         <button class="rbtn" onclick="loadTravel()">&#8635; Actualiser</button>
       </div>
       <div id="travel-grid"></div>
-    </div>
-
-    <div class="section-card">
-      <div class="card-h">
-        <span style="font-size:15px">&#128739;&#65039;</span>
-        <span class="card-t">A8 — Trafic par section</span>
-        <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
-        <span id="a8-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
-        <button class="rbtn" onclick="loadA8Traffic()">&#8635; Actualiser</button>
-      </div>
-      <div id="a8-timeline-wrap" class="a8-tl-wrap"><div class="a8-tl-loading">Chargement trafic A8...</div></div>
-      <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a><span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span></div>
     </
+
     <!-- MONACO TRAFFIC -->
     <div class="section-card" style="padding-bottom:0">
       <div class="card-h">
@@ -1338,6 +1385,19 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     </div>
 
 div>
+div>
+
+    <div class="section-card">
+      <div class="card-h">
+        <span style="font-size:15px">&#128739;&#65039;</span>
+        <span class="card-t">A8 — Trafic par section</span>
+        <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
+        <span id="a8-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
+        <button class="rbtn" onclick="loadA8Traffic()">&#8635; Actualiser</button>
+      </div>
+      <div id="a8-timeline-wrap" class="a8-tl-wrap"><div class="a8-tl-loading">Chargement trafic A8...</div></div>
+      <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a><span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span></div>
+    </
 
     <div class="section-card">
       <div class="card-h"><span style="font-size:15px">&#128506;&#65039;</span><span class="card-t">Waze — Monaco</span><div class="pill" style="margin-left:10px"><span class="dot"></span>LIVE</div></div>
