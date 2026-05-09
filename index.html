@@ -1168,51 +1168,48 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 
 /* MONACO TRAFFIC */
-.mco-cat-title{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--muted);padding:12px 20px 6px;
-  border-top:1px solid var(--border);
-}
-.mco-cat-title:first-child{border-top:none;}
-.mco-grid{padding:0 12px 4px;}
-.mco-row{
+#monaco-traffic-body{padding:12px 16px;}
+.mco-inner{
   display:grid;
-  grid-template-columns:1fr auto auto auto;
-  align-items:center;gap:10px;
-  padding:7px 8px;
-  border-radius:6px;
-  transition:background .1s;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:0 20px;
 }
-.mco-row:hover{background:rgba(255,255,255,.03);}
+.mco-col-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);padding:0 0 6px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:4px;
+}
+.mco-row{
+  display:flex;align-items:center;
+  gap:6px;padding:4px 0;
+  border-bottom:1px solid rgba(255,255,255,.03);
+}
+.mco-row:last-child{border-bottom:none;}
 .mco-name{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;font-weight:700;letter-spacing:.04em;
-  color:rgba(255,255,255,.8);
+  font-size:12px;font-weight:700;letter-spacing:.03em;
+  color:rgba(255,255,255,.75);flex:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.mco-pill{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:3px 12px;border-radius:14px;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  min-width:80px;
+.mco-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
 }
-.mco-pill.fluide {background:rgba(34,192,94,.15);color:#22C05E;border:1px solid rgba(34,192,94,.3);}
-.mco-pill.ralenti{background:rgba(255,214,0,.12); color:#FFD600;border:1px solid rgba(255,214,0,.3);}
-.mco-pill.dense  {background:rgba(255,107,0,.15); color:#FF8C00;border:1px solid rgba(255,107,0,.3);}
-.mco-pill.bloque {background:rgba(232,16,16,.15); color:#ff5252;border:1px solid rgba(232,16,16,.3);}
-.mco-pill.inconnu{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--border);}
+.mco-dot.fluide {background:#22C05E;}
+.mco-dot.ralenti{background:#FFD600;}
+.mco-dot.dense  {background:#FF8C00;}
+.mco-dot.bloque {background:#E81010;}
+.mco-dot.inconnu{background:var(--muted2);}
 .mco-spd{
   font-family:'Share Tech Mono',monospace;
-  font-size:11px;color:var(--muted);
-  min-width:52px;text-align:right;
+  font-size:10px;color:var(--muted);
+  min-width:44px;text-align:right;flex-shrink:0;
 }
-.mco-trend{
-  font-size:13px;font-weight:700;min-width:16px;text-align:center;
-}
+.mco-trend{font-size:11px;font-weight:700;width:12px;text-align:center;flex-shrink:0;}
 .mco-trend.up{color:#22C05E;}
 .mco-trend.dn{color:#ff5252;}
-.mco-trend.eq{color:var(--muted);}
+.mco-trend.eq{color:var(--muted2);}
 
 </style>
 </head>
@@ -1895,25 +1892,27 @@ function fetchMonaco(){
     MCO_PREV=newPrev;
     try{localStorage.setItem('mco_prev',JSON.stringify(newPrev));}catch(e){}
 
-    var html='';
-    Object.keys(cats).forEach(function(catKey){
-      var cat=cats[catKey];
-      html+='<div class="mco-cat-title">'+cat.label+'</div>';
-      html+='<div class="mco-grid">';
+    /* Construire les 3 colonnes côte à côte */
+    function colHtml(cat){
+      var h='<div><div class="mco-col-title">'+cat.label+'</div>';
       cat.items.forEach(function(item){
         var spd=item.d.cur>0?item.d.cur+' km/h':'';
         var trendCls=item.trend==='&#8593;'?'up':item.trend==='&#8595;'?'dn':'eq';
-        html+='<div class="mco-row">'
+        h+='<div class="mco-row">'
+          +'<div class="mco-dot '+item.cls+'"></div>'
           +'<div class="mco-name">'+item.ax.name+'</div>'
-          +'<div class="mco-pill '+item.cls+'">'+SP_LBL[item.cls]+'</div>'
-          +(spd?'<div class="mco-spd">'+spd+'</div>':'<div class="mco-spd"></div>')
-          +(item.trend?'<div class="mco-trend '+trendCls+'">'+item.trend+'</div>':'<div class="mco-trend"></div>')
+          +(spd?'<span class="mco-spd">'+spd+'</span>':'<span class="mco-spd"></span>')
+          +(item.trend?'<span class="mco-trend '+trendCls+'">'+item.trend+'</span>':'<span class="mco-trend"></span>')
           +'</div>';
       });
-      html+='</div>';
-    });
+      return h+'</div>';
+    }
 
-    el.innerHTML=html;
+    el.innerHTML='<div class="mco-inner">'
+      +colHtml(cats.boulevard)
+      +colHtml(cats.tunnel)
+      +colHtml(cats.corniche)
+      +'</div>';
     var u=document.getElementById('monaco-upd');
     if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
   }).catch(function(e){
