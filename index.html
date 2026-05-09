@@ -1149,7 +1149,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .ed-div{width:1px;height:18px;background:var(--border);margin:0 3px;flex-shrink:0;}
 .ed-sel{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:0 5px;height:26px;font-size:11px;cursor:pointer;}
 .ed-body{flex:1;overflow-y:auto;}
-#ed-doc{min-height:300px;padding:22px 28px;outline:none;font-family:'Barlow',sans-serif;font-size:15px;line-height:1.75;color:var(--text);caret-color:var(--red);}
+#ed-doc{min-height:200px;padding:22px 28px;outline:none;font-family:'Barlow',sans-serif;font-size:15px;line-height:1.75;color:var(--text);caret-color:var(--red);}
 #ed-doc:empty::before{content:'Commencez à écrire...';color:var(--muted2);pointer-events:none;}
 #ed-doc h1{font-size:2em;font-weight:800;margin-bottom:.4em;}
 #ed-doc h2{font-size:1.5em;font-weight:700;margin-bottom:.35em;}
@@ -1201,15 +1201,59 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .mco-dot.dense  {background:#FF8C00;}
 .mco-dot.bloque {background:#E81010;}
 .mco-dot.inconnu{background:var(--muted2);}
-.mco-spd{
-  font-family:'Share Tech Mono',monospace;
-  font-size:10px;color:var(--muted);
-  min-width:44px;text-align:right;flex-shrink:0;
+.mco-flu{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  min-width:54px;text-align:right;flex-shrink:0;
 }
+.mco-flu.fluide {color:#22C05E;}
+.mco-flu.ralenti{color:#FFD600;}
+.mco-flu.dense  {color:#FF8C00;}
+.mco-flu.bloque {color:#ff5252;}
+.mco-flu.inconnu{color:var(--muted2);}
 .mco-trend{font-size:11px;font-weight:700;width:12px;text-align:center;flex-shrink:0;}
 .mco-trend.up{color:#22C05E;}
 .mco-trend.dn{color:#ff5252;}
 .mco-trend.eq{color:var(--muted2);}
+
+
+/* A8 ZOOM/PAN */
+.a8-scroll-wrap{
+  overflow-x:auto;overflow-y:visible;
+  cursor:grab;
+  position:relative;
+}
+.a8-scroll-wrap:active{cursor:grabbing;}
+.a8-scroll-wrap::-webkit-scrollbar{height:6px;}
+.a8-scroll-wrap::-webkit-scrollbar-track{background:var(--border);border-radius:3px;}
+.a8-scroll-wrap::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);border-radius:3px;}
+.a8-scroll-wrap::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.4);}
+.a8-scroll-inner{
+  /* width est défini inline selon le niveau de zoom */
+  min-width:100%;
+  position:relative;
+}
+.a8-zoom-controls{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 20px 4px;
+}
+.a8-zc-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
+.a8-zc-btn{
+  width:26px;height:26px;border-radius:4px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);cursor:pointer;font-size:16px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.a8-zc-btn:hover{border-color:var(--red);color:var(--red);}
+.a8-zc-pct{
+  font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);
+  min-width:40px;text-align:center;
+}
+.a8-zc-reset{
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);background:transparent;border:1px solid var(--border);
+  border-radius:4px;padding:3px 8px;cursor:pointer;transition:all .15s;
+}
+.a8-zc-reset:hover{border-color:var(--red);color:var(--red);}
 
 </style>
 </head>
@@ -1369,7 +1413,7 @@ div>
 <!-- FAB -->
 
 <button class="ed-fab" onclick="edOpen()">&#9998;</button>
-<div class="ed-ov" id="ed-ov" onclick="if(event.target===this)edClose()">
+<div class="ed-ov" id="ed-ov" id="ed-ov-el">
   <div class="ed-modal" id="ed-modal">
     <div class="ed-head" id="ed-drag"><span>&#9998;</span><span class="ed-head-t">Editeur de texte</span><button class="ed-close" onclick="edClose()">&#10005;</button></div>
     <div class="ed-tb">
@@ -1654,7 +1698,7 @@ setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM(
 
 <script>
 /* == A8 Traffic v8 == */
-var A8K='nFt8c40zRLaLYYghcApBurt0ZyK7FIbA', A8Z='full';
+var A8K='nFt8c40zRLaLYYghcApBurt0ZyK7FIbA', A8Z='full', A8_ZOOM_PCT=100;
 var AX=[{"n": 36, "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725}, {"n": 37, "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82}, {"n": 38, "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89}, {"n": 39, "short": "Les Adrets", "km": 28, "lat": 43.52, "lon": 6.95}, {"n": 40, "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01}, {"n": 41, "short": "Cns Bocca", "km": 44, "lat": 43.553, "lon": 7.04}, {"n": 42, "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07}, {"n": 44, "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12}, {"n": 46, "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16}, {"n": 47, "short": "VL Centre", "km": 67, "lat": 43.635, "lon": 7.18}, {"n": 48, "short": "Cagnes Est", "km": 70, "lat": 43.655, "lon": 7.195}, {"n": 49, "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205}, {"n": 50, "short": "Nice Ouest", "km": 77, "lat": 43.675, "lon": 7.215}, {"n": 51, "short": "Nice Aéro", "km": 80, "lat": 43.665, "lon": 7.235}, {"n": 52, "short": "N.St-Isid.", "km": 83, "lat": 43.705, "lon": 7.265}, {"n": 54, "short": "Nice Nord", "km": 86, "lat": 43.72, "lon": 7.285}, {"n": 55, "short": "Ariane", "km": 89, "lat": 43.73, "lon": 7.31}, {"n": 56, "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39}, {"n": 57, "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42}, {"n": 58, "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47}, {"n": 59, "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5}, {"n": 0, "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57}], AZM=[{"id": "full", "label": "A8 complète", "from": 36, "to": 0}, {"id": "cannes", "label": "Cannes", "from": 40, "to": 44}, {"id": "antibes", "label": "Antibes", "from": 44, "to": 46}, {"id": "nice", "label": "Nice", "from": 49, "to": 55}, {"id": "monaco", "label": "Monaco / Menton", "from": 56, "to": 0}];
 var MONACO_AXES=[{"id": "alb1", "name": "Bd Albert-Ier", "cat": "boulevard", "lat": 43.731, "lon": 7.4182}, {"id": "lou2", "name": "Bd Louis-II", "cat": "boulevard", "lat": 43.7345, "lon": 7.416}, {"id": "rain3", "name": "Bd Rainier-III", "cat": "boulevard", "lat": 43.7307, "lon": 7.4197}, {"id": "moul", "name": "Bd des Moulins", "cat": "boulevard", "lat": 43.7492, "lon": 7.4312}, {"id": "pcha", "name": "Bd Psse-Charlotte", "cat": "boulevard", "lat": 43.7448, "lon": 7.4169}, {"id": "oste", "name": "Av. d'Ostende", "cat": "boulevard", "lat": 43.7305, "lon": 7.4215}, {"id": "cost", "name": "Av. de la Costa", "cat": "boulevard", "lat": 43.7316, "lon": 7.4235}, {"id": "pgra", "name": "Av. Psse-Grace", "cat": "boulevard", "lat": 43.7382, "lon": 7.4302}, {"id": "jard", "name": "Bd Jardin Exotique", "cat": "boulevard", "lat": 43.7352, "lon": 7.4119}, {"id": "pisc", "name": "Route de la Piscine", "cat": "boulevard", "lat": 43.7455, "lon": 7.422}, {"id": "tl2", "name": "Tunnel Louis-II", "cat": "tunnel", "lat": 43.7351, "lon": 7.4168}, {"id": "tfair", "name": "Tunnel Fairmont", "cat": "tunnel", "lat": 43.7408, "lon": 7.4287}, {"id": "tr3", "name": "Tunnel Rainier-III", "cat": "tunnel", "lat": 43.7315, "lon": 7.4188}, {"id": "tje", "name": "Tunnel Jardin Exo.", "cat": "tunnel", "lat": 43.7356, "lon": 7.4118}, {"id": "tcol", "name": "Tunnel de la Colle", "cat": "tunnel", "lat": 43.7442, "lon": 7.4143}, {"id": "tcan", "name": "Tunnel Canton", "cat": "tunnel", "lat": 43.7352, "lon": 7.4158}, {"id": "trno", "name": "Tunnel Rocher-Noghès", "cat": "tunnel", "lat": 43.7331, "lon": 7.4193}, {"id": "tsd", "name": "Tunnel Ste-Dévote", "cat": "tunnel", "lat": 43.7339, "lon": 7.4172}, {"id": "tport", "name": "Tunnel du Portier", "cat": "tunnel", "lat": 43.7321, "lon": 7.4219}, {"id": "tcas", "name": "Tunnel Casino/Costa", "cat": "tunnel", "lat": 43.739, "lon": 7.427}, {"id": "marq", "name": "Liaison Marquet", "cat": "tunnel", "lat": 43.7346, "lon": 7.415}, {"id": "basse", "name": "Basse Corniche", "cat": "corniche", "lat": 43.728, "lon": 7.395}, {"id": "moyen", "name": "Moyenne Corniche", "cat": "corniche", "lat": 43.739, "lon": 7.371}, {"id": "grande", "name": "Grande Corniche", "cat": "corniche", "lat": 43.76, "lon": 7.39}, {"id": "a500", "name": "A500 / Accès A8", "cat": "corniche", "lat": 43.733, "lon": 7.4163}];
 var AP=(function(){var r=[];for(var i=0;i<AX.length-1;i++){var a=AX[i],b=AX[i+1];r.push({lat:(a.lat+b.lat)/2,lon:(a.lon+b.lon)/2});}return r;})();
@@ -1722,6 +1766,15 @@ function drawRoad(idxs,northD,southD){
     zb.appendChild(btn);
   });
   wrap.appendChild(zb);
+
+  /* Contrôles zoom/pan */
+  var zcWrap=document.createElement('div');zcWrap.className='a8-zoom-controls';
+  zcWrap.innerHTML='<span class="a8-zc-lbl">Zoom bande</span>'
+    +'<button class="a8-zc-btn" onclick="a8ZoomIn()" title="Zoom +">+</button>'
+    +'<span class="a8-zc-pct" id="a8-zc-pct">'+A8_ZOOM_PCT+'%</span>'
+    +'<button class="a8-zc-btn" onclick="a8ZoomOut()" title="Zoom −">−</button>'
+    +'<button class="a8-zc-reset" onclick="a8ZoomReset()">&#8635; Réinitialiser</button>';
+  wrap.appendChild(zcWrap);
 
   var zone=document.createElement('div');zone.className='a8-road-section';
   var outer=document.createElement('div');outer.className='a8-road-outer';outer.style.cssText='position:relative;margin:0 8px;';
@@ -1819,7 +1872,27 @@ function drawRoad(idxs,northD,southD){
     nm.appendChild(el);
   });
   zone.appendChild(nm);
-  wrap.appendChild(zone);
+  /* ── Scroll wrap pour zoom/pan ── */
+  var scrollWrap=document.getElementById('a8-scroll-wrap');
+  if(!scrollWrap){
+    scrollWrap=document.createElement('div');
+    scrollWrap.id='a8-scroll-wrap';
+    scrollWrap.className='a8-scroll-wrap';
+    /* Drag to scroll */
+    var isDragging=false,startX=0,scrollLeft=0;
+    scrollWrap.addEventListener('mousedown',function(e){isDragging=true;startX=e.pageX-scrollWrap.offsetLeft;scrollLeft=scrollWrap.scrollLeft;scrollWrap.style.cursor='grabbing';});
+    scrollWrap.addEventListener('mouseleave',function(){isDragging=false;scrollWrap.style.cursor='grab';});
+    scrollWrap.addEventListener('mouseup',function(){isDragging=false;scrollWrap.style.cursor='grab';});
+    scrollWrap.addEventListener('mousemove',function(e){if(!isDragging)return;e.preventDefault();var x=e.pageX-scrollWrap.offsetLeft;var walk=(x-startX)*1.5;scrollWrap.scrollLeft=scrollLeft-walk;});
+  }
+  var inner=document.getElementById('a8-scroll-inner');
+  if(!inner){inner=document.createElement('div');inner.id='a8-scroll-inner';inner.className='a8-scroll-inner';}
+  inner.innerHTML='';
+  inner.style.width=A8_ZOOM_PCT+'%';
+  inner.appendChild(zone);
+  scrollWrap.innerHTML='';
+  scrollWrap.appendChild(inner);
+  wrap.appendChild(scrollWrap);;
 
   /* Résumé */
   function sumDir(st,lbl,ac,ar){
@@ -1901,7 +1974,7 @@ function fetchMonaco(){
         h+='<div class="mco-row">'
           +'<div class="mco-dot '+item.cls+'"></div>'
           +'<div class="mco-name">'+item.ax.name+'</div>'
-          +(spd?'<span class="mco-spd">'+spd+'</span>':'<span class="mco-spd"></span>')
+          +'<span class="mco-flu '+item.cls+'">'+SP_LBL[item.cls]+'</span>'
           +(item.trend?'<span class="mco-trend '+trendCls+'">'+item.trend+'</span>':'<span class="mco-trend"></span>')
           +'</div>';
       });
@@ -1921,6 +1994,29 @@ function fetchMonaco(){
 }
 
 function refreshA8Traffic(){loadA8Traffic();}
+function a8ZoomIn(){
+  A8_ZOOM_PCT=Math.min(A8_ZOOM_PCT+50,500);
+  var inner=document.getElementById('a8-scroll-inner');
+  if(inner)inner.style.width=A8_ZOOM_PCT+'%';
+  var lbl=document.getElementById('a8-zc-pct');
+  if(lbl)lbl.textContent=A8_ZOOM_PCT+'%';
+}
+function a8ZoomOut(){
+  A8_ZOOM_PCT=Math.max(A8_ZOOM_PCT-50,100);
+  var inner=document.getElementById('a8-scroll-inner');
+  if(inner)inner.style.width=A8_ZOOM_PCT+'%';
+  var lbl=document.getElementById('a8-zc-pct');
+  if(lbl)lbl.textContent=A8_ZOOM_PCT+'%';
+}
+function a8ZoomReset(){
+  A8_ZOOM_PCT=100;
+  var inner=document.getElementById('a8-scroll-inner');
+  if(inner){inner.style.width='100%';}
+  var sw=document.getElementById('a8-scroll-wrap');
+  if(sw)sw.scrollLeft=0;
+  var lbl=document.getElementById('a8-zc-pct');
+  if(lbl)lbl.textContent='100%';
+}
 function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
 </script>
 
@@ -1949,7 +2045,19 @@ function edTable(){var r=parseInt(prompt('Lignes :','3'));var col=parseInt(promp
 function edImg(){var u=prompt('URL image :','https://');if(u)edc('insertHTML','<img src="'+u+'" style="max-width:100%"><p></p>');}
 function edPrint(){var w=window.open('','_blank');w.document.write('<html><head><style>body{font-family:sans-serif;max-width:800px;margin:40px auto;font-size:14px;line-height:1.7}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px}blockquote{border-left:3px solid #E4032E;padding-left:12px;color:#666}</style></head><body>'+document.getElementById('ed-doc').innerHTML+'</body></html>');w.document.close();w.focus();setTimeout(function(){w.print();},300);}
 function edCopy(){navigator.clipboard.writeText(document.getElementById('ed-doc').innerText).catch(function(){});}
-function edSave(){localStorage.setItem('rm_draft',document.getElementById('ed-doc').innerHTML);}
+function edSave(){
+  var html=document.getElementById('ed-doc').innerHTML;
+  localStorage.setItem('rm_draft',html);
+  /* Télécharger en .html */
+  var blob=new Blob(['<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:sans-serif;max-width:860px;margin:40px auto;font-size:14px;line-height:1.75;padding:0 24px}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px 10px}blockquote{border-left:3px solid #E4032E;padding-left:14px;color:#666;margin:.5em 0}h1{font-size:2em}h2{font-size:1.5em}h3{font-size:1.2em}a{color:#E4032E}</style></head><body>'+html+'</body></html>'],{type:'text/html;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  var ts=new Date().toISOString().slice(0,16).replace('T','_').replace(':','-');
+  a.download='note_radio_monaco_'+ts+'.html';
+  document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(url);document.body.removeChild(a);},1000);
+}
 function edClear(){if(confirm('Vider le contenu ?')){document.getElementById('ed-doc').innerHTML='';localStorage.removeItem('rm_draft');}}
 document.getElementById('ed-doc').addEventListener('input',function(){
   var t=this.innerText.trim();var w=t?t.split(/\s+/).length:0;
