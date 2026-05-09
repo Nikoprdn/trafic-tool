@@ -4,12 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Radio Monaco — Studio Tools</title>
-<link rel="stylesheet" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps.css">
-<script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-
-
 :root{--red:#E4032E;--bg:#0D1016;--panel:#12151C;--card:#181B26;--border:#232730;--text:#E8EAF0;--muted:#5E6474;--muted2:#42465A;--yellow:#F5C518;--orange:#FF6B35;--green:#27AE60;--sb-bg:#003580;--sb-head:#002055;--sb-row:#004AC0;--sb-alt:#0041A8;--sb-sep:rgba(255,255,255,.06);--blue-deep:#071830;--blue-mid:#0A2A5E;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow',sans-serif;}
@@ -1127,31 +1123,70 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 
 
-.section-card.collapsed>.stations-grid,
-.section-card.collapsed>.dis-wrap,.section-card.collapsed>.dis-merge-head,
-.section-card.collapsed>#travel-grid,.section-card.collapsed>.a8-tl-wrap,
-.section-card.collapsed>[id="a8-timeline-wrap"],.section-card.collapsed>.map-frame,
-.section-card.collapsed>.map-footer{display:none;}
+/* TRAVEL CHIPS 6 colonnes */
+.travel-compact{padding:0;}
+.travel-dir-compact{display:flex;align-items:center;gap:10px;padding:10px 16px 8px;}
+.tdc-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+.travel-chips-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:0 12px 14px;}
+.travel-chip{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;background:var(--card);border:1px solid var(--border);
+  border-top:3px solid var(--border);border-radius:8px;
+  padding:10px 6px 8px;text-align:center;min-height:70px;
+}
+.travel-chip.g{border-top-color:var(--green);}
+.travel-chip.y{border-top-color:var(--yellow);}
+.travel-chip.o{border-top-color:var(--orange);}
+.travel-chip.r{border-top-color:var(--red);}
+.travel-chip.x{border-top-color:var(--muted2);}
+.tc-city{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:rgba(255,255,255,.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.tc-time{font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:700;line-height:1;}
+.tc-time.g{color:var(--green);}
+.tc-time.y{color:var(--yellow);}
+.tc-time.o{color:var(--orange);}
+.tc-time.r{color:var(--red);}
+.tc-time.x{color:var(--muted);}
+.tc-unit{font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--muted);}
+.tc-via{font-family:'Barlow Condensed',sans-serif;font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);}
+/* MONACO TRAFFIC AXES */
+.mco-inner{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 20px;padding:10px 16px 14px;}
+.mco-col-title{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);padding:0 0 6px;border-bottom:1px solid var(--border);margin-bottom:4px;}
+.mco-row{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.mco-row:last-child{border-bottom:none;}
+.mco-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.mco-dot.fluide{background:#22C05E;}.mco-dot.ralenti{background:#FFD600;}.mco-dot.dense{background:#FF8C00;}.mco-dot.bloque{background:#E81010;}.mco-dot.inconnu{background:var(--muted2);}
+.mco-name{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,.75);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mco-flu{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;min-width:54px;text-align:right;flex-shrink:0;}
+.mco-flu.fluide{color:#22C05E;}.mco-flu.ralenti{color:#FFD600;}.mco-flu.dense{color:#FF8C00;}.mco-flu.bloque{color:#ff5252;}.mco-flu.inconnu{color:var(--muted2);}
+.mco-trend{font-size:11px;font-weight:700;width:12px;text-align:center;flex-shrink:0;}
+.mco-trend.up{color:#22C05E;}.mco-trend.dn{color:#ff5252;}.mco-trend.eq{color:var(--muted2);}
+/* COLLAPSE */
+.section-card.collapsed>.stations-grid,.section-card.collapsed>.dis-wrap,
+.section-card.collapsed>.dis-merge-head,.section-card.collapsed>#travel-grid,
+.section-card.collapsed>.a8-tl-wrap,.section-card.collapsed>[id="a8-timeline-wrap"],
+.section-card.collapsed>.map-frame,.section-card.collapsed>.map-footer,
+.section-card.collapsed>#monaco-traffic-body,.section-card.collapsed>#monaco-map-wrap{display:none;}
 .collapse-btn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:4px;background:transparent;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:14px;flex-shrink:0;transition:all .15s;margin-left:4px;}
 .collapse-btn:hover{border-color:var(--red);color:var(--red);}
 .collapse-btn .chv{display:inline-block;transition:transform .2s;}
 .section-card.collapsed .collapse-btn .chv{transform:rotate(180deg);}
+/* EDITOR */
 .ed-fab{position:fixed;bottom:28px;right:28px;z-index:1000;width:50px;height:50px;border-radius:50%;background:var(--red);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(228,3,46,.45);transition:transform .15s;}
 .ed-fab:hover{transform:scale(1.1);}
-.ed-ov{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
-.ed-ov.open{display:flex;}
-.ed-modal{background:var(--panel);border:1px solid var(--border);border-radius:14px;width:min(880px,95vw);max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.8);}
-.ed-head{display:flex;align-items:center;gap:10px;padding:0 18px;height:46px;background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0;cursor:move;user-select:none;}
+.ed-ov{position:fixed;inset:0;z-index:2000;display:none;pointer-events:none;}
+.ed-ov.open{display:block;}
+.ed-modal{background:rgba(18,21,28,.93);border:1px solid var(--border);border-radius:14px;width:min(680px,88vw);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.6);backdrop-filter:blur(14px);pointer-events:all;position:absolute;top:60px;right:24px;resize:both;max-height:75vh;}
+.ed-head{display:flex;align-items:center;gap:10px;padding:0 18px;height:46px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--border);flex-shrink:0;cursor:move;user-select:none;}
 .ed-head-t{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
 .ed-close{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:4px 8px;border-radius:4px;}
 .ed-close:hover{color:var(--red);}
-.ed-tb{display:flex;align-items:center;flex-wrap:wrap;gap:1px;padding:6px 10px;border-bottom:1px solid var(--border);background:var(--card);flex-shrink:0;}
+.ed-tb{display:flex;align-items:center;flex-wrap:wrap;gap:1px;padding:6px 10px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.02);flex-shrink:0;}
 .eb{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:26px;padding:0 5px;border-radius:4px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-weight:600;transition:all .1s;}
 .eb:hover{background:rgba(255,255,255,.08);color:var(--text);}
 .ed-div{width:1px;height:18px;background:var(--border);margin:0 3px;flex-shrink:0;}
-.ed-sel{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:0 5px;height:26px;font-size:11px;cursor:pointer;}
+.ed-sel{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:0 5px;height:26px;font-size:11px;cursor:pointer;}
 .ed-body{flex:1;overflow-y:auto;}
-#ed-doc{min-height:200px;padding:22px 28px;outline:none;font-family:'Barlow',sans-serif;font-size:15px;line-height:1.75;color:var(--text);caret-color:var(--red);}
+#ed-doc{min-height:200px;padding:20px 24px;outline:none;font-family:'Barlow',sans-serif;font-size:15px;line-height:1.75;color:var(--text);caret-color:var(--red);}
 #ed-doc:empty::before{content:'Commencez à écrire...';color:var(--muted2);pointer-events:none;}
 #ed-doc h1{font-size:2em;font-weight:800;margin-bottom:.4em;}
 #ed-doc h2{font-size:1.5em;font-weight:700;margin-bottom:.35em;}
@@ -1161,162 +1196,25 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 #ed-doc table{border-collapse:collapse;width:100%;margin:.5em 0;}
 #ed-doc td,#ed-doc th{border:1px solid var(--border);padding:6px 10px;min-width:60px;}
 #ed-doc a{color:var(--red);}
-.ed-foot{display:flex;align-items:center;gap:8px;padding:8px 18px;background:var(--card);border-top:1px solid var(--border);flex-shrink:0;}
+.ed-foot{display:flex;align-items:center;gap:8px;padding:8px 18px;background:rgba(255,255,255,.02);border-top:1px solid var(--border);flex-shrink:0;}
 .ed-wc{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted2);}
 .ed-act{padding:6px 16px;border-radius:5px;border:none;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transition:opacity .15s;}
 .ed-act.sv{background:var(--red);color:#fff;margin-left:auto;}
 .ed-act.sv:hover{opacity:.85;}
 .ed-act.pr,.ed-act.cp{background:rgba(255,255,255,.07);color:var(--muted);}
-
-
-/* MONACO TRAFFIC */
-#monaco-traffic-body{padding:12px 16px;}
-.mco-inner{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:0 20px;
-}
-.mco-col-title{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--muted);padding:0 0 6px;
-  border-bottom:1px solid var(--border);
-  margin-bottom:4px;
-}
-.mco-row{
-  display:flex;align-items:center;
-  gap:6px;padding:4px 0;
-  border-bottom:1px solid rgba(255,255,255,.03);
-}
-.mco-row:last-child{border-bottom:none;}
-.mco-name{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:12px;font-weight:700;letter-spacing:.03em;
-  color:rgba(255,255,255,.75);flex:1;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.mco-dot{
-  width:8px;height:8px;border-radius:50%;flex-shrink:0;
-}
-.mco-dot.fluide {background:#22C05E;}
-.mco-dot.ralenti{background:#FFD600;}
-.mco-dot.dense  {background:#FF8C00;}
-.mco-dot.bloque {background:#E81010;}
-.mco-dot.inconnu{background:var(--muted2);}
-.mco-flu{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  min-width:54px;text-align:right;flex-shrink:0;
-}
-.mco-flu.fluide {color:#22C05E;}
-.mco-flu.ralenti{color:#FFD600;}
-.mco-flu.dense  {color:#FF8C00;}
-.mco-flu.bloque {color:#ff5252;}
-.mco-flu.inconnu{color:var(--muted2);}
-.mco-trend{font-size:11px;font-weight:700;width:12px;text-align:center;flex-shrink:0;}
-.mco-trend.up{color:#22C05E;}
-.mco-trend.dn{color:#ff5252;}
-.mco-trend.eq{color:var(--muted2);}
-
-
-/* A8 ZOOM/PAN */
-.a8-scroll-wrap{
-  overflow-x:auto;overflow-y:visible;
-  cursor:grab;
-  position:relative;
-}
+/* A8 ZOOM */
+.a8-scroll-wrap{overflow-x:auto;overflow-y:visible;cursor:grab;position:relative;}
 .a8-scroll-wrap:active{cursor:grabbing;}
 .a8-scroll-wrap::-webkit-scrollbar{height:6px;}
 .a8-scroll-wrap::-webkit-scrollbar-track{background:var(--border);border-radius:3px;}
 .a8-scroll-wrap::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);border-radius:3px;}
-.a8-scroll-wrap::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.4);}
-.a8-scroll-inner{
-  /* width est défini inline selon le niveau de zoom */
-  min-width:100%;
-  position:relative;
-}
-.a8-zoom-controls{
-  display:flex;align-items:center;gap:6px;
-  padding:8px 20px 4px;
-}
+.a8-zoom-controls{display:flex;align-items:center;gap:6px;padding:8px 20px 4px;}
 .a8-zc-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
-.a8-zc-btn{
-  width:26px;height:26px;border-radius:4px;border:1px solid var(--border);
-  background:transparent;color:var(--muted);cursor:pointer;font-size:16px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;transition:all .15s;
-}
+.a8-zc-btn{width:26px;height:26px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .15s;}
 .a8-zc-btn:hover{border-color:var(--red);color:var(--red);}
-.a8-zc-pct{
-  font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);
-  min-width:40px;text-align:center;
-}
-.a8-zc-reset{
-  font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted);background:transparent;border:1px solid var(--border);
-  border-radius:4px;padding:3px 8px;cursor:pointer;transition:all .15s;
-}
+.a8-zc-pct{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);min-width:40px;text-align:center;}
+.a8-zc-reset{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:transparent;border:1px solid var(--border);border-radius:4px;padding:3px 8px;cursor:pointer;transition:all .15s;}
 .a8-zc-reset:hover{border-color:var(--red);color:var(--red);}
-
-
-/* COMPACT TRAVEL TIMES — 6 chips en ligne */
-.travel-compact{padding:0;}
-.travel-dir-compact{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 16px 8px;
-}
-.tdc-label{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--muted);
-}
-.travel-chips-row{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:6px;
-  padding:0 12px 12px;
-}
-.travel-chip{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:3px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-top:3px solid var(--border);
-  border-radius:8px;
-  padding:10px 8px 8px;
-  cursor:default;transition:border-color .15s;
-  min-height:72px;
-  text-align:center;
-}
-.travel-chip.g{border-top-color:var(--green);}
-.travel-chip.y{border-top-color:var(--yellow);}
-.travel-chip.o{border-top-color:var(--orange);}
-.travel-chip.r{border-top-color:var(--red);}
-.travel-chip.x{border-top-color:var(--muted2);}
-.tc-city{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:.03em;
-  color:rgba(255,255,255,.65);
-  line-height:1.2;white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis;max-width:100%;
-}
-.tc-time{
-  font-family:'Share Tech Mono',monospace;
-  font-size:22px;font-weight:700;line-height:1;
-}
-.tc-time.g{color:var(--green);}
-.tc-time.y{color:var(--yellow);}
-.tc-time.o{color:var(--orange);}
-.tc-time.r{color:var(--red);}
-.tc-time.x{color:var(--muted);}
-.tc-unit{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:10px;color:var(--muted);
-}
-.tc-via{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--muted2);
-}
 
 </style>
 </head>
@@ -1374,38 +1272,38 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       </div>
       <div id="travel-grid"></div>
     </
-
-    <!-- MONACO MAP -->
-    <div class="section-card" style="padding-bottom:0;overflow:hidden;">
+    <!-- MONACO AXES -->
+    <div class="section-card">
       <div class="card-h">
         <span style="font-size:15px">&#127467;&#127462;</span>
-        <span class="card-t">Trafic Monaco &mdash; Carte en temps réel</span>
+        <span class="card-t">Trafic Monaco &mdash; Axes principaux</span>
         <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
-        <!-- Légende -->
+        <span id="monaco-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
+        <button class="rbtn" onclick="fetchMonaco()">&#8635; Actualiser</button>
+      </div>
+      <div id="monaco-traffic-body"><div class="a8-loading">Chargement…</div></div>
+    </div>
+
+    <!-- MONACO MAP -->
+    <div class="section-card" style="overflow:hidden;padding-bottom:0;">
+      <div class="card-h">
+        <span style="font-size:15px">&#128506;&#65039;</span>
+        <span class="card-t">Carte trafic Monaco</span>
+        <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
         <div style="display:flex;align-items:center;gap:10px;margin-left:16px;">
-          <span style="display:flex;align-items:center;gap:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);">
-            <span style="width:10px;height:10px;border-radius:50%;background:#22C05E;display:inline-block;"></span>Fluide
-          </span>
-          <span style="display:flex;align-items:center;gap:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);">
-            <span style="width:10px;height:10px;border-radius:50%;background:#FFD600;display:inline-block;"></span>Ralenti
-          </span>
-          <span style="display:flex;align-items:center;gap:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);">
-            <span style="width:10px;height:10px;border-radius:50%;background:#FF6B00;display:inline-block;"></span>Dense
-          </span>
-          <span style="display:flex;align-items:center;gap:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5);">
-            <span style="width:10px;height:10px;border-radius:50%;background:#E81010;display:inline-block;"></span>Bloqué
-          </span>
+          <span style="display:inline-flex;align-items:center;gap:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,.45)"><span style="width:9px;height:9px;border-radius:50%;background:#22C05E;display:inline-block;"></span>Fluide</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,.45)"><span style="width:9px;height:9px;border-radius:50%;background:#FFD600;display:inline-block;"></span>Ralenti</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,.45)"><span style="width:9px;height:9px;border-radius:50%;background:#FF6B00;display:inline-block;"></span>Dense</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,.45)"><span style="width:9px;height:9px;border-radius:50%;background:#E81010;display:inline-block;"></span>Bloqué</span>
         </div>
         <span id="monaco-map-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
         <button class="rbtn" onclick="refreshMonacoMap()">&#8635; Actualiser</button>
       </div>
-      <!-- Carte TomTom Monaco -->
-      <div style="position:relative;height:480px;background:#0a0c12;">
+      <div id="monaco-map-wrap" style="height:480px;background:#0a0c12;">
         <div id="monaco-map" style="width:100%;height:100%;"></div>
-        <!-- Overlay axes en surbrillance (données TomTom) -->
-        <div id="monaco-map-axes" style="position:absolute;bottom:12px;left:12px;z-index:10;display:flex;flex-direction:column;gap:6px;max-width:220px;"></div>
       </div>
     </div>
+div>
 
     <div class="section-card">
       <div class="card-h">
@@ -1417,7 +1315,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       </div>
       <div id="a8-timeline-wrap" class="a8-tl-wrap"><div class="a8-tl-loading">Chargement trafic A8...</div></div>
       <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a><span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span></div>
-    </
+    </div>
 
     <div class="section-card">
       <div class="card-h"><span style="font-size:15px">&#128506;&#65039;</span><span class="card-t">Waze — Monaco</span><div class="pill" style="margin-left:10px"><span class="dot"></span>LIVE</div></div>
@@ -1488,60 +1386,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 
 
-
-
-<!-- FAB -->
-
-<button class="ed-fab" onclick="edOpen()">&#9998;</button>
-<div class="ed-ov" id="ed-ov" id="ed-ov-el">
-  <div class="ed-modal" id="ed-modal">
-    <div class="ed-head" id="ed-drag"><span>&#9998;</span><span class="ed-head-t">Editeur de texte</span><button class="ed-close" onclick="edClose()">&#10005;</button></div>
-    <div class="ed-tb">
-      <select class="ed-sel" onchange="edc('formatBlock',this.value);this.blur()"><option value="p">Paragraphe</option><option value="h1">Titre 1</option><option value="h2">Titre 2</option><option value="h3">Titre 3</option><option value="blockquote">Citation</option><option value="pre">Code</option></select>
-      <select class="ed-sel" style="width:54px" onchange="edc('fontSize',this.value);this.blur()"><option value="2">10</option><option value="3">12</option><option value="4" selected>14</option><option value="5">18</option><option value="6">24</option><option value="7">36</option></select>
-      <div class="ed-div"></div>
-      <button class="eb" onclick="edc('bold')"><b>G</b></button>
-      <button class="eb" onclick="edc('italic')"><i>I</i></button>
-      <button class="eb" onclick="edc('underline')"><u>S</u></button>
-      <button class="eb" onclick="edc('strikeThrough')"><s>R</s></button>
-      <button class="eb" onclick="edc('superscript')">x&#178;</button>
-      <button class="eb" onclick="edc('subscript')">x&#8322;</button>
-      <div class="ed-div"></div>
-      <button class="eb" onclick="edPick('foreColor')" style="border-bottom:2px solid #E4032E">A</button>
-      <button class="eb" onclick="edPick('hiliteColor')" style="background:rgba(255,214,0,.2)">&#9646;</button>
-      <div class="ed-div"></div>
-      <button class="eb" onclick="edc('justifyLeft')">&#8676;</button>
-      <button class="eb" onclick="edc('justifyCenter')">&#9632;</button>
-      <button class="eb" onclick="edc('justifyRight')">&#8677;</button>
-      <button class="eb" onclick="edc('justifyFull')">&#9644;</button>
-      <div class="ed-div"></div>
-      <button class="eb" onclick="edc('insertUnorderedList')">&#8226;</button>
-      <button class="eb" onclick="edc('insertOrderedList')">1.</button>
-      <button class="eb" onclick="edc('outdent')">&#8676;&#8676;</button>
-      <button class="eb" onclick="edc('indent')">&#8677;&#8677;</button>
-      <div class="ed-div"></div>
-      <button class="eb" onclick="edLink()">&#128279;</button>
-      <button class="eb" onclick="edTable()">&#9783;</button>
-      <button class="eb" onclick="edImg()">&#128247;</button>
-      <div class="ed-div"></div>
-      <button class="eb" onclick="edc('undo')">&#8630;</button>
-      <button class="eb" onclick="edc('redo')">&#8631;</button>
-      <button class="eb" onclick="edc('removeFormat')">&#9003;</button>
-      <button class="eb" onclick="edClear()" style="color:#ff8080">&#10060;</button>
-    </div>
-    <input type="color" id="ed-cp" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;">
-    <div class="ed-body"><div id="ed-doc" contenteditable="true" spellcheck="true"></div></div>
-    <div class="ed-foot">
-      <span class="ed-wc" id="ed-wc">0 mot</span>
-      <button class="ed-act pr" onclick="edPrint()">&#128438; Imprimer</button>
-      <button class="ed-act cp" onclick="edCopy()">&#128203; Copier</button>
-      <button class="ed-act sv" onclick="edSave()">&#128190; Sauvegarder</button>
-    </div>
-  </div>
-</div>
-
 <script>
-
 
 /* THEME */
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
@@ -1555,7 +1400,7 @@ function switchTab(n){
   document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
   document.getElementById('tab-btn-'+n).classList.add('active');
   document.getElementById('tab-'+n).classList.add('active');
-  if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);setTimeout(fetchMonaco,1200);traficLoaded=true;}
+  if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(function(){if(typeof loadA8Traffic==='function')loadA8Traffic();if(typeof maybeInitMonacoMap==='function')maybeInitMonacoMap();},800);traficLoaded=true;}
   if(n==='weather'&&!weatherLoaded){switchWeather('am');loadWeatherAM();loadWeatherIDF();loadVigilance();weatherLoaded=true;}
 }
 function switchWeather(z){
@@ -1638,41 +1483,31 @@ function fetchAllRoutes(isTo){
 function renderSkeleton(){
   var isTo=travelDir==='to';
   var grid=document.getElementById('travel-grid');if(!grid)return;
-  grid.innerHTML='<div class="travel-dir-header">'
-    +(isTo
-      ?'<span class="travel-dir-label">Depuis</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-dest">Fontvieille \u2014 Monaco</span>'
-      :'<span class="travel-dir-dest">Fontvieille \u2014 Monaco</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-label">Vers</span>')
-    +'</div>'
-    +'<div class="travel-col-head" style="grid-template-columns:4px 1fr auto">'
-    +'<div></div><div class="tch-city">Ville</div>'
-    +'<div class="tch-opt with" style="min-width:120px;"><span class="tch-icon">&#128663;</span><span class="tch-lbl">Temps de parcours</span></div>'
-    +'</div>'
-    +'<div class="travel-list">'
-    +ROUTES.map(function(r){
-      return'<div class="travel-row" style="grid-template-columns:4px 1fr auto">'
-        +'<div class="t-bar x"></div>'
-        +'<div class="t-city"><span class="t-city-name">'+r.from+'</span><span class="t-city-hint">'+r.hint+'</span></div>'
-        +'<div class="t-opt"><span class="t-time loading">...</span></div>'
-        +'</div>';
-    }).join('')
-    +'</div>';
+  var dir='<div class="travel-dir-compact"><span class="tdc-label">'+(isTo?'Depuis':'Vers')+'</span>'
+    +'<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:14px;font-weight:800;color:#fff;letter-spacing:.06em;">Fontvieille \u2014 Monaco</span></div>';
+  var chips=ROUTES.map(function(r){
+    return'<div class="travel-chip x"><span class="tc-city">'+r.from+'</span><span class="tc-time x">...</span></div>';
+  }).join('');
+  grid.innerHTML='<div class="travel-compact">'+dir+'<div class="travel-chips-row">'+chips+'</div></div>';
 }
 function loadTravel(){
   renderSkeleton();var isTo=travelDir==='to';
   fetchAllRoutes(isTo).then(function(res){
-    var rows=ROUTES.map(function(r,i){
-      return{route:r,result:res.results[i],
-             sort:res.results[i]?res.results[i].duration:999999};
-    });
+    var rows=ROUTES.map(function(r,i){return{route:r,result:res.results[i],sort:res.results[i]?res.results[i].duration:999999};});
     rows.sort(function(a,b){return a.sort-b.sort;});
-    var listEl=document.querySelector('#travel-grid .travel-list');
-    if(listEl)listEl.innerHTML=rows.map(function(row){
-      return buildSingleRow(row.route,row.result);
-    }).join('');
-    var srcEl=document.getElementById('travel-source');
-    if(srcEl)srcEl.innerHTML='&#128994; TomTom \u2014 Trafic temps r\u00e9el';
-    var u=document.getElementById('travel-upd');
-    if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
+    var chipsEl=document.querySelector('#travel-grid .travel-chips-row');
+    if(chipsEl){
+      chipsEl.innerHTML=rows.map(function(row){
+        var r=row.result,cls='x',timeHtml='<span class="tc-time x">-</span>';
+        if(r){cls=delayCls(r.noTrafDuration,r.duration);var dur=fmtDurClean(r.duration);timeHtml='<span class="tc-time '+cls+'">'+dur.val+'</span>';}
+        var via=!row.route.highway?'<span class="tc-via">Nat.</span>':'';
+        var dur2=r?fmtDurClean(r.duration):null;
+        return'<div class="travel-chip '+cls+'"><span class="tc-city">'+row.route.from+'</span>'
+          +timeHtml+(dur2&&dur2.unit?'<span class="tc-unit">'+dur2.unit+'</span>':'')+via+'</div>';
+      }).join('');
+    }
+    var srcEl=document.getElementById('travel-source');if(srcEl)srcEl.innerHTML='&#128994; TomTom \u2014 Trafic temps r\u00e9el';
+    var u=document.getElementById('travel-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
   });
 }
 var renderTravelSkeleton=renderSkeleton;
@@ -1769,37 +1604,64 @@ function loadVigilance(){var el=document.getElementById('vig-body');if(!el)retur
 })();
 setInterval(function(){if(traficLoaded){loadBoard();if(!TEST_MODE)loadDis();}},60000);
 setInterval(function(){if(traficLoaded)loadTravel();},600000);
-setInterval(function(){if(traficLoaded)fetchMonaco();},120000);
 setInterval(function(){if(traficLoaded)loadA8Traffic();},300000);
 setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM();loadWeatherIDF();loadVigilance();}},300000);
-
 
 </script>
 
 <script>
-/* == A8 Traffic v8 == */
-var A8K='nFt8c40zRLaLYYghcApBurt0ZyK7FIbA', A8Z='full', A8_ZOOM_PCT=100;
-var AX=[{"n": 36, "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725}, {"n": 37, "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82}, {"n": 38, "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89}, {"n": 39, "short": "Les Adrets", "km": 28, "lat": 43.52, "lon": 6.95}, {"n": 40, "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01}, {"n": 41, "short": "Cns Bocca", "km": 44, "lat": 43.553, "lon": 7.04}, {"n": 42, "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07}, {"n": 44, "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12}, {"n": 46, "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16}, {"n": 47, "short": "VL Centre", "km": 67, "lat": 43.635, "lon": 7.18}, {"n": 48, "short": "Cagnes Est", "km": 70, "lat": 43.655, "lon": 7.195}, {"n": 49, "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205}, {"n": 50, "short": "Nice Ouest", "km": 77, "lat": 43.675, "lon": 7.215}, {"n": 51, "short": "Nice Aéro", "km": 80, "lat": 43.665, "lon": 7.235}, {"n": 52, "short": "N.St-Isid.", "km": 83, "lat": 43.705, "lon": 7.265}, {"n": 54, "short": "Nice Nord", "km": 86, "lat": 43.72, "lon": 7.285}, {"n": 55, "short": "Ariane", "km": 89, "lat": 43.73, "lon": 7.31}, {"n": 56, "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39}, {"n": 57, "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42}, {"n": 58, "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47}, {"n": 59, "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5}, {"n": 0, "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57}], AZM=[{"id": "full", "label": "A8 complète", "from": 36, "to": 0}, {"id": "cannes", "label": "Cannes", "from": 40, "to": 44}, {"id": "antibes", "label": "Antibes", "from": 44, "to": 46}, {"id": "nice", "label": "Nice", "from": 49, "to": 55}, {"id": "monaco", "label": "Monaco / Menton", "from": 56, "to": 0}];
-var MONACO_AXES=[{"id": "alb1", "name": "Bd Albert-Ier", "cat": "boulevard", "lat": 43.731, "lon": 7.4182}, {"id": "lou2", "name": "Bd Louis-II", "cat": "boulevard", "lat": 43.7345, "lon": 7.416}, {"id": "rain3", "name": "Bd Rainier-III", "cat": "boulevard", "lat": 43.7307, "lon": 7.4197}, {"id": "moul", "name": "Bd des Moulins", "cat": "boulevard", "lat": 43.7492, "lon": 7.4312}, {"id": "pcha", "name": "Bd Psse-Charlotte", "cat": "boulevard", "lat": 43.7448, "lon": 7.4169}, {"id": "oste", "name": "Av. d'Ostende", "cat": "boulevard", "lat": 43.7305, "lon": 7.4215}, {"id": "cost", "name": "Av. de la Costa", "cat": "boulevard", "lat": 43.7316, "lon": 7.4235}, {"id": "pgra", "name": "Av. Psse-Grace", "cat": "boulevard", "lat": 43.7382, "lon": 7.4302}, {"id": "jard", "name": "Bd Jardin Exotique", "cat": "boulevard", "lat": 43.7352, "lon": 7.4119}, {"id": "pisc", "name": "Route de la Piscine", "cat": "boulevard", "lat": 43.7455, "lon": 7.422}, {"id": "tl2", "name": "Tunnel Louis-II", "cat": "tunnel", "lat": 43.7351, "lon": 7.4168}, {"id": "tfair", "name": "Tunnel Fairmont", "cat": "tunnel", "lat": 43.7408, "lon": 7.4287}, {"id": "tr3", "name": "Tunnel Rainier-III", "cat": "tunnel", "lat": 43.7315, "lon": 7.4188}, {"id": "tje", "name": "Tunnel Jardin Exo.", "cat": "tunnel", "lat": 43.7356, "lon": 7.4118}, {"id": "tcol", "name": "Tunnel de la Colle", "cat": "tunnel", "lat": 43.7442, "lon": 7.4143}, {"id": "tcan", "name": "Tunnel Canton", "cat": "tunnel", "lat": 43.7352, "lon": 7.4158}, {"id": "trno", "name": "Tunnel Rocher-Noghès", "cat": "tunnel", "lat": 43.7331, "lon": 7.4193}, {"id": "tsd", "name": "Tunnel Ste-Dévote", "cat": "tunnel", "lat": 43.7339, "lon": 7.4172}, {"id": "tport", "name": "Tunnel du Portier", "cat": "tunnel", "lat": 43.7321, "lon": 7.4219}, {"id": "tcas", "name": "Tunnel Casino/Costa", "cat": "tunnel", "lat": 43.739, "lon": 7.427}, {"id": "marq", "name": "Liaison Marquet", "cat": "tunnel", "lat": 43.7346, "lon": 7.415}, {"id": "basse", "name": "Basse Corniche", "cat": "corniche", "lat": 43.728, "lon": 7.395}, {"id": "moyen", "name": "Moyenne Corniche", "cat": "corniche", "lat": 43.739, "lon": 7.371}, {"id": "grande", "name": "Grande Corniche", "cat": "corniche", "lat": 43.76, "lon": 7.39}, {"id": "a500", "name": "A500 / Accès A8", "cat": "corniche", "lat": 43.733, "lon": 7.4163}];
-var AP=(function(){var r=[];for(var i=0;i<AX.length-1;i++){var a=AX[i],b=AX[i+1];r.push({lat:(a.lat+b.lat)/2,lon:(a.lon+b.lon)/2});}return r;})();
+/* ═ A8 Traffic v6 ═ */
+var A8_KEY='Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
+var A8_ZOOM='full';
+var A8_EXITS=[{"n": 36, "lbl": "St-Tropez / Le Muy", "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725}, {"n": 37, "lbl": "Puget / Fréjus O.", "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82}, {"n": 38, "lbl": "Fréjus / St-Raph", "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89}, {"n": 39, "lbl": "Les Adrets", "short": "Les Adrets", "km": 28, "lat": 43.52, "lon": 6.95}, {"n": 40, "lbl": "Mandelieu", "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01}, {"n": 41, "lbl": "Cannes La Bocca", "short": "Cns Bocca", "km": 44, "lat": 43.553, "lon": 7.04}, {"n": 42, "lbl": "Cannes / Mougins", "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07}, {"n": 44, "lbl": "Antibes / Sophia", "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12}, {"n": 46, "lbl": "VL Plage", "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16}, {"n": 47, "lbl": "VL Centre", "short": "VL Centre", "km": 67, "lat": 43.635, "lon": 7.18}, {"n": 48, "lbl": "Cagnes Est", "short": "Cagnes Est", "km": 70, "lat": 43.655, "lon": 7.195}, {"n": 49, "lbl": "St-Laurent-du-Var", "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205}, {"n": 50, "lbl": "Nice Ouest", "short": "Nice O.", "km": 77, "lat": 43.675, "lon": 7.215}, {"n": 51, "lbl": "Nice Aéroport", "short": "Nice Aéro", "km": 80, "lat": 43.665, "lon": 7.235}, {"n": 52, "lbl": "Nice St-Isidore", "short": "N.St-Isid.", "km": 83, "lat": 43.705, "lon": 7.265}, {"n": 54, "lbl": "Nice Nord", "short": "Nice Nord", "km": 86, "lat": 43.72, "lon": 7.285}, {"n": 55, "lbl": "Nice l'Ariane", "short": "Nice Ariane", "km": 89, "lat": 43.73, "lon": 7.31}, {"n": 56, "lbl": "Monaco", "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39}, {"n": 57, "lbl": "La Turbie", "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42}, {"n": 58, "lbl": "Roquebrune CM", "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47}, {"n": 59, "lbl": "Menton", "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5}, {"n": 0, "lbl": "Frontière italienne", "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57}];
+var A8_ZOOMS=[{"id": "full", "label": "A8 complète", "from": 36, "to": 0}, {"id": "cannes", "label": "Cannes (40→44)", "from": 40, "to": 44}, {"id": "antibes", "label": "Antibes (44→46)", "from": 44, "to": 46}, {"id": "nice", "label": "Nice (49→55)", "from": 49, "to": 55}, {"id": "monaco", "label": "Monaco/Menton (56→)", "from": 56, "to": 0}];
 
-function spCls(c,f){if(!f||!c)return'inconnu';var r=c/f;if(r>=0.75)return'fluide';if(r>=0.55)return'ralenti';if(r>=0.35)return'dense';return'bloque';}
-var SP_LBL={fluide:'Fluide',ralenti:'Ralenti',dense:'Dense',bloque:'Bloqu\u00e9',inconnu:'N/A'};
-var SP_COL={fluide:'#22C05E',ralenti:'#FFD600',dense:'#FF6B00',bloque:'#E81010',inconnu:'#2A2D3A'};
-var SP_TC ={fluide:'#22C05E',ralenti:'#FFD600',dense:'#FF8C00',bloque:'#ff5252',inconnu:'var(--muted)'};
+/* Sondes perpendiculaires */
+var A8_PROBES=(function(){
+  var sections=[];
+  for(var i=0;i<A8_EXITS.length-1;i++){
+    var ex=A8_EXITS[i],nx=A8_EXITS[i+1];
+    var mLat=(ex.lat+nx.lat)/2,mLon=(ex.lon+nx.lon)/2;
+    var dLat=nx.lat-ex.lat,dLon=nx.lon-ex.lon;
+    var len=Math.sqrt(dLat*dLat+dLon*dLon)||1;
+    var off=0.0025;
+    var pLat=(-dLon/len)*off,pLon=(dLat/len)*off;
+    sections.push({
+      south:{lat:mLat-pLat,lon:mLon-pLon},
+      north:{lat:mLat+pLat,lon:mLon+pLon}
+    });
+  }
+  return sections;
+})();
 
-function fetchSp(lat,lon){
-  return fetch('https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json?point='+lat.toFixed(5)+','+lon.toFixed(5)+'&unit=KMPH&key='+A8K,{headers:{Accept:'application/json'}})
-    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
-    .then(function(d){var f=d.flowSegmentData;return f&&f.currentSpeed?{cur:f.currentSpeed,ff:f.freeFlowSpeed||f.currentSpeed}:{cur:0,ff:0};})
-    .catch(function(){return{cur:0,ff:0};});
+function cls(cur,ff){
+  if(!ff||ff===0||cur===0)return'inconnu';
+  var r=cur/ff;
+  if(r>=0.85)return'fluide';
+  if(r>=0.65)return'ralenti';
+  if(r>=0.45)return'dense';
+  return'bloque';
+}
+var CLS_LBL={fluide:'Fluide',ralenti:'Ralenti',dense:'Dense',bloque:'Bloqué',inconnu:'N/A'};
+
+function fetchSeg(lat,lon){
+  var url='https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/12/json?point='
+    +lat.toFixed(4)+','+lon.toFixed(4)+'&unit=KMPH&key='+A8_KEY;
+  return fetch(url,{headers:{Accept:'application/json'}})
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(d){
+      var fd=d.flowSegmentData;
+      if(!fd||!fd.currentSpeed)return{cur:0,ff:0};
+      return{cur:fd.currentSpeed,ff:fd.freeFlowSpeed||fd.currentSpeed};
+    })
+    .catch(function(e){console.warn('A8 seg error:',e.message);return{cur:0,ff:0};});
 }
 
 function getIdxs(){
-  var z=AZM.find(function(z){return z.id===A8Z;})||AZM[0];
+  var z=A8_ZOOMS.find(function(z){return z.id===A8_ZOOM;})||A8_ZOOMS[0];
   var r=[];
-  for(var i=0;i<AX.length-1;i++){
-    var n=AX[i].n;
+  for(var i=0;i<A8_EXITS.length-1;i++){
+    var n=A8_EXITS[i].n;
     if(z.id==='full'){r.push(i);continue;}
     var ok=z.to===0?(n>0&&n>=z.from):(n>0&&n>=z.from&&n<z.to);
     if(ok)r.push(i);
@@ -1807,252 +1669,259 @@ function getIdxs(){
   return r;
 }
 
-function zonePct(z,km0,kmT){
-  var exF=AX.find(function(e){return e.n===z.from;});
-  var exT=z.to===0?AX[AX.length-1]:AX.find(function(e){return e.n===z.to;});
-  if(!exF||!exT)return null;
-  return{left:((exF.km-km0)/kmT*100).toFixed(2)+'%',width:((exT.km-exF.km)/kmT*100).toFixed(2)+'%'};
+function buildZoomBar(wrap){
+  var zBar=document.createElement('div');
+  zBar.className='a8-zoom-bar';
+  zBar.innerHTML='<span class="a8-zoom-lbl">Zone</span>';
+  A8_ZOOMS.forEach(function(z){
+    var btn=document.createElement('button');
+    btn.className='a8-zoom-btn'+(z.id===A8_ZOOM?' active':'');
+    btn.textContent=z.label;
+    btn.onclick=function(){
+      A8_ZOOM=z.id;
+      document.querySelectorAll('.a8-zoom-btn').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      loadA8Traffic();
+    };
+    zBar.appendChild(btn);
+  });
+  wrap.appendChild(zBar);
 }
 
-/* ── Tooltip ── */
-var tipEl=null;
-function showTip(e,txt){
-  if(!tipEl){tipEl=document.createElement('div');tipEl.id='a8-tip';
-    tipEl.style.cssText='position:fixed;z-index:9999;background:rgba(10,12,18,.97);border:1px solid #232730;border-radius:8px;padding:7px 13px;font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:600;color:#fff;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.7);';
-    document.body.appendChild(tipEl);}
-  tipEl.textContent=txt;tipEl.style.display='block';
-  tipEl.style.left=(e.clientX+14)+'px';tipEl.style.top=(e.clientY-42)+'px';
-}
-function moveTip(e){if(tipEl&&tipEl.style.display!=='none'){tipEl.style.left=(e.clientX+14)+'px';tipEl.style.top=(e.clientY-42)+'px';}}
-function hideTip(){if(tipEl)tipEl.style.display='none';}
-
-function drawRoad(idxs,northD,southD){
+function renderRoad(idxs,southData,northData){
   var wrap=document.getElementById('a8-timeline-wrap');
   if(!wrap)return;
+  if(!idxs||!idxs.length){wrap.innerHTML='<div class="a8-loading">Aucune section pour ce zoom</div>';return;}
+
   wrap.innerHTML='';
-  if(!idxs.length){wrap.innerHTML='<div class="a8-loading">Aucune section</div>';return;}
-  var exits=idxs.map(function(i){return AX[i];});
-  var last=AX[idxs[idxs.length-1]+1];if(last)exits.push(last);
-  var km0=AX[0].km,kmT=AX[AX.length-1].km-km0;
+  buildZoomBar(wrap);
 
-  /* Zoom bar */
-  var zb=document.createElement('div');zb.className='a8-zoom-bar';
-  zb.innerHTML='<span class="a8-zoom-lbl">Zone</span>';
-  AZM.forEach(function(z){
-    var btn=document.createElement('button');
-    btn.className='a8-zoom-btn'+(z.id===A8Z?' active':'');
-    btn.textContent=z.label;
-    btn.onclick=function(){A8Z=z.id;loadA8Traffic();};
-    zb.appendChild(btn);
-  });
-  wrap.appendChild(zb);
+  var exits=idxs.map(function(i){return A8_EXITS[i];});
+  /* Ajouter la dernière sortie */
+  var lastExit=A8_EXITS[idxs[idxs.length-1]+1];
+  if(lastExit)exits.push(lastExit);
+  if(exits.length<2){wrap.innerHTML='<div class="a8-loading">Données insuffisantes</div>';return;}
 
-  /* Contrôles zoom/pan */
-  var zcWrap=document.createElement('div');zcWrap.className='a8-zoom-controls';
-  zcWrap.innerHTML='<span class="a8-zc-lbl">Zoom bande</span>'
-    +'<button class="a8-zc-btn" onclick="a8ZoomIn()" title="Zoom +">+</button>'
-    +'<span class="a8-zc-pct" id="a8-zc-pct">'+A8_ZOOM_PCT+'%</span>'
-    +'<button class="a8-zc-btn" onclick="a8ZoomOut()" title="Zoom −">−</button>'
-    +'<button class="a8-zc-reset" onclick="a8ZoomReset()">&#8635; Réinitialiser</button>';
-  wrap.appendChild(zcWrap);
+  var km0=exits[0].km;
+  var kmTotal=exits[exits.length-1].km-km0;
+  if(kmTotal<=0)kmTotal=1;
 
-  var zone=document.createElement('div');zone.className='a8-road-section';
-  var outer=document.createElement('div');outer.className='a8-road-outer';outer.style.cssText='position:relative;margin:0 8px;';
-  var lN=document.createElement('div');lN.className='a8-lane north';
-  var lS=document.createElement('div');lS.className='a8-lane south';
-  var stN={f:0,r:0,d:0,b:0},stS={f:0,r:0,d:0,b:0};
+  /* Labels direction */
+  var dirDiv=document.createElement('div');
+  dirDiv.className='a8-dir-labels';
+  dirDiv.innerHTML='<div class="a8-dir-row"><span class="a8-dir-arrow st">&#8592;</span><span class="a8-dir-name">Vers Saint-Tropez</span></div>'
+    +'<div class="a8-dir-row"><span class="a8-dir-arrow it">&#8594;</span><span class="a8-dir-name">Vers Italie</span></div>';
+  wrap.appendChild(dirDiv);
 
-  for(var i=0;i<AX.length-1;i++){
-    var ex0=AX[i],ex1=AX[i+1];
-    var w=((ex1.km-ex0.km)/kmT*100).toFixed(2)+'%';
-    var dN=northD[i]||{cur:0,ff:0},dS=southD[i]||{cur:0,ff:0};
-    var cN=spCls(dN.cur,dN.ff),cS=spCls(dS.cur,dS.ff);
-    var isIn=(idxs.indexOf(i)!==-1);
-    var ks={fluide:'f',ralenti:'r',dense:'d',bloque:'b'};
-    if(isIn){if(stN[ks[cN]]!==undefined)stN[ks[cN]]++;if(stS[ks[cS]]!==undefined)stS[ks[cS]]++;}
-    var dim=A8Z!=='full'&&!isIn?0.3:1;
-    var tipN=ex1.short+' \u2192 '+ex0.short+' | '+SP_LBL[cN]+(dN.cur>0?' \u2014 '+dN.cur+' km/h':'');
-    var tipS=ex0.short+' \u2192 '+ex1.short+' | '+SP_LBL[cS]+(dS.cur>0?' \u2014 '+dS.cur+' km/h':'');
-    (function(cN_,cS_,tipN_,tipS_,dim_){
-      var sN=document.createElement('div');
-      sN.style.cssText='width:'+w+';height:100%;cursor:pointer;background:'+SP_COL[cN_]+';flex-shrink:0;opacity:'+dim_+';transition:filter .1s;';
-      sN.addEventListener('mouseenter',function(e){sN.style.filter='brightness(1.3)';showTip(e,tipN_);});
-      sN.addEventListener('mousemove',moveTip);sN.addEventListener('mouseleave',function(){sN.style.filter='';hideTip();});
-      var sS=document.createElement('div');
-      sS.style.cssText='width:'+w+';height:100%;cursor:pointer;background:'+SP_COL[cS_]+';flex-shrink:0;opacity:'+dim_+';transition:filter .1s;';
-      sS.addEventListener('mouseenter',function(e){sS.style.filter='brightness(1.3)';showTip(e,tipS_);});
-      sS.addEventListener('mousemove',moveTip);sS.addEventListener('mouseleave',function(){sS.style.filter='';hideTip();});
-      lN.appendChild(sN);lS.appendChild(sS);
-    })(cN,cS,tipN,tipS,dim);
+  /* Section */
+  var section=document.createElement('div');
+  section.className='a8-road-section';
+  var outer=document.createElement('div');
+  outer.className='a8-road-outer';
+  outer.style.cssText='position:relative;';
+
+  var lanes=document.createElement('div');
+  lanes.className='a8-lanes';
+  var laneN=document.createElement('div');laneN.className='a8-lane north';
+  var laneS=document.createElement('div');laneS.className='a8-lane south';
+
+  var statsN={fluide:0,ralenti:0,dense:0,bloque:0,inconnu:0};
+  var statsS={fluide:0,ralenti:0,dense:0,bloque:0,inconnu:0};
+
+  for(var ii=0;ii<idxs.length;ii++){
+    var idx=idxs[ii];
+    var ex0=A8_EXITS[idx],ex1=A8_EXITS[idx+1];
+    if(!ex0||!ex1)continue;
+    var w=((ex1.km-ex0.km)/kmTotal*100).toFixed(3)+'%';
+    var dN=northData[idx]||{cur:0,ff:0};
+    var dS=southData[idx]||{cur:0,ff:0};
+    var cN=cls(dN.cur,dN.ff),cS=cls(dS.cur,dS.ff);
+    if(statsN[cN]!==undefined)statsN[cN]++;
+    if(statsS[cS]!==undefined)statsS[cS]++;
+    var tipN=ex1.short+' → '+ex0.short+' | '+CLS_LBL[cN]+(dN.cur>0?' — '+dN.cur+' km/h':'');
+    var tipS=ex0.short+' → '+ex1.short+' | '+CLS_LBL[cS]+(dS.cur>0?' — '+dS.cur+' km/h':'');
+    var sN=document.createElement('div');sN.className='a8-seg '+cN;sN.style.width=w;sN.setAttribute('data-tip',tipN);
+    var sS=document.createElement('div');sS.className='a8-seg '+cS;sS.style.width=w;sS.setAttribute('data-tip',tipS);
+    laneN.appendChild(sN);laneS.appendChild(sS);
   }
 
-  /* Overlay : ticks + badges + zone frames CLIQUABLES */
-  var ov=document.createElement('div');
-  ov.style.cssText='position:absolute;top:-16px;bottom:0;left:0;right:0;pointer-events:none;z-index:10;';
+  lanes.appendChild(laneN);lanes.appendChild(laneS);
 
-  if(A8Z==='full'){
-    AZM.forEach(function(z){
-      if(z.id==='full')return;
-      var p=zonePct(z,km0,kmT);if(!p)return;
-      var box=document.createElement('div');
-      box.style.cssText='position:absolute;left:'+p.left+';width:'+p.width+';top:0;bottom:0;'
-        +'border:2px solid rgba(255,255,255,.3);border-radius:4px;box-sizing:border-box;'
-        +'cursor:pointer;pointer-events:all;transition:border-color .15s;';
-      box.title='Zoomer sur '+z.label;
-      box.addEventListener('mouseenter',function(){box.style.borderColor='rgba(228,3,46,.7)';});
-      box.addEventListener('mouseleave',function(){box.style.borderColor='rgba(255,255,255,.3)';});
-      box.addEventListener('click',function(){A8Z=z.id;loadA8Traffic();});
-      var lbl=document.createElement('div');
-      lbl.textContent=z.label;
-      lbl.style.cssText='position:absolute;top:-17px;left:50%;transform:translateX(-50%);'
-        +'font-family:Barlow Condensed,sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;'
-        +'color:rgba(255,255,255,.4);white-space:nowrap;pointer-events:none;';
-      box.appendChild(lbl);
-      ov.appendChild(box);
-    });
-  }
-
-  /* Ticks + badges */
-  AX.forEach(function(ex){
-    var pct=((ex.km-km0)/kmT*100).toFixed(2)+'%';
-    var tk=document.createElement('div');
-    tk.style.cssText='position:absolute;left:'+pct+';top:16px;bottom:0;width:2px;background:rgba(255,255,255,.1);transform:translateX(-50%);';
-    ov.appendChild(tk);
-    var bg=document.createElement('div');
-    bg.textContent=ex.n||'FR';
-    var isFr=!ex.n;
-    bg.style.cssText='position:absolute;left:'+pct+';top:50%;transform:translate(-50%,-50%);'
-      +'font-family:Share Tech Mono,monospace;font-size:10px;font-weight:700;'
-      +'background:var(--panel,#12151C);border:1.5px solid '+(isFr?'rgba(228,3,46,.5)':'rgba(255,255,255,.18)')+';'
-      +'color:'+(isFr?'#E4032E':'rgba(255,255,255,.85)')+';'
+  /* Overlay sorties à cheval */
+  var overlay=document.createElement('div');
+  overlay.style.cssText='position:absolute;top:-10px;bottom:-10px;left:0;right:0;pointer-events:none;z-index:10;';
+  exits.forEach(function(ex,i){
+    var pct=((ex.km-km0)/kmTotal*100).toFixed(3)+'%';
+    var mk=document.createElement('div');
+    mk.style.cssText='position:absolute;left:'+pct+';top:0;bottom:0;width:2px;background:rgba(255,255,255,.15);transform:translateX(-50%);';
+    overlay.appendChild(mk);
+    var badge=document.createElement('div');
+    badge.textContent=ex.n||'FR';
+    badge.style.cssText='position:absolute;left:'+pct+';top:50%;transform:translate(-50%,-50%);'
+      +'font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;'
+      +'background:var(--panel);border:1.5px solid var(--border);color:rgba(255,255,255,.8);'
       +'padding:2px 5px;border-radius:4px;white-space:nowrap;min-width:22px;text-align:center;z-index:11;';
-    ov.appendChild(bg);
+    if(!ex.n)badge.style.cssText+=';background:rgba(228,3,46,.12);border-color:rgba(228,3,46,.35);color:var(--red);font-size:8px;';
+    overlay.appendChild(badge);
   });
 
-  var lanes=document.createElement('div');lanes.className='a8-lanes';
-  lanes.appendChild(lN);lanes.appendChild(lS);
-  outer.appendChild(lanes);outer.appendChild(ov);
-  zone.appendChild(outer);
+  outer.appendChild(lanes);
+  outer.appendChild(overlay);
+  section.appendChild(outer);
 
-  /* Noms lisibles sur UNE SEULE ligne */
-  var nm=document.createElement('div');
-  nm.style.cssText='position:relative;height:24px;margin:7px 8px 0;overflow:visible;';
-  AX.forEach(function(ex,i){
-    var pct=((ex.km-km0)/kmT*100).toFixed(2)+'%';
+  /* Noms sous la bande */
+  var namesEl=document.createElement('div');
+  namesEl.className='a8-exit-names';
+  exits.forEach(function(ex){
+    var pct=((ex.km-km0)/kmTotal*100).toFixed(3)+'%';
     var el=document.createElement('div');
-    el.style.cssText='position:absolute;left:'+pct+';top:0;transform:translateX(-50%);'
-      +'display:flex;flex-direction:column;align-items:center;gap:2px;';
-    var tk=document.createElement('div');
-    tk.style.cssText='width:1px;height:5px;background:rgba(255,255,255,.2);flex-shrink:0;';
-    var lb=document.createElement('span');
-    lb.textContent=ex.short;
-    lb.style.cssText='font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:800;'
-      +'color:rgba(255,255,255,.75);white-space:nowrap;letter-spacing:.03em;';
-    el.appendChild(tk);el.appendChild(lb);
-    nm.appendChild(el);
+    el.className='a8-exit-name-el';
+    el.style.left=pct;
+    el.innerHTML='<div class="a8-exit-name-tick"></div><span class="a8-exit-name-lbl">'+ex.short+'</span>';
+    namesEl.appendChild(el);
   });
-  zone.appendChild(nm);
-  /* ── Scroll wrap pour zoom/pan ── */
-  var scrollWrap=document.getElementById('a8-scroll-wrap');
-  if(!scrollWrap){
-    scrollWrap=document.createElement('div');
-    scrollWrap.id='a8-scroll-wrap';
-    scrollWrap.className='a8-scroll-wrap';
-    /* Drag to scroll */
-    var isDragging=false,startX=0,scrollLeft=0;
-    scrollWrap.addEventListener('mousedown',function(e){isDragging=true;startX=e.pageX-scrollWrap.offsetLeft;scrollLeft=scrollWrap.scrollLeft;scrollWrap.style.cursor='grabbing';});
-    scrollWrap.addEventListener('mouseleave',function(){isDragging=false;scrollWrap.style.cursor='grab';});
-    scrollWrap.addEventListener('mouseup',function(){isDragging=false;scrollWrap.style.cursor='grab';});
-    scrollWrap.addEventListener('mousemove',function(e){if(!isDragging)return;e.preventDefault();var x=e.pageX-scrollWrap.offsetLeft;var walk=(x-startX)*1.5;scrollWrap.scrollLeft=scrollLeft-walk;});
-  }
-  var inner=document.getElementById('a8-scroll-inner');
-  if(!inner){inner=document.createElement('div');inner.id='a8-scroll-inner';inner.className='a8-scroll-inner';}
-  inner.innerHTML='';
-  inner.style.width=A8_ZOOM_PCT+'%';
-  inner.appendChild(zone);
-  scrollWrap.innerHTML='';
-  scrollWrap.appendChild(inner);
-  wrap.appendChild(scrollWrap);;
+  section.appendChild(namesEl);
+  wrap.appendChild(section);
 
   /* Résumé */
-  function sumDir(st,lbl,ac,ar){
-    var h='<div class="a8-sum-dir"><span class="a8-dir-arrow '+ac+'" style="width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">'+ar+'</span><span class="a8-sum-label">'+lbl+'</span>';
-    if(st.b)h+='<span class="a8-sum-pill bloque">&#9679; '+st.b+' bloqu\u00e9'+(st.b>1?'s':'')+'</span>';
-    if(st.d)h+='<span class="a8-sum-pill dense">&#9679; '+st.d+' dense'+(st.d>1?'s':'')+'</span>';
-    if(st.r)h+='<span class="a8-sum-pill ralenti">&#9679; '+st.r+' ralenti'+(st.r>1?'s':'')+'</span>';
-    if(!st.b&&!st.d&&!st.r)h+='<span class="a8-sum-pill fluide">Trafic fluide</span>';
+  function sumPills(st,lbl,ac,arrow){
+    var h='<div class="a8-sum-dir"><span class="a8-dir-arrow '+ac+'" style="width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">'+arrow+'</span><span class="a8-sum-label">'+lbl+'</span>';
+    if(st.bloque >0)h+='<span class="a8-sum-pill bloque">&#9679; '+st.bloque+' bloqué'+(st.bloque>1?'s':'')+'</span>';
+    if(st.dense  >0)h+='<span class="a8-sum-pill dense">&#9679; '+st.dense+' dense'+(st.dense>1?'s':'')+'</span>';
+    if(st.ralenti>0)h+='<span class="a8-sum-pill ralenti">&#9679; '+st.ralenti+' ralenti'+(st.ralenti>1?'s':'')+'</span>';
+    if(!st.bloque&&!st.dense&&!st.ralenti)h+='<span class="a8-sum-pill fluide">Trafic fluide</span>';
     return h+'</div>';
   }
-  var sm=document.createElement('div');sm.className='a8-summary';
-  sm.innerHTML=sumDir(stN,'Vers Saint-Tropez','st','&#8592;')+sumDir(stS,'Vers Italie','it','&#8594;');
-  wrap.appendChild(sm);
-  var u=document.getElementById('a8-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
+  var sumEl=document.createElement('div');
+  sumEl.className='a8-summary';
+  sumEl.innerHTML=sumPills(statsN,'Vers Saint-Tropez','st','&#8592;')+sumPills(statsS,'Vers Italie','it','&#8594;');
+  wrap.appendChild(sumEl);
+
+  var u=document.getElementById('a8-upd');
+  if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
 }
 
 function loadA8Traffic(){
-  var wrap=document.getElementById('a8-timeline-wrap');if(!wrap)return;
-  var zb=document.createElement('div');zb.className='a8-zoom-bar';
-  zb.innerHTML='<span class="a8-zoom-lbl">Zone</span>';
-  AZM.forEach(function(z){var btn=document.createElement('button');btn.className='a8-zoom-btn'+(z.id===A8Z?' active':'');btn.textContent=z.label;btn.onclick=function(){A8Z=z.id;loadA8Traffic();};zb.appendChild(btn);});
-  wrap.innerHTML='<div class="a8-loading">Chargement trafic A8\u2026</div>';wrap.prepend(zb);
-  Promise.all([
-    Promise.all(AP.map(function(p){return fetchSp(p.lat,p.lon);})),
-    Promise.all(AP.map(function(p){return fetchSp(p.lat+0.0007,p.lon+0.0007);}))
-  ]).then(function(r){drawRoad(getIdxs(),r[0],r[1]);})
-    .catch(function(e){wrap.innerHTML='<div class="a8-loading" style="color:#ff8080">Erreur: '+e.message+'</div>';});
+  var wrap=document.getElementById('a8-timeline-wrap');
+  if(!wrap)return;
+  wrap.innerHTML='<div class="a8-loading">Chargement trafic A8…</div>';
+  /* Reconstruire le zoom bar pendant le chargement */
+  buildZoomBar(wrap.querySelector('.a8-zoom-bar')||{appendChild:function(){}});
+
+  var idxs=getIdxs();
+  if(!idxs.length){wrap.innerHTML='<div class="a8-loading">Zone non disponible</div>';return;}
+
+  var sf=A8_PROBES.map(function(p){return fetchSeg(p.south.lat,p.south.lon);});
+  var nf=A8_PROBES.map(function(p){return fetchSeg(p.north.lat,p.north.lon);});
+  Promise.all([Promise.all(sf),Promise.all(nf)]).then(function(r){
+    renderRoad(idxs,r[0],r[1]);
+  }).catch(function(e){
+    if(wrap)wrap.innerHTML='<div class="a8-loading" style="color:#ff8080">Erreur: '+e.message+'</div>';
+  });
 }
 
-/* ══ TRAFIC MONACO ══ */
-var MCO_PREV={};  /* Stockage des lectures précédentes pour tendance */
+/* Charger quand le tab trafic est visible */
+function initA8IfVisible(){
+  var wrap=document.getElementById('a8-timeline-wrap');
+  if(wrap&&wrap.offsetParent!==null){
+    loadA8Traffic();
+  } else {
+    setTimeout(initA8IfVisible,500);
+  }
+}
+document.addEventListener('DOMContentLoaded',function(){setTimeout(initA8IfVisible,800);});
+setInterval(function(){
+  var wrap=document.getElementById('a8-timeline-wrap');
+  if(wrap&&wrap.offsetParent!==null)loadA8Traffic();
+},300000);
+function refreshA8Traffic(){loadA8Traffic();}
+function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
+</script>
 
+
+<button class="ed-fab" onclick="edOpen()" title="Editeur de texte">&#9998;</button>
+<div class="ed-ov" id="ed-ov">
+  <div class="ed-modal" id="ed-modal">
+    <div class="ed-head" id="ed-drag"><span>&#9998;</span><span class="ed-head-t">Editeur de texte</span><button class="ed-close" onclick="edClose()">&#10005;</button></div>
+    <div class="ed-tb">
+      <select class="ed-sel" onchange="edc('formatBlock',this.value);this.blur()"><option value="p">Paragraphe</option><option value="h1">Titre 1</option><option value="h2">Titre 2</option><option value="h3">Titre 3</option><option value="blockquote">Citation</option></select>
+      <select class="ed-sel" style="width:54px" onchange="edc('fontSize',this.value);this.blur()"><option value="2">10</option><option value="3">12</option><option value="4" selected>14</option><option value="5">18</option><option value="6">24</option><option value="7">36</option></select>
+      <div class="ed-div"></div>
+      <button class="eb" onclick="edc('bold')"><b>G</b></button><button class="eb" onclick="edc('italic')"><i>I</i></button><button class="eb" onclick="edc('underline')"><u>S</u></button><button class="eb" onclick="edc('strikeThrough')"><s>R</s></button>
+      <div class="ed-div"></div>
+      <button class="eb" onclick="edPick('foreColor')" style="border-bottom:2px solid #E4032E">A</button>
+      <button class="eb" onclick="edPick('hiliteColor')" style="background:rgba(255,214,0,.2)">&#9646;</button>
+      <div class="ed-div"></div>
+      <button class="eb" onclick="edc('justifyLeft')">&#8676;</button><button class="eb" onclick="edc('justifyCenter')">&#9632;</button><button class="eb" onclick="edc('justifyRight')">&#8677;</button>
+      <div class="ed-div"></div>
+      <button class="eb" onclick="edc('insertUnorderedList')">&#8226;</button><button class="eb" onclick="edc('insertOrderedList')">1.</button>
+      <button class="eb" onclick="edc('outdent')">&#8676;&#8676;</button><button class="eb" onclick="edc('indent')">&#8677;&#8677;</button>
+      <div class="ed-div"></div>
+      <button class="eb" onclick="edLink()">&#128279;</button><button class="eb" onclick="edTable()">&#9783;</button>
+      <div class="ed-div"></div>
+      <button class="eb" onclick="edc('undo')">&#8630;</button><button class="eb" onclick="edc('redo')">&#8631;</button>
+      <button class="eb" onclick="edc('removeFormat')">&#9003;</button>
+      <button class="eb" onclick="edClear()" style="color:#ff8080">&#10060;</button>
+    </div>
+    <input type="color" id="ed-cp" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;">
+    <div class="ed-body"><div id="ed-doc" contenteditable="true" spellcheck="true"></div></div>
+    <div class="ed-foot">
+      <span class="ed-wc" id="ed-wc">0 mot</span>
+      <button class="ed-act pr" onclick="edPrint()">&#128438; Imprimer</button>
+      <button class="ed-act cp" onclick="edCopy()">&#128203; Copier</button>
+      <button class="ed-act sv" onclick="edSave()">&#128190; Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── TomTom Maps SDK Monaco ── */
+if(!document.querySelector('link[href*="maps-sdk"]')){
+  var l=document.createElement('link');l.rel='stylesheet';
+  l.href='https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps.css';
+  document.head.appendChild(l);
+}
+if(!window._ttScriptLoaded){
+  window._ttScriptLoaded=true;
+  var s=document.createElement('script');
+  s.src='https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js';
+  document.head.appendChild(s);
+}
+
+/* ── Monaco Axes ── */
+var MONACO_AXES=[{"id": "alb1", "name": "Bd Albert-Ier", "cat": "boulevard", "lat": 43.731, "lon": 7.4182}, {"id": "lou2", "name": "Bd Louis-II", "cat": "boulevard", "lat": 43.7345, "lon": 7.416}, {"id": "rain3", "name": "Bd Rainier-III", "cat": "boulevard", "lat": 43.7307, "lon": 7.4197}, {"id": "moul", "name": "Bd des Moulins", "cat": "boulevard", "lat": 43.7492, "lon": 7.4312}, {"id": "pcha", "name": "Bd Psse-Charlotte", "cat": "boulevard", "lat": 43.7448, "lon": 7.4169}, {"id": "oste", "name": "Av. d'Ostende", "cat": "boulevard", "lat": 43.7305, "lon": 7.4215}, {"id": "cost", "name": "Av. de la Costa", "cat": "boulevard", "lat": 43.7316, "lon": 7.4235}, {"id": "pgra", "name": "Av. Psse-Grace", "cat": "boulevard", "lat": 43.7382, "lon": 7.4302}, {"id": "jard", "name": "Bd Jardin Exotique", "cat": "boulevard", "lat": 43.7352, "lon": 7.4119}, {"id": "pisc", "name": "Route de la Piscine", "cat": "boulevard", "lat": 43.7455, "lon": 7.422}, {"id": "tl2", "name": "Tunnel Louis-II", "cat": "tunnel", "lat": 43.7351, "lon": 7.4168}, {"id": "tfair", "name": "Tunnel Fairmont", "cat": "tunnel", "lat": 43.7408, "lon": 7.4287}, {"id": "tr3", "name": "Tunnel Rainier-III", "cat": "tunnel", "lat": 43.7315, "lon": 7.4188}, {"id": "tje", "name": "Tunnel Jardin Exo.", "cat": "tunnel", "lat": 43.7356, "lon": 7.4118}, {"id": "tcol", "name": "Tunnel de la Colle", "cat": "tunnel", "lat": 43.7442, "lon": 7.4143}, {"id": "tcan", "name": "Tunnel Canton", "cat": "tunnel", "lat": 43.7352, "lon": 7.4158}, {"id": "trno", "name": "Tunnel Rocher-Noghès", "cat": "tunnel", "lat": 43.7331, "lon": 7.4193}, {"id": "tsd", "name": "Tunnel Ste-Dévote", "cat": "tunnel", "lat": 43.7339, "lon": 7.4172}, {"id": "tport", "name": "Tunnel du Portier", "cat": "tunnel", "lat": 43.7321, "lon": 7.4219}, {"id": "tcas", "name": "Tunnel Casino/Costa", "cat": "tunnel", "lat": 43.739, "lon": 7.427}, {"id": "marq", "name": "Liaison Marquet", "cat": "tunnel", "lat": 43.7346, "lon": 7.415}, {"id": "basse", "name": "Basse Corniche", "cat": "corniche", "lat": 43.728, "lon": 7.395}, {"id": "moyen", "name": "Moyenne Corniche", "cat": "corniche", "lat": 43.739, "lon": 7.371}, {"id": "grande", "name": "Grande Corniche", "cat": "corniche", "lat": 43.76, "lon": 7.39}, {"id": "a500", "name": "A500 / Accès A8", "cat": "corniche", "lat": 43.733, "lon": 7.4163}];
+var MCO_PREV={};
+var A8K_MCO='nFt8c40zRLaLYYghcApBurt0ZyK7FIbA';
+var SP_LBL={fluide:'Fluide',ralenti:'Ralenti',dense:'Dense',bloque:'Bloqué',inconnu:'N/A'};
+function spClsMco(c,f){if(!f||!c)return'inconnu';var r=c/f;if(r>=0.75)return'fluide';if(r>=0.55)return'ralenti';if(r>=0.35)return'dense';return'bloque';}
+function fetchMcoSeg(lat,lon){
+  return fetch('https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json?point='+lat.toFixed(5)+','+lon.toFixed(5)+'&unit=KMPH&key='+A8K_MCO,{headers:{Accept:'application/json'}})
+    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
+    .then(function(d){var f=d.flowSegmentData;return f&&f.currentSpeed?{cur:f.currentSpeed,ff:f.freeFlowSpeed||f.currentSpeed}:{cur:0,ff:0};})
+    .catch(function(){return{cur:0,ff:0};});
+}
 function fetchMonaco(){
-  var el=document.getElementById('monaco-traffic-body');
-  if(!el)return;
-  el.innerHTML='<div class="a8-loading">Chargement trafic Monaco\u2026</div>';
-
+  var el=document.getElementById('monaco-traffic-body');if(!el)return;
+  el.innerHTML='<div class="a8-loading">Chargement…</div>';
   var now=Date.now();
-  /* Essayer de restaurer les données précédentes */
   try{var s=localStorage.getItem('mco_prev');if(s)MCO_PREV=JSON.parse(s);}catch(e){}
-
-  Promise.all(MONACO_AXES.map(function(ax){
-    return fetchSp(ax.lat,ax.lon).then(function(d){return{ax:ax,d:d};});
-  })).then(function(results){
-    /* Sauvegarder comme précédent */
+  Promise.all(MONACO_AXES.map(function(ax){return fetchMcoSeg(ax.lat,ax.lon).then(function(d){return{ax:ax,d:d};});}))
+  .then(function(results){
     var newPrev={};
     results.forEach(function(r){newPrev[r.ax.id]={cur:r.d.cur,ff:r.d.ff,ts:now};});
-
-    /* Grouper par catégorie */
-    var cats={
-      boulevard:{label:'Boulevards & Avenues',items:[]},
-      tunnel:   {label:'Tunnels',             items:[]},
-      corniche: {label:'Cornishes & Accès',   items:[]},
-    };
+    var cats={boulevard:{label:'Boulevards & Avenues',items:[]},tunnel:{label:'Tunnels',items:[]},corniche:{label:'Cornishes & Accès',items:[]}};
     results.forEach(function(r){
-      var cls=spCls(r.d.cur,r.d.ff);
-      var prev=MCO_PREV[r.ax.id];
-      var trend='';
-      if(prev&&prev.ff>0&&r.d.ff>0){
-        var rNew=r.d.cur/r.d.ff, rOld=prev.cur/prev.ff;
-        var diff=rNew-rOld;
-        if(diff>0.08)trend='&#8593;'; /* amélioration */
-        else if(diff<-0.08)trend='&#8595;'; /* dégradation */
-        else trend='&#8594;'; /* stable */
-      }
+      var cls=spClsMco(r.d.cur,r.d.ff);
+      var prev=MCO_PREV[r.ax.id],trend='';
+      if(prev&&prev.ff>0&&r.d.ff>0){var rN=r.d.cur/r.d.ff,rO=prev.cur/prev.ff,diff=rN-rO;trend=diff>0.08?'↑':diff<-0.08?'↓':'→';}
       cats[r.ax.cat].items.push({ax:r.ax,d:r.d,cls:cls,trend:trend});
     });
-
-    /* Stocker pour la prochaine fois */
-    MCO_PREV=newPrev;
-    try{localStorage.setItem('mco_prev',JSON.stringify(newPrev));}catch(e){}
-
-    /* Construire les 3 colonnes côte à côte */
+    MCO_PREV=newPrev;try{localStorage.setItem('mco_prev',JSON.stringify(newPrev));}catch(e){}
     function colHtml(cat){
       var h='<div><div class="mco-col-title">'+cat.label+'</div>';
       cat.items.forEach(function(item){
-        var spd=item.d.cur>0?item.d.cur+' km/h':'';
-        var trendCls=item.trend==='&#8593;'?'up':item.trend==='&#8595;'?'dn':'eq';
-        h+='<div class="mco-row">'
-          +'<div class="mco-dot '+item.cls+'"></div>'
+        var trendCls=item.trend==='↑'?'up':item.trend==='↓'?'dn':'eq';
+        h+='<div class="mco-row"><div class="mco-dot '+item.cls+'"></div>'
           +'<div class="mco-name">'+item.ax.name+'</div>'
           +'<span class="mco-flu '+item.cls+'">'+SP_LBL[item.cls]+'</span>'
           +(item.trend?'<span class="mco-trend '+trendCls+'">'+item.trend+'</span>':'<span class="mco-trend"></span>')
@@ -2060,164 +1929,98 @@ function fetchMonaco(){
       });
       return h+'</div>';
     }
-
-    el.innerHTML='<div class="mco-inner">'
-      +colHtml(cats.boulevard)
-      +colHtml(cats.tunnel)
-      +colHtml(cats.corniche)
-      +'</div>';
-    var u=document.getElementById('monaco-upd');
-    if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
-  }).catch(function(e){
-    el.innerHTML='<div class="a8-loading" style="color:#ff8080">Erreur: '+e.message+'</div>';
+    el.innerHTML='<div class="mco-inner">'+colHtml(cats.boulevard)+colHtml(cats.tunnel)+colHtml(cats.corniche)+'</div>';
+    var u=document.getElementById('monaco-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
   });
 }
 
-function refreshA8Traffic(){loadA8Traffic();}
-function a8ZoomIn(){
-  A8_ZOOM_PCT=Math.min(A8_ZOOM_PCT+50,500);
-  var inner=document.getElementById('a8-scroll-inner');
-  if(inner)inner.style.width=A8_ZOOM_PCT+'%';
-  var lbl=document.getElementById('a8-zc-pct');
-  if(lbl)lbl.textContent=A8_ZOOM_PCT+'%';
+/* ── Monaco Map ── */
+var MONACO_MAP=null,MCO_MAP_KEY='Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
+var _mcoMapDone=false;
+function initMonacoMap(){
+  var el=document.getElementById('monaco-map');if(!el||MONACO_MAP)return;
+  if(typeof tt==='undefined'){setTimeout(initMonacoMap,600);return;}
+  try{
+    MONACO_MAP=tt.map({key:MCO_MAP_KEY,container:'monaco-map',center:[7.4246,43.7384],zoom:14,language:'fr-FR',style:'tomtom://vector/1/basic-night',stylesVisibility:{trafficFlow:true,trafficIncidents:true}});
+    MONACO_MAP.addControl(new tt.NavigationControl(),'bottom-right');
+    MONACO_MAP.on('load',function(){MONACO_MAP.fitBounds([[7.4060,43.7240],[7.4430,43.7510]],{padding:20,animate:false});});
+    var u=document.getElementById('monaco-map-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
+  }catch(err){
+    var el2=document.getElementById('monaco-map');
+    if(el2)el2.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#ff8080;font-family:monospace;font-size:12px;">'+err.message+'</div>';
+  }
 }
-function a8ZoomOut(){
-  A8_ZOOM_PCT=Math.max(A8_ZOOM_PCT-50,100);
-  var inner=document.getElementById('a8-scroll-inner');
-  if(inner)inner.style.width=A8_ZOOM_PCT+'%';
-  var lbl=document.getElementById('a8-zc-pct');
-  if(lbl)lbl.textContent=A8_ZOOM_PCT+'%';
+function refreshMonacoMap(){
+  if(!MONACO_MAP){initMonacoMap();return;}
+  try{
+    MONACO_MAP.setStylesVisibility({trafficFlow:false,trafficIncidents:false});
+    setTimeout(function(){MONACO_MAP.setStylesVisibility({trafficFlow:true,trafficIncidents:true});var u=document.getElementById('monaco-map-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});},300);
+  }catch(e){}
 }
-function a8ZoomReset(){
-  A8_ZOOM_PCT=100;
-  var inner=document.getElementById('a8-scroll-inner');
-  if(inner){inner.style.width='100%';}
-  var sw=document.getElementById('a8-scroll-wrap');
-  if(sw)sw.scrollLeft=0;
-  var lbl=document.getElementById('a8-zc-pct');
-  if(lbl)lbl.textContent='100%';
+function maybeInitMonacoMap(){
+  if(_mcoMapDone)return;
+  var el=document.getElementById('monaco-map');
+  if(el&&el.offsetParent!==null){_mcoMapDone=true;initMonacoMap();}
 }
-function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
+document.addEventListener('DOMContentLoaded',function(){setTimeout(maybeInitMonacoMap,1500);});
+setInterval(function(){if(!_mcoMapDone)maybeInitMonacoMap();},600);
+setInterval(refreshMonacoMap,300000);
+setInterval(fetchMonaco,120000);
 </script>
-
 <script>
-
 document.querySelectorAll('.section-card').forEach(function(card){
   var h=card.querySelector('.card-h');if(!h)return;
-  var btn=document.createElement('button');
-  btn.className='collapse-btn';btn.title='Reduire/Agrandir';
+  var btn=document.createElement('button');btn.className='collapse-btn';btn.title='Reduire';
   btn.innerHTML='<span class="chv">&#8964;</span>';
   btn.onclick=function(e){e.stopPropagation();card.classList.toggle('collapsed');};
   h.appendChild(btn);
 });
+var A8_ZOOM_PCT=100;
+function a8ZoomIn(){A8_ZOOM_PCT=Math.min(A8_ZOOM_PCT+50,500);_a8ZoomApply();}
+function a8ZoomOut(){A8_ZOOM_PCT=Math.max(A8_ZOOM_PCT-50,100);_a8ZoomApply();}
+function a8ZoomReset(){A8_ZOOM_PCT=100;_a8ZoomApply();var sw=document.getElementById('a8-scroll-wrap');if(sw)sw.scrollLeft=0;}
+function _a8ZoomApply(){var i=document.getElementById('a8-scroll-inner');if(i)i.style.width=A8_ZOOM_PCT+'%';var l=document.getElementById('a8-zc-pct');if(l)l.textContent=A8_ZOOM_PCT+'%';}
 var edColorMode='foreColor';
-function edOpen(){
-  document.getElementById('ed-ov').classList.add('open');
-  setTimeout(function(){document.getElementById('ed-doc').focus();},100);
-  var d=localStorage.getItem('rm_draft');
-  if(d&&!document.getElementById('ed-doc').innerHTML)document.getElementById('ed-doc').innerHTML=d;
-}
+function edOpen(){document.getElementById('ed-ov').classList.add('open');setTimeout(function(){document.getElementById('ed-doc').focus();},100);var d=localStorage.getItem('rm_draft');if(d&&!document.getElementById('ed-doc').innerHTML)document.getElementById('ed-doc').innerHTML=d;}
 function edClose(){document.getElementById('ed-ov').classList.remove('open');}
 function edc(cmd,val){document.getElementById('ed-doc').focus();document.execCommand(cmd,false,val||null);}
 function edPick(mode){edColorMode=mode;var p=document.getElementById('ed-cp');p.onchange=function(){edc(mode,p.value);};p.click();}
 function edLink(){var u=prompt('URL :','https://');if(u)edc('createLink',u);}
 function edTable(){var r=parseInt(prompt('Lignes :','3'));var col=parseInt(prompt('Colonnes :','3'));if(!r||!col)return;var h='<table>';for(var i=0;i<r;i++){h+='<tr>';for(var j=0;j<col;j++)h+='<td>&nbsp;</td>';h+='</tr>';}h+='</table><p></p>';edc('insertHTML',h);}
-function edImg(){var u=prompt('URL image :','https://');if(u)edc('insertHTML','<img src="'+u+'" style="max-width:100%"><p></p>');}
-function edPrint(){var w=window.open('','_blank');w.document.write('<html><head><style>body{font-family:sans-serif;max-width:800px;margin:40px auto;font-size:14px;line-height:1.7}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px}blockquote{border-left:3px solid #E4032E;padding-left:12px;color:#666}</style></head><body>'+document.getElementById('ed-doc').innerHTML+'
-<script>
-/* == Monaco Map == */
-var MONACO_MAP = null;
-var MONACO_MAP_KEY = 'Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
-
-function initMonacoMap(){
-  var container = document.getElementById('monaco-map');
-  if(!container || MONACO_MAP) return;
-  if(typeof tt === 'undefined'){
-    setTimeout(initMonacoMap, 800);
-    return;
-  }
-  try {
-    MONACO_MAP = tt.map({
-      key: MONACO_MAP_KEY,
-      container: 'monaco-map',
-      center: [7.4246, 43.7384], /* [lon, lat] Monaco */
-      zoom: 14,
-      language: 'fr-FR',
-      style: 'tomtom://vector/1/basic-night',
-      stylesVisibility: {
-        trafficFlow:      true,
-        trafficIncidents: true,
-      },
-    });
-    MONACO_MAP.addControl(new tt.NavigationControl(), 'bottom-right');
-    MONACO_MAP.on('load', function(){
-      /* Zoomer sur toute la principauté */
-      MONACO_MAP.fitBounds([[7.4060, 43.7240],[7.4430, 43.7510]], {padding: 20, animate: false});
-    });
-    var u = document.getElementById('monaco-map-upd');
-    if(u) u.textContent = new Date().toLocaleTimeString('fr-FR', {hour12:false});
-  } catch(err) {
-    var el = document.getElementById('monaco-map');
-    if(el) el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:monospace;font-size:12px;color:#ff8080;flex-direction:column;gap:8px;"><span>Carte indisponible</span><small>'+err.message+'</small></div>';
-  }
+function edPrint(){
+  var html=document.getElementById('ed-doc').innerHTML;
+  var w=window.open('','_blank');if(!w)return;
+  w.document.open();
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>'
+    +'body{font-family:sans-serif;max-width:800px;margin:40px auto;font-size:14px;line-height:1.75}'
+    +'table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px 10px}'
+    +'blockquote{border-left:3px solid #E4032E;padding-left:14px;color:#666}'
+    +'h1,h2,h3{margin:.5em 0}a{color:#E4032E}'
+    +'</style></head><body>'+html+'</body></html>');
+  w.document.close();w.focus();setTimeout(function(){w.print();},300);
 }
-
-function refreshMonacoMap(){
-  if(!MONACO_MAP) { initMonacoMap(); return; }
-  /* Forcer le rechargement des tuiles trafic */
-  try {
-    MONACO_MAP.setStylesVisibility({ trafficFlow: false, trafficIncidents: false });
-    setTimeout(function(){
-      MONACO_MAP.setStylesVisibility({ trafficFlow: true, trafficIncidents: true });
-      var u = document.getElementById('monaco-map-upd');
-      if(u) u.textContent = new Date().toLocaleTimeString('fr-FR', {hour12:false});
-    }, 200);
-  } catch(e) {}
-}
-
-/* Démarrer quand le tab trafic est visible */
-var _monacoMapInitDone = false;
-function maybeInitMonacoMap(){
-  if(_monacoMapInitDone) return;
-  var el = document.getElementById('monaco-map');
-  if(el && el.offsetParent !== null){
-    _monacoMapInitDone = true;
-    initMonacoMap();
-  }
-}
-document.addEventListener('DOMContentLoaded', function(){
-  setTimeout(maybeInitMonacoMap, 1200);
-});
-setInterval(maybeInitMonacoMap, 500);
-setInterval(refreshMonacoMap, 300000);
-</script>
-</body></html>');w.document.close();w.focus();setTimeout(function(){w.print();},300);}
 function edCopy(){navigator.clipboard.writeText(document.getElementById('ed-doc').innerText).catch(function(){});}
 function edSave(){
   var html=document.getElementById('ed-doc').innerHTML;
   localStorage.setItem('rm_draft',html);
-  /* Télécharger en .html */
-  var blob=new Blob(['<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:sans-serif;max-width:860px;margin:40px auto;font-size:14px;line-height:1.75;padding:0 24px}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px 10px}blockquote{border-left:3px solid #E4032E;padding-left:14px;color:#666;margin:.5em 0}h1{font-size:2em}h2{font-size:1.5em}h3{font-size:1.2em}a{color:#E4032E}</style></head><body>'+html+'</body></html>'],{type:'text/html;charset=utf-8'});
+  var blob=new Blob(['<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:sans-serif;max-width:860px;margin:40px auto;font-size:14px;line-height:1.75;padding:0 24px}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px 10px}blockquote{border-left:3px solid #E4032E;padding-left:14px;color:#666}h1{font-size:2em}h2{font-size:1.5em}a{color:#E4032E}</style></head><body>'+html+'</body></html>'],{type:'text/html;charset=utf-8'});
   var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');
-  a.href=url;
-  var ts=new Date().toISOString().slice(0,16).replace('T','_').replace(':','-');
-  a.download='note_radio_monaco_'+ts+'.html';
-  document.body.appendChild(a);a.click();
-  setTimeout(function(){URL.revokeObjectURL(url);document.body.removeChild(a);},1000);
+  var a=document.createElement('a');a.href=url;
+  a.download='note_'+new Date().toISOString().slice(0,16).replace('T','_').replace(':','-')+'.html';
+  document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(url);document.body.removeChild(a);},1000);
 }
-function edClear(){if(confirm('Vider le contenu ?')){document.getElementById('ed-doc').innerHTML='';localStorage.removeItem('rm_draft');}}
-document.getElementById('ed-doc').addEventListener('input',function(){
-  var t=this.innerText.trim();var w=t?t.split(/\s+/).length:0;
-  document.getElementById('ed-wc').textContent=w+' mot'+(w>1?'s':'')+' \u00b7 '+t.length+' caract\u00e8re'+(t.length>1?'s':'');
-});
+function edClear(){if(confirm('Vider ?')){document.getElementById('ed-doc').innerHTML='';localStorage.removeItem('rm_draft');}}
+document.getElementById('ed-doc').addEventListener('input',function(){var t=this.innerText.trim();var w=t?t.split(/\s+/).length:0;document.getElementById('ed-wc').textContent=w+' mot'+(w>1?'s':'')+' · '+t.length+' car.';});
 (function(){var m=document.getElementById('ed-modal'),hd=document.getElementById('ed-drag'),ox=0,oy=0,lx=0,ly=0,on=false;
 hd.addEventListener('mousedown',function(e){on=true;ox=e.clientX-lx;oy=e.clientY-ly;document.addEventListener('mousemove',mv);document.addEventListener('mouseup',mu);});
 function mv(e){if(!on)return;lx=e.clientX-ox;ly=e.clientY-oy;m.style.position='fixed';m.style.left=lx+'px';m.style.top=ly+'px';m.style.transform='none';}
 function mu(){on=false;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',mu);}
 })();
-
+/* Appel Monaco au démarrage */
+document.addEventListener('DOMContentLoaded',function(){
+  setTimeout(function(){if(typeof fetchMonaco==='function')fetchMonaco();},1000);
+});
+window._initA8=true;
 </script>
-
 </body>
 </html>
