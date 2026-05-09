@@ -1166,6 +1166,54 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .ed-act.sv:hover{opacity:.85;}
 .ed-act.pr,.ed-act.cp{background:rgba(255,255,255,.07);color:var(--muted);}
 
+
+/* MONACO TRAFFIC */
+.mco-cat-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);padding:12px 20px 6px;
+  border-top:1px solid var(--border);
+}
+.mco-cat-title:first-child{border-top:none;}
+.mco-grid{padding:0 12px 4px;}
+.mco-row{
+  display:grid;
+  grid-template-columns:1fr auto auto auto;
+  align-items:center;gap:10px;
+  padding:7px 8px;
+  border-radius:6px;
+  transition:background .1s;
+}
+.mco-row:hover{background:rgba(255,255,255,.03);}
+.mco-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:700;letter-spacing:.04em;
+  color:rgba(255,255,255,.8);
+}
+.mco-pill{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:3px 12px;border-radius:14px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  min-width:80px;
+}
+.mco-pill.fluide {background:rgba(34,192,94,.15);color:#22C05E;border:1px solid rgba(34,192,94,.3);}
+.mco-pill.ralenti{background:rgba(255,214,0,.12); color:#FFD600;border:1px solid rgba(255,214,0,.3);}
+.mco-pill.dense  {background:rgba(255,107,0,.15); color:#FF8C00;border:1px solid rgba(255,107,0,.3);}
+.mco-pill.bloque {background:rgba(232,16,16,.15); color:#ff5252;border:1px solid rgba(232,16,16,.3);}
+.mco-pill.inconnu{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--border);}
+.mco-spd{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;color:var(--muted);
+  min-width:52px;text-align:right;
+}
+.mco-trend{
+  font-size:13px;font-weight:700;min-width:16px;text-align:center;
+}
+.mco-trend.up{color:#22C05E;}
+.mco-trend.dn{color:#ff5252;}
+.mco-trend.eq{color:var(--muted);}
+
 </style>
 </head>
 <body>
@@ -1233,7 +1281,22 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       </div>
       <div id="a8-timeline-wrap" class="a8-tl-wrap"><div class="a8-tl-loading">Chargement trafic A8...</div></div>
       <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a><span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span></div>
+    </
+    <!-- MONACO TRAFFIC -->
+    <div class="section-card" style="padding-bottom:0">
+      <div class="card-h">
+        <span style="font-size:15px">&#127467;&#127462;</span>
+        <span class="card-t">Trafic Monaco — Axes principaux</span>
+        <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
+        <span id="monaco-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
+        <button class="rbtn" onclick="fetchMonaco()">&#8635; Actualiser</button>
+      </div>
+      <div id="monaco-traffic-body">
+        <div class="a8-loading">Chargement…</div>
+      </div>
     </div>
+
+div>
 
     <div class="section-card">
       <div class="card-h"><span style="font-size:15px">&#128506;&#65039;</span><span class="card-t">Waze — Monaco</span><div class="pill" style="margin-left:10px"><span class="dot"></span>LIVE</div></div>
@@ -1371,7 +1434,7 @@ function switchTab(n){
   document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
   document.getElementById('tab-btn-'+n).classList.add('active');
   document.getElementById('tab-'+n).classList.add('active');
-  if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);traficLoaded=true;}
+  if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);setTimeout(fetchMonaco,1200);traficLoaded=true;}
   if(n==='weather'&&!weatherLoaded){switchWeather('am');loadWeatherAM();loadWeatherIDF();loadVigilance();weatherLoaded=true;}
 }
 function switchWeather(z){
@@ -1585,6 +1648,7 @@ function loadVigilance(){var el=document.getElementById('vig-body');if(!el)retur
 })();
 setInterval(function(){if(traficLoaded){loadBoard();if(!TEST_MODE)loadDis();}},60000);
 setInterval(function(){if(traficLoaded)loadTravel();},600000);
+setInterval(function(){if(traficLoaded)fetchMonaco();},120000);
 setInterval(function(){if(traficLoaded)loadA8Traffic();},300000);
 setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM();loadWeatherIDF();loadVigilance();}},300000);
 
@@ -1592,40 +1656,21 @@ setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM(
 </script>
 
 <script>
-/* == A8 Traffic v7 == */
+/* == A8 Traffic v8 == */
 var A8K='nFt8c40zRLaLYYghcApBurt0ZyK7FIbA', A8Z='full';
-var AX=[{"n": 36, "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725}, {"n": 37, "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82}, {"n": 38, "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89}, {"n": 39, "short": "Les Adrets", "km": 28, "lat": 43.52, "lon": 6.95}, {"n": 40, "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01}, {"n": 41, "short": "Cns Bocca", "km": 44, "lat": 43.553, "lon": 7.04}, {"n": 42, "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07}, {"n": 44, "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12}, {"n": 46, "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16}, {"n": 47, "short": "VL Centre", "km": 67, "lat": 43.635, "lon": 7.18}, {"n": 48, "short": "Cagnes Est", "km": 70, "lat": 43.655, "lon": 7.195}, {"n": 49, "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205}, {"n": 50, "short": "Nice Ouest", "km": 77, "lat": 43.675, "lon": 7.215}, {"n": 51, "short": "Nice Aéro", "km": 80, "lat": 43.665, "lon": 7.235}, {"n": 52, "short": "N.St-Isid.", "km": 83, "lat": 43.705, "lon": 7.265}, {"n": 54, "short": "Nice Nord", "km": 86, "lat": 43.72, "lon": 7.285}, {"n": 55, "short": "Ariane", "km": 89, "lat": 43.73, "lon": 7.31}, {"n": 56, "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39}, {"n": 57, "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42}, {"n": 58, "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47}, {"n": 59, "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5}, {"n": 0, "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57}], AZM=[{"id": "full", "label": "A8 complète", "from": 36, "to": 0}, {"id": "cannes", "label": "Cannes 40→44", "from": 40, "to": 44}, {"id": "antibes", "label": "Antibes 44→46", "from": 44, "to": 46}, {"id": "nice", "label": "Nice 49→55", "from": 49, "to": 55}, {"id": "monaco", "label": "Monaco/Menton 56→", "from": 56, "to": 0}];
+var AX=[{"n": 36, "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725}, {"n": 37, "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82}, {"n": 38, "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89}, {"n": 39, "short": "Les Adrets", "km": 28, "lat": 43.52, "lon": 6.95}, {"n": 40, "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01}, {"n": 41, "short": "Cns Bocca", "km": 44, "lat": 43.553, "lon": 7.04}, {"n": 42, "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07}, {"n": 44, "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12}, {"n": 46, "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16}, {"n": 47, "short": "VL Centre", "km": 67, "lat": 43.635, "lon": 7.18}, {"n": 48, "short": "Cagnes Est", "km": 70, "lat": 43.655, "lon": 7.195}, {"n": 49, "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205}, {"n": 50, "short": "Nice Ouest", "km": 77, "lat": 43.675, "lon": 7.215}, {"n": 51, "short": "Nice Aéro", "km": 80, "lat": 43.665, "lon": 7.235}, {"n": 52, "short": "N.St-Isid.", "km": 83, "lat": 43.705, "lon": 7.265}, {"n": 54, "short": "Nice Nord", "km": 86, "lat": 43.72, "lon": 7.285}, {"n": 55, "short": "Ariane", "km": 89, "lat": 43.73, "lon": 7.31}, {"n": 56, "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39}, {"n": 57, "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42}, {"n": 58, "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47}, {"n": 59, "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5}, {"n": 0, "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57}], AZM=[{"id": "full", "label": "A8 complète", "from": 36, "to": 0}, {"id": "cannes", "label": "Cannes", "from": 40, "to": 44}, {"id": "antibes", "label": "Antibes", "from": 44, "to": 46}, {"id": "nice", "label": "Nice", "from": 49, "to": 55}, {"id": "monaco", "label": "Monaco / Menton", "from": 56, "to": 0}];
+var MONACO_AXES=[{"id": "alb1", "name": "Bd Albert-Ier", "cat": "boulevard", "lat": 43.731, "lon": 7.4182}, {"id": "lou2", "name": "Bd Louis-II", "cat": "boulevard", "lat": 43.7345, "lon": 7.416}, {"id": "rain3", "name": "Bd Rainier-III", "cat": "boulevard", "lat": 43.7307, "lon": 7.4197}, {"id": "moul", "name": "Bd des Moulins", "cat": "boulevard", "lat": 43.7492, "lon": 7.4312}, {"id": "pcha", "name": "Bd Psse-Charlotte", "cat": "boulevard", "lat": 43.7448, "lon": 7.4169}, {"id": "oste", "name": "Av. d'Ostende", "cat": "boulevard", "lat": 43.7305, "lon": 7.4215}, {"id": "cost", "name": "Av. de la Costa", "cat": "boulevard", "lat": 43.7316, "lon": 7.4235}, {"id": "pgra", "name": "Av. Psse-Grace", "cat": "boulevard", "lat": 43.7382, "lon": 7.4302}, {"id": "jard", "name": "Bd Jardin Exotique", "cat": "boulevard", "lat": 43.7352, "lon": 7.4119}, {"id": "pisc", "name": "Route de la Piscine", "cat": "boulevard", "lat": 43.7455, "lon": 7.422}, {"id": "tl2", "name": "Tunnel Louis-II", "cat": "tunnel", "lat": 43.7351, "lon": 7.4168}, {"id": "tfair", "name": "Tunnel Fairmont", "cat": "tunnel", "lat": 43.7408, "lon": 7.4287}, {"id": "tr3", "name": "Tunnel Rainier-III", "cat": "tunnel", "lat": 43.7315, "lon": 7.4188}, {"id": "tje", "name": "Tunnel Jardin Exo.", "cat": "tunnel", "lat": 43.7356, "lon": 7.4118}, {"id": "tcol", "name": "Tunnel de la Colle", "cat": "tunnel", "lat": 43.7442, "lon": 7.4143}, {"id": "tcan", "name": "Tunnel Canton", "cat": "tunnel", "lat": 43.7352, "lon": 7.4158}, {"id": "trno", "name": "Tunnel Rocher-Noghès", "cat": "tunnel", "lat": 43.7331, "lon": 7.4193}, {"id": "tsd", "name": "Tunnel Ste-Dévote", "cat": "tunnel", "lat": 43.7339, "lon": 7.4172}, {"id": "tport", "name": "Tunnel du Portier", "cat": "tunnel", "lat": 43.7321, "lon": 7.4219}, {"id": "tcas", "name": "Tunnel Casino/Costa", "cat": "tunnel", "lat": 43.739, "lon": 7.427}, {"id": "marq", "name": "Liaison Marquet", "cat": "tunnel", "lat": 43.7346, "lon": 7.415}, {"id": "basse", "name": "Basse Corniche", "cat": "corniche", "lat": 43.728, "lon": 7.395}, {"id": "moyen", "name": "Moyenne Corniche", "cat": "corniche", "lat": 43.739, "lon": 7.371}, {"id": "grande", "name": "Grande Corniche", "cat": "corniche", "lat": 43.76, "lon": 7.39}, {"id": "a500", "name": "A500 / Accès A8", "cat": "corniche", "lat": 43.733, "lon": 7.4163}];
+var AP=(function(){var r=[];for(var i=0;i<AX.length-1;i++){var a=AX[i],b=AX[i+1];r.push({lat:(a.lat+b.lat)/2,lon:(a.lon+b.lon)/2});}return r;})();
 
-/* Sondes milieu de chaque section */
-var AP=(function(){
-  var r=[];
-  for(var i=0;i<AX.length-1;i++){
-    var a=AX[i],b=AX[i+1];
-    r.push({lat:(a.lat+b.lat)/2,lon:(a.lon+b.lon)/2});
-  }
-  return r;
-})();
-
-function spCls(c,f){
-  if(!f||!c)return'inconnu';
-  var r=c/f;
-  if(r>=0.75)return'fluide';
-  if(r>=0.55)return'ralenti';
-  if(r>=0.35)return'dense';
-  return'bloque';
-}
+function spCls(c,f){if(!f||!c)return'inconnu';var r=c/f;if(r>=0.75)return'fluide';if(r>=0.55)return'ralenti';if(r>=0.35)return'dense';return'bloque';}
 var SP_LBL={fluide:'Fluide',ralenti:'Ralenti',dense:'Dense',bloque:'Bloqu\u00e9',inconnu:'N/A'};
 var SP_COL={fluide:'#22C05E',ralenti:'#FFD600',dense:'#FF6B00',bloque:'#E81010',inconnu:'#2A2D3A'};
+var SP_TC ={fluide:'#22C05E',ralenti:'#FFD600',dense:'#FF8C00',bloque:'#ff5252',inconnu:'var(--muted)'};
 
 function fetchSp(lat,lon){
-  return fetch('https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json?point='
-    +lat.toFixed(5)+','+lon.toFixed(5)+'&unit=KMPH&key='+A8K,
-    {headers:{Accept:'application/json'}})
+  return fetch('https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json?point='+lat.toFixed(5)+','+lon.toFixed(5)+'&unit=KMPH&key='+A8K,{headers:{Accept:'application/json'}})
     .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
-    .then(function(d){
-      var f=d.flowSegmentData;
-      return f&&f.currentSpeed?{cur:f.currentSpeed,ff:f.freeFlowSpeed||f.currentSpeed}:{cur:0,ff:0};
-    })
+    .then(function(d){var f=d.flowSegmentData;return f&&f.currentSpeed?{cur:f.currentSpeed,ff:f.freeFlowSpeed||f.currentSpeed}:{cur:0,ff:0};})
     .catch(function(){return{cur:0,ff:0};});
 }
 
@@ -1641,32 +1686,35 @@ function getIdxs(){
   return r;
 }
 
-/* Calcule les bornes px d'une zone zoom par rapport au km total */
 function zonePct(z,km0,kmT){
-  /* trouver km de la borne from */
-  var exFrom=AX.find(function(e){return e.n===z.from;});
-  var exTo  =z.to===0?AX[AX.length-1]:AX.find(function(e){return e.n===z.to;});
-  if(!exFrom||!exTo)return null;
-  return{
-    left:((exFrom.km-km0)/kmT*100).toFixed(2)+'%',
-    width:((exTo.km-exFrom.km)/kmT*100).toFixed(2)+'%'
-  };
+  var exF=AX.find(function(e){return e.n===z.from;});
+  var exT=z.to===0?AX[AX.length-1]:AX.find(function(e){return e.n===z.to;});
+  if(!exF||!exT)return null;
+  return{left:((exF.km-km0)/kmT*100).toFixed(2)+'%',width:((exT.km-exF.km)/kmT*100).toFixed(2)+'%'};
 }
+
+/* ── Tooltip ── */
+var tipEl=null;
+function showTip(e,txt){
+  if(!tipEl){tipEl=document.createElement('div');tipEl.id='a8-tip';
+    tipEl.style.cssText='position:fixed;z-index:9999;background:rgba(10,12,18,.97);border:1px solid #232730;border-radius:8px;padding:7px 13px;font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:600;color:#fff;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.7);';
+    document.body.appendChild(tipEl);}
+  tipEl.textContent=txt;tipEl.style.display='block';
+  tipEl.style.left=(e.clientX+14)+'px';tipEl.style.top=(e.clientY-42)+'px';
+}
+function moveTip(e){if(tipEl&&tipEl.style.display!=='none'){tipEl.style.left=(e.clientX+14)+'px';tipEl.style.top=(e.clientY-42)+'px';}}
+function hideTip(){if(tipEl)tipEl.style.display='none';}
 
 function drawRoad(idxs,northD,southD){
   var wrap=document.getElementById('a8-timeline-wrap');
   if(!wrap)return;
   wrap.innerHTML='';
   if(!idxs.length){wrap.innerHTML='<div class="a8-loading">Aucune section</div>';return;}
-
   var exits=idxs.map(function(i){return AX[i];});
-  var last=AX[idxs[idxs.length-1]+1];
-  if(last)exits.push(last);
-  /* Toujours partir de la sortie 36 (km=0) pour que la bande commence au bord */
-  var km0=AX[0].km;  /* = 0 */
-  var kmT=AX[AX.length-1].km-km0; /* = 112 */
+  var last=AX[idxs[idxs.length-1]+1];if(last)exits.push(last);
+  var km0=AX[0].km,kmT=AX[AX.length-1].km-km0;
 
-  /* ── Zoom bar ── */
+  /* Zoom bar */
   var zb=document.createElement('div');zb.className='a8-zoom-bar';
   zb.innerHTML='<span class="a8-zoom-lbl">Zone</span>';
   AZM.forEach(function(z){
@@ -1678,92 +1726,77 @@ function drawRoad(idxs,northD,southD){
   });
   wrap.appendChild(zb);
 
-  /* ── Zone route ── */
   var zone=document.createElement('div');zone.className='a8-road-section';
-  var outer=document.createElement('div');
-  outer.className='a8-road-outer';
-  outer.style.cssText='position:relative;margin:0 8px;';
-
+  var outer=document.createElement('div');outer.className='a8-road-outer';outer.style.cssText='position:relative;margin:0 8px;';
   var lN=document.createElement('div');lN.className='a8-lane north';
   var lS=document.createElement('div');lS.className='a8-lane south';
+  var stN={f:0,r:0,d:0,b:0},stS={f:0,r:0,d:0,b:0};
 
-  var stN={f:0,r:0,d:0,b:0}, stS={f:0,r:0,d:0,b:0};
-
-  /* Construire les segments pour TOUTES les sections (vue complète) */
   for(var i=0;i<AX.length-1;i++){
     var ex0=AX[i],ex1=AX[i+1];
     var w=((ex1.km-ex0.km)/kmT*100).toFixed(2)+'%';
-    var dN=northD[i]||{cur:0,ff:0}, dS=southD[i]||{cur:0,ff:0};
-    var cN=spCls(dN.cur,dN.ff), cS=spCls(dS.cur,dS.ff);
-    var isInZoom=(idxs.indexOf(i)!==-1);
+    var dN=northD[i]||{cur:0,ff:0},dS=southD[i]||{cur:0,ff:0};
+    var cN=spCls(dN.cur,dN.ff),cS=spCls(dS.cur,dS.ff);
+    var isIn=(idxs.indexOf(i)!==-1);
     var ks={fluide:'f',ralenti:'r',dense:'d',bloque:'b'};
-    if(isInZoom){if(stN[ks[cN]]!==undefined)stN[ks[cN]]++;if(stS[ks[cS]]!==undefined)stS[ks[cS]]++;}
+    if(isIn){if(stN[ks[cN]]!==undefined)stN[ks[cN]]++;if(stS[ks[cS]]!==undefined)stS[ks[cS]]++;}
+    var dim=A8Z!=='full'&&!isIn?0.3:1;
     var tipN=ex1.short+' \u2192 '+ex0.short+' | '+SP_LBL[cN]+(dN.cur>0?' \u2014 '+dN.cur+' km/h':'');
     var tipS=ex0.short+' \u2192 '+ex1.short+' | '+SP_LBL[cS]+(dS.cur>0?' \u2014 '+dS.cur+' km/h':'');
-
-    function makeSeg(cls,tip,inZoom){
-      var s=document.createElement('div');
-      /* Sections hors zoom = légèrement assombries si zoom actif */
-      var opacity=(A8Z==='full'||inZoom)?1:0.4;
-      s.style.cssText='width:'+w+';height:100%;cursor:pointer;transition:filter .1s;'
-        +'background:'+SP_COL[cls]+';flex-shrink:0;opacity:'+opacity+';';
-      s.addEventListener('mouseenter',function(e){
-        s.style.filter='brightness(1.3)';
-        var t=document.getElementById('a8-tip');
-        if(!t){t=document.createElement('div');t.id='a8-tip';
-          t.style.cssText='position:fixed;z-index:9999;background:rgba(10,12,18,.97);border:1px solid #232730;border-radius:8px;padding:7px 13px;font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:600;color:#fff;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.7);';
-          document.body.appendChild(t);}
-        t.textContent=tip;t.style.display='block';
-        t.style.left=(e.clientX+14)+'px';t.style.top=(e.clientY-42)+'px';
-      });
-      s.addEventListener('mousemove',function(e){var t=document.getElementById('a8-tip');if(t){t.style.left=(e.clientX+14)+'px';t.style.top=(e.clientY-42)+'px';}});
-      s.addEventListener('mouseleave',function(){s.style.filter='';var t=document.getElementById('a8-tip');if(t)t.style.display='none';});
-      return s;
-    }
-    lN.appendChild(makeSeg(cN,tipN,isInZoom));
-    lS.appendChild(makeSeg(cS,tipS,isInZoom));
+    (function(cN_,cS_,tipN_,tipS_,dim_){
+      var sN=document.createElement('div');
+      sN.style.cssText='width:'+w+';height:100%;cursor:pointer;background:'+SP_COL[cN_]+';flex-shrink:0;opacity:'+dim_+';transition:filter .1s;';
+      sN.addEventListener('mouseenter',function(e){sN.style.filter='brightness(1.3)';showTip(e,tipN_);});
+      sN.addEventListener('mousemove',moveTip);sN.addEventListener('mouseleave',function(){sN.style.filter='';hideTip();});
+      var sS=document.createElement('div');
+      sS.style.cssText='width:'+w+';height:100%;cursor:pointer;background:'+SP_COL[cS_]+';flex-shrink:0;opacity:'+dim_+';transition:filter .1s;';
+      sS.addEventListener('mouseenter',function(e){sS.style.filter='brightness(1.3)';showTip(e,tipS_);});
+      sS.addEventListener('mousemove',moveTip);sS.addEventListener('mouseleave',function(){sS.style.filter='';hideTip();});
+      lN.appendChild(sN);lS.appendChild(sS);
+    })(cN,cS,tipN,tipS,dim);
   }
 
-  /* ── Overlay : ticks + badges numéros + encadrés de zone ── */
+  /* Overlay : ticks + badges + zone frames CLIQUABLES */
   var ov=document.createElement('div');
-  ov.style.cssText='position:absolute;top:-14px;bottom:0;left:0;right:0;pointer-events:none;z-index:10;';
+  ov.style.cssText='position:absolute;top:-16px;bottom:0;left:0;right:0;pointer-events:none;z-index:10;';
 
-  /* Encadrés des zones zoom (sauf "full") sur la vue complète */
   if(A8Z==='full'){
     AZM.forEach(function(z){
       if(z.id==='full')return;
-      var p=zonePct(z,km0,kmT);
-      if(!p)return;
+      var p=zonePct(z,km0,kmT);if(!p)return;
       var box=document.createElement('div');
       box.style.cssText='position:absolute;left:'+p.left+';width:'+p.width+';top:0;bottom:0;'
-        +'border:2px solid rgba(255,255,255,.35);border-radius:4px;box-sizing:border-box;'
-        +'pointer-events:none;';
-      /* Label de zone en haut de l'encadré */
+        +'border:2px solid rgba(255,255,255,.3);border-radius:4px;box-sizing:border-box;'
+        +'cursor:pointer;pointer-events:all;transition:border-color .15s;';
+      box.title='Zoomer sur '+z.label;
+      box.addEventListener('mouseenter',function(){box.style.borderColor='rgba(228,3,46,.7)';});
+      box.addEventListener('mouseleave',function(){box.style.borderColor='rgba(255,255,255,.3)';});
+      box.addEventListener('click',function(){A8Z=z.id;loadA8Traffic();});
       var lbl=document.createElement('div');
-      lbl.textContent=z.label.replace(/\u2192\d+/,'').trim();
-      lbl.style.cssText='position:absolute;top:-18px;left:50%;transform:translateX(-50%);'
-        +'font-family:Barlow Condensed,sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;'
-        +'color:rgba(255,255,255,.45);white-space:nowrap;';
+      lbl.textContent=z.label;
+      lbl.style.cssText='position:absolute;top:-17px;left:50%;transform:translateX(-50%);'
+        +'font-family:Barlow Condensed,sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;'
+        +'color:rgba(255,255,255,.4);white-space:nowrap;pointer-events:none;';
       box.appendChild(lbl);
       ov.appendChild(box);
     });
   }
 
-  /* Ticks et badges échangeurs */
-  AX.forEach(function(ex,i){
+  /* Ticks + badges */
+  AX.forEach(function(ex){
     var pct=((ex.km-km0)/kmT*100).toFixed(2)+'%';
-    var tick=document.createElement('div');
-    tick.style.cssText='position:absolute;left:'+pct+';top:14px;bottom:0;width:2px;background:rgba(255,255,255,.12);transform:translateX(-50%);';
-    ov.appendChild(tick);
-    var badge=document.createElement('div');
-    badge.textContent=ex.n||'FR';
+    var tk=document.createElement('div');
+    tk.style.cssText='position:absolute;left:'+pct+';top:16px;bottom:0;width:2px;background:rgba(255,255,255,.1);transform:translateX(-50%);';
+    ov.appendChild(tk);
+    var bg=document.createElement('div');
+    bg.textContent=ex.n||'FR';
     var isFr=!ex.n;
-    badge.style.cssText='position:absolute;left:'+pct+';top:50%;transform:translate(-50%,-50%);'
+    bg.style.cssText='position:absolute;left:'+pct+';top:50%;transform:translate(-50%,-50%);'
       +'font-family:Share Tech Mono,monospace;font-size:10px;font-weight:700;'
       +'background:var(--panel,#12151C);border:1.5px solid '+(isFr?'rgba(228,3,46,.5)':'rgba(255,255,255,.18)')+';'
       +'color:'+(isFr?'#E4032E':'rgba(255,255,255,.85)')+';'
       +'padding:2px 5px;border-radius:4px;white-space:nowrap;min-width:22px;text-align:center;z-index:11;';
-    ov.appendChild(badge);
+    ov.appendChild(bg);
   });
 
   var lanes=document.createElement('div');lanes.className='a8-lanes';
@@ -1771,39 +1804,29 @@ function drawRoad(idxs,northD,southD){
   outer.appendChild(lanes);outer.appendChild(ov);
   zone.appendChild(outer);
 
-  /* ── Noms sur une seule ligne, affichés au-dessus si pas de place ── */
-  /* On calcule dynamiquement la largeur disponible par échangeur */
-  var namesWrap=document.createElement('div');
-  namesWrap.style.cssText='position:relative;height:28px;margin:5px 8px 0;overflow:visible;';
-
+  /* Noms lisibles sur UNE SEULE ligne */
+  var nm=document.createElement('div');
+  nm.style.cssText='position:relative;height:24px;margin:7px 8px 0;overflow:visible;';
   AX.forEach(function(ex,i){
     var pct=((ex.km-km0)/kmT*100).toFixed(2)+'%';
-    /* Largeur disponible = distance jusqu'au prochain échangeur */
-    var nextKm=i<AX.length-1?AX[i+1].km:AX[i].km+8;
-    var availPct=((nextKm-ex.km)/kmT*100);
-    /* Si largeur dispo < 5% → label en haut (au-dessus de la bande) sinon en bas */
-    var goUp=(availPct<5);
-
     var el=document.createElement('div');
-    el.style.cssText='position:absolute;left:'+pct+';'+(goUp?'bottom:0;':'top:0;')
-      +'transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;';
-    var tick=document.createElement('div');
-    tick.style.cssText='width:1px;height:6px;background:rgba(255,255,255,.2);';
-    var lbl=document.createElement('span');
-    lbl.textContent=ex.short;
-    lbl.style.cssText='font-family:Barlow Condensed,sans-serif;font-size:10px;font-weight:700;'
-      +'color:rgba(255,255,255,.6);white-space:nowrap;text-align:center;letter-spacing:.03em;';
-    if(goUp){el.appendChild(lbl);el.appendChild(tick);}
-    else{el.appendChild(tick);el.appendChild(lbl);}
-    namesWrap.appendChild(el);
+    el.style.cssText='position:absolute;left:'+pct+';top:0;transform:translateX(-50%);'
+      +'display:flex;flex-direction:column;align-items:center;gap:2px;';
+    var tk=document.createElement('div');
+    tk.style.cssText='width:1px;height:5px;background:rgba(255,255,255,.2);flex-shrink:0;';
+    var lb=document.createElement('span');
+    lb.textContent=ex.short;
+    lb.style.cssText='font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:800;'
+      +'color:rgba(255,255,255,.75);white-space:nowrap;letter-spacing:.03em;';
+    el.appendChild(tk);el.appendChild(lb);
+    nm.appendChild(el);
   });
-  zone.appendChild(namesWrap);
+  zone.appendChild(nm);
   wrap.appendChild(zone);
 
-  /* ── Résumé ── */
+  /* Résumé */
   function sumDir(st,lbl,ac,ar){
-    var h='<div class="a8-sum-dir"><span class="a8-dir-arrow '+ac+'" style="width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">'+ar+'</span>'
-      +'<span class="a8-sum-label">'+lbl+'</span>';
+    var h='<div class="a8-sum-dir"><span class="a8-dir-arrow '+ac+'" style="width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">'+ar+'</span><span class="a8-sum-label">'+lbl+'</span>';
     if(st.b)h+='<span class="a8-sum-pill bloque">&#9679; '+st.b+' bloqu\u00e9'+(st.b>1?'s':'')+'</span>';
     if(st.d)h+='<span class="a8-sum-pill dense">&#9679; '+st.d+' dense'+(st.d>1?'s':'')+'</span>';
     if(st.r)h+='<span class="a8-sum-pill ralenti">&#9679; '+st.r+' ralenti'+(st.r>1?'s':'')+'</span>';
@@ -1813,35 +1836,91 @@ function drawRoad(idxs,northD,southD){
   var sm=document.createElement('div');sm.className='a8-summary';
   sm.innerHTML=sumDir(stN,'Vers Saint-Tropez','st','&#8592;')+sumDir(stS,'Vers Italie','it','&#8594;');
   wrap.appendChild(sm);
-
-  var u=document.getElementById('a8-upd');
-  if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
+  var u=document.getElementById('a8-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
 }
 
 function loadA8Traffic(){
-  var wrap=document.getElementById('a8-timeline-wrap');
-  if(!wrap)return;
+  var wrap=document.getElementById('a8-timeline-wrap');if(!wrap)return;
   var zb=document.createElement('div');zb.className='a8-zoom-bar';
   zb.innerHTML='<span class="a8-zoom-lbl">Zone</span>';
-  AZM.forEach(function(z){
-    var btn=document.createElement('button');
-    btn.className='a8-zoom-btn'+(z.id===A8Z?' active':'');
-    btn.textContent=z.label;
-    btn.onclick=function(){A8Z=z.id;loadA8Traffic();};
-    zb.appendChild(btn);
-  });
-  wrap.innerHTML='<div class="a8-loading">Chargement trafic A8\u2026</div>';
-  wrap.prepend(zb);
-
+  AZM.forEach(function(z){var btn=document.createElement('button');btn.className='a8-zoom-btn'+(z.id===A8Z?' active':'');btn.textContent=z.label;btn.onclick=function(){A8Z=z.id;loadA8Traffic();};zb.appendChild(btn);});
+  wrap.innerHTML='<div class="a8-loading">Chargement trafic A8\u2026</div>';wrap.prepend(zb);
   Promise.all([
     Promise.all(AP.map(function(p){return fetchSp(p.lat,p.lon);})),
     Promise.all(AP.map(function(p){return fetchSp(p.lat+0.0007,p.lon+0.0007);}))
-  ]).then(function(r){
-    drawRoad(getIdxs(),r[0],r[1]);
+  ]).then(function(r){drawRoad(getIdxs(),r[0],r[1]);})
+    .catch(function(e){wrap.innerHTML='<div class="a8-loading" style="color:#ff8080">Erreur: '+e.message+'</div>';});
+}
+
+/* ══ TRAFIC MONACO ══ */
+var MCO_PREV={};  /* Stockage des lectures précédentes pour tendance */
+
+function fetchMonaco(){
+  var el=document.getElementById('monaco-traffic-body');
+  if(!el)return;
+  el.innerHTML='<div class="a8-loading">Chargement trafic Monaco\u2026</div>';
+
+  var now=Date.now();
+  /* Essayer de restaurer les données précédentes */
+  try{var s=localStorage.getItem('mco_prev');if(s)MCO_PREV=JSON.parse(s);}catch(e){}
+
+  Promise.all(MONACO_AXES.map(function(ax){
+    return fetchSp(ax.lat,ax.lon).then(function(d){return{ax:ax,d:d};});
+  })).then(function(results){
+    /* Sauvegarder comme précédent */
+    var newPrev={};
+    results.forEach(function(r){newPrev[r.ax.id]={cur:r.d.cur,ff:r.d.ff,ts:now};});
+
+    /* Grouper par catégorie */
+    var cats={
+      boulevard:{label:'Boulevards & Avenues',items:[]},
+      tunnel:   {label:'Tunnels',             items:[]},
+      corniche: {label:'Cornishes & Accès',   items:[]},
+    };
+    results.forEach(function(r){
+      var cls=spCls(r.d.cur,r.d.ff);
+      var prev=MCO_PREV[r.ax.id];
+      var trend='';
+      if(prev&&prev.ff>0&&r.d.ff>0){
+        var rNew=r.d.cur/r.d.ff, rOld=prev.cur/prev.ff;
+        var diff=rNew-rOld;
+        if(diff>0.08)trend='&#8593;'; /* amélioration */
+        else if(diff<-0.08)trend='&#8595;'; /* dégradation */
+        else trend='&#8594;'; /* stable */
+      }
+      cats[r.ax.cat].items.push({ax:r.ax,d:r.d,cls:cls,trend:trend});
+    });
+
+    /* Stocker pour la prochaine fois */
+    MCO_PREV=newPrev;
+    try{localStorage.setItem('mco_prev',JSON.stringify(newPrev));}catch(e){}
+
+    var html='';
+    Object.keys(cats).forEach(function(catKey){
+      var cat=cats[catKey];
+      html+='<div class="mco-cat-title">'+cat.label+'</div>';
+      html+='<div class="mco-grid">';
+      cat.items.forEach(function(item){
+        var spd=item.d.cur>0?item.d.cur+' km/h':'';
+        var trendCls=item.trend==='&#8593;'?'up':item.trend==='&#8595;'?'dn':'eq';
+        html+='<div class="mco-row">'
+          +'<div class="mco-name">'+item.ax.name+'</div>'
+          +'<div class="mco-pill '+item.cls+'">'+SP_LBL[item.cls]+'</div>'
+          +(spd?'<div class="mco-spd">'+spd+'</div>':'<div class="mco-spd"></div>')
+          +(item.trend?'<div class="mco-trend '+trendCls+'">'+item.trend+'</div>':'<div class="mco-trend"></div>')
+          +'</div>';
+      });
+      html+='</div>';
+    });
+
+    el.innerHTML=html;
+    var u=document.getElementById('monaco-upd');
+    if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
   }).catch(function(e){
-    wrap.innerHTML='<div class="a8-loading" style="color:#ff8080">Erreur: '+e.message+'</div>';
+    el.innerHTML='<div class="a8-loading" style="color:#ff8080">Erreur: '+e.message+'</div>';
   });
 }
+
 function refreshA8Traffic(){loadA8Traffic();}
 function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
 </script>
