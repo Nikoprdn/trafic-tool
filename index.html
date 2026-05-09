@@ -1604,7 +1604,7 @@ var AP=(function(){
   return r;
 })();
 
-function spCls(c,f){if(!f||!c)return'inconnu';var r=c/f;if(r>=0.85)return'fluide';if(r>=0.65)return'ralenti';if(r>=0.45)return'dense';return'bloque';}
+function spCls(c,f){if(!f||!c)return'inconnu';var r=c/f;if(r>=0.75)return'fluide';if(r>=0.55)return'ralenti';if(r>=0.35)return'dense';return'bloque';}
 var SP_LBL={fluide:'Fluide',ralenti:'Ralenti',dense:'Dense',bloque:'Bloqué',inconnu:'N/A'};
 var SP_COL={fluide:'#22C05E',ralenti:'#FFD600',dense:'#FF6B00',bloque:'#E81010',inconnu:'#2A2D3A'};
 
@@ -1724,25 +1724,24 @@ function drawRoad(idxs,northD,southD){
   outer.appendChild(lanes);outer.appendChild(ov);
   zone.appendChild(outer);
 
-  /* ── Noms des échangeurs sous la double bande ── */
+  /* ── Noms des échangeurs sous la double bande — horizontaux ── */
+  /* On place les noms en alternance haut/bas pour éviter les chevauchements */
   var namesWrap=document.createElement('div');
-  namesWrap.style.cssText='position:relative;height:64px;margin:6px 8px 0;';
+  namesWrap.style.cssText='position:relative;height:52px;margin:4px 8px 0;overflow:visible;';
   exits.forEach(function(ex,i){
     var pct=((ex.km-km0)/kmT*100).toFixed(2)+'%';
+    var isUp=(i%2===0); /* alternance : haut / bas */
     var el=document.createElement('div');
-    el.style.cssText='position:absolute;left:'+pct+';top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;';
-    /* Petit tick de liaison */
+    el.style.cssText='position:absolute;left:'+pct+';transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;top:'+(isUp?'0':'26px')+';';
     var tick=document.createElement('div');
-    tick.style.cssText='width:1px;height:8px;background:var(--border,#232730);flex-shrink:0;';
-    /* Nom affiché clairement en diagonal lisible */
+    tick.style.cssText='width:1px;height:'+(isUp?'8px':'6px')+';background:rgba(255,255,255,.2);flex-shrink:0;'+(isUp?'':'order:2;margin-top:2px;');
     var lbl=document.createElement('span');
     lbl.textContent=ex.short;
-    lbl.style.cssText='font-family:Barlow Condensed,sans-serif;font-size:10px;font-weight:700;'
-      +'color:rgba(255,255,255,.6);letter-spacing:.04em;'
-      +'white-space:nowrap;'
-      +'transform:rotate(-40deg) translateX(4px);transform-origin:top left;'
-      +'display:block;margin-top:2px;';
-    el.appendChild(tick);el.appendChild(lbl);
+    lbl.style.cssText='font-family:Barlow Condensed,sans-serif;font-size:10.5px;font-weight:700;'
+      +'color:rgba(255,255,255,.65);letter-spacing:.04em;white-space:nowrap;'
+      +'text-align:center;display:block;'+(isUp?'margin-bottom:2px;':'margin-top:2px;');
+    if(isUp){el.appendChild(lbl);el.appendChild(tick);}
+    else{el.appendChild(tick);el.appendChild(lbl);}
     namesWrap.appendChild(el);
   });
   zone.appendChild(namesWrap);
