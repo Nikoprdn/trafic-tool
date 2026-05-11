@@ -1933,17 +1933,18 @@ function buildTrainRow(t){
 }
 function renderStation(st,el){if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}el.innerHTML=st.trains.map(buildTrainRow).join('');}
 function toggleStation(key){
-  var panel = document.getElementById('board-'+key);
-  var btn   = document.getElementById('tog-'+key);
-  if(!panel||!btn) return;
+  var inner = document.getElementById('board-'+key);
+  if(!inner) return;
+  /* Remonter au panel parent (.station-panel) */
+  var panel = inner.parentElement;
+  while(panel && !panel.classList.contains('station-panel')) panel = panel.parentElement;
+  var btn = document.getElementById('tog-'+key);
+  if(!panel || !btn) return;
   var hidden = panel.classList.toggle('hidden');
   btn.classList.toggle('active', !hidden);
-  /* Adapter la grille : si toutes cachées sauf 1 → pleine largeur */
-  var panels = document.querySelectorAll('.station-panel:not(.hidden)');
-  var grid   = document.getElementById('stations-grid');
-  if(grid){
-    grid.style.gridTemplateColumns = panels.length <= 1 ? '1fr' : '';
-  }
+  var visible = document.querySelectorAll('.stations-grid .station-panel:not(.hidden)');
+  var grid = document.getElementById('stations-grid');
+  if(grid) grid.style.gridTemplateColumns = visible.length === 1 ? '1fr' : '';
 }
 
 function loadBoard(){fetch(W+'/board?count=5').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){var u=document.getElementById('last-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)renderStation(d[k],p);});}).catch(function(e){ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)p.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';});});}
