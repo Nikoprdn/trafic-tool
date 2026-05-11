@@ -1729,20 +1729,15 @@ var AZM=[{"id": "full", "label": "A8 complète", "from": 36, "to": 0}, {"id": "c
 
 /* Sondes milieu de chaque section (une par section pour simplifier) */
 var AP=(function(){
-  var r=[];
-  for(var i=0;i<AX.length-1;i++){
-    var a=AX[i],b=AX[i+1];
-    r.push({lat:(a.lat+b.lat)/2,lon:(a.lon+b.lon)/2});
-  }
-  return r;
+  return [{"north":{"lat":43.48502,"lon":6.77276},"south":{"lat":43.48798,"lon":6.77224}},{"north":{"lat":43.50103,"lon":6.85531},"south":{"lat":43.50397,"lon":6.85469}},{"north":{"lat":43.51352,"lon":6.92025},"south":{"lat":43.51648,"lon":6.91975}},{"north":{"lat":43.52756,"lon":6.98043},"south":{"lat":43.53044,"lon":6.97957}},{"north":{"lat":43.54416,"lon":7.02567},"south":{"lat":43.54684,"lon":7.02433}},{"north":{"lat":43.55916,"lon":7.05567},"south":{"lat":43.56184,"lon":7.05433}},{"north":{"lat":43.57763,"lon":7.0956},"south":{"lat":43.58037,"lon":7.0944}},{"north":{"lat":43.6038,"lon":7.1409},"south":{"lat":43.6062,"lon":7.1391}},{"north":{"lat":43.6263,"lon":7.1709},"south":{"lat":43.6287,"lon":7.1691}},{"north":{"lat":43.6441,"lon":7.1887},"south":{"lat":43.6459,"lon":7.1863}},{"north":{"lat":43.66167,"lon":7.20125},"south":{"lat":43.66333,"lon":7.19875}},{"north":{"lat":43.67116,"lon":7.21067},"south":{"lat":43.67384,"lon":7.20933}},{"north":{"lat":43.66866,"lon":7.22433},"south":{"lat":43.67134,"lon":7.22567}},{"north":{"lat":43.6841,"lon":7.2512},"south":{"lat":43.6859,"lon":7.2488}},{"north":{"lat":43.7113,"lon":7.2759},"south":{"lat":43.7137,"lon":7.2741}},{"north":{"lat":43.72361,"lon":7.29806},"south":{"lat":43.72639,"lon":7.29694}},{"north":{"lat":43.731,"lon":7.35009},"south":{"lat":43.734,"lon":7.34991}},{"north":{"lat":43.73602,"lon":7.40525},"south":{"lat":43.73898,"lon":7.40475}},{"north":{"lat":43.74861,"lon":7.44556},"south":{"lat":43.75139,"lon":7.44444}},{"north":{"lat":43.76616,"lon":7.48567},"south":{"lat":43.76884,"lon":7.48433}},{"north":{"lat":43.78103,"lon":7.53531},"south":{"lat":43.78397,"lon":7.53469}}];
 })();
 
 function cls(c,f){
   if(!f||f===0||c===0)return'inconnu';
   var r=c/f;
-  if(r>=0.60)return'fluide';
-  if(r>=0.40)return'ralenti';
-  if(r>=0.25)return'dense';
+  if(r>=0.75)return'fluide';
+  if(r>=0.55)return'ralenti';
+  if(r>=0.35)return'dense';
   return'bloque';
 }
 var CLS_COL={fluide:'#22C05E',ralenti:'#FFD600',dense:'#FF6B00',bloque:'#E81010',inconnu:'#1c1f2e'};
@@ -1948,8 +1943,8 @@ function loadA8Traffic(){
   wrap.innerHTML='<div class="a8-loading">Chargement trafic A8…</div>';wrap.prepend(zb);
   var idxs=getIdxs();
   Promise.all([
-    Promise.all(AP.map(function(p){return fetchSeg(p.lat+0.0005,p.lon+0.0005);})),
-    Promise.all(AP.map(function(p){return fetchSeg(p.lat-0.0005,p.lon-0.0005);}))
+    Promise.all(AP.map(function(p){return fetchSeg(p.north.lat,p.north.lon);})),
+    Promise.all(AP.map(function(p){return fetchSeg(p.south.lat,p.south.lon);}))
   ]).then(function(r){drawRoad(idxs,r[0],r[1]);})
     .catch(function(e){wrap.innerHTML='<div class="a8-loading" style="color:#ff8080">Erreur: '+e.message+'</div>';});
 }
@@ -2187,7 +2182,7 @@ function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
 <script>
 var MONACO_AXES=[{"id": "alb1", "name": "Bd Albert-Ier", "cat": "boulevard", "lat": 43.731, "lon": 7.4182}, {"id": "lou2", "name": "Bd Louis-II", "cat": "boulevard", "lat": 43.7345, "lon": 7.416}, {"id": "rain3", "name": "Bd Rainier-III", "cat": "boulevard", "lat": 43.7307, "lon": 7.4197}, {"id": "moul", "name": "Bd des Moulins", "cat": "boulevard", "lat": 43.7492, "lon": 7.4312}, {"id": "pcha", "name": "Bd Psse-Charlotte", "cat": "boulevard", "lat": 43.7448, "lon": 7.4169}, {"id": "oste", "name": "Av. d'Ostende", "cat": "boulevard", "lat": 43.7305, "lon": 7.4215}, {"id": "cost", "name": "Av. de la Costa", "cat": "boulevard", "lat": 43.7316, "lon": 7.4235}, {"id": "pgra", "name": "Av. Psse-Grace", "cat": "boulevard", "lat": 43.7382, "lon": 7.4302}, {"id": "jard", "name": "Bd Jardin Exotique", "cat": "boulevard", "lat": 43.7352, "lon": 7.4119}, {"id": "pisc", "name": "Route de la Piscine", "cat": "boulevard", "lat": 43.7455, "lon": 7.422}, {"id": "tl2", "name": "Tunnel Louis-II", "cat": "tunnel", "lat": 43.7351, "lon": 7.4168}, {"id": "tfair", "name": "Tunnel Fairmont", "cat": "tunnel", "lat": 43.7408, "lon": 7.4287}, {"id": "tr3", "name": "Tunnel Rainier-III", "cat": "tunnel", "lat": 43.7315, "lon": 7.4188}, {"id": "tje", "name": "Tunnel Jardin Exo.", "cat": "tunnel", "lat": 43.7356, "lon": 7.4118}, {"id": "tcol", "name": "Tunnel de la Colle", "cat": "tunnel", "lat": 43.7442, "lon": 7.4143}, {"id": "tcan", "name": "Tunnel Canton", "cat": "tunnel", "lat": 43.7352, "lon": 7.4158}, {"id": "trno", "name": "Tunnel Rocher-Noghès", "cat": "tunnel", "lat": 43.7331, "lon": 7.4193}, {"id": "tsd", "name": "Tunnel Ste-Dévote", "cat": "tunnel", "lat": 43.7339, "lon": 7.4172}, {"id": "tport", "name": "Tunnel du Portier", "cat": "tunnel", "lat": 43.7321, "lon": 7.4219}, {"id": "tcas", "name": "Tunnel Casino/Costa", "cat": "tunnel", "lat": 43.739, "lon": 7.427}, {"id": "marq", "name": "Liaison Marquet", "cat": "tunnel", "lat": 43.7346, "lon": 7.415}, {"id": "basse", "name": "Basse Corniche", "cat": "corniche", "lat": 43.728, "lon": 7.395}, {"id": "moyen", "name": "Moyenne Corniche", "cat": "corniche", "lat": 43.739, "lon": 7.371}, {"id": "grande", "name": "Grande Corniche", "cat": "corniche", "lat": 43.76, "lon": 7.39}, {"id": "a500", "name": "A500 / Accès A8", "cat": "corniche", "lat": 43.733, "lon": 7.4163}];
 var MCO_PREV={};
-function spMco(cur,ff){if(!ff||!cur)return'inconnu';var r=cur/ff;if(r>=0.60)return'fluide';if(r>=0.40)return'ralenti';if(r>=0.25)return'dense';return'bloque';}
+function spMco(cur,ff){if(!ff||!cur)return'inconnu';var r=cur/ff;if(r>=0.75)return'fluide';if(r>=0.55)return'ralenti';if(r>=0.35)return'dense';return'bloque';}
 var MCO_LBL={fluide:'Fluide',ralenti:'Ralenti',dense:'Dense',bloque:'Bloqu\u00e9',inconnu:'N/A'};
 function fetchMco(lat,lon){
   return fetch('https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json?point='+lat.toFixed(5)+','+lon.toFixed(5)+'&unit=KMPH&key=nFt8c40zRLaLYYghcApBurt0ZyK7FIbA',{headers:{Accept:'application/json'}})
