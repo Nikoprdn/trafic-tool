@@ -2250,9 +2250,11 @@ function drawRoad(probes,northD,southD){
   var stN={f:0,r:0,d:0,b:0},stS={f:0,r:0,d:0,b:0};
 
   /* Un segment de 1px/km, width = 1/vpKmT * 100% */
-  var w=(1/vpKmT*100).toFixed(4)+'%';
-
+  /* Chaque probe couvre de p.km à p.kmEnd, clippé aux bornes du zoom */
   probes.forEach(function(p,i){
+    var km0clip = Math.max(p.km, rng.km0);
+    var km1clip = Math.min(p.kmEnd, rng.km1);
+    var w = ((km1clip - km0clip) / vpKmT * 100).toFixed(4) + '%';
     var isLastProbe=(i===probes.length-1);
     var dN=northD[i]||{cur:0,ff:0},dS=southD[i]||{cur:0,ff:0};
     var cN=cls(dN.cur,dN.ff),cS=cls(dS.cur,dS.ff);
