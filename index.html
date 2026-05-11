@@ -2253,6 +2253,7 @@ function drawRoad(probes,northD,southD){
   var w=(1/vpKmT*100).toFixed(4)+'%';
 
   probes.forEach(function(p,i){
+    var isLastProbe=(i===probes.length-1);
     var dN=northD[i]||{cur:0,ff:0},dS=southD[i]||{cur:0,ff:0};
     var cN=cls(dN.cur,dN.ff),cS=cls(dS.cur,dS.ff);
     var ks={fluide:'f',ralenti:'r',dense:'d',bloque:'b'};
@@ -2263,7 +2264,7 @@ function drawRoad(probes,northD,southD){
 
     [['N',cN,tipN,laneN],['S',cS,tipS,laneS]].forEach(function(x){
       var seg=document.createElement('div');
-      seg.style.cssText='width:'+w+';height:100%;cursor:pointer;transition:filter .1s;'
+      seg.style.cssText=(isLastProbe?'flex:1;min-width:'+w+';':'width:'+w+';')+'height:100%;cursor:pointer;transition:filter .1s;'
         +'background:'+CLS_COL[x[1]]+';flex-shrink:0;'+(x[1]==='inconnu'?'opacity:.45;':'');
       seg.addEventListener('mouseenter',function(e){seg.style.filter='brightness(1.3)';showA8Tip(e,x[2]);});
       seg.addEventListener('mousemove',moveA8Tip);
