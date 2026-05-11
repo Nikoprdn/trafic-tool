@@ -1349,6 +1349,21 @@ div>
 
 <script>
 
+/* ═══ POOL DE CLÉS TOMTOM (rotation round-robin) ═══
+ * Ajoutez votre 2e clé dans TT_KEYS[1] après avoir créé
+ * un second compte sur developer.tomtom.com
+ * ═══════════════════════════════════════════════════ */
+var TT_KEYS = [
+  'nFt8c40zRLaLYYghcApBurt0ZyK7FIbA',  /* Clé 1 — compte principal */
+  '6lmPsZop12kVUAYtYPZXYaapjroiQZvZ',  /* Clé 2 — compte secondaire */
+];
+var TT_KEY_IDX = 0;
+function nextTTKey(){
+  var k = TT_KEYS[TT_KEY_IDX % TT_KEYS.length];
+  TT_KEY_IDX++;
+  return k;
+}
+
 /* THEME */
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
 function toggleTheme(){var cur=document.documentElement.getAttribute('data-theme')||'dark';applyTheme(cur==='dark'?'light':'dark');}
@@ -1407,7 +1422,7 @@ function fmtDurClean(sec){
 function callTomTom(oLat,oLon,dLat,dLon,avoid,attempt){
   attempt=attempt||1;
   var av=avoid?'&avoid=motorways':'';
-  var url='https://api.tomtom.com/routing/1/calculateRoute/'+oLat+','+oLon+':'+dLat+','+dLon+'/json?traffic=true&travelMode=car&computeTravelTimeFor=all'+av+'&key='+TOMTOM_KEY;
+  var url='https://api.tomtom.com/routing/1/calculateRoute/'+oLat+','+oLon+':'+dLat+','+dLon+'/json?traffic=true&travelMode=car&computeTravelTimeFor=all'+av+'&key='+(typeof nextTTKey==='function'?nextTTKey():TOMTOM_KEY);
   return fetch(url,{headers:{Accept:'application/json'}}).then(function(r){
     if(r.status===429&&attempt<3)return new Promise(function(res){setTimeout(res,1000*attempt);}).then(function(){return callTomTom(oLat,oLon,dLat,dLon,avoid,attempt+1);});
     if(!r.ok)throw new Error('TomTom '+r.status);
@@ -1553,18 +1568,13 @@ function loadVigilance(){var el=document.getElementById('vig-body');if(!el)retur
 
 /* Stubs — les vrais scripts les surchargent */
 if(typeof loadA8Traffic==="undefined")window.loadA8Traffic=function(){setTimeout(function(){if(typeof loadA8Traffic._impl==="function")loadA8Traffic._impl();},200);};
-/* INIT */
-/* Lire le paramètre URL ?tab=weather ou ?tab=trafic */
+/* INIT — chargement unique au démarrage */
 (function(){
   var params = new URLSearchParams(window.location.search);
   var tab = params.get('tab');
   switchTab(tab === 'weather' ? 'weather' : 'trafic');
 })();
-setInterval(function(){if(traficLoaded){loadBoard();if(!TEST_MODE)loadDis();}},60000);
-setInterval(function(){if(traficLoaded)loadTravel();},600000);
-setInterval(function(){if(traficLoaded&&typeof loadA8Traffic==='function')loadA8Traffic();},300000);
-setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM();loadWeatherIDF();loadVigilance();}},300000);
-
+/* Pas de refresh automatique — actualisation manuelle uniquement */
 </script>
 
 <script>
@@ -1905,7 +1915,7 @@ document.addEventListener('DOMContentLoaded',function(){
   });
   setTimeout(function(){if(typeof fetchMonaco==='function')fetchMonaco();},1000);
 });
-setInterval(function(){if(typeof fetchMonaco==='function')fetchMonaco();},120000);
+/* fetchMonaco : manuel uniquement */
 var A8_ZOOM_PCT=100;
 function a8ZoomIn(){A8_ZOOM_PCT=Math.min(A8_ZOOM_PCT+50,500);_applyZ();}
 function a8ZoomOut(){A8_ZOOM_PCT=Math.max(A8_ZOOM_PCT-50,100);_applyZ();}
