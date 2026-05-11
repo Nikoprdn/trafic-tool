@@ -1992,16 +1992,39 @@ function loadA8Incidents(){
   var list=el.querySelector('.a8-inc-list');
   if(list)list.innerHTML='<div class="a8-inc-empty" style="color:var(--muted)">Chargement des incidents\u2026</div>';
 
+  /* API TomTom Traffic Incidents v5 — URL simplifiée */
+  var ts=Math.floor(Date.now()/1000);
   var url='https://api.tomtom.com/traffic/services/5/incidentDetails'
     +'?bbox='+A8_INC_BBOX
-    +'&fields={incidents{type,geometry{type,coordinates},properties{id,iconCategory,magnitudeOfDelay,startTime,endTime,delay,roadNumbers,description{value,language}}}}'
-    +'&language=fr-FR&t=1111&categoryFilter=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14'
-    +'&key='+(typeof nextTTKey==='function'?nextTTKey():A8K1);
+    +'&language=fr-FR'
+    +'&t='+ts
+    +'&timeValidityFilter=present'
+    +'&key='+(typeof nextTTKey==='function'?nextTTKey():'nFt8c40zRLaLYYghcApBurt0ZyK7FIbA');
 
   fetch(url,{headers:{Accept:'application/json'}})
     .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
     .then(function(data){
-      var incidents=(data.incidents||[]);
+      /* TomTom v5 peut retourner incidents[] ou tm.poi[] selon la version */
+    var incidents=(data.incidents||data.tm&&data.tm.poi||[]);
+    /* Normaliser la structure */
+    incidents=incidents.map(function(inc){
+      /* Certaines versions ont la structure à plat */
+      if(!inc.properties&&inc.iconCategory!==undefined){
+        return{
+          geometry:inc.geometry||{type:'Point',coordinates:[inc.lng||0,inc.lat||0]},
+          properties:{
+            iconCategory:inc.iconCategory,
+            magnitudeOfDelay:inc.magnitudeOfDelay||0,
+            delay:inc.delay||0,
+            startTime:inc.startTime||'',
+            endTime:inc.endTime||'',
+            roadNumbers:inc.roadNumbers||[],
+            description:inc.description||[],
+          }
+        };
+      }
+      return inc;
+    });
       /* Trier par délai décroissant */
       incidents.sort(function(a,b){
         var dA=(a.properties&&a.properties.delay)||0;
