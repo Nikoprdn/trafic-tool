@@ -1614,6 +1614,38 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 }
 .board-msg.board-err{color:#ff5252;}
 
+
+/* ALTERNANCE HEURE RETARDÉE */
+@keyframes flipTime {
+  0%,45%  { opacity:1; transform:translateY(0); }
+  50%     { opacity:0; transform:translateY(-6px); }
+  55%,100%{ opacity:1; transform:translateY(0); }
+}
+.tr-time-wrap{position:relative;overflow:hidden;}
+.tr-time-planned{
+  display:block;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:28px;font-weight:900;letter-spacing:.02em;line-height:1;
+  color:rgba(255,255,255,.35);
+  text-decoration:line-through;
+  text-decoration-color:rgba(255,107,53,.6);
+  font-size:18px;
+  margin-bottom:2px;
+}
+.tr-time-real{
+  display:block;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:28px;font-weight:900;letter-spacing:.02em;line-height:1;
+  color:#FF6B35;
+  animation:flipTime 3s ease-in-out infinite;
+}
+.tr-time-real-static{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:28px;font-weight:900;letter-spacing:.02em;line-height:1;
+}
+.tr-time-real-static.ok      {color:#F5C518;}
+.tr-time-real-static.cancelled{color:rgba(255,255,255,.3);text-decoration:line-through;}
+
 </style>
 </head>
 <body>
@@ -1811,38 +1843,50 @@ setInterval(tick,1000);tick();
 var W='https://sncf-proxy.nicolas7lejeune.workers.dev';var TEST_MODE=false;var TEST_DATA=[{"id":"t1","_trains":["881 134"],"_stops":[{"name":"Cannes"}],"_lines":[],"severity":{"effect":"SIGNIFICANT_DELAYS"},"messages":[{"text":"Retards 20-45 min.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T12:00:00","end":"2099-12-31T23:59:59"}]}];var ORDER=['cannes','nice','monaco','menton'];
 function buildTrainRow(t){
   var s=t.statusClass||'ok';
-  /* Barre gauche */
   var bar='<div class="tr-bar '+s+'"></div>';
-  /* Statut + heure */
+
+  /* ── Heure : alternance si retard ── */
+  var timeContent;
+  if(t.delayMin>0&&t.planned&&t.display&&t.planned!==t.display){
+    /* Clignote : heure prévue (barrée) ↔ nouvelle heure (orange) */
+    timeContent='<div class="tr-time-wrap">'
+      +'<span class="tr-time-planned">'+t.planned+'</span>'
+      +'<span class="tr-time-real">'+t.display+'</span>'
+      +'</div>';
+  } else {
+    timeContent='<span class="tr-time-real-static '+s+'"'
+      +(s==='cancelled'?' style="text-decoration:line-through;opacity:.35;"':'')
+      +'>'+t.planned+'</span>';
+  }
+
   var time='<div class="tr-tc">'
     +'<span class="tr-status '+s+'">'+t.statusLabel+'</span>'
-    +'<span class="tr-time '+s+'">'+t.planned+'</span>'
+    +timeContent
     +'</div>';
-  /* Séparateur */
+
   var sep='<div class="tr-sep"></div>';
-  /* Badge retard */
+
+  /* Pas de badge retard — l'alternance suffit */
   var badge='<div class="tr-badge-wrap">';
   if(s==='cancelled'){
     badge+='<span class="tr-badge gone">Supprimé</span>';
-  } else if(t.delayMin>0){
-    var h=Math.floor(t.delayMin/60),m=t.delayMin%60;
-    badge+='<span class="tr-delay-pill">+'+(h>0?h+'h'+(m<10?'0':'')+m:t.delayMin+' min')+'</span>';
   } else if(s==='modified'){
     badge+='<span class="tr-badge modif">Modifié</span>';
   }
   badge+='</div>';
-  /* Destination */
+
   var out=s==='cancelled'?' x':'';
   var dest='<div class="tr-dest">'
     +'<span class="tr-dname'+out+'">'+t.direction+'</span>'
     +'<span class="tr-dsub">'+t.sub+'</span>'
     +'</div>';
-  /* Voie */
+
   var v=t.platform||'';
   var voie='<div class="tr-voie">'
     +'<span class="tr-voie-lbl">Voie</span>'
     +'<div class="tr-voie-box'+(v?' filled':'')+'"><span class="tr-voie-v">'+(v||'–')+'</span></div>'
     +'</div>';
+
   return'<div class="train-row">'+bar+time+sep+badge+dest+voie+'</div>';
 }
 function renderStation(st,el){if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}el.innerHTML=st.trains.map(buildTrainRow).join('');}
