@@ -1800,6 +1800,46 @@ function getVisibleProbes(){
   return AP.filter(function(p){return p.km>=r.km0&&p.km<r.km1;});
 }
 
+/* Remplir les segments inconnus par interpolation des voisins */
+function fillGaps(data){
+  var filled = data.slice();
+  /* Passe 1 : forward fill */
+  var last = null;
+  for(var i=0;i<filled.length;i++){
+    if(filled[i].cur>0&&filled[i].ff>0){ last=filled[i]; }
+    else if(last){ filled[i]={cur:last.cur,ff:last.ff,interpolated:true}; }
+  }
+  /* Passe 2 : backward fill pour les segments au début */
+  var next = null;
+  for(var j=filled.length-1;j>=0;j--){
+    if(filled[j].cur>0&&filled[j].ff>0){ next=filled[j]; }
+    else if(next&&(!filled[j].cur||filled[j].cur===0)){ filled[j]={cur:next.cur,ff:next.ff,interpolated:true}; }
+  }
+  return filled;
+}
+
+/* Fusionner les km consécutifs de même classe → moins d'éléments DOM */
+function mergeSegments(probes,northD,southD){
+  var merged=[];
+  for(var i=0;i<probes.length;i++){
+    var cN=cls(northD[i].cur,northD[i].ff);
+    var cS=cls(southD[i].cur,southD[i].ff);
+    var last=merged[merged.length-1];
+    if(last&&last.cN===cN&&last.cS===cS){
+      last.count++;
+      last.dN=northD[i];last.dS=southD[i];
+      last.kmEnd=probes[i].km+1;
+    } else {
+      merged.push({
+        km:probes[i].km,kmEnd:probes[i].km+1,
+        count:1,cN:cN,cS:cS,
+        dN:northD[i],dS:southD[i]
+      });
+    }
+  }
+  return merged;
+}
+
 function drawRoad(probes,northD,southD){
   var wrap=document.getElementById('a8-timeline-wrap');
   if(!wrap)return;
@@ -1968,7 +2008,11 @@ function loadA8Traffic(){
   Promise.all([
     Promise.all(probes.map(function(p){return fetchSeg(p.north.lat,p.north.lon);})),
     Promise.all(probes.map(function(p){return fetchSeg(p.south.lat,p.south.lon);}))
-  ]).then(function(r){drawRoad(probes,r[0],r[1]);})
+  ]).then(function(r){
+    var northD=fillGaps(r[0]);
+    var southD=fillGaps(r[1]);
+    drawRoad(probes,northD,southD);
+  })
     .catch(function(e){wrap.innerHTML='<div class="a8-loading" style="color:#ff8080">Erreur: '+e.message+'</div>';});
 }
 function refreshA8Traffic(){loadA8Traffic();}
