@@ -1264,6 +1264,76 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .mco-row:last-child{border-bottom:none;}
 .mco-name{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,.75);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
+
+/* A8 INCIDENTS */
+.a8-incidents{
+  padding:8px 0 4px;
+  border-top:1px solid var(--border);
+  margin-top:4px;
+}
+.a8-inc-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);padding:0 0 6px;
+  display:flex;align-items:center;gap:6px;
+}
+.a8-inc-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.85);}}
+.a8-inc-list{display:flex;flex-direction:column;gap:4px;}
+.a8-inc-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:7px 10px;
+  background:var(--card);border-radius:6px;
+  border-left:3px solid var(--border);
+  transition:border-color .15s;
+}
+.a8-inc-item.ACCIDENT      {border-left-color:#E81010;}
+.a8-inc-item.BROKEN_VEHICLE{border-left-color:#FF6B00;}
+.a8-inc-item.ROAD_WORKS    {border-left-color:#FFD600;}
+.a8-inc-item.JAM           {border-left-color:#FF6B00;}
+.a8-inc-item.ROAD_CLOSED   {border-left-color:#E81010;}
+.a8-inc-item.OTHER         {border-left-color:var(--muted2);}
+.a8-inc-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.a8-inc-body{flex:1;min-width:0;}
+.a8-inc-type{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+}
+.a8-inc-desc{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:700;
+  color:rgba(255,255,255,.85);
+  margin-top:1px;line-height:1.3;
+}
+.a8-inc-meta{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;color:var(--muted);
+  margin-top:3px;display:flex;gap:12px;flex-wrap:wrap;
+}
+.a8-inc-delay{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;font-weight:700;
+  color:var(--red);flex-shrink:0;margin-top:2px;
+}
+.a8-inc-empty{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;color:var(--muted);
+  padding:8px 0;
+}
+/* Indicateur sur la bande */
+.a8-inc-marker{
+  position:absolute;
+  top:-6px;
+  transform:translateX(-50%);
+  font-size:14px;
+  z-index:20;
+  cursor:pointer;
+  filter:drop-shadow(0 1px 3px rgba(0,0,0,.7));
+  transition:transform .15s;
+}
+.a8-inc-marker:hover{transform:translateX(-50%) scale(1.3);}
+
 </style>
 </head>
 <body>
@@ -1341,6 +1411,7 @@ div>
         <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
         <span id="a8-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
         <button class="rbtn" onclick="if(typeof loadA8Traffic==='function')loadA8Traffic();">&#8635; Actualiser</button>
+        <button class="rbtn" onclick="if(typeof loadA8Incidents==='function')loadA8Incidents();" style="margin-left:4px;">&#9888;&#65039; Incidents</button>
       </div>
       <div id="a8-timeline-wrap" class="a8-tl-wrap"><div class="a8-tl-loading">Chargement trafic A8...</div></div>
       <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a><span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span></div>
@@ -1882,6 +1953,166 @@ function loadA8Traffic(){
   ]).then(function(r){drawRoad(idxs,r[0],r[1]);})
     .catch(function(e){wrap.innerHTML='<div class="a8-loading" style="color:#ff8080">Erreur: '+e.message+'</div>';});
 }
+
+/* ── INCIDENTS A8 ── */
+var A8_INC_BBOX = '6.90,43.46,7.65,43.90'; /* Cannes → Frontière italienne */
+
+var INC_ICONS = {
+  ACCIDENT:'\uD83D\uDEA8', JAM:'\uD83D\uDE97',
+  ROAD_WORKS:'\uD83D\uDEA7', ROAD_CLOSED:'\uD83D\uDEAB',
+  BROKEN_VEHICLE:'\uD83D\uDD3A', LANE_CLOSED:'\u26A0\uFE0F',
+  WEATHER_CONDITIONS:'\uD83C\uDF27\uFE0F', FOG:'\uD83C\uDF2B\uFE0F',
+  DANGEROUS_CONDITIONS:'\u26A0\uFE0F',
+};
+var INC_LABELS = {
+  ACCIDENT:'Accident', JAM:'Embouteillage', ROAD_WORKS:'Travaux',
+  ROAD_CLOSED:'Route ferm\u00e9e', BROKEN_VEHICLE:'V\u00e9hicule arr\u00eat\u00e9',
+  LANE_CLOSED:'Voie ferm\u00e9e', WEATHER_CONDITIONS:'Conditions m\u00e9t\u00e9o',
+  FOG:'Brouillard', DANGEROUS_CONDITIONS:'Danger',
+};
+var INC_CSS_CLS = {
+  ACCIDENT:'ACCIDENT',JAM:'JAM',ROAD_WORKS:'ROAD_WORKS',
+  ROAD_CLOSED:'ROAD_CLOSED',BROKEN_VEHICLE:'BROKEN_VEHICLE',
+};
+
+function fmtDelay(sec){
+  if(!sec||sec<60)return'';
+  var m=Math.round(sec/60);
+  return m<60?'+'+m+' min':'+'+Math.floor(m/60)+'h'+('0'+m%60).slice(-2);
+}
+
+function fmtTime(iso){
+  if(!iso)return'';
+  try{var d=new Date(iso);return d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}catch(e){return'';}
+}
+
+function loadA8Incidents(){
+  var el=document.getElementById('a8-incidents-wrap');
+  if(!el)return;
+  var list=el.querySelector('.a8-inc-list');
+  if(list)list.innerHTML='<div class="a8-inc-empty" style="color:var(--muted)">Chargement des incidents\u2026</div>';
+
+  var url='https://api.tomtom.com/traffic/services/5/incidentDetails'
+    +'?bbox='+A8_INC_BBOX
+    +'&fields={incidents{type,geometry{type,coordinates},properties{id,iconCategory,magnitudeOfDelay,startTime,endTime,delay,roadNumbers,description{value,language}}}}'
+    +'&language=fr-FR&t=1111&categoryFilter=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14'
+    +'&key='+(typeof nextTTKey==='function'?nextTTKey():A8K1);
+
+  fetch(url,{headers:{Accept:'application/json'}})
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(data){
+      var incidents=(data.incidents||[]);
+      /* Trier par délai décroissant */
+      incidents.sort(function(a,b){
+        var dA=(a.properties&&a.properties.delay)||0;
+        var dB=(b.properties&&b.properties.delay)||0;
+        return dB-dA;
+      });
+      renderIncidents(incidents);
+      /* Placer des marqueurs sur la bande A8 si elle est chargée */
+      placeIncidentMarkers(incidents);
+    })
+    .catch(function(e){
+      if(list)list.innerHTML='<div class="a8-inc-empty" style="color:#ff8080">Erreur: '+e.message+'</div>';
+    });
+}
+
+function renderIncidents(incidents){
+  var el=document.getElementById('a8-incidents-wrap');if(!el)return;
+  var list=el.querySelector('.a8-inc-list');if(!list)return;
+
+  if(!incidents.length){
+    list.innerHTML='<div class="a8-inc-empty">&#10004; Aucun incident signalé sur l\'A8</div>';
+    return;
+  }
+
+  var html=incidents.map(function(inc){
+    var p=inc.properties||{};
+    var type=(p.iconCategory||'OTHER').toUpperCase();
+    var icon=INC_ICONS[type]||'\u26A0\uFE0F';
+    var label=INC_LABELS[type]||type;
+    var cssCls=INC_CSS_CLS[type]||'OTHER';
+    var desc='';
+    if(p.description){
+      var descs=Array.isArray(p.description)?p.description:[p.description];
+      var fr=descs.find(function(d){return d.language==='fr-FR';});
+      desc=(fr||descs[0]||{}).value||'';
+    }
+    var roads=(p.roadNumbers||[]).join(', ');
+    var delay=fmtDelay(p.delay);
+    var start=fmtTime(p.startTime);
+    var mag=p.magnitudeOfDelay||0;
+    var magLbl=['Insignifiant','Mineur','Mod\u00e9r\u00e9','Majeur','Inconnu'][Math.min(mag,4)];
+
+    return '<div class="a8-inc-item '+cssCls+'">'
+      +'<div class="a8-inc-icon">'+icon+'</div>'
+      +'<div class="a8-inc-body">'
+      +'<div class="a8-inc-type">'+label+(roads?' \u2014 '+roads:'')+'</div>'
+      +(desc?'<div class="a8-inc-desc">'+desc+'</div>':'')
+      +'<div class="a8-inc-meta">'
+      +(start?'<span>\u23F0 '+start+'</span>':'')
+      +'<span>Impact: '+magLbl+'</span>'
+      +'</div>'
+      +'</div>'
+      +(delay?'<div class="a8-inc-delay">'+delay+'</div>':'')
+      +'</div>';
+  }).join('');
+  list.innerHTML=html;
+}
+
+function placeIncidentMarkers(incidents){
+  /* Supprimer anciens marqueurs */
+  document.querySelectorAll('.a8-inc-marker').forEach(function(m){m.remove();});
+  var outer=document.querySelector('.a8-road-outer');if(!outer)return;
+
+  var AX_LOCAL=typeof AX!=='undefined'?AX:[];
+  var vpKm0=AX_LOCAL.length?AX_LOCAL[0].km:0;
+  var vpKmT=AX_LOCAL.length?AX_LOCAL[AX_LOCAL.length-1].km-vpKm0:112;
+
+  incidents.forEach(function(inc){
+    if(!inc.geometry||!inc.geometry.coordinates)return;
+    var coords=inc.geometry.coordinates;
+    /* Prendre le premier point (ou le milieu si LineString) */
+    var pt=Array.isArray(coords[0])?coords[Math.floor(coords.length/2)]:coords;
+    var incLon=pt[0],incLat=pt[1];
+    /* Approximer la position km sur l\'A8 par interpolation sur la longitude */
+    var km=approximateKm(incLon);
+    if(km===null)return;
+    var pct=((km-vpKm0)/vpKmT*100).toFixed(2)+'%';
+    var p=inc.properties||{};
+    var type=(p.iconCategory||'OTHER').toUpperCase();
+    var icon=INC_ICONS[type]||'\u26A0\uFE0F';
+
+    var mk=document.createElement('div');
+    mk.className='a8-inc-marker';
+    mk.style.left=pct;
+    mk.textContent=icon;
+    mk.title=(INC_LABELS[type]||type)+(p.delay>60?' \u2014 '+fmtDelay(p.delay):'');
+    mk.addEventListener('click',function(){
+      document.getElementById('a8-incidents-wrap').scrollIntoView({behavior:'smooth'});
+    });
+    outer.appendChild(mk);
+  });
+}
+
+function approximateKm(lon){
+  /* Interpolation linéaire basée sur la longitude des échangeurs */
+  var AX_LOCAL=typeof AX!=='undefined'?AX:[];
+  if(!AX_LOCAL.length)return null;
+  for(var i=0;i<AX_LOCAL.length-1;i++){
+    var a=AX_LOCAL[i],b=AX_LOCAL[i+1];
+    if(lon>=a.lon&&lon<=b.lon){
+      var t=(lon-a.lon)/(b.lon-a.lon);
+      return a.km+t*(b.km-a.km);
+    }
+  }
+  /* Hors plage — vérifier si proche des bornes */
+  if(lon<AX_LOCAL[0].lon)return AX_LOCAL[0].km;
+  if(lon>AX_LOCAL[AX_LOCAL.length-1].lon)return AX_LOCAL[AX_LOCAL.length-1].km;
+  return null;
+}
+
+
 function refreshA8Traffic(){loadA8Traffic();}
 function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
 </script>
