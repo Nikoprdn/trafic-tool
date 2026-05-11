@@ -1757,7 +1757,7 @@ if(typeof loadA8Traffic==="undefined")window.loadA8Traffic=function(){setTimeout
 </script>
 
 <script>
-/* == A8 Traffic v9 == */
+/* == A8 Traffic v10 — résolution 1 km == */
 var A8K1='nFt8c40zRLaLYYghcApBurt0ZyK7FIbA';
 var A8K2='6lmPsZop12kVUAYtYPZXYaapjroiQZvZ';
 var A8KI=0;
@@ -1765,12 +1765,9 @@ function nextA8Key(){return A8KI++%2===0?A8K1:A8K2;}
 
 var A8Z='full';
 var AX=[{"n": 36, "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725}, {"n": 37, "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82}, {"n": 38, "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89}, {"n": 39, "short": "Les Adrets", "km": 28, "lat": 43.52, "lon": 6.95}, {"n": 40, "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01}, {"n": 41, "short": "Cns Bocca", "km": 44, "lat": 43.553, "lon": 7.04}, {"n": 42, "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07}, {"n": 44, "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12}, {"n": 46, "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16}, {"n": 47, "short": "VL Centre", "km": 67, "lat": 43.635, "lon": 7.18}, {"n": 48, "short": "Cagnes Est", "km": 70, "lat": 43.655, "lon": 7.195}, {"n": 49, "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205}, {"n": 50, "short": "Nice Ouest", "km": 77, "lat": 43.675, "lon": 7.215}, {"n": 51, "short": "Nice Aéro", "km": 80, "lat": 43.665, "lon": 7.235}, {"n": 52, "short": "N.St-Isid.", "km": 83, "lat": 43.705, "lon": 7.265}, {"n": 54, "short": "Nice Nord", "km": 86, "lat": 43.72, "lon": 7.285}, {"n": 55, "short": "Ariane", "km": 89, "lat": 43.73, "lon": 7.31}, {"n": 56, "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39}, {"n": 57, "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42}, {"n": 58, "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47}, {"n": 59, "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5}, {"n": 0, "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57}];
-var AZM=[{"id": "full", "label": "A8 complète", "from": 36, "to": 0}, {"id": "cannes", "label": "Cannes", "from": 40, "to": 44}, {"id": "antibes", "label": "Antibes", "from": 44, "to": 46}, {"id": "nice", "label": "Nice", "from": 49, "to": 55}, {"id": "monaco", "label": "Monaco / Menton", "from": 56, "to": 0}];
-
-/* Sondes milieu de chaque section (une par section pour simplifier) */
-var AP=(function(){
-  return [{"north":{"lat":43.48502,"lon":6.77276},"south":{"lat":43.48798,"lon":6.77224}},{"north":{"lat":43.50103,"lon":6.85531},"south":{"lat":43.50397,"lon":6.85469}},{"north":{"lat":43.51352,"lon":6.92025},"south":{"lat":43.51648,"lon":6.91975}},{"north":{"lat":43.52756,"lon":6.98043},"south":{"lat":43.53044,"lon":6.97957}},{"north":{"lat":43.54416,"lon":7.02567},"south":{"lat":43.54684,"lon":7.02433}},{"north":{"lat":43.55916,"lon":7.05567},"south":{"lat":43.56184,"lon":7.05433}},{"north":{"lat":43.57763,"lon":7.0956},"south":{"lat":43.58037,"lon":7.0944}},{"north":{"lat":43.6038,"lon":7.1409},"south":{"lat":43.6062,"lon":7.1391}},{"north":{"lat":43.6263,"lon":7.1709},"south":{"lat":43.6287,"lon":7.1691}},{"north":{"lat":43.6441,"lon":7.1887},"south":{"lat":43.6459,"lon":7.1863}},{"north":{"lat":43.66167,"lon":7.20125},"south":{"lat":43.66333,"lon":7.19875}},{"north":{"lat":43.67116,"lon":7.21067},"south":{"lat":43.67384,"lon":7.20933}},{"north":{"lat":43.66866,"lon":7.22433},"south":{"lat":43.67134,"lon":7.22567}},{"north":{"lat":43.6841,"lon":7.2512},"south":{"lat":43.6859,"lon":7.2488}},{"north":{"lat":43.7113,"lon":7.2759},"south":{"lat":43.7137,"lon":7.2741}},{"north":{"lat":43.72361,"lon":7.29806},"south":{"lat":43.72639,"lon":7.29694}},{"north":{"lat":43.731,"lon":7.35009},"south":{"lat":43.734,"lon":7.34991}},{"north":{"lat":43.73602,"lon":7.40525},"south":{"lat":43.73898,"lon":7.40475}},{"north":{"lat":43.74861,"lon":7.44556},"south":{"lat":43.75139,"lon":7.44444}},{"north":{"lat":43.76616,"lon":7.48567},"south":{"lat":43.76884,"lon":7.48433}},{"north":{"lat":43.78103,"lon":7.53531},"south":{"lat":43.78397,"lon":7.53469}}];
-})();
+var AZM=[{"id": "full", "label": "A8 complète", "km0": 0, "km1": 112}, {"id": "cannes", "label": "Cannes", "km0": 38, "km1": 56}, {"id": "antibes", "label": "Antibes", "km0": 56, "km1": 64}, {"id": "nice", "label": "Nice", "km0": 73, "km1": 89}, {"id": "monaco", "label": "Monaco / Menton", "km0": 93, "km1": 112}];
+/* 112 sondes — une par km — avec offset perpendiculaire précis */
+var AP=[{"km":0,"north":{"lat":43.4773,"lon":6.72958},"south":{"lat":43.48025,"lon":6.72905}},{"km":1,"north":{"lat":43.47884,"lon":6.73822},"south":{"lat":43.48179,"lon":6.73769}},{"km":2,"north":{"lat":43.48039,"lon":6.74686},"south":{"lat":43.48334,"lon":6.74633}},{"km":3,"north":{"lat":43.48193,"lon":6.75549},"south":{"lat":43.48489,"lon":6.75496}},{"km":4,"north":{"lat":43.48348,"lon":6.76413},"south":{"lat":43.48643,"lon":6.7636}},{"km":5,"north":{"lat":43.48502,"lon":6.77276},"south":{"lat":43.48798,"lon":6.77224}},{"km":6,"north":{"lat":43.48657,"lon":6.7814},"south":{"lat":43.48952,"lon":6.78087}},{"km":7,"north":{"lat":43.48811,"lon":6.79004},"south":{"lat":43.49107,"lon":6.78951}},{"km":8,"north":{"lat":43.48966,"lon":6.79867},"south":{"lat":43.49261,"lon":6.79814}},{"km":9,"north":{"lat":43.49121,"lon":6.80731},"south":{"lat":43.49416,"lon":6.80678}},{"km":10,"north":{"lat":43.49275,"lon":6.81595},"south":{"lat":43.4957,"lon":6.81542}},{"km":11,"north":{"lat":43.4946,"lon":6.82531},"south":{"lat":43.49754,"lon":6.82469}},{"km":12,"north":{"lat":43.49675,"lon":6.83531},"south":{"lat":43.49968,"lon":6.83469}},{"km":13,"north":{"lat":43.49889,"lon":6.84531},"south":{"lat":43.50182,"lon":6.84469}},{"km":14,"north":{"lat":43.50103,"lon":6.85531},"south":{"lat":43.50397,"lon":6.85469}},{"km":15,"north":{"lat":43.50318,"lon":6.86531},"south":{"lat":43.50611,"lon":6.86469}},{"km":16,"north":{"lat":43.50532,"lon":6.87531},"south":{"lat":43.50825,"lon":6.87469}},{"km":17,"north":{"lat":43.50746,"lon":6.88531},"south":{"lat":43.5104,"lon":6.88469}},{"km":18,"north":{"lat":43.50902,"lon":6.89325},"south":{"lat":43.51198,"lon":6.89275}},{"km":19,"north":{"lat":43.51002,"lon":6.89925},"south":{"lat":43.51298,"lon":6.89875}},{"km":20,"north":{"lat":43.51102,"lon":6.90525},"south":{"lat":43.51398,"lon":6.90475}},{"km":21,"north":{"lat":43.51202,"lon":6.91125},"south":{"lat":43.51498,"lon":6.91075}},{"km":22,"north":{"lat":43.51302,"lon":6.91725},"south":{"lat":43.51598,"lon":6.91675}},{"km":23,"north":{"lat":43.51402,"lon":6.92325},"south":{"lat":43.51698,"lon":6.92275}},{"km":24,"north":{"lat":43.51502,"lon":6.92925},"south":{"lat":43.51798,"lon":6.92875}},{"km":25,"north":{"lat":43.51602,"lon":6.93525},"south":{"lat":43.51898,"lon":6.93475}},{"km":26,"north":{"lat":43.51702,"lon":6.94125},"south":{"lat":43.51998,"lon":6.94075}},{"km":27,"north":{"lat":43.51802,"lon":6.94725},"south":{"lat":43.52098,"lon":6.94675}},{"km":28,"north":{"lat":43.51946,"lon":6.95343},"south":{"lat":43.52234,"lon":6.95257}},{"km":29,"north":{"lat":43.52126,"lon":6.95943},"south":{"lat":43.52414,"lon":6.95857}},{"km":30,"north":{"lat":43.52306,"lon":6.96543},"south":{"lat":43.52594,"lon":6.96457}},{"km":31,"north":{"lat":43.52486,"lon":6.97143},"south":{"lat":43.52774,"lon":6.97057}},{"km":32,"north":{"lat":43.52666,"lon":6.97743},"south":{"lat":43.52954,"lon":6.97657}},{"km":33,"north":{"lat":43.52846,"lon":6.98343},"south":{"lat":43.53134,"lon":6.98257}},{"km":34,"north":{"lat":43.53026,"lon":6.98943},"south":{"lat":43.53314,"lon":6.98857}},{"km":35,"north":{"lat":43.53206,"lon":6.99543},"south":{"lat":43.53494,"lon":6.99457}},{"km":36,"north":{"lat":43.53386,"lon":7.00143},"south":{"lat":43.53674,"lon":7.00057}},{"km":37,"north":{"lat":43.53566,"lon":7.00743},"south":{"lat":43.53854,"lon":7.00657}},{"km":38,"north":{"lat":43.53791,"lon":7.01317},"south":{"lat":43.54059,"lon":7.01183}},{"km":39,"north":{"lat":43.54041,"lon":7.01817},"south":{"lat":43.54309,"lon":7.01683}},{"km":40,"north":{"lat":43.54291,"lon":7.02317},"south":{"lat":43.54559,"lon":7.02183}},{"km":41,"north":{"lat":43.54541,"lon":7.02817},"south":{"lat":43.54809,"lon":7.02683}},{"km":42,"north":{"lat":43.54791,"lon":7.03317},"south":{"lat":43.55059,"lon":7.03183}},{"km":43,"north":{"lat":43.55041,"lon":7.03817},"south":{"lat":43.55309,"lon":7.03683}},{"km":44,"north":{"lat":43.55353,"lon":7.04442},"south":{"lat":43.55622,"lon":7.04308}},{"km":45,"north":{"lat":43.55728,"lon":7.05192},"south":{"lat":43.55997,"lon":7.05058}},{"km":46,"north":{"lat":43.56103,"lon":7.05942},"south":{"lat":43.56372,"lon":7.05808}},{"km":47,"north":{"lat":43.56478,"lon":7.06692},"south":{"lat":43.56747,"lon":7.06558}},{"km":48,"north":{"lat":43.568,"lon":7.07373},"south":{"lat":43.57075,"lon":7.07252}},{"km":49,"north":{"lat":43.57075,"lon":7.07998},"south":{"lat":43.5735,"lon":7.07877}},{"km":50,"north":{"lat":43.5735,"lon":7.08623},"south":{"lat":43.57625,"lon":7.08502}},{"km":51,"north":{"lat":43.57625,"lon":7.09248},"south":{"lat":43.579,"lon":7.09127}},{"km":52,"north":{"lat":43.579,"lon":7.09873},"south":{"lat":43.58175,"lon":7.09752}},{"km":53,"north":{"lat":43.58175,"lon":7.10498},"south":{"lat":43.5845,"lon":7.10377}},{"km":54,"north":{"lat":43.5845,"lon":7.11123},"south":{"lat":43.58725,"lon":7.11002}},{"km":55,"north":{"lat":43.58725,"lon":7.11748},"south":{"lat":43.59,"lon":7.11627}},{"km":56,"north":{"lat":43.59068,"lon":7.1234},"south":{"lat":43.59307,"lon":7.1216}},{"km":57,"north":{"lat":43.59443,"lon":7.1284},"south":{"lat":43.59683,"lon":7.1266}},{"km":58,"north":{"lat":43.59818,"lon":7.1334},"south":{"lat":43.60057,"lon":7.1316}},{"km":59,"north":{"lat":43.60193,"lon":7.1384},"south":{"lat":43.60432,"lon":7.1366}},{"km":60,"north":{"lat":43.60568,"lon":7.1434},"south":{"lat":43.60807,"lon":7.1416}},{"km":61,"north":{"lat":43.60943,"lon":7.1484},"south":{"lat":43.61182,"lon":7.1466}},{"km":62,"north":{"lat":43.61317,"lon":7.1534},"south":{"lat":43.61557,"lon":7.1516}},{"km":63,"north":{"lat":43.61693,"lon":7.1584},"south":{"lat":43.61932,"lon":7.1566}},{"km":64,"north":{"lat":43.6213,"lon":7.16423},"south":{"lat":43.6237,"lon":7.16243}},{"km":65,"north":{"lat":43.6263,"lon":7.1709},"south":{"lat":43.6287,"lon":7.1691}},{"km":66,"north":{"lat":43.6313,"lon":7.17757},"south":{"lat":43.6337,"lon":7.17577}},{"km":67,"north":{"lat":43.63743,"lon":7.1837},"south":{"lat":43.63923,"lon":7.1813}},{"km":68,"north":{"lat":43.6441,"lon":7.1887},"south":{"lat":43.6459,"lon":7.1863}},{"km":69,"north":{"lat":43.65077,"lon":7.1937},"south":{"lat":43.65257,"lon":7.1913}},{"km":70,"north":{"lat":43.65667,"lon":7.19791},"south":{"lat":43.65833,"lon":7.19542}},{"km":71,"north":{"lat":43.66167,"lon":7.20125},"south":{"lat":43.66333,"lon":7.19875}},{"km":72,"north":{"lat":43.66667,"lon":7.20458},"south":{"lat":43.66833,"lon":7.20209}},{"km":73,"north":{"lat":43.66928,"lon":7.20692},"south":{"lat":43.67197,"lon":7.20558}},{"km":74,"north":{"lat":43.67053,"lon":7.20942},"south":{"lat":43.67322,"lon":7.20808}},{"km":75,"north":{"lat":43.67178,"lon":7.21192},"south":{"lat":43.67447,"lon":7.21058}},{"km":76,"north":{"lat":43.67303,"lon":7.21442},"south":{"lat":43.67572,"lon":7.21308}},{"km":77,"north":{"lat":43.67199,"lon":7.21766},"south":{"lat":43.67467,"lon":7.219}},{"km":78,"north":{"lat":43.66866,"lon":7.22433},"south":{"lat":43.67134,"lon":7.22567}},{"km":79,"north":{"lat":43.66533,"lon":7.231},"south":{"lat":43.66801,"lon":7.23234}},{"km":80,"north":{"lat":43.67077,"lon":7.2412},"south":{"lat":43.67257,"lon":7.2388}},{"km":81,"north":{"lat":43.6841,"lon":7.2512},"south":{"lat":43.6859,"lon":7.2488}},{"km":82,"north":{"lat":43.69743,"lon":7.2612},"south":{"lat":43.69923,"lon":7.2588}},{"km":83,"north":{"lat":43.7063,"lon":7.26923},"south":{"lat":43.7087,"lon":7.26743}},{"km":84,"north":{"lat":43.7113,"lon":7.2759},"south":{"lat":43.7137,"lon":7.2741}},{"km":85,"north":{"lat":43.7163,"lon":7.28257},"south":{"lat":43.7187,"lon":7.28077}},{"km":86,"north":{"lat":43.72027,"lon":7.28972},"south":{"lat":43.72306,"lon":7.28861}},{"km":87,"north":{"lat":43.72361,"lon":7.29806},"south":{"lat":43.72639,"lon":7.29694}},{"km":88,"north":{"lat":43.72694,"lon":7.30639},"south":{"lat":43.72973,"lon":7.30528}},{"km":89,"north":{"lat":43.72913,"lon":7.32009},"south":{"lat":43.73212,"lon":7.31991}},{"km":90,"north":{"lat":43.73038,"lon":7.34009},"south":{"lat":43.73337,"lon":7.33991}},{"km":91,"north":{"lat":43.73163,"lon":7.36009},"south":{"lat":43.73462,"lon":7.35991}},{"km":92,"north":{"lat":43.73288,"lon":7.38009},"south":{"lat":43.73587,"lon":7.37991}},{"km":93,"north":{"lat":43.73415,"lon":7.394},"south":{"lat":43.7371,"lon":7.3935}},{"km":94,"north":{"lat":43.7354,"lon":7.4015},"south":{"lat":43.73835,"lon":7.401}},{"km":95,"north":{"lat":43.73665,"lon":7.409},"south":{"lat":43.7396,"lon":7.4085}},{"km":96,"north":{"lat":43.7379,"lon":7.4165},"south":{"lat":43.74085,"lon":7.416}},{"km":97,"north":{"lat":43.74111,"lon":7.42681},"south":{"lat":43.74389,"lon":7.42569}},{"km":98,"north":{"lat":43.74611,"lon":7.43931},"south":{"lat":43.74889,"lon":7.43819}},{"km":99,"north":{"lat":43.75111,"lon":7.45181},"south":{"lat":43.75389,"lon":7.45069}},{"km":100,"north":{"lat":43.75611,"lon":7.46431},"south":{"lat":43.75889,"lon":7.46319}},{"km":101,"north":{"lat":43.76053,"lon":7.47442},"south":{"lat":43.76322,"lon":7.47308}},{"km":102,"north":{"lat":43.76428,"lon":7.48192},"south":{"lat":43.76697,"lon":7.48058}},{"km":103,"north":{"lat":43.76803,"lon":7.48942},"south":{"lat":43.77072,"lon":7.48808}},{"km":104,"north":{"lat":43.77178,"lon":7.49692},"south":{"lat":43.77447,"lon":7.49558}},{"km":105,"north":{"lat":43.7746,"lon":7.50531},"south":{"lat":43.77754,"lon":7.50469}},{"km":106,"north":{"lat":43.77675,"lon":7.51531},"south":{"lat":43.77968,"lon":7.51469}},{"km":107,"north":{"lat":43.77889,"lon":7.52531},"south":{"lat":43.78182,"lon":7.52469}},{"km":108,"north":{"lat":43.78103,"lon":7.53531},"south":{"lat":43.78397,"lon":7.53469}},{"km":109,"north":{"lat":43.78318,"lon":7.54531},"south":{"lat":43.78611,"lon":7.54469}},{"km":110,"north":{"lat":43.78532,"lon":7.55531},"south":{"lat":43.78825,"lon":7.55469}},{"km":111,"north":{"lat":43.78746,"lon":7.56531},"south":{"lat":43.7904,"lon":7.56469}}];
 
 function cls(c,f){
   if(!f||f===0||c===0)return'inconnu';
@@ -1781,7 +1778,7 @@ function cls(c,f){
   return'bloque';
 }
 var CLS_COL={fluide:'#22C05E',ralenti:'#FFD600',dense:'#FF6B00',bloque:'#E81010',inconnu:'#1c1f2e'};
-var CLS_LBL={fluide:'Fluide',ralenti:'Ralenti',dense:'Dense',bloque:'Bloqué',inconnu:'N/A'};
+var CLS_LBL={fluide:'Fluide',ralenti:'Ralenti',dense:'Dense',bloque:'Bloqu\u00e9',inconnu:'N/A'};
 
 function fetchSeg(lat,lon){
   var key=nextA8Key();
@@ -1793,31 +1790,22 @@ function fetchSeg(lat,lon){
     .catch(function(){return{cur:0,ff:0};});
 }
 
-function getIdxs(){
+function getKmRange(){
   var z=AZM.find(function(z){return z.id===A8Z;})||AZM[0];
-  var r=[];
-  for(var i=0;i<AX.length-1;i++){
-    var n=AX[i].n;
-    if(z.id==='full'){r.push(i);continue;}
-    var ok=z.to===0?(n>0&&n>=z.from):(n>0&&n>=z.from&&n<z.to);
-    if(ok)r.push(i);
-  }
-  return r;
+  return{km0:z.km0,km1:z.km1};
 }
 
-function zonePct(z,km0,kmT){
-  var exF=AX.find(function(e){return e.n===z.from;});
-  var exT=z.to===0?AX[AX.length-1]:AX.find(function(e){return e.n===z.to;});
-  if(!exF||!exT)return null;
-  return{left:((exF.km-km0)/kmT*100).toFixed(2)+'%',width:((exT.km-exF.km)/kmT*100).toFixed(2)+'%'};
+function getVisibleProbes(){
+  var r=getKmRange();
+  return AP.filter(function(p){return p.km>=r.km0&&p.km<r.km1;});
 }
 
-function drawRoad(idxs,northD,southD){
+function drawRoad(probes,northD,southD){
   var wrap=document.getElementById('a8-timeline-wrap');
   if(!wrap)return;
   wrap.innerHTML='';
 
-  /* ── Zoom bar ── */
+  /* Zoom bar */
   var zb=document.createElement('div');zb.className='a8-zoom-bar';
   zb.innerHTML='<span class="a8-zoom-lbl">Zone</span>';
   AZM.forEach(function(z){
@@ -1829,65 +1817,58 @@ function drawRoad(idxs,northD,southD){
   });
   wrap.appendChild(zb);
 
-  /* Exits et km pour le viewport actuel */
-  var exits=idxs.map(function(i){return AX[i];});
-  var lastAX=AX[idxs[idxs.length-1]+1];
-  if(lastAX)exits.push(lastAX);
-  if(exits.length<2){wrap.innerHTML+='<div class="a8-loading">Données insuffisantes</div>';return;}
+  var rng=getKmRange();
+  var vpKmT=rng.km1-rng.km0||1;
 
-  /* km0/kmT = toujours sur AX complet pour que les largeurs soient proportionnelles */
-  var km0=AX[0].km, kmT=AX[AX.length-1].km;
-  /* Pour positionner dans le viewport zoomed on rebase sur les exits visibles */
-  var vpKm0=exits[0].km, vpKmT=exits[exits.length-1].km-vpKm0||1;
-
-  /* ── Labels sens ── */
+  /* Labels sens */
   var dirDiv=document.createElement('div');dirDiv.className='a8-dir-labels';
   dirDiv.innerHTML='<div class="a8-dir-row"><span class="a8-dir-arrow st">&#8592;</span><span class="a8-dir-name">Vers Saint-Tropez</span></div>'
     +'<div class="a8-dir-row"><span class="a8-dir-arrow it">&#8594;</span><span class="a8-dir-name">Vers Italie</span></div>';
   wrap.appendChild(dirDiv);
 
-  /* ── Conteneur principal ── */
   var section=document.createElement('div');section.className='a8-road-section';
   var outer=document.createElement('div');
-  outer.className='a8-road-outer';
-  outer.style.cssText='position:relative;';
+  outer.className='a8-road-outer';outer.style.cssText='position:relative;';
 
   var laneN=document.createElement('div');laneN.className='a8-lane north';
   var laneS=document.createElement('div');laneS.className='a8-lane south';
   var stN={f:0,r:0,d:0,b:0},stS={f:0,r:0,d:0,b:0};
 
-  /* Construire les segments sur la largeur du viewport */
-  idxs.forEach(function(idx){
-    var ex0=AX[idx],ex1=AX[idx+1];if(!ex0||!ex1)return;
-    var w=((ex1.km-ex0.km)/vpKmT*100).toFixed(3)+'%';
-    var dN=northD[idx]||{cur:0,ff:0},dS=southD[idx]||{cur:0,ff:0};
+  /* Un segment de 1px/km, width = 1/vpKmT * 100% */
+  var w=(1/vpKmT*100).toFixed(4)+'%';
+
+  probes.forEach(function(p,i){
+    var dN=northD[i]||{cur:0,ff:0},dS=southD[i]||{cur:0,ff:0};
     var cN=cls(dN.cur,dN.ff),cS=cls(dS.cur,dS.ff);
     var ks={fluide:'f',ralenti:'r',dense:'d',bloque:'b'};
-    if(stN[ks[cN]])stN[ks[cN]]++;if(stS[ks[cS]])stS[ks[cS]]++;
-    var tipN=ex1.short+' → '+ex0.short+(dN.cur>0?' | '+dN.cur+' km/h':'');
-    var tipS=ex0.short+' → '+ex1.short+(dS.cur>0?' | '+dS.cur+' km/h':'');
+    if(stN[ks[cN]]!==undefined)stN[ks[cN]]++;
+    if(stS[ks[cS]]!==undefined)stS[ks[cS]]++;
+    var tipN='km '+(p.km)+' – '+(p.km+1)+' | ← St-Tropez'+(dN.cur>0?' | '+dN.cur+' km/h':'');
+    var tipS='km '+(p.km)+' – '+(p.km+1)+' | Italie →'+(dS.cur>0?' | '+dS.cur+' km/h':'');
+
     [['N',cN,tipN,laneN],['S',cS,tipS,laneS]].forEach(function(x){
       var seg=document.createElement('div');
       seg.style.cssText='width:'+w+';height:100%;cursor:pointer;transition:filter .1s;'
-        +'background:'+CLS_COL[x[1]]+';flex-shrink:0;'+(x[1]==='inconnu'?'opacity:.5;':'');
+        +'background:'+CLS_COL[x[1]]+';flex-shrink:0;'+(x[1]==='inconnu'?'opacity:.45;':'');
       seg.addEventListener('mouseenter',function(e){seg.style.filter='brightness(1.3)';showA8Tip(e,x[2]);});
-      seg.addEventListener('mousemove',function(e){moveA8Tip(e);});
+      seg.addEventListener('mousemove',moveA8Tip);
       seg.addEventListener('mouseleave',function(){seg.style.filter='';hideA8Tip();});
       x[3].appendChild(seg);
     });
   });
 
-  /* ── Overlay badges + encadrés zones ── */
+  /* Overlay : badges échangeurs + encadrés zones (vue complète) */
   var ov=document.createElement('div');
   ov.style.cssText='position:absolute;top:-10px;bottom:0;left:0;right:0;pointer-events:none;z-index:10;';
 
-  /* Encadrés des zones zoom en vue complète */
+  /* Encadrés des zones en vue complète */
   if(A8Z==='full'){
     AZM.forEach(function(z){
       if(z.id==='full')return;
-      var p=zonePct(z,vpKm0,vpKmT);if(!p)return;
+      var pctL=((z.km0-rng.km0)/vpKmT*100).toFixed(2)+'%';
+      var pctW=((z.km1-z.km0)/vpKmT*100).toFixed(2)+'%';
       var box=document.createElement('div');
-      box.style.cssText='position:absolute;left:'+p.left+';width:'+p.width+';top:0;bottom:0;'
+      box.style.cssText='position:absolute;left:'+pctL+';width:'+pctW+';top:0;bottom:0;'
         +'border:2px solid rgba(255,255,255,.28);border-radius:4px;box-sizing:border-box;'
         +'cursor:pointer;pointer-events:all;transition:border-color .15s;';
       box.addEventListener('mouseenter',function(){box.style.borderColor='rgba(228,3,46,.7)';});
@@ -1896,16 +1877,17 @@ function drawRoad(idxs,northD,southD){
       var lbl=document.createElement('div');
       lbl.textContent=z.label;
       lbl.style.cssText='position:absolute;top:-16px;left:50%;transform:translateX(-50%);'
-        +'font-family:Barlow Condensed,sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;'
+        +'font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;'
         +'text-transform:uppercase;color:rgba(255,255,255,.4);white-space:nowrap;pointer-events:none;';
       box.appendChild(lbl);
       ov.appendChild(box);
     });
   }
 
-  /* Badges numéros échangeurs */
-  exits.forEach(function(ex){
-    var pct=((ex.km-vpKm0)/vpKmT*100).toFixed(2)+'%';
+  /* Badges échangeurs */
+  AX.forEach(function(ex){
+    if(ex.km<rng.km0||ex.km>rng.km1)return;
+    var pct=((ex.km-rng.km0)/vpKmT*100).toFixed(2)+'%';
     var tk=document.createElement('div');
     tk.style.cssText='position:absolute;left:'+pct+';top:10px;bottom:0;width:1px;background:rgba(255,255,255,.12);transform:translateX(-50%);';
     ov.appendChild(tk);
@@ -1924,68 +1906,33 @@ function drawRoad(idxs,northD,southD){
   outer.appendChild(lanes);outer.appendChild(ov);
   section.appendChild(outer);
 
-  /* ── Noms des sorties HORIZONTAUX en dessous ── */
+  /* Noms des sorties visibles */
   var nm=document.createElement('div');
   nm.style.cssText='position:relative;height:24px;margin:7px 0 4px;';
-  exits.forEach(function(ex,i){
-    var pct=((ex.km-vpKm0)/vpKmT*100).toFixed(2)+'%';
+  AX.forEach(function(ex,i){
+    if(ex.km<rng.km0||ex.km>rng.km1)return;
+    var pct=((ex.km-rng.km0)/vpKmT*100).toFixed(2)+'%';
+    var isFirst=(ex.km===rng.km0||i===0);
+    var isLast=(ex.km===rng.km1||i===AX.length-1);
     var el=document.createElement('div');
-    /* Ajustement pour éviter les débordements aux bords */
-    var align='center';
-    if(i===0)align='left';
-    else if(i===exits.length-1)align='right';
     el.style.cssText='position:absolute;left:'+pct+';top:0;'
-      +'transform:translateX('+(i===0?'0':i===exits.length-1?'-100%':'-50%')+');'
+      +'transform:translateX('+(isFirst?'0':isLast?'-100%':'-50%')+');'
       +'font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:700;letter-spacing:.03em;'
       +'color:rgba(255,255,255,.6);white-space:nowrap;';
-    var nameSpan = document.createElement('span');
-    nameSpan.textContent = ex.short;
-    nameSpan.style.cssText = 'display:block;';
-    var kmSpan = document.createElement('span');
-    kmSpan.className = 'a8-exit-label-km';
-    kmSpan.textContent = ex.km > 0 ? ex.km + ' km' : '';
-    el.appendChild(nameSpan);
-    el.appendChild(kmSpan);
+    el.textContent=ex.short;
     nm.appendChild(el);
   });
   section.appendChild(nm);
-
-  /* ── Règle kilométrique ── */
-  var ruler = document.createElement('div');
-  ruler.className = 'a8-km-ruler';
-
-  /* Espacement adaptatif selon la longueur visible */
-  var step = vpKmT > 60 ? 10 : vpKmT > 30 ? 5 : vpKmT > 15 ? 2 : 1;
-
-  /* Début arrondi au multiple de step */
-  var startKm = Math.ceil(vpKm0 / step) * step;
-
-  for(var km = startKm; km <= vpKm0 + vpKmT; km += step){
-    var pct = ((km - vpKm0) / vpKmT * 100).toFixed(2) + '%';
-    var major = (km % (step * 5) === 0) || (step === 1 && km % 5 === 0);
-    var mk = document.createElement('div');
-    mk.className = 'a8-km-mark';
-    mk.style.left = pct;
-    var tick = document.createElement('div');
-    tick.className = 'a8-km-tick' + (major ? ' major' : '');
-    var lbl = document.createElement('span');
-    lbl.className = 'a8-km-label' + (major ? ' major' : '');
-    lbl.textContent = 'km ' + km;
-    mk.appendChild(tick);
-    mk.appendChild(lbl);
-    ruler.appendChild(mk);
-  }
-  section.appendChild(ruler);
   wrap.appendChild(section);
 
-  /* ── Résumé ── */
+  /* Résumé */
   function sumPills(st,lbl,ac,ar){
     var h='<div class="a8-sum-dir">'
       +'<span class="a8-dir-arrow '+ac+'" style="width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">'+ar+'</span>'
       +'<span class="a8-sum-label">'+lbl+'</span>';
-    if(st.b)h+='<span class="a8-sum-pill bloque">&#9679; '+st.b+' bloqué'+(st.b>1?'s':'')+'</span>';
-    if(st.d)h+='<span class="a8-sum-pill dense">&#9679; '+st.d+' dense'+(st.d>1?'s':'')+'</span>';
-    if(st.r)h+='<span class="a8-sum-pill ralenti">&#9679; '+st.r+' ralenti'+(st.r>1?'s':'')+'</span>';
+    if(st.b)h+='<span class="a8-sum-pill bloque">&#9679; '+st.b+' km bloqu\u00e9'+(st.b>1?'s':'')+'</span>';
+    if(st.d)h+='<span class="a8-sum-pill dense">&#9679; '+st.d+' km dense'+(st.d>1?'s':'')+'</span>';
+    if(st.r)h+='<span class="a8-sum-pill ralenti">&#9679; '+st.r+' km ralenti'+(st.r>1?'s':'')+'</span>';
     if(!st.b&&!st.d&&!st.r)h+='<span class="a8-sum-pill fluide">Trafic fluide</span>';
     return h+'</div>';
   }
@@ -1997,7 +1944,7 @@ function drawRoad(idxs,northD,southD){
   if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
 }
 
-/* Tooltip A8 */
+/* Tooltip */
 var _a8tip=null;
 function showA8Tip(e,txt){
   if(!_a8tip){_a8tip=document.createElement('div');
@@ -2014,197 +1961,16 @@ function loadA8Traffic(){
   var zb=document.createElement('div');zb.className='a8-zoom-bar';
   zb.innerHTML='<span class="a8-zoom-lbl">Zone</span>';
   AZM.forEach(function(z){var btn=document.createElement('button');btn.className='a8-zoom-btn'+(z.id===A8Z?' active':'');btn.textContent=z.label;btn.onclick=function(){A8Z=z.id;loadA8Traffic();};zb.appendChild(btn);});
-  wrap.innerHTML='<div class="a8-loading">Chargement trafic A8…</div>';wrap.prepend(zb);
-  var idxs=getIdxs();
+  wrap.innerHTML='<div class="a8-loading">Chargement trafic A8 ('+getVisibleProbes().length+' km)\u2026</div>';
+  wrap.prepend(zb);
+
+  var probes=getVisibleProbes();
   Promise.all([
-    Promise.all(AP.map(function(p){return fetchSeg(p.north.lat,p.north.lon);})),
-    Promise.all(AP.map(function(p){return fetchSeg(p.south.lat,p.south.lon);}))
-  ]).then(function(r){drawRoad(idxs,r[0],r[1]);})
+    Promise.all(probes.map(function(p){return fetchSeg(p.north.lat,p.north.lon);})),
+    Promise.all(probes.map(function(p){return fetchSeg(p.south.lat,p.south.lon);}))
+  ]).then(function(r){drawRoad(probes,r[0],r[1]);})
     .catch(function(e){wrap.innerHTML='<div class="a8-loading" style="color:#ff8080">Erreur: '+e.message+'</div>';});
 }
-
-/* ── INCIDENTS A8 ── */
-var A8_INC_BBOX = '6.90,43.46,7.65,43.90'; /* Cannes → Frontière italienne */
-
-var INC_ICONS = {
-  ACCIDENT:'\uD83D\uDEA8', JAM:'\uD83D\uDE97',
-  ROAD_WORKS:'\uD83D\uDEA7', ROAD_CLOSED:'\uD83D\uDEAB',
-  BROKEN_VEHICLE:'\uD83D\uDD3A', LANE_CLOSED:'\u26A0\uFE0F',
-  WEATHER_CONDITIONS:'\uD83C\uDF27\uFE0F', FOG:'\uD83C\uDF2B\uFE0F',
-  DANGEROUS_CONDITIONS:'\u26A0\uFE0F',
-};
-var INC_LABELS = {
-  ACCIDENT:'Accident', JAM:'Embouteillage', ROAD_WORKS:'Travaux',
-  ROAD_CLOSED:'Route ferm\u00e9e', BROKEN_VEHICLE:'V\u00e9hicule arr\u00eat\u00e9',
-  LANE_CLOSED:'Voie ferm\u00e9e', WEATHER_CONDITIONS:'Conditions m\u00e9t\u00e9o',
-  FOG:'Brouillard', DANGEROUS_CONDITIONS:'Danger',
-};
-var INC_CSS_CLS = {
-  ACCIDENT:'ACCIDENT',JAM:'JAM',ROAD_WORKS:'ROAD_WORKS',
-  ROAD_CLOSED:'ROAD_CLOSED',BROKEN_VEHICLE:'BROKEN_VEHICLE',
-};
-
-function fmtDelay(sec){
-  if(!sec||sec<60)return'';
-  var m=Math.round(sec/60);
-  return m<60?'+'+m+' min':'+'+Math.floor(m/60)+'h'+('0'+m%60).slice(-2);
-}
-
-function fmtTime(iso){
-  if(!iso)return'';
-  try{var d=new Date(iso);return d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}catch(e){return'';}
-}
-
-function loadA8Incidents(){
-  var el=document.getElementById('a8-incidents-wrap');
-  if(!el)return;
-  var list=el.querySelector('.a8-inc-list');
-  if(list)list.innerHTML='<div class="a8-inc-empty" style="color:var(--muted)">Chargement des incidents\u2026</div>';
-
-  /* API TomTom Traffic Incidents v5 — URL simplifiée */
-  var ts=Math.floor(Date.now()/1000);
-  var url='https://api.tomtom.com/traffic/services/5/incidentDetails'
-    +'?bbox='+A8_INC_BBOX
-    +'&language=fr-FR'
-    +'&t='+ts
-    +'&timeValidityFilter=present'
-    +'&key='+(typeof nextTTKey==='function'?nextTTKey():'nFt8c40zRLaLYYghcApBurt0ZyK7FIbA');
-
-  fetch(url,{headers:{Accept:'application/json'}})
-    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
-    .then(function(data){
-      /* TomTom v5 peut retourner incidents[] ou tm.poi[] selon la version */
-    var incidents=(data.incidents||data.tm&&data.tm.poi||[]);
-    /* Normaliser la structure */
-    incidents=incidents.map(function(inc){
-      /* Certaines versions ont la structure à plat */
-      if(!inc.properties&&inc.iconCategory!==undefined){
-        return{
-          geometry:inc.geometry||{type:'Point',coordinates:[inc.lng||0,inc.lat||0]},
-          properties:{
-            iconCategory:inc.iconCategory,
-            magnitudeOfDelay:inc.magnitudeOfDelay||0,
-            delay:inc.delay||0,
-            startTime:inc.startTime||'',
-            endTime:inc.endTime||'',
-            roadNumbers:inc.roadNumbers||[],
-            description:inc.description||[],
-          }
-        };
-      }
-      return inc;
-    });
-      /* Trier par délai décroissant */
-      incidents.sort(function(a,b){
-        var dA=(a.properties&&a.properties.delay)||0;
-        var dB=(b.properties&&b.properties.delay)||0;
-        return dB-dA;
-      });
-      renderIncidents(incidents);
-      /* Placer des marqueurs sur la bande A8 si elle est chargée */
-      placeIncidentMarkers(incidents);
-    })
-    .catch(function(e){
-      if(list)list.innerHTML='<div class="a8-inc-empty" style="color:#ff8080">Erreur: '+e.message+'</div>';
-    });
-}
-
-function renderIncidents(incidents){
-  var el=document.getElementById('a8-incidents-wrap');if(!el)return;
-  var list=el.querySelector('.a8-inc-list');if(!list)return;
-
-  if(!incidents.length){
-    list.innerHTML='<div class="a8-inc-empty">&#10004; Aucun incident signalé sur l\'A8</div>';
-    return;
-  }
-
-  var html=incidents.map(function(inc){
-    var p=inc.properties||{};
-    var type=(p.iconCategory||'OTHER').toUpperCase();
-    var icon=INC_ICONS[type]||'\u26A0\uFE0F';
-    var label=INC_LABELS[type]||type;
-    var cssCls=INC_CSS_CLS[type]||'OTHER';
-    var desc='';
-    if(p.description){
-      var descs=Array.isArray(p.description)?p.description:[p.description];
-      var fr=descs.find(function(d){return d.language==='fr-FR';});
-      desc=(fr||descs[0]||{}).value||'';
-    }
-    var roads=(p.roadNumbers||[]).join(', ');
-    var delay=fmtDelay(p.delay);
-    var start=fmtTime(p.startTime);
-    var mag=p.magnitudeOfDelay||0;
-    var magLbl=['Insignifiant','Mineur','Mod\u00e9r\u00e9','Majeur','Inconnu'][Math.min(mag,4)];
-
-    return '<div class="a8-inc-item '+cssCls+'">'
-      +'<div class="a8-inc-icon">'+icon+'</div>'
-      +'<div class="a8-inc-body">'
-      +'<div class="a8-inc-type">'+label+(roads?' \u2014 '+roads:'')+'</div>'
-      +(desc?'<div class="a8-inc-desc">'+desc+'</div>':'')
-      +'<div class="a8-inc-meta">'
-      +(start?'<span>\u23F0 '+start+'</span>':'')
-      +'<span>Impact: '+magLbl+'</span>'
-      +'</div>'
-      +'</div>'
-      +(delay?'<div class="a8-inc-delay">'+delay+'</div>':'')
-      +'</div>';
-  }).join('');
-  list.innerHTML=html;
-}
-
-function placeIncidentMarkers(incidents){
-  /* Supprimer anciens marqueurs */
-  document.querySelectorAll('.a8-inc-marker').forEach(function(m){m.remove();});
-  var outer=document.querySelector('.a8-road-outer');if(!outer)return;
-
-  var AX_LOCAL=typeof AX!=='undefined'?AX:[];
-  var vpKm0=AX_LOCAL.length?AX_LOCAL[0].km:0;
-  var vpKmT=AX_LOCAL.length?AX_LOCAL[AX_LOCAL.length-1].km-vpKm0:112;
-
-  incidents.forEach(function(inc){
-    if(!inc.geometry||!inc.geometry.coordinates)return;
-    var coords=inc.geometry.coordinates;
-    /* Prendre le premier point (ou le milieu si LineString) */
-    var pt=Array.isArray(coords[0])?coords[Math.floor(coords.length/2)]:coords;
-    var incLon=pt[0],incLat=pt[1];
-    /* Approximer la position km sur l\'A8 par interpolation sur la longitude */
-    var km=approximateKm(incLon);
-    if(km===null)return;
-    var pct=((km-vpKm0)/vpKmT*100).toFixed(2)+'%';
-    var p=inc.properties||{};
-    var type=(p.iconCategory||'OTHER').toUpperCase();
-    var icon=INC_ICONS[type]||'\u26A0\uFE0F';
-
-    var mk=document.createElement('div');
-    mk.className='a8-inc-marker';
-    mk.style.left=pct;
-    mk.textContent=icon;
-    mk.title=(INC_LABELS[type]||type)+(p.delay>60?' \u2014 '+fmtDelay(p.delay):'');
-    mk.addEventListener('click',function(){
-      document.getElementById('a8-incidents-wrap').scrollIntoView({behavior:'smooth'});
-    });
-    outer.appendChild(mk);
-  });
-}
-
-function approximateKm(lon){
-  /* Interpolation linéaire basée sur la longitude des échangeurs */
-  var AX_LOCAL=typeof AX!=='undefined'?AX:[];
-  if(!AX_LOCAL.length)return null;
-  for(var i=0;i<AX_LOCAL.length-1;i++){
-    var a=AX_LOCAL[i],b=AX_LOCAL[i+1];
-    if(lon>=a.lon&&lon<=b.lon){
-      var t=(lon-a.lon)/(b.lon-a.lon);
-      return a.km+t*(b.km-a.km);
-    }
-  }
-  /* Hors plage — vérifier si proche des bornes */
-  if(lon<AX_LOCAL[0].lon)return AX_LOCAL[0].km;
-  if(lon>AX_LOCAL[AX_LOCAL.length-1].lon)return AX_LOCAL[AX_LOCAL.length-1].km;
-  return null;
-}
-
-
 function refreshA8Traffic(){loadA8Traffic();}
 function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
 </script>
