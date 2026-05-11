@@ -1334,6 +1334,46 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 }
 .a8-inc-marker:hover{transform:translateX(-50%) scale(1.3);}
 
+
+/* A8 RÈGLE KILOMÉTRIQUE */
+.a8-km-ruler{
+  position:relative;
+  height:18px;
+  margin:2px 0 0;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.a8-km-mark{
+  position:absolute;
+  top:0;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;
+  pointer-events:none;
+}
+.a8-km-tick{
+  width:1px;height:5px;
+  background:rgba(255,255,255,.2);
+}
+.a8-km-tick.major{
+  height:7px;
+  background:rgba(255,255,255,.4);
+}
+.a8-km-label{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;font-weight:700;
+  color:rgba(255,255,255,.35);
+  margin-top:1px;white-space:nowrap;
+}
+.a8-km-label.major{
+  color:rgba(255,255,255,.55);
+  font-size:9.5px;
+}
+/* Km sur le tooltip */
+.a8-exit-label-km{
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px;color:rgba(255,255,255,.3);
+  margin-top:1px;
+}
+
 </style>
 </head>
 <body>
@@ -1898,10 +1938,44 @@ function drawRoad(idxs,northD,southD){
       +'transform:translateX('+(i===0?'0':i===exits.length-1?'-100%':'-50%')+');'
       +'font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:700;letter-spacing:.03em;'
       +'color:rgba(255,255,255,.6);white-space:nowrap;';
-    el.textContent=ex.short;
+    var nameSpan = document.createElement('span');
+    nameSpan.textContent = ex.short;
+    nameSpan.style.cssText = 'display:block;';
+    var kmSpan = document.createElement('span');
+    kmSpan.className = 'a8-exit-label-km';
+    kmSpan.textContent = ex.km > 0 ? ex.km + ' km' : '';
+    el.appendChild(nameSpan);
+    el.appendChild(kmSpan);
     nm.appendChild(el);
   });
   section.appendChild(nm);
+
+  /* ── Règle kilométrique ── */
+  var ruler = document.createElement('div');
+  ruler.className = 'a8-km-ruler';
+
+  /* Espacement adaptatif selon la longueur visible */
+  var step = vpKmT > 60 ? 10 : vpKmT > 30 ? 5 : vpKmT > 15 ? 2 : 1;
+
+  /* Début arrondi au multiple de step */
+  var startKm = Math.ceil(vpKm0 / step) * step;
+
+  for(var km = startKm; km <= vpKm0 + vpKmT; km += step){
+    var pct = ((km - vpKm0) / vpKmT * 100).toFixed(2) + '%';
+    var major = (km % (step * 5) === 0) || (step === 1 && km % 5 === 0);
+    var mk = document.createElement('div');
+    mk.className = 'a8-km-mark';
+    mk.style.left = pct;
+    var tick = document.createElement('div');
+    tick.className = 'a8-km-tick' + (major ? ' major' : '');
+    var lbl = document.createElement('span');
+    lbl.className = 'a8-km-label' + (major ? ' major' : '');
+    lbl.textContent = 'km ' + km;
+    mk.appendChild(tick);
+    mk.appendChild(lbl);
+    ruler.appendChild(mk);
+  }
+  section.appendChild(ruler);
   wrap.appendChild(section);
 
   /* ── Résumé ── */
