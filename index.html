@@ -1196,6 +1196,74 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .ed-act.sv{background:var(--red);color:#fff;margin-left:auto;}.ed-act.sv:hover{opacity:.85;}
 .ed-act.pr,.ed-act.cp{background:rgba(255,255,255,.07);color:var(--muted);}
 
+
+/* A8 NOMS SORTIES HORIZONTAUX */
+.a8-exit-names-row{
+  display:flex;
+  position:relative;
+  height:28px;
+  margin:6px 0 0;
+  overflow:visible;
+}
+.a8-exit-label{
+  position:absolute;
+  transform:translateX(-50%);
+  top:0;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  pointer-events:none;
+}
+.a8-exit-label-tick{
+  width:1px;height:5px;background:rgba(255,255,255,.2);flex-shrink:0;
+}
+.a8-exit-label-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.04em;
+  color:rgba(255,255,255,.65);
+  white-space:nowrap;text-align:center;
+}
+
+/* A8 LANES REDESIGN */
+.a8-lanes{display:flex;flex-direction:column;gap:3px;}
+.a8-lane{
+  height:18px;
+  display:flex;
+  position:relative;
+  overflow:visible;
+  border-radius:0;
+}
+.a8-lane.north{border-radius:5px 5px 0 0;}
+.a8-lane.south{border-radius:0 0 5px 5px;}
+.a8-lane-label{
+  position:absolute;
+  left:-90px;top:50%;transform:translateY(-50%);
+  display:flex;align-items:center;gap:5px;
+  white-space:nowrap;
+}
+.a8-lane-arrow-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:700;
+}
+.a8-lane-arrow-badge.st{background:rgba(245,197,24,.15);color:var(--yellow);border:1px solid rgba(245,197,24,.3);}
+.a8-lane-arrow-badge.it{background:rgba(39,174,96,.15);color:var(--green);border:1px solid rgba(39,174,96,.3);}
+.a8-lane-name-txt{font-family:'Barlow Condensed',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);}
+
+/* MONACO DIRECTIONS */
+.mco-dirs{display:flex;gap:4px;align-items:center;flex-shrink:0;}
+.mco-dir-pill{
+  display:inline-flex;align-items:center;
+  padding:2px 7px;border-radius:10px;
+  font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;
+  white-space:nowrap;
+}
+.mco-dir-pill.fluide {background:rgba(34,192,94,.15);color:#22C05E;}
+.mco-dir-pill.ralenti{background:rgba(255,214,0,.12);color:#FFD600;}
+.mco-dir-pill.dense  {background:rgba(255,107,0,.15);color:#FF8C00;}
+.mco-dir-pill.bloque {background:rgba(232,16,16,.15);color:#ff5252;}
+.mco-dir-pill.inconnu{background:rgba(255,255,255,.04);color:var(--muted);}
+.mco-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.mco-row:last-child{border-bottom:none;}
+.mco-name{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,.75);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
 </style>
 </head>
 <body>
@@ -1605,9 +1673,9 @@ var A8_PROBES=(function(){
 function cls(cur,ff){
   if(!ff||ff===0||cur===0)return'inconnu';
   var r=cur/ff;
-  if(r>=0.75)return'fluide';
-  if(r>=0.55)return'ralenti';
-  if(r>=0.35)return'dense';
+  if(r>=0.60)return'fluide';
+  if(r>=0.40)return'ralenti';
+  if(r>=0.25)return'dense';
   return'bloque';
 }
 var CLS_LBL={fluide:'Fluide',ralenti:'Ralenti',dense:'Dense',bloque:'Bloqué',inconnu:'N/A'};
@@ -1865,7 +1933,7 @@ function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
 <script>
 var MONACO_AXES=[{"id": "alb1", "name": "Bd Albert-Ier", "cat": "boulevard", "lat": 43.731, "lon": 7.4182}, {"id": "lou2", "name": "Bd Louis-II", "cat": "boulevard", "lat": 43.7345, "lon": 7.416}, {"id": "rain3", "name": "Bd Rainier-III", "cat": "boulevard", "lat": 43.7307, "lon": 7.4197}, {"id": "moul", "name": "Bd des Moulins", "cat": "boulevard", "lat": 43.7492, "lon": 7.4312}, {"id": "pcha", "name": "Bd Psse-Charlotte", "cat": "boulevard", "lat": 43.7448, "lon": 7.4169}, {"id": "oste", "name": "Av. d'Ostende", "cat": "boulevard", "lat": 43.7305, "lon": 7.4215}, {"id": "cost", "name": "Av. de la Costa", "cat": "boulevard", "lat": 43.7316, "lon": 7.4235}, {"id": "pgra", "name": "Av. Psse-Grace", "cat": "boulevard", "lat": 43.7382, "lon": 7.4302}, {"id": "jard", "name": "Bd Jardin Exotique", "cat": "boulevard", "lat": 43.7352, "lon": 7.4119}, {"id": "pisc", "name": "Route de la Piscine", "cat": "boulevard", "lat": 43.7455, "lon": 7.422}, {"id": "tl2", "name": "Tunnel Louis-II", "cat": "tunnel", "lat": 43.7351, "lon": 7.4168}, {"id": "tfair", "name": "Tunnel Fairmont", "cat": "tunnel", "lat": 43.7408, "lon": 7.4287}, {"id": "tr3", "name": "Tunnel Rainier-III", "cat": "tunnel", "lat": 43.7315, "lon": 7.4188}, {"id": "tje", "name": "Tunnel Jardin Exo.", "cat": "tunnel", "lat": 43.7356, "lon": 7.4118}, {"id": "tcol", "name": "Tunnel de la Colle", "cat": "tunnel", "lat": 43.7442, "lon": 7.4143}, {"id": "tcan", "name": "Tunnel Canton", "cat": "tunnel", "lat": 43.7352, "lon": 7.4158}, {"id": "trno", "name": "Tunnel Rocher-Noghès", "cat": "tunnel", "lat": 43.7331, "lon": 7.4193}, {"id": "tsd", "name": "Tunnel Ste-Dévote", "cat": "tunnel", "lat": 43.7339, "lon": 7.4172}, {"id": "tport", "name": "Tunnel du Portier", "cat": "tunnel", "lat": 43.7321, "lon": 7.4219}, {"id": "tcas", "name": "Tunnel Casino/Costa", "cat": "tunnel", "lat": 43.739, "lon": 7.427}, {"id": "marq", "name": "Liaison Marquet", "cat": "tunnel", "lat": 43.7346, "lon": 7.415}, {"id": "basse", "name": "Basse Corniche", "cat": "corniche", "lat": 43.728, "lon": 7.395}, {"id": "moyen", "name": "Moyenne Corniche", "cat": "corniche", "lat": 43.739, "lon": 7.371}, {"id": "grande", "name": "Grande Corniche", "cat": "corniche", "lat": 43.76, "lon": 7.39}, {"id": "a500", "name": "A500 / Accès A8", "cat": "corniche", "lat": 43.733, "lon": 7.4163}];
 var MCO_PREV={};
-function spMco(cur,ff){if(!ff||!cur)return'inconnu';var r=cur/ff;if(r>=0.75)return'fluide';if(r>=0.55)return'ralenti';if(r>=0.35)return'dense';return'bloque';}
+function spMco(cur,ff){if(!ff||!cur)return'inconnu';var r=cur/ff;if(r>=0.60)return'fluide';if(r>=0.40)return'ralenti';if(r>=0.25)return'dense';return'bloque';}
 var MCO_LBL={fluide:'Fluide',ralenti:'Ralenti',dense:'Dense',bloque:'Bloqu\u00e9',inconnu:'N/A'};
 function fetchMco(lat,lon){
   return fetch('https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json?point='+lat.toFixed(5)+','+lon.toFixed(5)+'&unit=KMPH&key=nFt8c40zRLaLYYghcApBurt0ZyK7FIbA',{headers:{Accept:'application/json'}})
@@ -1878,24 +1946,38 @@ function fetchMonaco(){
   el.innerHTML='<div class="a8-loading">Chargement\u2026</div>';
   var now=Date.now();
   try{var s=localStorage.getItem('mco_prev');if(s)MCO_PREV=JSON.parse(s);}catch(e){}
-  Promise.all(MONACO_AXES.map(function(ax){return fetchMco(ax.lat,ax.lon).then(function(d){return{ax:ax,d:d};});}))
+  /* Deux sondes par axe : sens A (lat+off, lon+off) et sens B (lat-off, lon-off) */
+  Promise.all(MONACO_AXES.map(function(ax){
+    var off=0.0005; /* ~50m offset pour différencier les deux sens */
+    return Promise.all([
+      fetchMco(ax.lat+off, ax.lon+off),
+      fetchMco(ax.lat-off, ax.lon-off)
+    ]).then(function(r){return{ax:ax,dA:r[0],dB:r[1]};});
+  }))
   .then(function(results){
     var newPrev={};results.forEach(function(r){newPrev[r.ax.id]={cur:r.d.cur,ff:r.d.ff,ts:now};});
     var cats={boulevard:{label:'Boulevards & Avenues',items:[]},tunnel:{label:'Tunnels',items:[]},corniche:{label:'Cornishes & Acc\u00e8s',items:[]}};
     results.forEach(function(r){
-      var cls=spMco(r.d.cur,r.d.ff),prev=MCO_PREV[r.ax.id],trend='';
-      if(prev&&prev.ff>0&&r.d.ff>0){var diff=r.d.cur/r.d.ff-prev.cur/prev.ff;trend=diff>0.08?'\u2191':diff<-0.08?'\u2193':'\u2192';}
-      cats[r.ax.cat].items.push({ax:r.ax,cls:cls,trend:trend});
+      var clsA=spMco(r.dA.cur,r.dA.ff), clsB=spMco(r.dB.cur,r.dB.ff);
+      var prev=MCO_PREV[r.ax.id],trend='';
+      var curAvg=(r.dA.cur+r.dB.cur)/2, ffAvg=(r.dA.ff+r.dB.ff)/2;
+      if(prev&&prev.ff>0&&ffAvg>0){var diff=curAvg/ffAvg-prev.cur/prev.ff;trend=diff>0.08?'\u2191':diff<-0.08?'\u2193':'\u2192';}
+      cats[r.ax.cat].items.push({ax:r.ax,clsA:clsA,clsB:clsB,dA:r.dA,dB:r.dB,trend:trend});
     });
     MCO_PREV=newPrev;try{localStorage.setItem('mco_prev',JSON.stringify(newPrev));}catch(e){}
     function colHtml(cat){
       var h='<div><div class="mco-col-title">'+cat.label+'</div>';
       cat.items.forEach(function(item){
         var tc=item.trend==='\u2191'?'up':item.trend==='\u2193'?'dn':'eq';
-        h+='<div class="mco-row"><div class="mco-dot '+item.cls+'"></div>'
+        var spdA=item.dA&&item.dA.cur>0?item.dA.cur+' km/h':'';
+        var spdB=item.dB&&item.dB.cur>0?item.dB.cur+' km/h':'';
+        h+='<div class="mco-row">'
           +'<div class="mco-name">'+item.ax.name+'</div>'
-          +'<span class="mco-flu '+item.cls+'">'+MCO_LBL[item.cls]+'</span>'
-          +(item.trend?'<span class="mco-trend '+tc+'">'+item.trend+'</span>':'')
+          +'<div class="mco-dirs">'
+          +'<span class="mco-dir-pill '+item.clsA+'" title="Sens A'+(spdA?' — '+spdA:'')+'">&#8594; '+(spdA||MCO_LBL[item.clsA])+'</span>'
+          +'<span class="mco-dir-pill '+item.clsB+'" title="Sens B'+(spdB?' — '+spdB:'')+'">&#8592; '+(spdB||MCO_LBL[item.clsB])+'</span>'
+          +'</div>'
+          +(item.trend?'<span class="mco-trend '+tc+'">'+item.trend+'</span>':'<span class="mco-trend"></span>')
           +'</div>';
       });
       return h+'</div>';
