@@ -1374,6 +1374,92 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   margin-top:1px;
 }
 
+
+/* SNCF BOARD REDESIGN */
+.train-row{
+  display:grid;
+  grid-template-columns:4px auto auto 1fr auto;
+  align-items:center;
+  gap:0;
+  padding:10px 14px 10px 0;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  min-height:60px;
+}
+.train-row:last-child{border-bottom:none;}
+.tr-bar{
+  width:4px;align-self:stretch;border-radius:2px 0 0 2px;margin-right:14px;
+  flex-shrink:0;
+}
+.tr-bar.ok{background:var(--green);}
+.tr-bar.delayed{background:var(--yellow);}
+.tr-bar.cancelled{background:var(--red);}
+.tr-bar.modified{background:var(--orange);}
+.tr-tc{
+  display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+  min-width:90px;padding-right:14px;
+}
+.tr-status{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+}
+.tr-status.ok{color:var(--green);}
+.tr-status.delayed{color:var(--yellow);}
+.tr-status.cancelled{color:var(--red);}
+.tr-status.modified{color:var(--orange);}
+.tr-time{
+  font-family:'Share Tech Mono',monospace;
+  font-size:22px;font-weight:700;color:#fff;line-height:1;
+}
+.tr-time.cancelled{text-decoration:line-through;opacity:.5;}
+/* Badge retard */
+.tr-badge-wrap{min-width:52px;padding-right:12px;display:flex;align-items:center;justify-content:center;}
+.tr-badge{
+  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:4px;white-space:nowrap;
+}
+.tr-badge.gone{background:rgba(232,16,16,.15);color:#ff5252;border:1px solid rgba(232,16,16,.3);}
+.tr-badge.modif{background:rgba(255,107,53,.15);color:#FF6B35;border:1px solid rgba(255,107,53,.3);}
+.tr-delay-pill{
+  font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;
+  color:var(--yellow);background:rgba(245,197,24,.12);
+  border:1px solid rgba(245,197,24,.25);
+  padding:3px 8px;border-radius:4px;white-space:nowrap;
+}
+/* Destination */
+.tr-dest{flex:1;min-width:0;}
+.tr-dname{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:800;letter-spacing:.02em;
+  color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  display:block;
+}
+.tr-dname.x{text-decoration:line-through;opacity:.4;}
+.tr-dsub{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;color:var(--muted);margin-top:1px;display:block;
+}
+/* Voie */
+.tr-voie{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin-left:16px;flex-shrink:0;
+}
+.tr-voie-lbl{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);margin-bottom:3px;
+}
+.tr-voie-box{
+  width:36px;height:36px;border-radius:6px;
+  border:2px solid rgba(255,255,255,.18);
+  display:flex;align-items:center;justify-content:center;
+  background:var(--card);
+}
+.tr-voie-box.empty{border-color:rgba(255,255,255,.07);opacity:.4;}
+.tr-voie-v{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:900;color:#fff;letter-spacing:.05em;
+}
+
 </style>
 </head>
 <body>
@@ -1569,9 +1655,41 @@ setInterval(tick,1000);tick();
 
 /* TRAFIC */
 var W='https://sncf-proxy.nicolas7lejeune.workers.dev';var TEST_MODE=false;var TEST_DATA=[{"id":"t1","_trains":["881 134"],"_stops":[{"name":"Cannes"}],"_lines":[],"severity":{"effect":"SIGNIFICANT_DELAYS"},"messages":[{"text":"Retards 20-45 min.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T12:00:00","end":"2099-12-31T23:59:59"}]}];var ORDER=['cannes','nice','monaco','menton'];
-function buildTrainRow(t){var s=t.statusClass,out=s==='cancelled'?' x':'';var bdg='';if(s==='cancelled')bdg='<div class="tr-badge-wrap"><span class="tr-badge gone">Supprime</span></div>';else if(t.delayMin>0){var h=Math.floor(t.delayMin/60),m=t.delayMin%60;var lbl=h>0?'+'+h+'h'+(m<10?'0':'')+m:'+'+t.delayMin+' min';bdg='<div class="tr-badge-wrap delayed-cell"><div class="t-flip"><span class="va">'+t.planned+'</span><div class="vb"><span class="vb-lbl">'+lbl+'</span></div></div></div>';}else if(s==='modified')bdg='<div class="tr-badge-wrap"><span class="tr-badge modif">Modifie</span></div>';else bdg='<div class="tr-badge-wrap"></div>';var v=t.platform||'';var voie=v?'<div class="tr-voie"><span class="tr-voie-lbl">Voie</span><div class="tr-voie-box"><span class="tr-voie-v">'+v+'</span></div></div>':'<div class="tr-voie"><span class="tr-voie-lbl">Voie</span><div class="tr-voie-box empty"><span class="tr-voie-v">-</span></div></div>';return'<div class="train-row"><div class="tr-bar '+s+'"></div><div class="tr-tc"><span class="tr-status '+s+'">'+t.statusLabel+'</span><span class="tr-time'+(s==='cancelled'?' cancelled':'')+'">'+t.planned+'</span></div>'+bdg+'<div class="tr-dest"><span class="tr-dname'+out+'">'+t.direction+'</span><span class="tr-dsub">'+t.sub+'</span></div>'+voie+'</div>';}
+function buildTrainRow(t){
+  var s=t.statusClass||'ok';
+  /* Barre colorée */
+  var bar='<div class="tr-bar '+s+'"></div>';
+  /* Statut + heure */
+  var time='<div class="tr-tc">'
+    +'<span class="tr-status '+s+'">'+t.statusLabel+'</span>'
+    +'<span class="tr-time'+(s==='cancelled'?' cancelled':'')+'">'+t.planned+'</span>'
+    +'</div>';
+  /* Badge retard ou vide */
+  var badge='<div class="tr-badge-wrap">';
+  if(s==='cancelled'){badge+='<span class="tr-badge gone">Supprimé</span>';}
+  else if(t.delayMin>0){
+    var h=Math.floor(t.delayMin/60),m=t.delayMin%60;
+    var lbl=h>0?'+'+h+'h'+(m<10?'0':'')+m:'+'+t.delayMin+' min';
+    badge+='<span class="tr-delay-pill">'+lbl+'</span>';
+  } else if(s==='modified'){badge+='<span class="tr-badge modif">Modifié</span>';}
+  badge+='</div>';
+  /* Destination */
+  var out=s==='cancelled'?' x':'';
+  var dest='<div class="tr-dest">'
+    +'<span class="tr-dname'+out+'">'+t.direction+'</span>'
+    +'<span class="tr-dsub">'+t.sub+'</span>'
+    +'</div>';
+  /* Voie */
+  var v=t.platform||'';
+  var voie='<div class="tr-voie">'
+    +'<span class="tr-voie-lbl">Voie</span>'
+    +'<div class="tr-voie-box'+(v?'':' empty')+'">'
+    +'<span class="tr-voie-v">'+(v||'–')+'</span>'
+    +'</div></div>';
+  return'<div class="train-row">'+bar+time+badge+dest+voie+'</div>';
+}
 function renderStation(st,el){if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}el.innerHTML=st.trains.map(buildTrainRow).join('');}
-function loadBoard(){fetch(W+'/board?count=4').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){var u=document.getElementById('last-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)renderStation(d.board&&d.board[k],p);});}).catch(function(e){ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)p.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';});});}
+function loadBoard(){fetch(W+'/board?count=6').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){var u=document.getElementById('last-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)renderStation(d.board&&d.board[k],p);});}).catch(function(e){ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)p.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';});});}
 function hdate(iso){if(!iso)return'';var d=new Date(iso);return isNaN(d)?iso:d.toLocaleString('fr-FR',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}
 function renderDis(list,isTest){var el=document.getElementById('dis-body');if(!el)return;var cEl=document.getElementById('dis-count');if(cEl)cEl.textContent=list.length?list.length+' perturbation'+(list.length>1?'s':'')+' active'+(list.length>1?'s':''):'';if(!list.length){el.innerHTML='<div class="no-dis">&#10004; Aucune perturbation active</div>';return;}var bC=function(e){return{NO_SERVICE:'NO_SERVICE',SIGNIFICANT_DELAYS:'SIGNIFICANT_DELAYS',REDUCED_SERVICE:'REDUCED_SERVICE',MODIFIED_SERVICE:'MODIFIED_SERVICE'}[e]||'default';};var bL=function(e){return{NO_SERVICE:'Suppression',SIGNIFICANT_DELAYS:'Retards importants',REDUCED_SERVICE:'Service reduit',MODIFIED_SERVICE:'Parcours modifie'}[e]||(e?e.replace(/_/g,' '):'Perturbation');};var sC=function(d){var e=((d.severity&&d.severity.effect)||'').toUpperCase();return e==='NO_SERVICE'?'severe':e.indexOf('MODIFIED')!==-1||e.indexOf('REDUCED')!==-1?'modified':e.indexOf('DELAY')!==-1?'':'info';};var fP=function(p){if(!p||!p.length)return'';var o=[];p.slice(0,2).forEach(function(x){var f=hdate(x.begin),t=hdate(x.end);if(f&&t)o.push('Du '+f+' au '+t);else if(f)o.push('Depuis '+f);});return o.join(' \u2014 ');};var html='';list.forEach(function(d){var eff=(d.severity&&d.severity.effect)||'';var trains=(d._trains||[]).slice(0,6).join(', ');var stops=(d._stops||[]).slice(0,5).map(function(x){return x.name;}).join(', ');var lines=(d._lines||[]).slice(0,3).join(', ');var msgs=d.messages||[],best=null;var prio=['web','notification','long_sms','sms'];for(var p=0;p<prio.length&&!best;p++)for(var i=0;i<msgs.length;i++){var ch=(msgs[i].channel&&msgs[i].channel.types)||[];if(ch.indexOf(prio[p])!==-1){best=msgs[i];break;}}if(!best&&msgs.length)best=msgs[0];var txt=((best&&best.text)?best.text:'').replace(/\n/g,'<br>').slice(0,500);var per=fP(d.application_periods);var title=trains||stops||lines||'Perturbation reseau';if(title.length>90)title=title.slice(0,87)+'...';var meta=trains&&stops?'<strong>Gares :</strong> '+stops:stops&&!trains?'<strong>Gares :</strong> '+stops:lines?'<strong>Ligne :</strong> '+lines:'';html+='<div class="dis-item '+sC(d)+(isTest?' test-mode':'')+'">'+( isTest?'<div class="dis-test-lbl">&#9670; MODE TEST</div>':'')+'<div class="dis-top"><div><div class="dis-title">'+title+'</div>'+(meta?'<div class="dis-meta">'+meta+'</div>':'')+'</div><span class="dis-badge '+bC(eff)+'">'+bL(eff)+'</span></div>'+(txt?'<div class="dis-txt">'+txt+'</div>':'')+(per?'<div class="dis-per">&#128337; '+per+'</div>':'')+'</div>';});el.innerHTML=html;}
 function loadDis(){TEST_MODE=false;var el=document.getElementById('dis-body');if(!el)return;el.innerHTML='<p style="padding:10px 0;font-size:12px;color:var(--muted);font-family:monospace">Chargement...</p>';fetch(W+'/disruptions').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(data){var now=Date.now();var list=(data.disruptions||[]).filter(function(d){if(d.status==='active'||d.status==='future')return true;var p=d.application_periods||[];if(!p.length)return true;for(var i=0;i<p.length;i++){var e=p[i].end?new Date(p[i].end).getTime():Infinity;if(e>=now)return true;}return false;});renderDis(list,false);}).catch(function(e){document.getElementById('dis-body').innerHTML='<div class="no-dis" style="color:#ff8080">Erreur : '+e.message+'</div>';});}
