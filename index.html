@@ -1460,6 +1460,160 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   font-size:16px;font-weight:900;color:#fff;letter-spacing:.05em;
 }
 
+
+/* ═══ TABLEAU SNCF — DESIGN OFFICIEL ═══════════════════════════════════ */
+.stations-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+}
+.station-panel{
+  border-right:1px solid rgba(255,255,255,.08);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.station-panel:nth-child(2n){border-right:none;}
+.station-panel:nth-last-child(-n+2){border-bottom:none;}
+
+.station-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 18px 9px;
+  background:#0b1525;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.station-head-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;
+  color:#fff;
+}
+.station-head-dot{
+  width:9px;height:9px;border-radius:50%;background:#22C05E;
+  box-shadow:0 0 6px #22C05E;
+}
+
+/* Tableau des trains */
+.train-board{width:100%;}
+.train-row{
+  display:flex;align-items:stretch;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  background:#0e1c30;
+  transition:background .1s;
+  min-height:62px;
+}
+.train-row:last-child{border-bottom:none;}
+.train-row:hover{background:#132440;}
+
+/* Barre de statut (gauche) */
+.tr-bar{
+  width:5px;flex-shrink:0;
+  border-radius:0;
+}
+.tr-bar.ok      {background:#22C05E;}
+.tr-bar.delayed {background:#F5C518;}
+.tr-bar.cancelled{background:#E81010;}
+.tr-bar.modified{background:#FF6B35;}
+
+/* Colonne heure */
+.tr-tc{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10px 20px 10px 16px;
+  min-width:100px;
+}
+.tr-status{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);margin-bottom:2px;
+}
+.tr-status.ok      {color:#22C05E;}
+.tr-status.delayed {color:#F5C518;}
+.tr-status.cancelled{color:#E81010;text-decoration:line-through;}
+.tr-status.modified{color:#FF6B35;}
+.tr-time{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:28px;font-weight:900;letter-spacing:.02em;line-height:1;
+  color:#F5C518;
+}
+.tr-time.cancelled{color:rgba(255,255,255,.3);text-decoration:line-through;}
+.tr-time.ok      {color:#F5C518;}
+.tr-time.delayed {color:#F5C518;}
+
+/* Séparateur vertical */
+.tr-sep{
+  width:1px;background:rgba(255,255,255,.08);
+  margin:10px 0;flex-shrink:0;
+}
+
+/* Badge retard */
+.tr-badge-wrap{
+  display:flex;align-items:center;justify-content:center;
+  min-width:64px;padding:0 10px;
+}
+.tr-delay-pill{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:800;letter-spacing:.06em;
+  color:#F5C518;background:rgba(245,197,24,.12);
+  border:1px solid rgba(245,197,24,.3);
+  padding:3px 10px;border-radius:4px;white-space:nowrap;
+}
+.tr-badge{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;
+}
+.tr-badge.gone {background:rgba(232,16,16,.15);color:#ff5252;border:1px solid rgba(232,16,16,.3);}
+.tr-badge.modif{background:rgba(255,107,53,.15);color:#FF6B35;border:1px solid rgba(255,107,53,.3);}
+
+/* Destination */
+.tr-dest{
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  padding:10px 16px;
+}
+.tr-dname{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:800;letter-spacing:.03em;
+  color:#fff;line-height:1.1;
+}
+.tr-dname.x{opacity:.35;text-decoration:line-through;}
+.tr-dsub{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:600;letter-spacing:.05em;
+  color:rgba(255,255,255,.38);margin-top:3px;
+}
+
+/* Badge voie */
+.tr-voie{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 18px 0 8px;
+  flex-shrink:0;
+}
+.tr-voie-lbl{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);margin-bottom:4px;
+}
+.tr-voie-box{
+  width:40px;height:40px;border-radius:7px;
+  border:2px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;
+}
+.tr-voie-box.filled{
+  background:#fff;border-color:#fff;
+}
+.tr-voie-v{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:900;letter-spacing:.05em;
+  color:rgba(255,255,255,.5);
+}
+.tr-voie-box.filled .tr-voie-v{color:#0e1c30;}
+
+/* Messages d'erreur/chargement */
+.board-msg{
+  padding:20px 18px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);text-align:center;
+}
+.board-msg.board-err{color:#ff5252;}
+
 </style>
 </head>
 <body>
@@ -1657,21 +1811,25 @@ setInterval(tick,1000);tick();
 var W='https://sncf-proxy.nicolas7lejeune.workers.dev';var TEST_MODE=false;var TEST_DATA=[{"id":"t1","_trains":["881 134"],"_stops":[{"name":"Cannes"}],"_lines":[],"severity":{"effect":"SIGNIFICANT_DELAYS"},"messages":[{"text":"Retards 20-45 min.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T12:00:00","end":"2099-12-31T23:59:59"}]}];var ORDER=['cannes','nice','monaco','menton'];
 function buildTrainRow(t){
   var s=t.statusClass||'ok';
-  /* Barre colorée */
+  /* Barre gauche */
   var bar='<div class="tr-bar '+s+'"></div>';
   /* Statut + heure */
   var time='<div class="tr-tc">'
     +'<span class="tr-status '+s+'">'+t.statusLabel+'</span>'
-    +'<span class="tr-time'+(s==='cancelled'?' cancelled':'')+'">'+t.planned+'</span>'
+    +'<span class="tr-time '+s+'">'+t.planned+'</span>'
     +'</div>';
-  /* Badge retard ou vide */
+  /* Séparateur */
+  var sep='<div class="tr-sep"></div>';
+  /* Badge retard */
   var badge='<div class="tr-badge-wrap">';
-  if(s==='cancelled'){badge+='<span class="tr-badge gone">Supprimé</span>';}
-  else if(t.delayMin>0){
+  if(s==='cancelled'){
+    badge+='<span class="tr-badge gone">Supprimé</span>';
+  } else if(t.delayMin>0){
     var h=Math.floor(t.delayMin/60),m=t.delayMin%60;
-    var lbl=h>0?'+'+h+'h'+(m<10?'0':'')+m:'+'+t.delayMin+' min';
-    badge+='<span class="tr-delay-pill">'+lbl+'</span>';
-  } else if(s==='modified'){badge+='<span class="tr-badge modif">Modifié</span>';}
+    badge+='<span class="tr-delay-pill">+'+(h>0?h+'h'+(m<10?'0':'')+m:t.delayMin+' min')+'</span>';
+  } else if(s==='modified'){
+    badge+='<span class="tr-badge modif">Modifié</span>';
+  }
   badge+='</div>';
   /* Destination */
   var out=s==='cancelled'?' x':'';
@@ -1683,10 +1841,9 @@ function buildTrainRow(t){
   var v=t.platform||'';
   var voie='<div class="tr-voie">'
     +'<span class="tr-voie-lbl">Voie</span>'
-    +'<div class="tr-voie-box'+(v?'':' empty')+'">'
-    +'<span class="tr-voie-v">'+(v||'–')+'</span>'
-    +'</div></div>';
-  return'<div class="train-row">'+bar+time+badge+dest+voie+'</div>';
+    +'<div class="tr-voie-box'+(v?' filled':'')+'"><span class="tr-voie-v">'+(v||'–')+'</span></div>'
+    +'</div>';
+  return'<div class="train-row">'+bar+time+sep+badge+dest+voie+'</div>';
 }
 function renderStation(st,el){if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}el.innerHTML=st.trains.map(buildTrainRow).join('');}
 function loadBoard(){fetch(W+'/board?count=6').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){var u=document.getElementById('last-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)renderStation(d[k],p);});}).catch(function(e){ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)p.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';});});}
