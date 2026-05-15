@@ -22,7 +22,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 .hdr-clock{font-family:'Share Tech Mono',monospace;font-size:30px;color:#fff;text-align:right;white-space:nowrap;}
 .tab-content{display:none;}
 .tab-content.active{display:block;}
-.wrap{max-width:100%;margin:0;padding:0;}
+.wrap{max-width:100%;margin:0;padding:0 12px;}
 
 /* BLUE CARD */
 .bc{background:var(--hero-grad);border:1px solid var(--hero-border);border-radius:12px;position:relative;overflow:hidden;margin-bottom:20px;}
@@ -1464,19 +1464,18 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 /* ═══ TABLEAU SNCF — DESIGN OFFICIEL ═══════════════════════════════════ */
 .stations-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(4,1fr);
   gap:0;
 }
 .station-panel{
   border-right:1px solid rgba(255,255,255,.08);
-  border-bottom:1px solid rgba(255,255,255,.08);
+  border-bottom:none;
 }
-.station-panel:nth-child(2n){border-right:none;}
-.station-panel:nth-last-child(-n+2){border-bottom:none;}
+.station-panel:last-child{border-right:none;}
 
 .station-head{
   display:flex;align-items:center;justify-content:space-between;
-  padding:10px 18px 9px;
+  padding:8px 12px 7px;
   background:#0b1525;
   border-bottom:1px solid rgba(255,255,255,.1);
 }
@@ -1497,7 +1496,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
   border-bottom:1px solid rgba(255,255,255,.06);
   background:#0e1c30;
   transition:background .1s;
-  min-height:62px;
+  min-height:54px;
 }
 .train-row:last-child{border-bottom:none;}
 .train-row:hover{background:#132440;}
@@ -1515,8 +1514,8 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 /* Colonne heure */
 .tr-tc{
   display:flex;flex-direction:column;justify-content:center;
-  padding:10px 20px 10px 16px;
-  min-width:100px;
+  padding:8px 14px 8px 12px;
+  min-width:80px;
 }
 .tr-status{
   font-family:'Barlow Condensed',sans-serif;
@@ -1568,7 +1567,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 }
 .tr-dname{
   font-family:'Inter','Barlow',sans-serif;
-  font-size:17px;font-weight:600;letter-spacing:0;
+  font-size:15px;font-weight:600;letter-spacing:0;
   color:#fff;line-height:1.2;
 }
 .tr-dname.x{opacity:.35;text-decoration:line-through;}
@@ -1581,7 +1580,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 /* Badge voie */
 .tr-voie{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:0 18px 0 8px;
+  padding:0 10px 0 6px;
   flex-shrink:0;
 }
 .tr-voie-lbl{
@@ -1683,15 +1682,15 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 
 
 /* FULL WIDTH — zéro marge globale */
-.wrap{max-width:100%;margin:0;padding:0;}
+.wrap{max-width:100%;margin:0;padding:0 12px;}
 .section-card{border-radius:0;border-left:none;border-right:none;margin:0;}
 .section-card+.section-card{border-top:1px solid var(--border);}
 .w-sub-tabs,.w-sub-content,.a8-tl-wrap{padding-left:0;padding-right:0;}
 
 
 /* ZÉRO MARGE — pleine largeur */
-.wrap{max-width:100% !important;padding:0 !important;margin:0 !important;}
-.tab-content>.wrap{padding:0 !important;}
+.wrap{max-width:100%;margin:0;padding:0 12px;}
+.tab-content>.wrap{max-width:100%;margin:0;padding:0 12px;}
 .section-card{border-radius:0 !important;margin:0 !important;}
 .section-card+.section-card{border-top:1px solid var(--border);}
 .a8-road-section,.a8-tl-wrap{padding:0 !important;}
