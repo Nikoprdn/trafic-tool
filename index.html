@@ -1750,12 +1750,21 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
       <div class="section-spacer"></div>
 
     <div class="section-card">
-      <div class="card-h">
+      <div class="card-h" style="flex-wrap:wrap;row-gap:6px;">
         <span style="font-size:15px">&#128739;&#65039;</span>
-        <span class="card-t">A8 — Trafic par section</span>
+        <span class="card-t">A8 &mdash; Trafic par section</span>
         <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
         <span id="a8-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
-        <div id="a8-zoom-btns" style="display:flex;gap:4px;margin-left:12px;flex-wrap:wrap;"><button class="a8-zoom-btn active" id="a8z-full"    onclick="A8Z='full';  loadA8Traffic();">Complet</button><button class="a8-zoom-btn"        id="a8z-cannes"  onclick="A8Z='cannes';loadA8Traffic();">Cannes</button><button class="a8-zoom-btn"        id="a8z-antibes" onclick="A8Z='antibes';loadA8Traffic();">Antibes</button><button class="a8-zoom-btn"        id="a8z-nice"    onclick="A8Z='nice';  loadA8Traffic();">Nice</button><button class="a8-zoom-btn"        id="a8z-monaco"  onclick="A8Z='monaco';loadA8Traffic();">Monaco</button></div><button class="rbtn" onclick="loadA8Traffic()">&#8635; Actualiser</button>
+        <button class="rbtn" onclick="loadA8Traffic()">&#8635; Actualiser</button>
+        <!-- Barre zooms sur 2ème ligne -->
+        <div id="a8-zoom-btns" style="width:100%;display:flex;gap:6px;padding:0 0 2px;border-top:1px solid rgba(255,255,255,.07);padding-top:6px;">
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);align-self:center;margin-right:4px;">Zone</span>
+          <button class="a8-zoom-btn active" id="a8z-full"    onclick="A8Z='full';  loadA8Traffic();">A8 compl&egrave;te</button>
+          <button class="a8-zoom-btn"        id="a8z-cannes"  onclick="A8Z='cannes';loadA8Traffic();">Cannes</button>
+          <button class="a8-zoom-btn"        id="a8z-antibes" onclick="A8Z='antibes';loadA8Traffic();">Antibes</button>
+          <button class="a8-zoom-btn"        id="a8z-nice"    onclick="A8Z='nice';  loadA8Traffic();">Nice</button>
+          <button class="a8-zoom-btn"        id="a8z-monaco"  onclick="A8Z='monaco';loadA8Traffic();">Monaco / Menton</button>
+        </div>
       </div>
       <div id="a8-timeline-wrap" class="a8-tl-wrap"><div class="a8-tl-loading">Chargement trafic A8...</div></div>
       <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a><span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span></div>
@@ -1920,7 +1929,7 @@ function buildTrainRow(t){
 
   return'<div class="train-row">'+bar+time+sep+badge+dest+'</div>';
 }
-function renderStation(st,el){if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}el.innerHTML=st.trains.map(buildTrainRow).join('');}
+function renderStation(st,el){if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}el.innerHTML=st.trains.slice(0,5).map(buildTrainRow).join('');}
 function toggleStation(key){
   var panel=document.getElementById('panel-'+key);
   var btn=document.getElementById('tog-'+key);
