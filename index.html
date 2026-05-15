@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Radio Monaco — Studio Tools</title>
+<link rel="stylesheet" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps.css">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{--red:#E4032E;--bg:#0D1016;--panel:#12151C;--card:#181B26;--border:#232730;--text:#E8EAF0;--muted:#5E6474;--muted2:#42465A;--yellow:#F5C518;--orange:#FF6B35;--green:#27AE60;--sb-bg:#003580;--sb-head:#002055;--sb-row:#004AC0;--sb-alt:#0041A8;--sb-sep:rgba(255,255,255,.06);--blue-deep:#071830;--blue-mid:#0A2A5E;--hero-grad:linear-gradient(135deg,#071830 0%,#0A2A5E 55%,#0D3060 100%);--hero-border:rgba(255,255,255,.1);}
@@ -1679,6 +1680,30 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
   border-left:none;border-right:none;
 }
 
+
+/* MONACO COMPACT — liste + carte */
+#monaco-traffic-body .mco-inner{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:0 12px;
+  padding:8px 10px 10px;
+}
+#monaco-traffic-body .mco-col-title{
+  font-size:8px;letter-spacing:.2em;padding:0 0 4px;margin-bottom:3px;
+}
+#monaco-traffic-body .mco-row{
+  padding:3px 0;
+}
+#monaco-traffic-body .mco-name{
+  font-size:11px;
+}
+#monaco-traffic-body .mco-status-lbl{
+  font-size:9px;
+}
+#monaco-traffic-body .mco-dot{
+  width:6px;height:6px;
+}
+
 </style>
 </head>
 <body>
@@ -1746,7 +1771,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
       <div class="section-spacer"></div></div>
 
     <!-- MONACO -->
-    <div class="section-card">
+    <div class="section-card" style="padding-bottom:0;">
       <div class="card-h">
         <span style="font-size:15px">&#127467;&#127462;</span>
         <span class="card-t">Trafic Monaco &mdash; Axes principaux</span>
@@ -1754,9 +1779,16 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
         <span id="monaco-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
         <button class="rbtn" onclick="fetchMonaco()">&#8635; Actualiser</button>
       </div>
-      <div id="monaco-traffic-body"><div class="a8-loading">Chargement…</div></div>
+      <!-- Layout 2 colonnes : axes (40%) + carte (60%) -->
+      <div id="monaco-layout" style="display:grid;grid-template-columns:40% 60%;min-height:320px;">
+        <!-- Axes trafic compacts -->
+        <div id="monaco-traffic-body" style="border-right:1px solid var(--border);overflow-y:auto;max-height:360px;">
+          <div class="a8-loading">Chargement…</div>
+        </div>
+        <!-- Carte TomTom Monaco -->
+        <div id="monaco-map" style="width:100%;height:360px;background:#0a0c12;"></div>
+      </div>
     </div>
-div>
 
     <div class="section-card">
       <div class="card-h">
@@ -2517,7 +2549,96 @@ function edPrint(){
   var html=document.getElementById('ed-doc').innerHTML;
   var w=window.open('','_blank');if(!w)return;
   w.document.open();
-  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:sans-serif;max-width:800px;margin:40px auto;font-size:14px;line-height:1.75}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px 10px}blockquote{border-left:3px solid #E4032E;padding-left:12px;color:#666}h1,h2,h3{margin:.5em 0}a{color:#E4032E}</style></head><body>'+html+'</body></html>');
+  var css='body{font-family:sans-serif;max-width:800px;margin:40px auto;font-size:14px;line-height:1.75}';
+  css+='table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:6px 10px}';
+  css+='blockquote{border-left:3px solid #E4032E;padding-left:12px;color:#666}';
+  css+='h1,h2,h3{margin:.5em 0}a{color:#E4032E}';
+  var page='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>'+css+'</style></head><body>'+html+'</body></html>';
+  w.document.write(page);
+  w.document.close();w.focus();setTimeout(function(){w.print();},300);
+}
+function edCopy(){navigator.clipboard.writeText(document.getElementById('ed-doc').innerText).catch(function(){});}
+function edSave(){
+  var html=document.getElementById('ed-doc').innerHTML;
+  localStorage.setItem('rm_draft',html);
+  var blob=new Blob(['<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:sans-serif;max-width:860px;margin:40px auto;padding:0 24px;font-size:14px;line-height:1.75}</style></head><body>'+html+'</body></html>'],{type:'text/html;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download='note_'+new Date().toISOString().slice(0,16).replace('T','_').replace(':','-')+'.html';
+  document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(url);document.body.removeChild(a);},1000);
+}
+function edClear(){if(confirm('Vider ?')){document.getElementById('ed-doc').innerHTML='';localStorage.removeItem('rm_draft');}}
+(document.getElementById('ed-doc')||{addEventListener:function(){}}).addEventListener('input',function(){var t=this.innerText.trim();var wc=t?t.split(/[^\w]+/).length:0;var el=document.getElementById('ed-wc');if(el)el.textContent=wc+' mot'+(wc>1?'s':'')+' \u00b7 '+t.length+' car.';});
+(function(){var m=document.getElementById('ed-modal'),hd=document.getElementById('ed-drag'),ox=0,oy=0,lx=0,ly=0,on=false;
+if(!m||!hd)return;
+hd.addEventListener('mousedown',function(e){on=true;ox=e.clientX-lx;oy=e.clientY-ly;document.addEventListener('mousemove',mv);document.addEventListener('mouseup',mu);});
+function mv(e){if(!on)return;lx=e.clientX-ox;ly=e.clientY-oy;m.style.position='fixed';m.style.left=lx+'px';m.style.top=ly+'px';m.style.transform='none';}
+function mu(){on=false;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',mu);}
+})();
+setTimeout(function(){if(typeof fetchMonaco==='function')fetchMonaco();},1000);</script>
+
+<script>
+/* ── Monaco Map TomTom ── */
+(function(){
+  var MAP_KEY='Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
+  var _map=null,_done=false;
+
+  function tryLoad(){
+    if(_done)return;
+    var el=document.getElementById('monaco-map');
+    if(!el||el.offsetParent===null)return; /* pas visible */
+    if(typeof tt==='undefined'){
+      /* Charger le SDK dynamiquement */
+      if(!document.getElementById('tt-sdk-js')){
+        var s=document.createElement('script');
+        s.id='tt-sdk-js';
+        s.src='https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js';
+        s.onload=function(){ setTimeout(initMonacoMap,300); };
+        document.head.appendChild(s);
+      }
+      return;
+    }
+    initMonacoMap();
+  }
+
+  function initMonacoMap(){
+    if(_done)return;
+    var el=document.getElementById('monaco-map');
+    if(!el)return;
+    _done=true;
+    try{
+      _map=tt.map({
+        key: MAP_KEY,
+        container: 'monaco-map',
+        center: [7.4246, 43.7384],
+        zoom: 14,
+        language: 'fr-FR',
+        style: 'tomtom://vector/1/basic-night',
+        stylesVisibility:{
+          trafficFlow: true,
+          trafficIncidents: true
+        }
+      });
+      _map.addControl(new tt.NavigationControl(),'bottom-right');
+      _map.on('load',function(){
+        /* Centrer sur Monaco avec padding */
+        _map.fitBounds([[7.406,43.724],[7.443,7.751]],{padding:20,animate:false});
+      });
+    }catch(e){
+      if(el)el.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#ff8080;font-size:12px;font-family:monospace;">'+e.message+'</div>';
+    }
+  }
+
+  /* Déclencher quand le tab trafic devient visible */
+  var orig=window.switchTab;
+  window.switchTab=function(n){
+    if(typeof orig==='function')orig(n);
+    if(n==='trafic')setTimeout(tryLoad,800);
+  };
+  setInterval(function(){if(!_done)tryLoad();},1000);
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(tryLoad,1500);});
+})();
+</script>
+</body></html>');
   w.document.close();w.focus();setTimeout(function(){w.print();},300);
 }
 function edCopy(){navigator.clipboard.writeText(document.getElementById('ed-doc').innerText).catch(function(){});}
