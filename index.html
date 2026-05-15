@@ -1248,18 +1248,16 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 .a8-lane-name-txt{font-family:'Barlow Condensed',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);}
 
 /* MONACO DIRECTIONS */
-.mco-dirs{display:flex;gap:4px;align-items:center;flex-shrink:0;}
-.mco-dir-pill{
-  display:inline-flex;align-items:center;
-  padding:2px 7px;border-radius:10px;
-  font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;
-  white-space:nowrap;
+.mco-status-lbl{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  flex-shrink:0;
 }
-.mco-dir-pill.fluide {background:rgba(34,192,94,.15);color:#22C05E;}
-.mco-dir-pill.ralenti{background:rgba(255,214,0,.12);color:#FFD600;}
-.mco-dir-pill.dense  {background:rgba(255,107,0,.15);color:#FF8C00;}
-.mco-dir-pill.bloque {background:rgba(232,16,16,.15);color:#ff5252;}
-.mco-dir-pill.inconnu{background:rgba(255,255,255,.04);color:var(--muted);}
+.mco-status-lbl.fluide {color:#22C05E;}
+.mco-status-lbl.ralenti{color:#FFD600;}
+.mco-status-lbl.dense  {color:#FF8C00;}
+.mco-status-lbl.bloque {color:#ff5252;}
+.mco-status-lbl.inconnu{color:var(--muted2);}
 .mco-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);}
 .mco-row:last-child{border-bottom:none;}
 .mco-name{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,.75);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -1673,6 +1671,14 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 .w-sub-content>.wrap,.w-sub-tabs{padding:0 !important;}
 .dis-wrap,.dis-merge-head{padding-left:16px;padding-right:16px;}
 
+
+/* SÉPARATEURS ENTRE SECTIONS */
+.section-spacer{
+  height:12px;
+  background:var(--bg);
+  border-left:none;border-right:none;
+}
+
 </style>
 </head>
 <body>
@@ -1722,7 +1728,8 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
         <button class="rbtn" onclick="loadDis()">&#8635; Live</button>
       </div>
       <div id="dis-body" class="dis-wrap"><p style="font-size:12px;color:var(--muted);font-family:monospace">Chargement...</p></div>
-    </div>
+    
+      <div class="section-spacer"></div></div>
 
     <div class="section-card">
       <div class="card-h">
@@ -1735,7 +1742,8 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
         <button class="rbtn" onclick="loadTravel()">&#8635; Actualiser</button>
       </div>
       <div id="travel-grid"></div>
-    </div>
+    
+      <div class="section-spacer"></div></div>
 
     <!-- MONACO -->
     <div class="section-card">
@@ -1761,7 +1769,8 @@ div>
       </div>
       <div id="a8-timeline-wrap" class="a8-tl-wrap"><div class="a8-tl-loading">Chargement trafic A8...</div></div>
       <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a><span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span></div>
-    </div>
+    
+      <div class="section-spacer"></div></div>
 
     <div class="section-card">
       <div class="card-h"><span style="font-size:15px">&#128506;&#65039;</span><span class="card-t">Waze — Monaco</span><div class="pill" style="margin-left:10px"><span class="dot"></span>LIVE</div></div>
@@ -1915,13 +1924,7 @@ function buildTrainRow(t){
     +'<span class="tr-dsub">'+t.sub+'</span>'
     +'</div>';
 
-  var v=t.platform||'';
-  var voie='<div class="tr-voie">'
-    +'<span class="tr-voie-lbl">Voie</span>'
-    +'<div class="tr-voie-box'+(v?' filled':'')+'"><span class="tr-voie-v">'+(v||'–')+'</span></div>'
-    +'</div>';
-
-  return'<div class="train-row">'+bar+time+sep+badge+dest+voie+'</div>';
+  return'<div class="train-row">'+bar+time+sep+badge+dest+'</div>';
 }
 function renderStation(st,el){if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}el.innerHTML=st.trains.map(buildTrainRow).join('');}
 function toggleStation(key){
@@ -2470,18 +2473,14 @@ function fetchMonaco(){
     });
     MCO_PREV=newPrev;try{localStorage.setItem('mco_prev',JSON.stringify(newPrev));}catch(e){}
     function colHtml(cat){
+      var MS={fluide:"Fluide",ralenti:"Chargé",dense:"Dense",bloque:"Très dense",inconnu:"N/A"};
+      var OR={bloque:0,dense:1,ralenti:2,fluide:3,inconnu:4};
       var h='<div><div class="mco-col-title">'+cat.label+'</div>';
       cat.items.forEach(function(item){
-        var tc=item.trend==='\u2191'?'up':item.trend==='\u2193'?'dn':'eq';
-        var spdA=item.dA&&item.dA.cur>0?item.dA.cur+' km/h':'';
-        var spdB=item.dB&&item.dB.cur>0?item.dB.cur+' km/h':'';
-        h+='<div class="mco-row">'
+        var w=OR[item.clsA]<=OR[item.clsB]?item.clsA:item.clsB;
+        h+='<div class="mco-row"><div class="mco-dot '+w+'"></div>'
           +'<div class="mco-name">'+item.ax.name+'</div>'
-          +'<div class="mco-dirs">'
-          +'<span class="mco-dir-pill '+item.clsA+'" title="Sens A'+(spdA?' — '+spdA:'')+'">&#8594; '+(spdA||MCO_LBL[item.clsA])+'</span>'
-          +'<span class="mco-dir-pill '+item.clsB+'" title="Sens B'+(spdB?' — '+spdB:'')+'">&#8592; '+(spdB||MCO_LBL[item.clsB])+'</span>'
-          +'</div>'
-          +(item.trend?'<span class="mco-trend '+tc+'">'+item.trend+'</span>':'<span class="mco-trend"></span>')
+          +'<span class="mco-status-lbl '+w+'">'+MS[w]+'</span>'
           +'</div>';
       });
       return h+'</div>';
