@@ -1720,8 +1720,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 <div class="st-panel" id="panel-nice"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div><div class="st-board" id="board-nice"><div class="board-msg">Chargement&hellip;</div></div></div>
 <div class="st-panel" id="panel-monaco"><div class="st-head"><span class="st-name">Monaco</span><span class="st-dot"></span></div><div class="st-board" id="board-monaco"><div class="board-msg">Chargement&hellip;</div></div></div>
 <div class="st-panel" id="panel-menton"><div class="st-head"><span class="st-name">Menton</span><span class="st-dot"></span></div><div class="st-board" id="board-menton"><div class="board-msg">Chargement&hellip;</div></div></div>
-</div><div class="st-panel" id="panel-nice"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div>
-<div class="st-panel" id="panel-monaco"><div class="st-head"><span class="st-name">Monaco</span><span class="st-dot"></span></div><div class="st-board" id="board-monaco"><div class="board-msg">Chargement...</div></div></div><div class="st-board" id="board-nice"><div class="board-msg">Chargement...</div></div></div><div class="st-panel" id="panel-menton"><div class="st-head"><span class="st-name">Menton</span><span class="st-dot"></span></div><div class="st-board" id="board-menton"><div class="board-msg">Chargement...</div></div></div>
+</div>
       </div>
       <div class="dis-merge-head">
         <span style="font-size:14px">&#9888;&#65039;</span>
@@ -1756,7 +1755,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
         <span class="card-t">A8 — Trafic par section</span>
         <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
         <span id="a8-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
-        <button class="rbtn" onclick="loadA8Traffic()">&#8635; Actualiser</button>
+        <div id="a8-zoom-btns" style="display:flex;gap:4px;margin-left:12px;flex-wrap:wrap;"><button class="a8-zoom-btn active" id="a8z-full"    onclick="A8Z='full';  loadA8Traffic();">Complet</button><button class="a8-zoom-btn"        id="a8z-cannes"  onclick="A8Z='cannes';loadA8Traffic();">Cannes</button><button class="a8-zoom-btn"        id="a8z-antibes" onclick="A8Z='antibes';loadA8Traffic();">Antibes</button><button class="a8-zoom-btn"        id="a8z-nice"    onclick="A8Z='nice';  loadA8Traffic();">Nice</button><button class="a8-zoom-btn"        id="a8z-monaco"  onclick="A8Z='monaco';loadA8Traffic();">Monaco</button></div><button class="rbtn" onclick="loadA8Traffic()">&#8635; Actualiser</button>
       </div>
       <div id="a8-timeline-wrap" class="a8-tl-wrap"><div class="a8-tl-loading">Chargement trafic A8...</div></div>
       <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a><span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span></div>
@@ -2217,17 +2216,11 @@ function drawRoad(probes,northD,southD){
   if(!wrap)return;
   wrap.innerHTML='';
 
-  /* Zoom bar */
-  var zb=document.createElement('div');zb.className='a8-zoom-bar';
-  zb.innerHTML='<span class="a8-zoom-lbl">Zone</span>';
+  /* Sync boutons zoom du card-h */
   AZM.forEach(function(z){
-    var btn=document.createElement('button');
-    btn.className='a8-zoom-btn'+(z.id===A8Z?' active':'');
-    btn.textContent=z.label;
-    btn.onclick=function(){A8Z=z.id;loadA8Traffic();};
-    zb.appendChild(btn);
+    var b=document.getElementById('a8z-'+z.id);
+    if(b)b.className='a8-zoom-btn'+(z.id===A8Z?' active':'');
   });
-  wrap.appendChild(zb);
 
   var rng=getKmRange();
   var vpKmT=rng.km1-rng.km0||1;
@@ -2373,11 +2366,7 @@ function hideA8Tip(){if(_a8tip)_a8tip.style.display='none';}
 
 function loadA8Traffic(){
   var wrap=document.getElementById('a8-timeline-wrap');if(!wrap)return;
-  var zb=document.createElement('div');zb.className='a8-zoom-bar';
-  zb.innerHTML='<span class="a8-zoom-lbl">Zone</span>';
-  AZM.forEach(function(z){var btn=document.createElement('button');btn.className='a8-zoom-btn'+(z.id===A8Z?' active':'');btn.textContent=z.label;btn.onclick=function(){A8Z=z.id;loadA8Traffic();};zb.appendChild(btn);});
-  wrap.innerHTML='<div class="a8-loading">Chargement trafic A8 ('+getVisibleProbes().length+' km)\u2026</div>';
-  wrap.prepend(zb);
+    wrap.innerHTML='<div class="a8-loading">Chargement…</div>';
 
   var probes=getVisibleProbes();
   Promise.all([
@@ -2531,9 +2520,3 @@ function edPrint(){
 </body>
 </html>
       <div class="section-spacer"></div>
-    
-      <div class="section-spacer"></div>
-    <div class="section-card">
-      <div class="card-h"><span style="font-size:15px">&#128506;&#65039;</span><span class="card-t">Waze — Monaco</span><div class="pill" style="margin-left:10px"><span class="dot"></span>LIVE</div></div>
-      <div class="map-frame"><iframe src="https://embed.waze.com/iframe?zoom=14&lat=43.73916&lon=7.42653&ct=livemap" allow="geolocation" allowfullscreen loading="lazy"></iframe></div>
-    </div>
