@@ -115,9 +115,9 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 .tbtn{background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.4);color:var(--yellow);border-radius:4px;padding:4px 14px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
 .tbtn:hover{background:rgba(245,197,24,.22);}
 .stations-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
-.st-panel{border-right:1px solid var(--border);}
-.st-panel:nth-child(even){border-right:none;}
-.st-panel:nth-child(1),.st-panel:nth-child(2){border-bottom:1px solid var(--border);}
+.st-panel{border-right:1px solid rgba(255,255,255,.08);min-width:0;overflow:hidden;}
+
+.st-panel:nth-child(1),
 .st-head{background:var(--sb-head);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07);}
 .st-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.85);}
 .st-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:bdot 2s ease-in-out infinite;}
@@ -1923,18 +1923,18 @@ function buildTrainRow(t){
 }
 function renderStation(st,el){if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}el.innerHTML=st.trains.map(buildTrainRow).join('');}
 function toggleStation(key){
-  /* Cibler directement le panel par son id */
-  var panel = document.getElementById('panel-'+key);
-  var btn   = document.getElementById('tog-'+key);
-  if(!panel || !btn) return;
-  var hidden = panel.classList.toggle('hidden');
-  btn.classList.toggle('active', !hidden);
-  /* Adapter la grille selon le nb de panels visibles */
-  var grid = document.getElementById('stations-grid');
-  if(!grid) return;
-  var visible = grid.querySelectorAll('.st-panel:not(.hidden)');
-  var n = visible.length;
-  grid.style.gridTemplateColumns = n > 0 ? 'repeat('+n+',1fr)' : 'repeat(4,1fr)';
+  var panel=document.getElementById('panel-'+key);
+  var btn=document.getElementById('tog-'+key);
+  if(!panel||!btn)return;
+  var hidden=panel.classList.toggle('hidden');
+  btn.classList.toggle('active',!hidden);
+  var grid=document.getElementById('stations-grid');
+  if(!grid)return;
+  var panels=Array.from(grid.querySelectorAll('.st-panel'));
+  var visible=panels.filter(function(p){return!p.classList.contains('hidden');});
+  panels.forEach(function(p){p.style.borderRight='1px solid rgba(255,255,255,.08)';});
+  if(visible.length>0)visible[visible.length-1].style.borderRight='none';
+  grid.style.gridTemplateColumns=visible.length>0?'repeat('+visible.length+',1fr)':'repeat(4,1fr)';
 }
 
 function loadBoard(){fetch(W+'/board?count=5').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){var u=document.getElementById('last-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)renderStation(d[k],p);});}).catch(function(e){ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)p.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';});});}
@@ -2015,7 +2015,13 @@ function loadTravel(){
   fetchAllRoutes(isTo).then(function(res){
     var rows=ROUTES.map(function(r,i){return{route:r,result:res.results[i],sort:res.results[i]?res.results[i].duration:999999};});
     rows.sort(function(a,b){return a.sort-b.sort;});
-    var el=document.querySelector('#travel-grid .travel-chips-row');if(!el)return;
+    var el=document.querySelector('#travel-grid .travel-chips-row');
+    if(!el){
+      /* Le skeleton n'a pas été rendu — relancer */
+      renderSkeleton();
+      el=document.querySelector('#travel-grid .travel-chips-row');
+      if(!el)return;
+    }
     el.innerHTML=rows.map(function(row){
       var r=row.result,cls='x',tv='<span class="tc-time x">-</span>',unit='';
       if(r){cls=delayCls(r.noTrafDuration,r.duration);var d=fmtDurClean(r.duration);tv='<span class="tc-time '+cls+'">'+d.val+'</span>';unit=d.unit?'<span class="tc-unit">'+d.unit+'</span>':'';}
