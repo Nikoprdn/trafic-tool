@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Radio Monaco — Studio Tools</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--red:#E4032E;--bg:#0D1016;--panel:#12151C;--card:#181B26;--border:#232730;--text:#E8EAF0;--muted:#5E6474;--muted2:#42465A;--yellow:#F5C518;--orange:#FF6B35;--green:#27AE60;--sb-bg:#003580;--sb-head:#002055;--sb-row:#004AC0;--sb-alt:#0041A8;--sb-sep:rgba(255,255,255,.06);--blue-deep:#071830;--blue-mid:#0A2A5E;--hero-grad:linear-gradient(135deg,#071830 0%,#0A2A5E 55%,#0D3060 100%);--hero-border:rgba(255,255,255,.1);}
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -22,7 +22,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .hdr-clock{font-family:'Share Tech Mono',monospace;font-size:30px;color:#fff;text-align:right;white-space:nowrap;}
 .tab-content{display:none;}
 .tab-content.active{display:block;}
-.wrap{max-width:1600px;margin:0 auto;padding:22px 28px 48px;}
+.wrap{max-width:1600px;margin:0 auto;padding:16px 16px 32px;}
 
 /* BLUE CARD */
 .bc{background:var(--hero-grad);border:1px solid var(--hero-border);border-radius:12px;position:relative;overflow:hidden;margin-bottom:20px;}
@@ -387,7 +387,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 /* ══ DOUBLE BANDE ══ */
 .a8-road-section{
-  padding:20px 20px 0;
+  padding:0;
 }
 
 /* Wrapper positionné pour les sorties à cheval */
@@ -811,7 +811,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 /* Indenter la zone route pour les labels */
 .a8-road-outer{
-  padding-left:80px;
+  padding-left:0;
   position:relative;
 }
 
@@ -1567,15 +1567,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   padding:10px 16px;
 }
 .tr-dname{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:20px;font-weight:800;letter-spacing:.03em;
-  color:#fff;line-height:1.1;
+  font-family:'Inter','Barlow',sans-serif;
+  font-size:17px;font-weight:600;letter-spacing:0;
+  color:#fff;line-height:1.2;
 }
 .tr-dname.x{opacity:.35;text-decoration:line-through;}
 .tr-dsub{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:12px;font-weight:600;letter-spacing:.05em;
-  color:rgba(255,255,255,.38);margin-top:3px;
+  font-family:'Inter','Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:400;letter-spacing:.02em;
+  color:rgba(255,255,255,.4);margin-top:4px;
 }
 
 /* Badge voie */
@@ -2237,10 +2237,11 @@ function drawRoad(probes,northD,southD){
   var vpKmT=rng.km1-rng.km0||1;
 
   /* Labels sens */
-  var dirDiv=document.createElement('div');dirDiv.className='a8-dir-labels';
+  /* Labels de sens supprimés — intégrés dans le résumé */
+  var dirDiv=null;
   dirDiv.innerHTML='<div class="a8-dir-row"><span class="a8-dir-arrow st">&#8592;</span><span class="a8-dir-name">Vers Saint-Tropez</span></div>'
     +'<div class="a8-dir-row"><span class="a8-dir-arrow it">&#8594;</span><span class="a8-dir-name">Vers Italie</span></div>';
-  wrap.appendChild(dirDiv);
+  if(dirDiv)wrap.appendChild(dirDiv);
 
   var section=document.createElement('div');section.className='a8-road-section';
   var outer=document.createElement('div');
