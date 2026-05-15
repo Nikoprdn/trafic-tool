@@ -88,7 +88,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 .w-city.entering{animation:fadeCity .35s ease;}
 
 /* VIGILANCES */
-.vig-grid{display:grid;grid-template-columns:repeat(3,1fr);}
+.vig-grid{display:grid;grid-template-columns:repeat(4,1fr);}
 .vig-dept{padding:20px 24px;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:12px;}
 .vig-dept:last-child{border-right:none;}
 .vig-dept-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.8);margin-bottom:4px;}
@@ -1462,7 +1462,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 /* ═══ TABLEAU SNCF — DESIGN OFFICIEL ═══════════════════════════════════ */
 .stations-grid{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:0;
 }
 .station-panel{
@@ -1716,10 +1716,12 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
         <span class="station-toggle-lbl">Afficher</span>
         <button class="stn-tog active" id="tog-cannes" onclick="toggleStation('cannes')"><span class="stn-tog-dot"></span>Cannes</button>
         <button class="stn-tog active" id="tog-nice"   onclick="toggleStation('nice')"  ><span class="stn-tog-dot"></span>Nice-Ville</button>
+        <button class="stn-tog active" id="tog-monaco" onclick="toggleStation('monaco')"><span class="stn-tog-dot"></span>Monaco</button>
         <button class="stn-tog active" id="tog-menton" onclick="toggleStation('menton')"><span class="stn-tog-dot"></span>Menton</button>
       </div>
       <div class="stations-grid">
-<div class="st-panel" id="panel-cannes"><div class="st-head"><span class="st-name">Cannes</span><span class="st-dot"></span></div><div class="st-board" id="board-cannes"><div class="board-msg">Chargement...</div></div></div><div class="st-panel" id="panel-nice"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div><div class="st-board" id="board-nice"><div class="board-msg">Chargement...</div></div></div><div class="st-panel" id="panel-menton"><div class="st-head"><span class="st-name">Menton</span><span class="st-dot"></span></div><div class="st-board" id="board-menton"><div class="board-msg">Chargement...</div></div></div>
+<div class="st-panel" id="panel-cannes"><div class="st-head"><span class="st-name">Cannes</span><span class="st-dot"></span></div><div class="st-board" id="board-cannes"><div class="board-msg">Chargement...</div></div></div><div class="st-panel" id="panel-nice"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div>
+<div class="st-panel" id="panel-monaco"><div class="st-head"><span class="st-name">Monaco</span><span class="st-dot"></span></div><div class="st-board" id="board-monaco"><div class="board-msg">Chargement...</div></div></div><div class="st-board" id="board-nice"><div class="board-msg">Chargement...</div></div></div><div class="st-panel" id="panel-menton"><div class="st-head"><span class="st-name">Menton</span><span class="st-dot"></span></div><div class="st-board" id="board-menton"><div class="board-msg">Chargement...</div></div></div>
       </div>
       <div class="dis-merge-head">
         <span style="font-size:14px">&#9888;&#65039;</span>
@@ -1746,6 +1748,25 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
       <div id="travel-grid"></div>
     
       <div class="section-spacer"></div></div>
+      <div class="section-spacer"></div>
+
+    <div class="section-card">
+      <div class="card-h">
+        <span style="font-size:15px">&#128739;&#65039;</span>
+        <span class="card-t">A8 — Trafic par section</span>
+        <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
+        <span id="a8-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
+        <button class="rbtn" onclick="loadA8Traffic()">&#8635; Actualiser</button>
+      </div>
+      <div id="a8-timeline-wrap" class="a8-tl-wrap"><div class="a8-tl-loading">Chargement trafic A8...</div></div>
+      <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a><span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span></div>
+    </div>
+      <div class="section-spacer"></div>
+
+    <div class="section-card">
+      <div class="card-h"><span style="font-size:15px">&#128506;&#65039;</span><span class="card-t">Waze — Monaco</span><div class="pill" style="margin-left:10px"><span class="dot"></span>LIVE</div></div>
+      <div class="map-frame"><iframe src="https://embed.waze.com/iframe?zoom=14&lat=43.73916&lon=7.42653&ct=livemap" allow="geolocation" allowfullscreen loading="lazy"></iframe></div>
+    </div>
 
     </div>
 
@@ -2503,3 +2524,10 @@ function edPrint(){
 
 </body>
 </html>
+      <div class="section-spacer"></div>
+    
+      <div class="section-spacer"></div>
+    <div class="section-card">
+      <div class="card-h"><span style="font-size:15px">&#128506;&#65039;</span><span class="card-t">Waze — Monaco</span><div class="pill" style="margin-left:10px"><span class="dot"></span>LIVE</div></div>
+      <div class="map-frame"><iframe src="https://embed.waze.com/iframe?zoom=14&lat=43.73916&lon=7.42653&ct=livemap" allow="geolocation" allowfullscreen loading="lazy"></iframe></div>
+    </div>
