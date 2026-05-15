@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Radio Monaco — Studio Tools</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{--red:#E4032E;--bg:#0D1016;--panel:#12151C;--card:#181B26;--border:#232730;--text:#E8EAF0;--muted:#5E6474;--muted2:#42465A;--yellow:#F5C518;--orange:#FF6B35;--green:#27AE60;--sb-bg:#003580;--sb-head:#002055;--sb-row:#004AC0;--sb-alt:#0041A8;--sb-sep:rgba(255,255,255,.06);--blue-deep:#071830;--blue-mid:#0A2A5E;--hero-grad:linear-gradient(135deg,#071830 0%,#0A2A5E 55%,#0D3060 100%);--hero-border:rgba(255,255,255,.1);}
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -1480,9 +1480,9 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
   border-bottom:1px solid rgba(255,255,255,.1);
 }
 .station-head-name{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;
-  color:#fff;
+  font-family:'DM Sans','Inter',sans-serif;
+  font-size:12px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.9);
 }
 .station-head-dot{
   width:9px;height:9px;border-radius:50%;background:#22C05E;
@@ -1578,31 +1578,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 }
 
 /* Badge voie */
-.tr-voie{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:0 10px 0 6px;
-  flex-shrink:0;
-}
-.tr-voie-lbl{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
-  color:rgba(255,255,255,.3);margin-bottom:4px;
-}
-.tr-voie-box{
-  width:40px;height:40px;border-radius:7px;
-  border:2px solid rgba(255,255,255,.25);
-  background:rgba(255,255,255,.06);
-  display:flex;align-items:center;justify-content:center;
-}
-.tr-voie-box.filled{
-  background:#fff;border-color:#fff;
-}
-.tr-voie-v{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:18px;font-weight:900;letter-spacing:.05em;
-  color:rgba(255,255,255,.5);
-}
-.tr-voie-box.filled .tr-voie-v{color:#0e1c30;}
+/* tr-voie supprimé */
 
 /* Messages d'erreur/chargement */
 .board-msg{
@@ -2483,7 +2459,7 @@ function fetchMonaco(){
     ]).then(function(r){return{ax:ax,dA:r[0],dB:r[1]};});
   }))
   .then(function(results){
-    var newPrev={};results.forEach(function(r){newPrev[r.ax.id]={cur:r.d.cur,ff:r.d.ff,ts:now};});
+    var newPrev={};results.forEach(function(r){var avgCur=(r.dA.cur+r.dB.cur)/2,avgFf=(r.dA.ff+r.dB.ff)/2;newPrev[r.ax.id]={cur:avgCur,ff:avgFf,ts:now};});
     var cats={boulevard:{label:'Boulevards & Avenues',items:[]},tunnel:{label:'Tunnels',items:[]},corniche:{label:'Cornishes & Acc\u00e8s',items:[]}};
     results.forEach(function(r){
       var clsA=spMco(r.dA.cur,r.dA.ff), clsB=spMco(r.dB.cur,r.dB.ff);
