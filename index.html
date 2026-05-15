@@ -114,7 +114,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 .rbtn:hover{border-color:var(--red);color:var(--red);}
 .tbtn{background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.4);color:var(--yellow);border-radius:4px;padding:4px 14px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
 .tbtn:hover{background:rgba(245,197,24,.22);}
-.stations-grid{display:grid;grid-template-columns:1fr 1fr;}
+.stations-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
 .st-panel{border-right:1px solid var(--border);}
 .st-panel:nth-child(even){border-right:none;}
 .st-panel:nth-child(1),.st-panel:nth-child(2){border-bottom:1px solid var(--border);}
@@ -1460,11 +1460,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 
 
 /* ═══ TABLEAU SNCF — DESIGN OFFICIEL ═══════════════════════════════════ */
-.stations-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:0;
-}
+.stations-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
 .station-panel{
   border-right:1px solid rgba(255,255,255,.08);
   border-bottom:none;
@@ -1719,8 +1715,12 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
         <button class="stn-tog active" id="tog-monaco" onclick="toggleStation('monaco')"><span class="stn-tog-dot"></span>Monaco</button>
         <button class="stn-tog active" id="tog-menton" onclick="toggleStation('menton')"><span class="stn-tog-dot"></span>Menton</button>
       </div>
-      <div class="stations-grid">
-<div class="st-panel" id="panel-cannes"><div class="st-head"><span class="st-name">Cannes</span><span class="st-dot"></span></div><div class="st-board" id="board-cannes"><div class="board-msg">Chargement...</div></div></div><div class="st-panel" id="panel-nice"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div>
+      <div c<div class="stations-grid" id="stations-grid">
+<div class="st-panel" id="panel-cannes"><div class="st-head"><span class="st-name">Cannes</span><span class="st-dot"></span></div><div class="st-board" id="board-cannes"><div class="board-msg">Chargement&hellip;</div></div></div>
+<div class="st-panel" id="panel-nice"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div><div class="st-board" id="board-nice"><div class="board-msg">Chargement&hellip;</div></div></div>
+<div class="st-panel" id="panel-monaco"><div class="st-head"><span class="st-name">Monaco</span><span class="st-dot"></span></div><div class="st-board" id="board-monaco"><div class="board-msg">Chargement&hellip;</div></div></div>
+<div class="st-panel" id="panel-menton"><div class="st-head"><span class="st-name">Menton</span><span class="st-dot"></span></div><div class="st-board" id="board-menton"><div class="board-msg">Chargement&hellip;</div></div></div>
+</div><div class="st-panel" id="panel-nice"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div>
 <div class="st-panel" id="panel-monaco"><div class="st-head"><span class="st-name">Monaco</span><span class="st-dot"></span></div><div class="st-board" id="board-monaco"><div class="board-msg">Chargement...</div></div></div><div class="st-board" id="board-nice"><div class="board-msg">Chargement...</div></div></div><div class="st-panel" id="panel-menton"><div class="st-head"><span class="st-name">Menton</span><span class="st-dot"></span></div><div class="st-board" id="board-menton"><div class="board-msg">Chargement...</div></div></div>
       </div>
       <div class="dis-merge-head">
