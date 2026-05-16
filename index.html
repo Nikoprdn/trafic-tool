@@ -121,7 +121,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .st-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.85);}
 .st-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:bdot 2s ease-in-out infinite;}
 .st-board{background:var(--sb-bg);}
-.train-row{display:grid;grid-template-columns:4px 110px 1fr;align-items:stretch;height:60px;border-bottom:1px solid rgba(255,255,255,.06);background:#0d1b2a;overflow:hidden;}
+.train-row{display:grid;grid-template-columns:4px 110px 1fr;align-items:stretch;height:60px;border-bottom:1px solid rgba(255,255,255,.06);background:var(--sb-row);overflow:hidden;}
 
 .train-row:last-child{border-bottom:none;}
 .tr-bar{align-self:stretch;}
@@ -1163,8 +1163,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 }
 
 .train-row:hover{background:#1a3a6e;}
-.train-row:nth-child(odd){background:#0d1b2a;}
-.train-row:nth-child(even){background:#0a1828;}
+.train-row:nth-child(odd){background:var(--sb-row);}
+.train-row:nth-child(even){background:var(--sb-alt);}
 </style>
 </head>
 <body>
