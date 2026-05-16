@@ -114,10 +114,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .rbtn:hover{border-color:var(--red);color:var(--red);}
 .tbtn{background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.4);color:var(--yellow);border-radius:4px;padding:4px 14px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
 .tbtn:hover{background:rgba(245,197,24,.22);}
-.stations-grid{display:grid;grid-template-columns:1fr 1fr;}
+.stations-grid{display:grid;grid-template-columns:repeat(4,1fr);}
 .st-panel{border-right:1px solid var(--border);}
-.st-panel:nth-child(even){border-right:none;}
-.st-panel:nth-child(1),.st-panel:nth-child(2){border-bottom:1px solid var(--border);}
+.st-panel:last-child{border-right:none;}
 .st-head{background:var(--sb-head);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07);}
 .st-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.85);}
 .st-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:bdot 2s ease-in-out infinite;}
@@ -1138,6 +1137,19 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .tc-dest{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .tc-time{display:flex;align-items:baseline;gap:2px;}
 .tc-via{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.22);}
+
+/* TOGGLE GARES */
+.station-toggle-bar{display:flex;gap:6px;padding:8px 16px;background:var(--card);border-bottom:1px solid var(--border);}
+.stn-tog{padding:4px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.45);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.stn-tog.active{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff;}
+.st-panel.hidden{display:none !important;}
+
+/* SNCF : status "À l'heure" en vert */
+.tr-status.ok{color:var(--green) !important;}
+
+/* Rapprocher destination de l'heure */
+.tr-tc{padding:4px 6px 4px 10px;}
+.tr-dest{padding:4px 10px;}
 </style>
 </head>
 <body>
@@ -1168,9 +1180,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
         <span id="last-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:8px"></span>
         <button class="rbtn" onclick="loadBoard()">&#8635; Actualiser</button>
       </div>
-      <div class="stations-grid">
-<div class="st-panel"><div class="st-head"><span class="st-name">Cannes</span><span class="st-dot"></span></div><div class="st-board" id="board-cannes"><div class="board-msg">Chargement...</div></div></div><div class="st-panel"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div><div class="st-board" id="board-nice"><div class="board-msg">Chargement...</div></div></div><div class="st-panel"><div class="st-head"><span class="st-name">Monaco</span><span class="st-dot"></span></div><div class="st-board" id="board-monaco"><div class="board-msg">Chargement...</div></div></div><div class="st-panel"><div class="st-head"><span class="st-name">Menton</span><span class="st-dot"></span></div><div class="st-board" id="board-menton"><div class="board-msg">Chargement...</div></div></div>
-      </div>
+      <div class="station-toggle-bar"><button class="stn-tog active" id="tog-cannes"  onclick="toggleStation('cannes')">Cannes</button><button class="stn-tog active" id="tog-nice"    onclick="toggleStation('nice')">Nice-Ville</button><button class="stn-tog active" id="tog-monaco"  onclick="toggleStation('monaco')">Monaco</button><button class="stn-tog active" id="tog-menton"  onclick="toggleStation('menton')">Menton</button></div><div class="stations-grid" id="stations-grid"><div class="st-panel" id="panel-cannes"><div class="st-head"><span class="st-name">Cannes</span><span class="st-dot"></span></div><div class="st-board" id="board-cannes"><div class="board-msg">Chargement&hellip;</div></div></div><div class="st-panel" id="panel-nice"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div><div class="st-board" id="board-nice"><div class="board-msg">Chargement&hellip;</div></div></div><div class="st-panel" id="panel-monaco"><div class="st-head"><span class="st-name">Monaco</span><span class="st-dot"></span></div><div class="st-board" id="board-monaco"><div class="board-msg">Chargement&hellip;</div></div></div><div class="st-panel" id="panel-menton"><div class="st-head"><span class="st-name">Menton</span><span class="st-dot"></span></div><div class="st-board" id="board-menton"><div class="board-msg">Chargement&hellip;</div></div></div></div>
       <div class="dis-merge-head">
         <span style="font-size:14px">&#9888;&#65039;</span>
         <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;">Perturbations</span>
@@ -1527,6 +1537,19 @@ setInterval(function(){if(traficLoaded)loadTravel();},600000);
 setInterval(function(){if(traficLoaded)loadA8Traffic();},300000);
 setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM();loadWeatherIDF();loadVigilance();}},300000);
 
+
+function toggleStation(key){
+  var panel=document.getElementById('panel-'+key);
+  var btn=document.getElementById('tog-'+key);
+  if(!panel||!btn)return;
+  var hidden=panel.classList.toggle('hidden');
+  btn.classList.toggle('active',!hidden);
+  var grid=document.getElementById('stations-grid');
+  if(!grid)return;
+  var visible=Array.from(grid.querySelectorAll('.st-panel:not(.hidden)'));
+  visible.forEach(function(p,i){p.style.borderRight=i<visible.length-1?'1px solid var(--border)':'none';});
+  grid.style.gridTemplateColumns='repeat('+Math.max(1,visible.length)+',1fr)';
+}
 </script>
 
 <script>
