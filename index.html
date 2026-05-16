@@ -1677,6 +1677,30 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 
 
 .st-panel.hidden{display:none;}
+
+/* PERTURBATIONS ENRICHIES */
+.dis-item{padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.06);border-left:3px solid rgba(255,255,255,.15);}
+.dis-item.no-service{border-left-color:var(--red);}
+.dis-item.delayed{border-left-color:var(--orange);}
+.dis-item.reduced,.dis-item.modified{border-left-color:var(--yellow);}
+.dis-item.detour{border-left-color:#60a5fa;}
+.dis-item:last-child{border-bottom:none;}
+.dis-header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px;}
+.dis-badge{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:2px 8px;border-radius:4px;}
+.dis-badge.no-service{background:rgba(232,16,16,.2);color:#ff5252;}
+.dis-badge.delayed{background:rgba(255,107,53,.2);color:#FF6B35;}
+.dis-badge.reduced,.dis-badge.modified{background:rgba(245,197,24,.15);color:#F5C518;}
+.dis-badge.detour{background:rgba(96,165,250,.15);color:#60a5fa;}
+.dis-badge.other{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);}
+.dis-station{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);padding:2px 8px;border-radius:4px;}
+.dis-cause{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.4);font-style:italic;}
+.dis-period{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto;}
+.dis-title{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:#fff;line-height:1.4;margin-bottom:3px;}
+.dis-detail{font-family:'Inter',sans-serif;font-size:11px;color:rgba(255,255,255,.55);line-height:1.5;margin-bottom:5px;}
+.dis-trains{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;}
+.dis-train-num{display:inline-block;background:rgba(255,255,255,.08);border-radius:3px;padding:1px 5px;margin:0 2px;font-weight:700;color:rgba(255,255,255,.7);}
+.dis-trains em{color:var(--orange);font-style:normal;font-weight:700;}
+
 </style>
 </head>
 <body>
@@ -1699,6 +1723,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 
 <div class="tab-content" id="tab-trafic">
   <div class="wrap">
+
     <div class="section-card">
       <div class="card-h">
         <span style="font-size:15px">&#128642;</span>
@@ -1714,24 +1739,15 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
         <button class="stn-tog active" id="tog-monaco" onclick="toggleStation('monaco')"><span class="stn-tog-dot"></span>Monaco</button>
         <button class="stn-tog active" id="tog-menton" onclick="toggleStation('menton')"><span class="stn-tog-dot"></span>Menton</button>
       </div>
-      <div c<div class="stations-grid" id="stations-grid">
+      <div class="stations-grid" id="stations-grid">
 <div class="st-panel" id="panel-cannes"><div class="st-head"><span class="st-name">Cannes</span><span class="st-dot"></span></div><div class="st-board" id="board-cannes"><div class="board-msg">Chargement&hellip;</div></div></div>
 <div class="st-panel" id="panel-nice"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div><div class="st-board" id="board-nice"><div class="board-msg">Chargement&hellip;</div></div></div>
 <div class="st-panel" id="panel-monaco"><div class="st-head"><span class="st-name">Monaco</span><span class="st-dot"></span></div><div class="st-board" id="board-monaco"><div class="board-msg">Chargement&hellip;</div></div></div>
 <div class="st-panel" id="panel-menton"><div class="st-head"><span class="st-name">Menton</span><span class="st-dot"></span></div><div class="st-board" id="board-menton"><div class="board-msg">Chargement&hellip;</div></div></div>
 </div>
       </div>
-      <div class="dis-merge-head">
-        <span style="font-size:14px">&#9888;&#65039;</span>
-        <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;">Perturbations</span>
-        <span id="dis-count" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:4px"></span>
-        <div class="pill" style="margin-left:4px"><span class="dot"></span>Actives</div>
-        <button class="tbtn" onclick="testDis()" style="margin-left:8px">&#9670; Tester</button>
-        <button class="rbtn" onclick="loadDis()">&#8635; Live</button>
-      </div>
-      <div id="dis-body" class="dis-wrap"><p style="font-size:12px;color:var(--muted);font-family:monospace">Chargement...</p></div>
-    
-      <div class="section-spacer"></div></div>
+
+      <div class="section-spacer"></div>
 
     <div class="section-card">
       <div class="card-h">
@@ -1745,7 +1761,8 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
       </div>
       <div id="travel-grid"></div>
     
-      <div class="section-spacer"></div></div>
+          </div>
+
       <div class="section-spacer"></div>
 
     <div class="section-card">
@@ -1769,16 +1786,13 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
       <div id="a8-timeline-wrap" class="a8-tl-wrap"><div class="a8-tl-loading">Chargement trafic A8...</div></div>
       <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a><span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span></div>
     </div>
+
       <div class="section-spacer"></div>
 
     <div class="section-card">
       <div class="card-h"><span style="font-size:15px">&#128506;&#65039;</span><span class="card-t">Waze — Monaco</span><div class="pill" style="margin-left:10px"><span class="dot"></span>LIVE</div></div>
       <div class="map-frame"><iframe src="https://embed.waze.com/iframe?zoom=14&lat=43.73916&lon=7.42653&ct=livemap" allow="geolocation" allowfullscreen loading="lazy"></iframe></div>
     </div>
-
-    </div>
-
-    
 
   </div>
 </div>
@@ -1947,7 +1961,72 @@ function toggleStation(key){
 
 function loadBoard(){fetch(W+'/board?count=5').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){var u=document.getElementById('last-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)renderStation(d[k],p);});}).catch(function(e){ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)p.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';});});}
 function hdate(iso){if(!iso)return'';var d=new Date(iso);return isNaN(d)?iso:d.toLocaleString('fr-FR',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}
-function renderDis(list,isTest){var el=document.getElementById('dis-body');if(!el)return;var cEl=document.getElementById('dis-count');if(cEl)cEl.textContent=list.length?list.length+' perturbation'+(list.length>1?'s':'')+' active'+(list.length>1?'s':''):'';if(!list.length){el.innerHTML='<div class="no-dis">&#10004; Aucune perturbation active</div>';return;}var bC=function(e){return{NO_SERVICE:'NO_SERVICE',SIGNIFICANT_DELAYS:'SIGNIFICANT_DELAYS',REDUCED_SERVICE:'REDUCED_SERVICE',MODIFIED_SERVICE:'MODIFIED_SERVICE'}[e]||'default';};var bL=function(e){return{NO_SERVICE:'Suppression',SIGNIFICANT_DELAYS:'Retards importants',REDUCED_SERVICE:'Service reduit',MODIFIED_SERVICE:'Parcours modifie'}[e]||(e?e.replace(/_/g,' '):'Perturbation');};var sC=function(d){var e=((d.severity&&d.severity.effect)||'').toUpperCase();return e==='NO_SERVICE'?'severe':e.indexOf('MODIFIED')!==-1||e.indexOf('REDUCED')!==-1?'modified':e.indexOf('DELAY')!==-1?'':'info';};var fP=function(p){if(!p||!p.length)return'';var o=[];p.slice(0,2).forEach(function(x){var f=hdate(x.begin),t=hdate(x.end);if(f&&t)o.push('Du '+f+' au '+t);else if(f)o.push('Depuis '+f);});return o.join(' \u2014 ');};var html='';list.forEach(function(d){var eff=(d.severity&&d.severity.effect)||'';var trains=(d._trains||[]).slice(0,6).join(', ');var stops=(d._stops||[]).slice(0,5).map(function(x){return x.name;}).join(', ');var lines=(d._lines||[]).slice(0,3).join(', ');var msgs=d.messages||[],best=null;var prio=['web','notification','long_sms','sms'];for(var p=0;p<prio.length&&!best;p++)for(var i=0;i<msgs.length;i++){var ch=(msgs[i].channel&&msgs[i].channel.types)||[];if(ch.indexOf(prio[p])!==-1){best=msgs[i];break;}}if(!best&&msgs.length)best=msgs[0];var txt=((best&&best.text)?best.text:'').replace(/\n/g,'<br>').slice(0,500);var per=fP(d.application_periods);var title=trains||stops||lines||'Perturbation reseau';if(title.length>90)title=title.slice(0,87)+'...';var meta=trains&&stops?'<strong>Gares :</strong> '+stops:stops&&!trains?'<strong>Gares :</strong> '+stops:lines?'<strong>Ligne :</strong> '+lines:'';html+='<div class="dis-item '+sC(d)+(isTest?' test-mode':'')+'">'+( isTest?'<div class="dis-test-lbl">&#9670; MODE TEST</div>':'')+'<div class="dis-top"><div><div class="dis-title">'+title+'</div>'+(meta?'<div class="dis-meta">'+meta+'</div>':'')+'</div><span class="dis-badge '+bC(eff)+'">'+bL(eff)+'</span></div>'+(txt?'<div class="dis-txt">'+txt+'</div>':'')+(per?'<div class="dis-per">&#128337; '+per+'</div>':'')+'</div>';});el.innerHTML=html;}
+function renderDis(list,isTest){
+  var el=document.getElementById('dis-body');if(!el)return;
+  var cEl=document.getElementById('dis-count');
+  if(cEl)cEl.textContent=list.length?list.length+' perturbation'+(list.length>1?'s':'')+' active'+(list.length>1?'s':''):'';
+  if(!list.length){el.innerHTML='<div class="no-dis">&#10004; Aucune perturbation active</div>';return;}
+
+  var EFFECT_CLS={
+    'NO_SERVICE':'no-service',
+    'SIGNIFICANT_DELAYS':'delayed',
+    'REDUCED_SERVICE':'reduced',
+    'MODIFIED_SERVICE':'modified',
+    'DETOUR':'detour',
+    'ADDITIONAL_SERVICE':'additional',
+    'OTHER_EFFECT':'other',
+    'UNKNOWN_EFFECT':'other',
+  };
+  var EFFECT_LBL={
+    'NO_SERVICE':'Suppression',
+    'SIGNIFICANT_DELAYS':'Retard significatif',
+    'REDUCED_SERVICE':'Service réduit',
+    'MODIFIED_SERVICE':'Modification',
+    'DETOUR':'Détournement',
+    'ADDITIONAL_SERVICE':'Train supplémentaire',
+    'OTHER_EFFECT':'Perturbation',
+    'UNKNOWN_EFFECT':'Perturbation',
+  };
+
+  el.innerHTML=list.map(function(d){
+    var cls=EFFECT_CLS[d.effect||d.severity]||'other';
+    var lbl=EFFECT_LBL[d.effect||d.severity]||d.effect||'Perturbation';
+    var cause=d.cause?'<span class="dis-cause">'+d.cause+'</span>':'';
+    var period='';
+    if(d.since||d.until){
+      var pFrom=d.since?('Depuis '+d.since):'',
+          pTo=d.until?('jusqu\u0027au '+d.until):'',
+          pSep=(d.since&&d.until)?' ':''
+      period='<span class="dis-period">'+pFrom+pSep+pTo+'</span>';
+    }
+    var station=d.station?'<span class="dis-station">'+d.station+'</span>':'';
+    /* Trains impactés */
+    var trainsHtml='';
+    if(d.trains&&d.trains.length){
+      trainsHtml='<div class="dis-trains">Trains impactés : '
+        +d.trains.map(function(t){
+          var delay='';
+          if(t.stops&&t.stops.length){
+            var s=t.stops.find(function(s){return s.delay>0;})||t.stops[0];
+            if(s&&s.delay>0)delay=' <em>+'+Math.round(s.delay/60)+' min</em>';
+          }
+          return '<span class="dis-train-num">'+t.name+'</span>'+delay;
+        }).join(', ')
+        +'</div>';
+    }
+    return '<div class="dis-item '+cls+'">'
+      +'<div class="dis-header">'
+        +'<span class="dis-badge '+cls+'">'+lbl+'</span>'
+        +station
+        +cause
+        +period
+      +'</div>'
+      +'<div class="dis-title">'+d.title+'</div>'
+      +(d.detail&&d.detail!==d.title?'<div class="dis-detail">'+d.detail+'</div>':'')
+      +trainsHtml
+      +'</div>';
+  }).join('');
+}
 function loadDis(){TEST_MODE=false;var el=document.getElementById('dis-body');if(!el)return;el.innerHTML='<p style="padding:10px 0;font-size:12px;color:var(--muted);font-family:monospace">Chargement...</p>';fetch(W+'/disruptions').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(data){var now=Date.now();var list=(data.disruptions||[]).filter(function(d){if(d.status==='active'||d.status==='future')return true;var p=d.application_periods||[];if(!p.length)return true;for(var i=0;i<p.length;i++){var e=p[i].end?new Date(p[i].end).getTime():Infinity;if(e>=now)return true;}return false;});renderDis(list,false);}).catch(function(e){document.getElementById('dis-body').innerHTML='<div class="no-dis" style="color:#ff8080">Erreur : '+e.message+'</div>';});}
 function testDis(){TEST_MODE=true;renderDis(TEST_DATA,true);}
 
@@ -2528,4 +2607,3 @@ function edPrint(){
 
 </body>
 </html>
-      <div class="section-spacer"></div>
