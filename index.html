@@ -120,16 +120,16 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .st-head{background:var(--sb-head);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07);}
 .st-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.85);}
 .st-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:bdot 2s ease-in-out infinite;}
-.st-board{background:var(--sb-bg);}
-.train-row{display:grid;grid-template-columns:4px 110px 1fr;align-items:stretch;height:60px;border-bottom:1px solid rgba(255,255,255,.06);background:var(--sb-row);overflow:hidden;}
+.st-board{background:#0a1626;}
+.train-row{display:grid;grid-template-columns:4px 110px 1fr;align-items:stretch;height:60px;border-bottom:1px solid rgba(255,255,255,.06);background:#0d1b35;overflow:hidden;}
 
 .train-row:last-child{border-bottom:none;}
 .tr-bar{align-self:stretch;}
 .tr-bar.ok{background:var(--green);}.tr-bar.delayed{background:var(--orange);}.tr-bar.cancelled{background:var(--red);}.tr-bar.modified{background:var(--orange);}
 .tr-tc{display:flex;flex-direction:column;justify-content:center;padding:5px 4px 5px 14px;gap:1px;}
-.tr-status{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;line-height:1;color:rgba(255,255,255,.45);}
+.tr-status{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;line-height:1;font-style:italic;color:rgba(255,255,255,.5);}
 .tr-status.delayed{color:var(--orange);}.tr-status.cancelled{color:#ff8080;}.tr-status.modified{color:var(--orange);}.tr-status.ok{color:rgba(255,255,255,.38);}
-.tr-time{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--yellow);line-height:1;letter-spacing:.02em;}
+.tr-time{font-family:'Share Tech Mono',monospace;font-size:26px;font-weight:700;color:#F5C518;line-height:1;}
 .tr-time.cancelled{color:var(--muted);text-decoration:line-through;}
 .tr-badge-wrap{display:flex;align-items:center;justify-content:center;padding:0 8px;}
 .tr-badge{display:inline-flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;padding:5px 14px;border-radius:22px;white-space:nowrap;}
@@ -142,9 +142,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 @keyframes va{0%{opacity:1;}38%{opacity:1;}48%{opacity:0;}100%{opacity:0;}}
 @keyframes vb{0%{opacity:0;}38%{opacity:0;}48%{opacity:1;}95%{opacity:1;}100%{opacity:0;}}
 .tr-dest{display:flex;flex-direction:column;justify-content:center;padding:5px 12px 5px 10px;overflow:hidden;}
-.tr-dname{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;}
+.tr-dname{font-family:'Inter','Barlow',sans-serif;font-size:16px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;}
 .tr-dname.x{text-decoration:line-through;color:var(--muted);font-weight:400;}
-.tr-dsub{font-family:'Share Tech Mono',monospace;font-size:9.5px;color:rgba(255,255,255,.32);margin-top:3px;}
+.tr-dsub{font-family:'Inter','Barlow',sans-serif;font-size:11px;color:rgba(255,255,255,.45);margin-top:2px;}
 .tr-voie{display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.18);padding:0 8px;}
 .tr-voie-lbl{font-size:8px;color:rgba(255,255,255,.3);font-family:'Barlow Condensed',sans-serif;letter-spacing:.07em;text-transform:uppercase;}
 .tr-voie-box{background:#fff;border-radius:5px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;margin-top:2px;}
@@ -1141,7 +1141,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 /* ── SNCF AMÉLIORATIONS ── */
 /* Status en vert */
-.tr-status.ok{color:var(--green);}
+.tr-status.ok{color:#22C05E;font-style:italic;}
 /* Overlay clignotant retard */
 @keyframes blinkPlanned{0%,45%{opacity:1;}50%,95%{opacity:0;}100%{opacity:1;}}
 @keyframes blinkReal{0%,45%{opacity:0;}50%,95%{opacity:1;}100%{opacity:0;}}
@@ -1162,9 +1162,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   margin-left:8px;vertical-align:middle;
 }
 
-.train-row:hover{background:#1a3a6e;}
-.train-row:nth-child(odd){background:var(--sb-row);}
-.train-row:nth-child(even){background:var(--sb-alt);}
+.train-row:hover{background:#1a4fca;}
+.train-row:nth-child(odd){background:#0d1b35;}
+.train-row:nth-child(even){background:#132444;}
 </style>
 </head>
 <body>
