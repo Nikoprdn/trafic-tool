@@ -1485,11 +1485,12 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 /* Tableau des trains */
 .train-board{width:100%;}
 .train-row{
-  display:flex;align-items:stretch;
+  display:flex;align-items:center;
   border-bottom:1px solid rgba(255,255,255,.06);
   background:#0e1c30;
   transition:background .1s;
-  min-height:44px;
+  height:56px;
+  overflow:hidden;
 }
 .train-row:last-child{border-bottom:none;}
 .train-row:hover{background:#132440;}
@@ -1507,8 +1508,8 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 /* Colonne heure */
 .tr-tc{
   display:flex;flex-direction:column;justify-content:center;
-  padding:6px 12px 6px 10px;
-  min-width:80px;
+  padding:4px 10px 4px 8px;
+  min-width:76px;flex-shrink:0;
 }
 .tr-status{
   font-family:'Barlow Condensed',sans-serif;
@@ -1560,14 +1561,14 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 }
 .tr-dname{
   font-family:'Inter','Barlow',sans-serif;
-  font-size:14px;font-weight:600;letter-spacing:0;
-  color:#fff;line-height:1.15;
+  font-size:13px;font-weight:600;letter-spacing:0;
+  color:#fff;line-height:1.2;
 }
 .tr-dname.x{opacity:.35;text-decoration:line-through;}
 .tr-dsub{
   font-family:'Inter','Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:400;letter-spacing:.02em;
-  color:rgba(255,255,255,.4);margin-top:4px;
+  font-size:10px;font-weight:400;letter-spacing:.02em;
+  color:rgba(255,255,255,.4);margin-top:2px;
 }
 
 /* Badge voie */
@@ -1593,23 +1594,22 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 .tr-time-planned{
   display:block;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:28px;font-weight:900;letter-spacing:.02em;line-height:1;
+  font-size:13px;font-weight:700;letter-spacing:.02em;line-height:1;
   color:rgba(255,255,255,.35);
   text-decoration:line-through;
   text-decoration-color:rgba(255,107,53,.6);
-  font-size:18px;
-  margin-bottom:2px;
+  margin-bottom:1px;
 }
 .tr-time-real{
   display:block;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:28px;font-weight:900;letter-spacing:.02em;line-height:1;
+  font-size:24px;font-weight:900;letter-spacing:.02em;line-height:1;
   color:#FF6B35;
   animation:flipTime 3s ease-in-out infinite;
 }
 .tr-time-real-static{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:28px;font-weight:900;letter-spacing:.02em;line-height:1;
+  font-size:24px;font-weight:900;letter-spacing:.02em;line-height:1;
 }
 .tr-time-real-static.ok      {color:#F5C518;}
 .tr-time-real-static.cancelled{color:rgba(255,255,255,.3);text-decoration:line-through;}
