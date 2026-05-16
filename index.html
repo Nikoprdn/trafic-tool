@@ -105,7 +105,7 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 
 /* TRAFIC */
 .section-card{background:var(--sc-bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
-.card-h{display:flex;align-items:center;gap:12px;padding:0 20px;height:48px;background:var(--card);border-bottom:1px solid var(--border);}
+.card-h{display:flex;align-items:center;gap:12px;padding:8px 20px;min-height:48px;background:var(--card);border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .card-t{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;}
 .pill{display:flex;align-items:center;gap:5px;background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);border-radius:20px;padding:2px 9px;font-size:10px;color:var(--green);font-family:'Share Tech Mono',monospace;white-space:nowrap;}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:bdot 2s ease-in-out infinite;}
@@ -115,9 +115,8 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 .tbtn{background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.4);color:var(--yellow);border-radius:4px;padding:4px 14px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
 .tbtn:hover{background:rgba(245,197,24,.22);}
 .stations-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;}
-.st-panel{border-right:1px solid rgba(255,255,255,.08);min-width:0;overflow:hidden;}
+.st-panel{border-right:1px solid rgba(255,255,255,.08);min-width:180px;overflow:hidden;}
 
-.st-panel:nth-child(1),
 .st-head{background:var(--sb-head);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07);}
 .st-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.85);}
 .st-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:bdot 2s ease-in-out infinite;}
@@ -1750,21 +1749,22 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
       <div class="section-spacer"></div>
 
     <div class="section-card">
-      <div class="card-h" style="flex-wrap:wrap;row-gap:6px;">
+      <div class="card-h">
         <span style="font-size:15px">&#128739;&#65039;</span>
         <span class="card-t">A8 &mdash; Trafic par section</span>
         <div class="pill" style="margin-left:10px"><span class="dot"></span>TomTom Live</div>
         <span id="a8-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:auto"></span>
         <button class="rbtn" onclick="loadA8Traffic()">&#8635; Actualiser</button>
         <!-- Barre zooms sur 2ème ligne -->
-        <div id="a8-zoom-btns" style="width:100%;display:flex;gap:6px;padding:0 0 2px;border-top:1px solid rgba(255,255,255,.07);padding-top:6px;">
-          <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);align-self:center;margin-right:4px;">Zone</span>
-          <button class="a8-zoom-btn active" id="a8z-full"    onclick="A8Z='full';  loadA8Traffic();">A8 compl&egrave;te</button>
-          <button class="a8-zoom-btn"        id="a8z-cannes"  onclick="A8Z='cannes';loadA8Traffic();">Cannes</button>
-          <button class="a8-zoom-btn"        id="a8z-antibes" onclick="A8Z='antibes';loadA8Traffic();">Antibes</button>
-          <button class="a8-zoom-btn"        id="a8z-nice"    onclick="A8Z='nice';  loadA8Traffic();">Nice</button>
-          <button class="a8-zoom-btn"        id="a8z-monaco"  onclick="A8Z='monaco';loadA8Traffic();">Monaco / Menton</button>
-        </div>
+        
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;padding:6px 20px 6px;background:var(--card);border-bottom:1px solid var(--border);">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-right:4px;">Zone</span>
+        <button class="a8-zoom-btn active" id="a8z-full"    onclick="A8Z='full';  loadA8Traffic();">A8 complète</button>
+        <button class="a8-zoom-btn"        id="a8z-cannes"  onclick="A8Z='cannes';loadA8Traffic();">Cannes</button>
+        <button class="a8-zoom-btn"        id="a8z-antibes" onclick="A8Z='antibes';loadA8Traffic();">Antibes</button>
+        <button class="a8-zoom-btn"        id="a8z-nice"    onclick="A8Z='nice';  loadA8Traffic();">Nice</button>
+        <button class="a8-zoom-btn"        id="a8z-monaco"  onclick="A8Z='monaco';loadA8Traffic();">Monaco / Menton</button>
       </div>
       <div id="a8-timeline-wrap" class="a8-tl-wrap"><div class="a8-tl-loading">Chargement trafic A8...</div></div>
       <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a><span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span></div>
