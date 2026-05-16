@@ -1138,18 +1138,23 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .tc-time{display:flex;align-items:baseline;gap:2px;}
 .tc-via{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.22);}
 
-/* TOGGLE GARES */
-.station-toggle-bar{display:flex;gap:6px;padding:8px 16px;background:var(--card);border-bottom:1px solid var(--border);}
+
+/* ── SNCF AMÉLIORATIONS ── */
+/* Status en vert */
+.tr-status.ok{color:var(--green);}
+/* Overlay clignotant retard */
+@keyframes blinkPlanned{0%,45%{opacity:1;}50%,95%{opacity:0;}100%{opacity:1;}}
+@keyframes blinkReal{0%,45%{opacity:0;}50%,95%{opacity:1;}100%{opacity:0;}}
+.tr-time-wrap{position:relative;display:inline-block;line-height:1;}
+.tr-time-planned{font-family:'Share Tech Mono',monospace;font-size:26px;font-weight:700;color:var(--yellow);display:block;animation:blinkPlanned 2.5s ease-in-out infinite;}
+.tr-time-real{position:absolute;top:0;left:0;font-family:'Share Tech Mono',monospace;font-size:26px;font-weight:700;color:var(--orange);white-space:nowrap;animation:blinkReal 2.5s ease-in-out infinite;}
+/* Toggle gares */
+.station-toggle-bar{display:flex;gap:6px;padding:8px 16px;background:var(--card);border-bottom:1px solid var(--border);flex-wrap:wrap;}
 .stn-tog{padding:4px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.45);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
 .stn-tog.active{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff;}
 .st-panel.hidden{display:none !important;}
-
-/* SNCF : status "À l'heure" en vert */
-.tr-status.ok{color:var(--green) !important;}
-
-/* Rapprocher destination de l'heure */
-.tr-tc{padding:4px 6px 4px 10px;}
-.tr-dest{padding:4px 10px;}
+/* 4 colonnes */
+.stations-grid{display:grid;grid-template-columns:repeat(4,1fr) !important;}
 </style>
 </head>
 <body>
