@@ -1584,28 +1584,45 @@ body{margin:0;padding:0;background:var(--bg);color:var(--text);min-height:100vh;
 .board-msg.board-err{color:#ff5252;}
 
 
-/* ALTERNANCE HEURE RETARDÉE */
-@keyframes flipTime {
-  0%,45%  { opacity:1; transform:translateY(0); }
-  50%     { opacity:0; transform:translateY(-6px); }
-  55%,100%{ opacity:1; transform:translateY(0); }
+/* HEURE RETARDÉE — overlay clignotant */
+@keyframes blinkReal {
+  0%,40%  { opacity:0; }
+  50%,90% { opacity:1; }
+  100%    { opacity:0; }
 }
-.tr-time-wrap{position:relative;overflow:hidden;}
+.tr-time-wrap{
+  position:relative;
+  display:inline-block;
+  line-height:1;
+}
+/* Heure initiale (toujours visible) */
 .tr-time-planned{
-  display:block;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:13px;font-weight:700;letter-spacing:.02em;line-height:1;
-  color:rgba(255,255,255,.35);
-  text-decoration:line-through;
-  text-decoration-color:rgba(255,107,53,.6);
-  margin-bottom:1px;
+  font-size:24px;font-weight:900;letter-spacing:.02em;
+  color:#F5C518;
+  display:block;
 }
+/* Heure réelle (en overlay, clignote par-dessus) */
 .tr-time-real{
-  display:block;
+  position:absolute;
+  top:0;left:0;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:24px;font-weight:900;letter-spacing:.02em;line-height:1;
+  font-size:24px;font-weight:900;letter-spacing:.02em;
   color:#FF6B35;
-  animation:flipTime 3s ease-in-out infinite;
+  animation:blinkReal 2.5s ease-in-out infinite;
+  white-space:nowrap;
+}
+/* Badge +X min à côté de la destination */
+.tr-delay-badge{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:800;letter-spacing:.06em;
+  color:#FF6B35;
+  background:rgba(255,107,53,.15);
+  border:1px solid rgba(255,107,53,.3);
+  padding:1px 7px;border-radius:4px;
+  margin-left:8px;
+  vertical-align:middle;
+  white-space:nowrap;
 }
 .tr-time-real-static{
   font-family:'Barlow Condensed',sans-serif;
@@ -1907,10 +1924,10 @@ function buildTrainRow(t){
   var s=t.statusClass||'ok';
   var bar='<div class="tr-bar '+s+'"></div>';
 
-  /* ── Heure : alternance si retard ── */
+  /* ── Heure ── */
   var timeContent;
   if(t.delayMin>0&&t.planned&&t.display&&t.planned!==t.display){
-    /* Clignote : heure prévue (barrée) ↔ nouvelle heure (orange) */
+    /* Heure initiale toujours visible, heure réelle en overlay clignotant */
     timeContent='<div class="tr-time-wrap">'
       +'<span class="tr-time-planned">'+t.planned+'</span>'
       +'<span class="tr-time-real">'+t.display+'</span>'
@@ -1920,26 +1937,28 @@ function buildTrainRow(t){
       +(s==='cancelled'?' style="text-decoration:line-through;opacity:.35;"':'')
       +'>'+t.planned+'</span>';
   }
-
-  var time='<div class="tr-tc">'
-    +'<span class="tr-status '+s+'">'+t.statusLabel+'</span>'
-    +timeContent
-    +'</div>';
+  var time='<div class="tr-tc"><span class="tr-status '+s+'">'+t.statusLabel+'</span>'+timeContent+'</div>';
 
   var sep='<div class="tr-sep"></div>';
 
-  /* Pas de badge retard — l'alternance suffit */
+  /* Badge vide (plus de badge retard ici) */
   var badge='<div class="tr-badge-wrap">';
-  if(s==='cancelled'){
-    badge+='<span class="tr-badge gone">Supprimé</span>';
-  } else if(s==='modified'){
-    badge+='<span class="tr-badge modif">Modifié</span>';
-  }
+  if(s==='cancelled') badge+='<span class="tr-badge gone">Supprimé</span>';
+  else if(s==='modified') badge+='<span class="tr-badge modif">Modifié</span>';
   badge+='</div>';
 
+  /* Destination + badge +Xmin à droite du nom */
   var out=s==='cancelled'?' x':'';
+  var delayBadge='';
+  if(t.delayMin>0){
+    var h=Math.floor(t.delayMin/60),m=t.delayMin%60;
+    delayBadge='<span class="tr-delay-badge">+'+(h>0?h+'h'+(m<10?'0':'')+m:t.delayMin+' min')+'</span>';
+  }
   var dest='<div class="tr-dest">'
+    +'<div style="display:flex;align-items:center;flex-wrap:wrap;gap:0;">'
     +'<span class="tr-dname'+out+'">'+t.direction+'</span>'
+    +delayBadge
+    +'</div>'
     +'<span class="tr-dsub">'+t.sub+'</span>'
     +'</div>';
 
