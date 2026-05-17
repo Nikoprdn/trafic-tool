@@ -1384,6 +1384,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
     <div class="w-source">Open-Meteo.com (ECMWF) — Vigilances : data.gouv.fr / Météo-France — Actualisation toutes
 
+<script>
 /* THEME */
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
 function toggleTheme(){var cur=document.documentElement.getAttribute('data-theme')||'dark';applyTheme(cur==='dark'?'light':'dark');}
@@ -1702,8 +1703,7 @@ function openTrainDetail(tripId, trainNum, direction, rowEl){
       tl.innerHTML='<div class="td-loading">Impossible de charger les arrêts</div>';
     });
 }
-umns='repeat('+Math.max(1,visible.length)+',1fr)';
-}
+
 </script>
 
 <script>
@@ -1855,7 +1855,7 @@ function renderRoad(idxs,southData,northData){
     var badge=document.createElement('div');
     badge.textContent=ex.n||'FR';
     badge.style.cssText='position:absolute;left:'+pct+';top:50%;transform:translate(-50%,-50%);'
-      +'font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;'
+      +'font-family:Share Tech Mono,monospace;font-size:10px;font-weight:700;'
       +'background:var(--panel);border:1.5px solid var(--border);color:rgba(255,255,255,.8);'
       +'padding:2px 5px;border-radius:4px;white-space:nowrap;min-width:22px;text-align:center;z-index:11;';
     if(!ex.n)badge.style.cssText+=';background:rgba(228,3,46,.12);border-color:rgba(228,3,46,.35);color:var(--red);font-size:8px;';
@@ -1933,6 +1933,7 @@ setInterval(function(){
 },300000);
 function refreshA8Traffic(){loadA8Traffic();}
 function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
+
 </script>
 
 </body>
