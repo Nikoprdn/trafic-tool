@@ -1167,14 +1167,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .train-row:nth-child(even){background:#132444;}
 
 /* ── TRAIN TIMELINE PANEL ── */
-#train-detail{
-  display:none;
-  border-top:2px solid var(--red);
-  background:#07111f;
-  overflow:hidden;
-  transition:max-height .3s ease;
-}
-#train-detail.open{display:block;}
+#train-detail{display:none;border-top:2px solid var(--red);background:#07111f;}
+#train-detail.open{display:block !important;}
 .td-header{
   display:flex;align-items:center;gap:10px;
   padding:10px 16px 8px;
@@ -1261,6 +1255,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .train-row.selected{background:#1a4fca !important;}
 
 .train-row.clickable{cursor:pointer;}
+
+#train-detail.open{display:block !important;}
 </style>
 </head>
 <body>
@@ -1390,6 +1386,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 <script>
 /* THEME */
+function applyTheme(t){document.documen
+/* THEME */
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
 function toggleTheme(){var cur=document.documentElement.getAttribute('data-theme')||'dark';applyTheme(cur==='dark'?'light':'dark');}
 (function(){applyTheme(localStorage.getItem('rm_theme')||'dark');})();
@@ -1450,7 +1448,7 @@ function buildTrainRow(t){
 
   return'<div class="train-row clickable"'+dataAttrs+'>'+bar+tc+dest+'</div>';
 }
-function renderStation(st,el){if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}el.innerHTML=st.trains.map(buildTrainRow).join('');}
+function renderStation(st,el){if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}el.innerHTML=st.trains.map(buildTrainRow).join('');setTimeout(attachTrainClicks,50);}
 function loadBoard(){fetch(W+'/board?count=4').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){var u=document.getElementById('last-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)renderStation(d[k],p);});}).catch(function(e){ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)p.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';});});}
 function hdate(iso){if(!iso)return'';var d=new Date(iso);return isNaN(d)?iso:d.toLocaleString('fr-FR',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}
 function renderDis(list,isTest){var el=document.getElementById('dis-body');if(!el)return;var cEl=document.getElementById('dis-count');if(cEl)cEl.textContent=list.length?list.length+' perturbation'+(list.length>1?'s':'')+' active'+(list.length>1?'s':''):'';if(!list.length){el.innerHTML='<div class="no-dis">&#10004; Aucune perturbation active</div>';return;}var bC=function(e){return{NO_SERVICE:'NO_SERVICE',SIGNIFICANT_DELAYS:'SIGNIFICANT_DELAYS',REDUCED_SERVICE:'REDUCED_SERVICE',MODIFIED_SERVICE:'MODIFIED_SERVICE'}[e]||'default';};var bL=function(e){return{NO_SERVICE:'Suppression',SIGNIFICANT_DELAYS:'Retards importants',REDUCED_SERVICE:'Service reduit',MODIFIED_SERVICE:'Parcours modifie'}[e]||(e?e.replace(/_/g,' '):'Perturbation');};var sC=function(d){var e=((d.severity&&d.severity.effect)||'').toUpperCase();return e==='NO_SERVICE'?'severe':e.indexOf('MODIFIED')!==-1||e.indexOf('REDUCED')!==-1?'modified':e.indexOf('DELAY')!==-1?'':'info';};var fP=function(p){if(!p||!p.length)return'';var o=[];p.slice(0,2).forEach(function(x){var f=hdate(x.begin),t=hdate(x.end);if(f&&t)o.push('Du '+f+' au '+t);else if(f)o.push('Depuis '+f);});return o.join(' \u2014 ');};var html='';list.forEach(function(d){var eff=(d.severity&&d.severity.effect)||'';var trains=(d._trains||[]).slice(0,6).join(', ');var stops=(d._stops||[]).slice(0,5).map(function(x){return x.name;}).join(', ');var lines=(d._lines||[]).slice(0,3).join(', ');var msgs=d.messages||[],best=null;var prio=['web','notification','long_sms','sms'];for(var p=0;p<prio.length&&!best;p++)for(var i=0;i<msgs.length;i++){var ch=(msgs[i].channel&&msgs[i].channel.types)||[];if(ch.indexOf(prio[p])!==-1){best=msgs[i];break;}}if(!best&&msgs.length)best=msgs[0];var txt=((best&&best.text)?best.text:'').replace(/\n/g,'<br>').slice(0,500);var per=fP(d.application_periods);var title=trains||stops||lines||'Perturbation reseau';if(title.length>90)title=title.slice(0,87)+'...';var meta=trains&&stops?'<strong>Gares :</strong> '+stops:stops&&!trains?'<strong>Gares :</strong> '+stops:lines?'<strong>Ligne :</strong> '+lines:'';html+='<div class="dis-item '+sC(d)+(isTest?' test-mode':'')+'">'+( isTest?'<div class="dis-test-lbl">&#9670; MODE TEST</div>':'')+'<div class="dis-top"><div><div class="dis-title">'+title+'</div>'+(meta?'<div class="dis-meta">'+meta+'</div>':'')+'</div><span class="dis-badge '+bC(eff)+'">'+bL(eff)+'</span></div>'+(txt?'<div class="dis-txt">'+txt+'</div>':'')+(per?'<div class="dis-per">&#128337; '+per+'</div>':'')+'</div>';});el.innerHTML=html;}
@@ -1711,21 +1709,22 @@ function openTrainDetail(tripId, trainNum, direction, rowEl){
 
 
 /* ── Délégation click sur les lignes de train ── */
-document.addEventListener('click', function(e){
-  var row = e.target.closest('.train-row.clickable');
-  if(!row) return;
-  var tripId  = row.dataset.trip  ? decodeURIComponent(row.dataset.trip)  : null;
-  var trainNum= row.dataset.num   ? decodeURIComponent(row.dataset.num)   : '';
-  var dir     = row.dataset.dir   ? decodeURIComponent(row.dataset.dir)   : '';
-  openTrainDetail(tripId, trainNum, dir, row);
-});
+function attachTrainClicks(){
+  var rows=document.querySelectorAll('.train-row.clickable');
+  rows.forEach(function(row){
+    row.removeEventListener('click',row._clickHandler);
+    row._clickHandler=function(){
+      var tripId  = row.dataset.trip ? decodeURIComponent(row.dataset.trip) : null;
+      var trainNum= row.dataset.num  ? decodeURIComponent(row.dataset.num)  : '';
+      var dir     = row.dataset.dir  ? decodeURIComponent(row.dataset.dir)  : '';
+      openTrainDetail(tripId, trainNum, dir, row);
+    };
+    row.addEventListener('click',row._clickHandler);
+  });
+}
 ;
 
-</script>
-
-<script>
-/* ═ A8 Traffic v6 ═ */
-var A8_KEY='Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
+EY='Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
 var A8_ZOOM='full';
 var A8_EXITS=[{"n": 36, "lbl": "St-Tropez / Le Muy", "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725}, {"n": 37, "lbl": "Puget / Fréjus O.", "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82}, {"n": 38, "lbl": "Fréjus / St-Raph", "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89}, {"n": 39, "lbl": "Les Adrets", "short": "Les Adrets", "km": 28, "lat": 43.52, "lon": 6.95}, {"n": 40, "lbl": "Mandelieu", "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01}, {"n": 41, "lbl": "Cannes La Bocca", "short": "Cns Bocca", "km": 44, "lat": 43.553, "lon": 7.04}, {"n": 42, "lbl": "Cannes / Mougins", "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07}, {"n": 44, "lbl": "Antibes / Sophia", "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12}, {"n": 46, "lbl": "VL Plage", "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16}, {"n": 47, "lbl": "VL Centre", "short": "VL Centre", "km": 67, "lat": 43.635, "lon": 7.18}, {"n": 48, "lbl": "Cagnes Est", "short": "Cagnes Est", "km": 70, "lat": 43.655, "lon": 7.195}, {"n": 49, "lbl": "St-Laurent-du-Var", "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205}, {"n": 50, "lbl": "Nice Ouest", "short": "Nice O.", "km": 77, "lat": 43.675, "lon": 7.215}, {"n": 51, "lbl": "Nice Aéroport", "short": "Nice Aéro", "km": 80, "lat": 43.665, "lon": 7.235}, {"n": 52, "lbl": "Nice St-Isidore", "short": "N.St-Isid.", "km": 83, "lat": 43.705, "lon": 7.265}, {"n": 54, "lbl": "Nice Nord", "short": "Nice Nord", "km": 86, "lat": 43.72, "lon": 7.285}, {"n": 55, "lbl": "Nice l'Ariane", "short": "Nice Ariane", "km": 89, "lat": 43.73, "lon": 7.31}, {"n": 56, "lbl": "Monaco", "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39}, {"n": 57, "lbl": "La Turbie", "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42}, {"n": 58, "lbl": "Roquebrune CM", "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47}, {"n": 59, "lbl": "Menton", "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5}, {"n": 0, "lbl": "Frontière italienne", "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57}];
 var A8_ZOOMS=[{"id": "full", "label": "A8 complète", "from": 36, "to": 0}, {"id": "cannes", "label": "Cannes (40→44)", "from": 40, "to": 44}, {"id": "antibes", "label": "Antibes (44→46)", "from": 44, "to": 46}, {"id": "nice", "label": "Nice (49→55)", "from": 49, "to": 55}, {"id": "monaco", "label": "Monaco/Menton (56→)", "from": 56, "to": 0}];
@@ -1950,9 +1949,7 @@ setInterval(function(){
 },300000);
 function refreshA8Traffic(){loadA8Traffic();}
 function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
-
-
-</script>
+}</script>
 
 </body>
 </html>
