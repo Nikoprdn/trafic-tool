@@ -1632,9 +1632,16 @@ function openTrainDetail(tripId,num,dir,row){
     .catch(function(){tl.innerHTML='<div class="td-loading">Impossible de charger les arrêts</div>';});
 }
 function attachTrainClicks(){
-  document.querySelectorAll('.train-row.clickable').forEach(function(row){
+  var rows=document.querySelectorAll('.train-row.clickable');
+  rows.forEach(function(row){
     if(row._cl)row.removeEventListener('click',row._cl);
-    row._cl=function(){openTrainDetail(row.dataset.trip?decodeURIComponent(row.dataset.trip):null,row.dataset.num?decodeURIComponent(row.dataset.num):'',row.dataset.dir?decodeURIComponent(row.dataset.dir):'',row);};
+    row._cl=function(e){
+      e.stopPropagation();
+      var trip=row.dataset.trip?decodeURIComponent(row.dataset.trip):null;
+      var num =row.dataset.num ?decodeURIComponent(row.dataset.num) :'';
+      var dir =row.dataset.dir ?decodeURIComponent(row.dataset.dir) :'';
+      openTrainDetail(trip,num,dir,row);
+    };
     row.addEventListener('click',row._cl);
   });
 }
