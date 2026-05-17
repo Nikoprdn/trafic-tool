@@ -1293,7 +1293,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       </div>
       <div class="station-toggle-bar"><button class="stn-tog active" id="tog-cannes"  onclick="toggleStation('cannes')">Cannes</button><button class="stn-tog active" id="tog-nice"    onclick="toggleStation('nice')">Nice-Ville</button><button class="stn-tog active" id="tog-monaco"  onclick="toggleStation('monaco')">Monaco</button><button class="stn-tog active" id="tog-menton"  onclick="toggleStation('menton')">Menton</button></div><div class="stations-grid" id="stations-grid"><div class="st-panel" id="panel-cannes"><div class="st-head"><span class="st-name">Cannes</span><span class="st-dot"></span></div><div class="st-board" id="board-cannes"><div class="board-msg">Chargement&hellip;</div></div></div><div class="st-panel" id="panel-nice"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div><div class="st-board" id="board-nice"><div class="board-msg">Chargement&hellip;</div></div></div><div class="st-panel" id="panel-monaco"><div class="st-head"><span class="st-name">Monaco</span><span class="st-dot"></span></div><div class="st-board" id="board-monaco"><div class="board-msg">Chargement&hellip;</div></div></div><div class="st-panel" id="panel-menton"><div class="st-head"><span class="st-name">Menton</span><span class="st-dot"></span></div><div class="st-board" id="board-menton"><div class="board-msg">Chargement&hellip;</div></div></div></div>
       
-      <div id="train-detail"><div class="td-header"><span class="td-train-num" id="td-train-num"></span><span class="td-title" id="td-title">Arrêts du train</span><button class="td-close" onclick="closeTrainDetail()">&#10005;</button></div><div class="td-scroll"><div class="td-timeline" id="td-timeline"><div class="td-loading">Sélectionnez un train</div></div></div></div>
 <div class="dis-merge-head">
         <span style="font-size:14px">&#9888;&#65039;</span>
         <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;">Perturbations</span>
@@ -1304,6 +1303,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       </div>
       <div id="dis-body" class="dis-wrap"><p style="font-size:12px;color:var(--muted);font-family:monospace">Chargement...</p></div>
     </div>
+
+      <div id="train-detail"><div class="td-header"><span class="td-train-num" id="td-train-num"></span><span class="td-title" id="td-title">Arrêts du train</span><button class="td-close" onclick="closeTrainDetail()">&#10005;</button></div><div class="td-scroll"><div class="td-timeline" id="td-timeline"><div class="td-loading">Sélectionnez un train</div></div></div></div>
+
 
     <div class="section-card">
       <div class="card-h">
@@ -1677,7 +1679,7 @@ function openTrainDetail(tripId, trainNum, direction, rowEl){
   setTimeout(function(){panel.scrollIntoView({behavior:'smooth',block:'nearest'});},100);
 
   if(!tripId){
-    tl.innerHTML='<div class="td-loading">Aucun identifiant de trajet disponible</div>';
+    tl.innerHTML='<div class="td-loading" style="color:rgba(255,165,0,.7);">Détails non disponibles pour ce train (ZOU! régional)</div>';
     return;
   }
 
@@ -1717,6 +1719,8 @@ document.addEventListener('click', function(e){
   var dir     = row.dataset.dir   ? decodeURIComponent(row.dataset.dir)   : '';
   openTrainDetail(tripId, trainNum, dir, row);
 });
+;
+
 </script>
 
 <script>
@@ -1946,6 +1950,7 @@ setInterval(function(){
 },300000);
 function refreshA8Traffic(){loadA8Traffic();}
 function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
+
 
 </script>
 
