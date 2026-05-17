@@ -1124,51 +1124,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 </style>
 </head>
-
-<style>
-/* ── SNCF 3 colonnes format image ── */
-.train-row{display:grid;grid-template-columns:4px 110px 1fr;align-items:stretch;height:60px;border-bottom:1px solid rgba(255,255,255,.06);background:#0d1b35;overflow:hidden;cursor:pointer;}
-.train-row:nth-child(even){background:#132444;}
-.train-row:hover,.train-row.selected{background:#1a4fca;}
-.tr-bar{align-self:stretch;}
-.tr-tc{display:flex;flex-direction:column;justify-content:center;padding:5px 4px 5px 14px;gap:1px;}
-.tr-status{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;line-height:1;font-style:italic;color:rgba(255,255,255,.5);}
-.tr-status.ok{color:#22C05E;}.tr-status.delayed{color:var(--orange);}.tr-status.cancelled{color:var(--red);}
-.tr-time{font-family:'Share Tech Mono',monospace;font-size:26px;font-weight:700;color:#F5C518;line-height:1;}
-.tr-time.cancelled{opacity:.35;text-decoration:line-through;}
-.tr-dest{display:flex;flex-direction:column;justify-content:center;padding:5px 12px 5px 10px;overflow:hidden;}
-.tr-dname{font-family:'Inter','Barlow',sans-serif;font-size:16px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;}
-.tr-dname.x{opacity:.35;text-decoration:line-through;}
-.tr-dsub{font-family:'Inter','Barlow',sans-serif;font-size:11px;color:rgba(255,255,255,.45);margin-top:2px;}
-@keyframes blinkPlanned{0%,45%{opacity:1;}50%,95%{opacity:0;}100%{opacity:1;}}
-@keyframes blinkReal{0%,45%{opacity:0;}50%,95%{opacity:1;}100%{opacity:0;}}
-.tr-time-wrap{position:relative;display:inline-block;line-height:1;}
-.tr-time-planned{font-family:'Share Tech Mono',monospace;font-size:26px;font-weight:700;color:#F5C518;display:block;animation:blinkPlanned 2.5s ease-in-out infinite;}
-.tr-time-real{position:absolute;top:0;left:0;font-family:'Share Tech Mono',monospace;font-size:26px;font-weight:700;color:var(--orange);white-space:nowrap;animation:blinkReal 2.5s ease-in-out infinite;}
-/* Toggles */
-.station-toggle-bar{display:flex;gap:6px;padding:8px 16px;background:var(--card);border-bottom:1px solid var(--border);}
-.stn-tog{padding:4px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.45);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
-.stn-tog.active{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff;}
-.st-panel.hidden{display:none !important;}
-.stations-grid{display:grid;grid-template-columns:repeat(4,1fr) !important;}
-/* Train detail panel */
-#train-detail.open{display:block !important;}
-.td-header{display:flex;align-items:center;gap:10px;padding:10px 16px 8px;background:#0b1a2e;border-bottom:1px solid rgba(255,255,255,.07);}
-.td-train-num{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:var(--yellow);background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.25);padding:2px 10px;border-radius:4px;}
-.td-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);}
-.td-close{margin-left:auto;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:18px;padding:2px 6px;}
-.td-scroll{overflow-x:auto;padding:16px 20px 14px;}
-.td-timeline{display:flex;align-items:flex-start;gap:0;min-width:max-content;}
-.td-stop{display:flex;flex-direction:column;align-items:center;min-width:90px;position:relative;}
-.td-stop::before{content:'';position:absolute;top:19px;left:0;right:0;height:2px;background:rgba(255,255,255,.15);}
-.td-stop:first-child::before{left:50%;}.td-stop:last-child::before{right:50%;}
-.td-dot{width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:#07111f;z-index:1;margin-bottom:6px;flex-shrink:0;}
-.td-stop.current .td-dot{border-color:var(--yellow);background:var(--yellow);box-shadow:0 0 8px rgba(245,197,24,.5);}
-.td-sname{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:rgba(255,255,255,.7);text-align:center;max-width:80px;line-height:1.2;word-break:break-word;}
-.td-stime{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,255,255,.45);margin-top:3px;text-align:center;}
-.td-loading{padding:20px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:12px;color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase;}
-
-/* ── ÉDITEUR DE TEXTE ── */
+ TEXTE ── */
 .ed-overlay{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
 .ed-overlay.open{display:flex;}
 .ed-modal{background:var(--panel,#12151C);border:1px solid var(--border,rgba(255,255,255,.1));border-radius:14px;width:min(900px,94vw);max-height:88vh;display:flex;flex-direction:column;box-shadow:0 32px 80px rgba(0,0,0,.7);overflow:hidden;}
@@ -1185,6 +1141,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .ed-doc blockquote{border-left:3px solid var(--red,#E4032E);padding-left:14px;color:rgba(255,255,255,.55);margin:8px 0;}
 .ed-footer{display:flex;align-items:center;gap:12px;padding:8px 16px;background:var(--card);border-top:1px solid var(--border);font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--muted,rgba(255,255,255,.35));}
 .ed-footer span#ed-wc{margin-right:auto;}
+
+.travel-chips-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:10px 14px 12px;}
+.travel-chip{background:var(--card);border:1px solid rgba(255,255,255,.08);border-top:3px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 12px 8px;display:flex;flex-direction:column;gap:6px;min-height:80px;}
+.travel-chip.g{border-top-color:var(--green);}
+.travel-chip.y{border-top-color:var(--yellow);}
+.travel-chip.r{border-top-color:var(--red);}
+.tc-dest{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tc-time{display:flex;align-items:baseline;gap:2px;}
+.tc-via{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.2);}
 </style>
 <body>
 
@@ -1197,7 +1162,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   <div class="hdr-tabs">
     <button class="tab-btn" id="tab-btn-trafic" onclick="switchTab('trafic')"><span class="ti">&#128642;</span> Trafic Tool</button>
     <button class="tab-btn" id="tab-btn-weather" onclick="switchTab('weather')"><span class="ti">&#9928;&#65039;</span> Weather Tool</button>
-    <button class="tab-btn" id="tab-btn-editor" onclick="openEditor()"><span class="ti">&#9999;&#65039;</span> Éditeur</button>
   </div>
   <div style="display:flex;align-items:center;gap:12px;justify-content:flex-end;">
     <button id="theme-toggle" onclick="toggleTheme()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:6px 12px;color:#fff;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;" title="Changer de thème">&#9790; Sombre</button>
@@ -1215,17 +1179,11 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
         <span id="last-upd" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:8px"></span>
         <button class="rbtn" onclick="loadBoard()">&#8635; Actualiser</button>
       </div>
-      <div class="station-toggle-bar">
-<button class="stn-tog active" id="tog-cannes"  onclick="toggleStation('cannes')">Cannes</button>
-<button class="stn-tog active" id="tog-nice"    onclick="toggleStation('nice')">Nice-Ville</button>
-<button class="stn-tog active" id="tog-monaco"  onclick="toggleStation('monaco')">Monaco</button>
-<button class="stn-tog active" id="tog-menton"  onclick="toggleStation('menton')">Menton</button>
-</div>
+      <div class="station-toggle-bar"><button class="stn-tog active" id="tog-cannes"  onclick="toggleStation('cannes')">Cannes</button><button class="stn-tog active" id="tog-nice"    onclick="toggleStation('nice')">Nice-Ville</button><button class="stn-tog active" id="tog-monaco"  onclick="toggleStation('monaco')">Monaco</button><button class="stn-tog active" id="tog-menton"  onclick="toggleStation('menton')">Menton</button></div>
 <div class="stations-grid" id="stations-grid">
 <div class="st-panel" id="panel-cannes"><div class="st-head"><span class="st-name">Cannes</span><span class="st-dot"></span></div><div class="st-board" id="board-cannes"><div class="board-msg">Chargement...</div></div></div><div class="st-panel" id="panel-nice"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div><div class="st-board" id="board-nice"><div class="board-msg">Chargement...</div></div></div><div class="st-panel" id="panel-monaco"><div class="st-head"><span class="st-name">Monaco</span><span class="st-dot"></span></div><div class="st-board" id="board-monaco"><div class="board-msg">Chargement...</div></div></div><div class="st-panel" id="panel-menton"><div class="st-head"><span class="st-name">Menton</span><span class="st-dot"></span></div><div class="st-board" id="board-menton"><div class="board-msg">Chargement...</div></div></div>
       </div>
-      
-<div id="train-detail" style="display:none;border-top:2px solid var(--red);background:#07111f;">
+      <div id="train-detail" style="display:none;border-top:2px solid var(--red);background:#07111f;">
   <div class="td-header">
     <span class="td-train-num" id="td-train-num"></span>
     <span class="td-title" id="td-title">Arrêts du train</span>
@@ -1233,7 +1191,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   </div>
   <div class="td-scroll"><div class="td-timeline" id="td-timeline"><div class="td-loading">Sélectionnez un train</div></div></div>
 </div>
-      <div class="dis-merge-head">
+<div class="dis-merge-head">
         <span style="font-size:14px">&#9888;&#65039;</span>
         <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;">Perturbations</span>
         <span id="dis-count" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:4px"></span>
@@ -1339,10 +1297,42 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 
 
+<!-- ÉDITEUR DE TEXTE -->
+<div class="ed-overlay" id="ed-ov">
+  <div class="ed-modal" id="ed-modal">
+    <div class="ed-drag" id="ed-drag">
+      <span style="font-size:16px">&#9999;&#65039;</span>
+      <span class="ed-drag-title">&#201;diteur — Radio Monaco</span>
+      <button class="ed-drag-close" onclick="closeEditor()">&#10005;</button>
+    </div>
+    <div class="ed-toolbar">
+      <button class="ed-btn" onclick="document.execCommand('bold')"><b>G</b></button>
+      <button class="ed-btn" onclick="document.execCommand('italic')"><i>I</i></button>
+      <button class="ed-btn" onclick="document.execCommand('underline')"><u>S</u></button>
+      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h1')">H1</button>
+      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h2')">H2</button>
+      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h3')">H3</button>
+      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'blockquote')">&ldquo;</button>
+      <button class="ed-btn" onclick="document.execCommand('insertUnorderedList')">&#8226; Liste</button>
+      <button class="ed-btn" onclick="document.execCommand('removeFormat')">&#10006; Style</button>
+      <span style="flex:1"></span>
+      <button class="ed-btn" onclick="edPrint()">&#128424; Imprimer</button>
+      <button class="ed-btn" onclick="edCopy()">&#128203; Copier</button>
+      <button class="ed-btn" onclick="edSave()">&#128190; Sauver</button>
+      <button class="ed-btn" onclick="edClear()" style="color:rgba(255,100,100,.8);">&#128465;</button>
+    </div>
+    <div class="ed-doc" id="ed-doc" contenteditable="true" spellcheck="false">
+      <p>&#201;crivez votre note ici&hellip;</p>
+    </div>
+    <div class="ed-footer">
+      <span id="ed-wc">0 mot</span>
+      <span>Ctrl+B Gras &nbsp;&#183;&nbsp; Ctrl+I Italique</span>
+    </div>
+  </div>
+</div>
+
 
 <script>
-
-
 /* THEME */
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
 function toggleTheme(){var cur=document.documentElement.getAttribute('data-theme')||'dark';applyTheme(cur==='dark'?'light':'dark');}
@@ -1454,41 +1444,25 @@ function fetchAllRoutes(isTo){
   })).then(function(results){ return {results:results}; });
 }
 function renderSkeleton(){
-  var isTo=travelDir==='to';
   var grid=document.getElementById('travel-grid');if(!grid)return;
-  grid.innerHTML='<div class="travel-dir-header">'
-    +(isTo
-      ?'<span class="travel-dir-label">Depuis</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-dest">Fontvieille \u2014 Monaco</span>'
-      :'<span class="travel-dir-dest">Fontvieille \u2014 Monaco</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-label">Vers</span>')
-    +'</div>'
-    +'<div class="travel-col-head" style="grid-template-columns:4px 1fr auto">'
-    +'<div></div><div class="tch-city">Ville</div>'
-    +'<div class="tch-opt with" style="min-width:120px;"><span class="tch-icon">&#128663;</span><span class="tch-lbl">Temps de parcours</span></div>'
-    +'</div>'
-    +'<div class="travel-list">'
-    +ROUTES.map(function(r){
-      return'<div class="travel-row" style="grid-template-columns:4px 1fr auto">'
-        +'<div class="t-bar x"></div>'
-        +'<div class="t-city"><span class="t-city-name">'+r.from+'</span><span class="t-city-hint">'+r.hint+'</span></div>'
-        +'<div class="t-opt"><span class="t-time loading">...</span></div>'
-        +'</div>';
-    }).join('')
+  var isTo=travelDir==='to';
+  var dh=isTo
+    ?'<span class="travel-dir-label">Depuis</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-dest">Fontvieille &mdash; Monaco</span>'
+    :'<span class="travel-dir-dest">Fontvieille &mdash; Monaco</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-label">Vers</span>';
+  grid.innerHTML='<div class="travel-dir-header">'+dh+'</div>'
+    +'<div class="travel-chips-row" id="travel-chips">'
+    +ROUTES.map(function(r){return'<div class="travel-chip x"><span class="tc-dest">'+r.from+'</span><div class="tc-time"><span style="font-size:28px;color:rgba(255,255,255,.18);">&#8230;</span></div></div>';}).join('')
     +'</div>';
 }
 function loadTravel(){
   renderSkeleton();var isTo=travelDir==='to';
   fetchAllRoutes(isTo).then(function(res){
-    var rows=ROUTES.map(function(r,i){
-      return{route:r,result:res.results[i],
-             sort:res.results[i]?res.results[i].duration:999999};
-    });
+    var rows=ROUTES.map(function(r,i){return{route:r,result:res.results[i],sort:res.results[i]?res.results[i].duration:999999};});
     rows.sort(function(a,b){return a.sort-b.sort;});
-    var listEl=document.querySelector('#travel-grid .travel-list');
-    if(listEl)listEl.innerHTML=rows.map(function(row){
-      return buildSingleRow(row.route,row.result);
-    }).join('');
+    var chips=document.getElementById('travel-chips');
+    if(chips)chips.innerHTML=rows.map(function(row){return buildSingleRow(row.route,row.result);}).join('');
     var srcEl=document.getElementById('travel-source');
-    if(srcEl)srcEl.innerHTML='&#128994; TomTom \u2014 Trafic temps r\u00e9el';
+    if(srcEl)srcEl.innerHTML='&#128994; TomTom — Trafic temps réel';
     var u=document.getElementById('travel-upd');
     if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
   });
@@ -1511,28 +1485,21 @@ function optCell(result,refResult){
 }
 
 function buildSingleRow(route,result){
-  var barCls='x';
+  var barCls='x',col='rgba(255,255,255,.7)';
   if(result){
-    var c=delayCls(result.noTrafDuration,result.duration);
-    barCls=c;
+    var dc=delayCls(result.noTrafDuration,result.duration);
+    barCls=dc;
+    col={g:'var(--green)',y:'var(--yellow)',r:'var(--red)',x:'rgba(255,255,255,.7)'}[dc]||'rgba(255,255,255,.7)';
   }
-  var timeHtml='';
-  if(!result){
-    timeHtml='<div class="t-opt"><span class="t-time na">\u2014</span></div>';
-  } else {
-    var dur=fmtDurClean(result.duration);
-    var col={g:'var(--green)',y:'var(--yellow)',r:'var(--red)',x:'#fff'}[barCls]||'#fff';
-    timeHtml='<div class="t-opt" style="flex:1">'
-      +'<span class="t-time" style="color:'+col+';font-size:38px;">'+dur.val
-      +(dur.unit?'<span style="color:var(--muted);font-size:16px;margin-left:4px;">'+dur.unit+'</span>':'')
-      +'</span>'
-      +(route.highway?'':'<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;display:block;margin-top:2px;">Via nationale</span>')
-      +'</div>';
-  }
-  return'<div class="travel-row">'
-    +'<div class="t-bar '+barCls+'"></div>'
-    +'<div class="t-city"><span class="t-city-name">'+route.from+'</span><span class="t-city-hint">'+route.hint+'</span></div>'
-    +timeHtml
+  var dur=result?fmtDur(result.duration):null;
+  var timeH=dur&&dur.val!=='-'
+    ?('<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:42px;font-weight:900;color:'+col+';line-height:1;">'+dur.val+'</span>'
+      +(dur.unit?'<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,.35);margin-left:4px;align-self:flex-end;padding-bottom:5px;">'+dur.unit+'</span>':''))
+    :'<span style="font-size:28px;color:rgba(255,255,255,.2);">—</span>';
+  return '<div class="travel-chip '+barCls+'">'
+    +'<span class="tc-dest">'+route.from+'</span>'
+    +'<div class="tc-time">'+timeH+'</div>'
+    +(route.highway?'':'<span class="tc-via">Nationale</span>')
     +'</div>';
 }
 
@@ -1687,9 +1654,24 @@ function edClear(){if(confirm('Vider le document ?')){document.getElementById('e
   function mv(e){if(!on)return;lx=e.clientX-ox;ly=e.clientY-oy;m.style.position='fixed';m.style.left=lx+'px';m.style.top=ly+'px';m.style.transform='none';}
   function mu(){on=false;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',mu);}
 })();
+ment.getElementById('ed-doc');
+  if(!doc)return;
+  doc.addEventListener('input',function(){
+    var t=this.innerText.trim();var wc=t?t.split(/\s+/).length:0;
+    var el=document.getElementById('ed-wc');if(el)el.textContent=wc+' mot'+(wc>1?'s':'')+' \u00b7 '+t.length+' car.';
+  });
+  /* Drag modal */
+  var m=document.getElementById('ed-modal'),hd=document.getElementById('ed-drag'),ox=0,oy=0,lx=0,ly=0,on=false;
+  if(!m||!hd)return;
+  hd.addEventListener('mousedown',function(e){on=true;ox=e.clientX-lx;oy=e.clientY-ly;document.addEventListener('mousemove',mv);document.addEventListener('mouseup',mu);});
+  function mv(e){if(!on)return;lx=e.clientX-ox;ly=e.clientY-oy;m.style.position='fixed';m.style.left=lx+'px';m.style.top=ly+'px';m.style.transform='none';}
+  function mu(){on=false;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',mu);}
+
+
 </script>
 
 <script>
+
 
 /* ═ A8 Traffic v6 ═ */
 var A8_KEY='Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
@@ -1918,40 +1900,8 @@ setInterval(function(){
 function refreshA8Traffic(){loadA8Traffic();}
 function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
 
+
 </script>
 
-<!-- ÉDITEUR DE TEXTE -->
-<div class="ed-overlay" id="ed-ov">
-  <div class="ed-modal" id="ed-modal">
-    <div class="ed-drag" id="ed-drag">
-      <span style="font-size:16px">&#9999;&#65039;</span>
-      <span class="ed-drag-title">&#201;diteur — Radio Monaco</span>
-      <button class="ed-drag-close" onclick="closeEditor()">&#10005;</button>
-    </div>
-    <div class="ed-toolbar">
-      <button class="ed-btn" onclick="document.execCommand('bold')"><b>G</b></button>
-      <button class="ed-btn" onclick="document.execCommand('italic')"><i>I</i></button>
-      <button class="ed-btn" onclick="document.execCommand('underline')"><u>S</u></button>
-      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h1')">H1</button>
-      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h2')">H2</button>
-      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h3')">H3</button>
-      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'blockquote')">&ldquo;</button>
-      <button class="ed-btn" onclick="document.execCommand('insertUnorderedList')">&#8226; Liste</button>
-      <button class="ed-btn" onclick="document.execCommand('removeFormat')">&#10006; Style</button>
-      <span style="flex:1"></span>
-      <button class="ed-btn" onclick="edPrint()">&#128424; Imprimer</button>
-      <button class="ed-btn" onclick="edCopy()">&#128203; Copier</button>
-      <button class="ed-btn" onclick="edSave()">&#128190; Sauver</button>
-      <button class="ed-btn" onclick="edClear()" style="color:rgba(255,100,100,.8);">&#128465;</button>
-    </div>
-    <div class="ed-doc" id="ed-doc" contenteditable="true" spellcheck="false">
-      <p>&#201;crivez votre note ici&hellip;</p>
-    </div>
-    <div class="ed-footer">
-      <span id="ed-wc">0 mot</span>
-      <span>Ctrl+B Gras &nbsp;&#183;&nbsp; Ctrl+I Italique</span>
-    </div>
-  </div>
-</div>
 </body>
 </html>
