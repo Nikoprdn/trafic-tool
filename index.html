@@ -1165,6 +1165,100 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .train-row:hover{background:#1a4fca;}
 .train-row:nth-child(odd){background:#0d1b35;}
 .train-row:nth-child(even){background:#132444;}
+
+/* ── TRAIN TIMELINE PANEL ── */
+#train-detail{
+  display:none;
+  border-top:2px solid var(--red);
+  background:#07111f;
+  overflow:hidden;
+  transition:max-height .3s ease;
+}
+#train-detail.open{display:block;}
+.td-header{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px 8px;
+  background:#0b1a2e;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.td-train-num{
+  font-family:'Share Tech Mono',monospace;
+  font-size:13px;font-weight:700;
+  color:var(--yellow);
+  background:rgba(245,197,24,.1);
+  border:1px solid rgba(245,197,24,.25);
+  padding:2px 10px;border-radius:4px;
+}
+.td-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.6);
+}
+.td-close{
+  margin-left:auto;
+  background:none;border:none;cursor:pointer;
+  color:rgba(255,255,255,.4);font-size:18px;padding:2px 6px;
+  transition:color .1s;
+}
+.td-close:hover{color:#fff;}
+/* Timeline horizontale */
+.td-scroll{
+  overflow-x:auto;
+  padding:16px 20px 14px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,.15) transparent;
+}
+.td-timeline{
+  display:flex;align-items:flex-start;gap:0;
+  min-width:max-content;
+}
+.td-stop{
+  display:flex;flex-direction:column;align-items:center;
+  min-width:90px;position:relative;
+}
+/* Ligne horizontale entre les arrêts */
+.td-stop::before{
+  content:'';position:absolute;top:19px;left:0;right:0;
+  height:2px;background:rgba(255,255,255,.15);z-index:0;
+}
+.td-stop:first-child::before{left:50%;}
+.td-stop:last-child::before{right:50%;}
+/* Rond */
+.td-dot{
+  width:12px;height:12px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.3);
+  background:#07111f;z-index:1;margin-bottom:6px;
+  transition:border-color .15s;flex-shrink:0;
+}
+.td-stop.current .td-dot{
+  border-color:var(--yellow);
+  background:var(--yellow);
+  box-shadow:0 0 8px rgba(245,197,24,.5);
+}
+.td-stop.skipped .td-dot{border-color:rgba(255,255,255,.1);}
+.td-stop.skipped .td-sname,.td-stop.skipped .td-stime{opacity:.25;}
+.td-sname{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:700;letter-spacing:.04em;
+  color:rgba(255,255,255,.7);
+  text-align:center;max-width:80px;line-height:1.2;
+  white-space:normal;word-break:break-word;
+}
+.td-stime{
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;color:rgba(255,255,255,.45);
+  margin-top:3px;text-align:center;
+}
+.td-loading{
+  padding:20px;text-align:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;color:rgba(255,255,255,.35);
+  letter-spacing:.1em;text-transform:uppercase;
+}
+
+.train-row{cursor:pointer;}
+
+.train-row.selected{background:#1a4fca !important;}
 </style>
 </head>
 <body>
@@ -1196,7 +1290,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
         <button class="rbtn" onclick="loadBoard()">&#8635; Actualiser</button>
       </div>
       <div class="station-toggle-bar"><button class="stn-tog active" id="tog-cannes"  onclick="toggleStation('cannes')">Cannes</button><button class="stn-tog active" id="tog-nice"    onclick="toggleStation('nice')">Nice-Ville</button><button class="stn-tog active" id="tog-monaco"  onclick="toggleStation('monaco')">Monaco</button><button class="stn-tog active" id="tog-menton"  onclick="toggleStation('menton')">Menton</button></div><div class="stations-grid" id="stations-grid"><div class="st-panel" id="panel-cannes"><div class="st-head"><span class="st-name">Cannes</span><span class="st-dot"></span></div><div class="st-board" id="board-cannes"><div class="board-msg">Chargement&hellip;</div></div></div><div class="st-panel" id="panel-nice"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div><div class="st-board" id="board-nice"><div class="board-msg">Chargement&hellip;</div></div></div><div class="st-panel" id="panel-monaco"><div class="st-head"><span class="st-name">Monaco</span><span class="st-dot"></span></div><div class="st-board" id="board-monaco"><div class="board-msg">Chargement&hellip;</div></div></div><div class="st-panel" id="panel-menton"><div class="st-head"><span class="st-name">Menton</span><span class="st-dot"></span></div><div class="st-board" id="board-menton"><div class="board-msg">Chargement&hellip;</div></div></div></div>
-      <div class="dis-merge-head">
+      
+      <div id="train-detail"><div class="td-header"><span class="td-train-num" id="td-train-num"></span><span class="td-title" id="td-title">Arrêts du train</span><button class="td-close" onclick="closeTrainDetail()">&#10005;</button></div><div class="td-scroll"><div class="td-timeline" id="td-timeline"><div class="td-loading">Sélectionnez un train</div></div></div></div>
+<div class="dis-merge-head">
         <span style="font-size:14px">&#9888;&#65039;</span>
         <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;">Perturbations</span>
         <span id="dis-count" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:4px"></span>
@@ -1286,22 +1382,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <div id="vig-body"><div class="w-loading">Chargement...</div></div>
     </div>
 
-    <div class="w-source">Open-Meteo.com (ECMWF) — Vigilances : data.gouv.fr / Météo-France — Actualisation toutes les 5 min</div>
-
-  </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-<script>
+    <div class="w-source">Open-Meteo.com (ECMWF) — Vigilances : data.gouv.fr / Météo-France — Actualisation toutes
 
 /* THEME */
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
@@ -1358,7 +1439,10 @@ function buildTrainRow(t){
     +'<span class="tr-dsub">'+t.sub+'</span>'
     +'</div>';
 
-  return'<div class="train-row">'+bar+tc+dest+'</div>';
+  var tid=t.tripId?JSON.stringify(t.tripId):'null';
+  var tnum=JSON.stringify(t.trainNum||'');
+  var tdir=JSON.stringify(t.direction||'');
+  return'<div class="train-row" onclick="openTrainDetail('+tid+','+tnum+','+tdir+',this)">'+bar+tc+dest+'</div>';
 }
 function renderStation(st,el){if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}el.innerHTML=st.trains.map(buildTrainRow).join('');}
 function loadBoard(){fetch(W+'/board?count=4').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){var u=document.getElementById('last-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)renderStation(d[k],p);});}).catch(function(e){ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)p.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';});});}
@@ -1553,6 +1637,72 @@ function toggleStation(key){
   var visible=Array.from(grid.querySelectorAll('.st-panel:not(.hidden)'));
   visible.forEach(function(p,i){p.style.borderRight=i<visible.length-1?'1px solid var(--border)':'none';});
   grid.style.gridTemplateColumns='repeat('+Math.max(1,visible.length)+',1fr)';
+}
+
+/* ── TRAIN DETAIL TIMELINE ── */
+var _currentTripId = null;
+
+function closeTrainDetail(){
+  var el=document.getElementById('train-detail');
+  if(el){el.classList.remove('open');}
+  _currentTripId=null;
+  /* Retirer la sélection active */
+  document.querySelectorAll('.train-row.selected').forEach(function(r){r.classList.remove('selected');});
+}
+
+function openTrainDetail(tripId, trainNum, direction, rowEl){
+  if(_currentTripId===tripId){closeTrainDetail();return;}
+  _currentTripId=tripId;
+
+  /* Mettre en évidence la ligne sélectionnée */
+  document.querySelectorAll('.train-row.selected').forEach(function(r){r.classList.remove('selected');});
+  if(rowEl)rowEl.classList.add('selected');
+
+  var panel=document.getElementById('train-detail');
+  var tl=document.getElementById('td-timeline');
+  var tn=document.getElementById('td-train-num');
+  var tt=document.getElementById('td-title');
+  if(!panel||!tl)return;
+
+  tn.textContent=trainNum||'Train';
+  tt.textContent=direction||'Arrêts';
+  tl.innerHTML='<div class="td-loading">Chargement…</div>';
+  panel.classList.add('open');
+
+  /* Scroller vers le panneau */
+  setTimeout(function(){panel.scrollIntoView({behavior:'smooth',block:'nearest'});},100);
+
+  if(!tripId){
+    tl.innerHTML='<div class="td-loading">Aucun identifiant de trajet disponible</div>';
+    return;
+  }
+
+  fetch(W+'/trip?id='+encodeURIComponent(tripId))
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d.stops||!d.stops.length){
+        tl.innerHTML='<div class="td-loading">Aucun arrêt disponible</div>';
+        return;
+      }
+      tl.innerHTML=d.stops.map(function(s,i){
+        var isCurrent=(s.name===direction||i===d.stops.length-1);
+        var cls='td-stop'+(s.skipped?' skipped':'')+(isCurrent?' current':'');
+        var time=s.depart||s.arrival||'';
+        return'<div class="'+cls+'">'
+          +'<div class="td-dot"></div>'
+          +'<div class="td-sname">'+s.name+'</div>'
+          +'<div class="td-stime">'+time+'</div>'
+          +'</div>';
+      }).join('');
+      /* Scroller vers la gare actuelle */
+      var cur=tl.querySelector('.current');
+      if(cur)setTimeout(function(){cur.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});},200);
+    })
+    .catch(function(){
+      tl.innerHTML='<div class="td-loading">Impossible de charger les arrêts</div>';
+    });
+}
+umns='repeat('+Math.max(1,visible.length)+',1fr)';
 }
 </script>
 
