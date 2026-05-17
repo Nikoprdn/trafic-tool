@@ -1259,6 +1259,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .train-row{cursor:pointer;}
 
 .train-row.selected{background:#1a4fca !important;}
+
+.train-row.clickable{cursor:pointer;}
 </style>
 </head>
 <body>
@@ -1413,8 +1415,6 @@ setInterval(tick,1000);tick();
 var W='https://sncf-proxy.nicolas7lejeune.workers.dev';var TEST_MODE=false;var TEST_DATA=[{"id":"t1","_trains":["881 134"],"_stops":[{"name":"Cannes"}],"_lines":[],"severity":{"effect":"SIGNIFICANT_DELAYS"},"messages":[{"text":"Retards 20-45 min.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T12:00:00","end":"2099-12-31T23:59:59"}]}];var ORDER=['cannes','nice','monaco','menton'];
 function buildTrainRow(t){
   var s=t.statusClass||'ok';
-
-  /* Barre colorée gauche */
   var bar='<div class="tr-bar '+s+'"></div>';
 
   /* Heure */
@@ -1440,10 +1440,13 @@ function buildTrainRow(t){
     +'<span class="tr-dsub">'+t.sub+'</span>'
     +'</div>';
 
-  var tid=t.tripId?JSON.stringify(t.tripId):'null';
-  var tnum=JSON.stringify(t.trainNum||'');
-  var tdir=JSON.stringify(t.direction||'');
-  return'<div class="train-row" onclick="openTrainDetail('+tid+','+tnum+','+tdir+',this)">'+bar+tc+dest+'</div>';
+  /* Encoder tripId/trainNum/direction en attributs data-* (pas d'injection HTML) */
+  var dataAttrs='';
+  if(t.tripId)  dataAttrs+=' data-trip="'+encodeURIComponent(t.tripId)+'"';
+  if(t.trainNum)dataAttrs+=' data-num="'+encodeURIComponent(t.trainNum)+'"';
+  if(t.direction)dataAttrs+=' data-dir="'+encodeURIComponent(t.direction)+'"';
+
+  return'<div class="train-row clickable"'+dataAttrs+'>'+bar+tc+dest+'</div>';
 }
 function renderStation(st,el){if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}el.innerHTML=st.trains.map(buildTrainRow).join('');}
 function loadBoard(){fetch(W+'/board?count=4').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(d){var u=document.getElementById('last-upd');if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)renderStation(d[k],p);});}).catch(function(e){ORDER.forEach(function(k){var p=document.getElementById('board-'+k);if(p)p.innerHTML='<div class="board-msg board-err">'+e.message+'</div>';});});}
@@ -1704,6 +1707,16 @@ function openTrainDetail(tripId, trainNum, direction, rowEl){
     });
 }
 
+
+/* ── Délégation click sur les lignes de train ── */
+document.addEventListener('click', function(e){
+  var row = e.target.closest('.train-row.clickable');
+  if(!row) return;
+  var tripId  = row.dataset.trip  ? decodeURIComponent(row.dataset.trip)  : null;
+  var trainNum= row.dataset.num   ? decodeURIComponent(row.dataset.num)   : '';
+  var dir     = row.dataset.dir   ? decodeURIComponent(row.dataset.dir)   : '';
+  openTrainDetail(tripId, trainNum, dir, row);
+});
 </script>
 
 <script>
