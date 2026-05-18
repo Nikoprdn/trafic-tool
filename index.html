@@ -6,6 +6,8 @@
 <title>Radio Monaco — Studio Tools</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+
+
 :root{--red:#E4032E;--bg:#0D1016;--panel:#12151C;--card:#181B26;--border:#232730;--text:#E8EAF0;--muted:#5E6474;--muted2:#42465A;--yellow:#F5C518;--orange:#FF6B35;--green:#27AE60;--sb-bg:#003580;--sb-head:#002055;--sb-row:#004AC0;--sb-alt:#0041A8;--sb-sep:rgba(255,255,255,.06);--blue-deep:#071830;--blue-mid:#0A2A5E;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow',sans-serif;}
@@ -114,7 +116,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .rbtn:hover{border-color:var(--red);color:var(--red);}
 .tbtn{background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.4);color:var(--yellow);border-radius:4px;padding:4px 14px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
 .tbtn:hover{background:rgba(245,197,24,.22);}
-.stations-grid{display:grid;grid-template-columns:1fr 1fr;}
+.stations-grid{display:grid;grid-template-columns:repeat(4,1fr);}
 .st-panel{border-right:1px solid var(--border);}
 .st-panel:nth-child(even){border-right:none;}
 .st-panel:nth-child(1),.st-panel:nth-child(2){border-bottom:1px solid var(--border);}
@@ -122,7 +124,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .st-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.85);}
 .st-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:bdot 2s ease-in-out infinite;}
 .st-board{background:var(--sb-bg);}
-.train-row{display:grid;grid-template-columns:5px 130px 100px 1fr 60px;align-items:stretch;min-height:60px;border-bottom:1px solid var(--sb-sep);background:var(--sb-row);}
+.train-row{display:grid;grid-template-columns:4px 110px 1fr;align-items:stretch;height:60px;overflow:hidden;border-bottom:1px solid var(--sb-sep);background:var(--sb-row);}
 .train-row:nth-child(even){background:var(--sb-alt);}
 .train-row:last-child{border-bottom:none;}
 .tr-bar{align-self:stretch;}
@@ -1122,9 +1124,45 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 
 
+
+/* SNCF alternance + hover */
+.train-row:nth-child(even){background:#132444;}
+.train-row:hover{background:#1a4fca;}
+.train-row.selected{background:#1a4fca !important;}
+.tr-status.ok{color:#22C05E !important;}
+.tr-bar{align-self:stretch;}
+/* Toggles gares */
+.station-toggle-bar{display:flex;gap:6px;padding:8px 16px;background:var(--card);border-bottom:1px solid var(--border);}
+.stn-tog{padding:4px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.45);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.stn-tog.active{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff;}
+.st-panel.hidden{display:none !important;}
+/* Train detail panel */
+#train-detail{display:none;border-top:2px solid var(--red);background:#07111f;}
+#train-detail.open{display:block !important;}
+
+
+.train-row{display:grid;grid-template-columns:4px 110px 1fr;align-items:stretch;height:60px;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.06);background:#0d1b35;cursor:pointer;}
+.train-row:nth-child(even){background:#132444;}
+.train-row:hover{background:#1a4fca;}
+.train-row.selected{background:#1a4fca !important;}
+.tr-status.ok{color:#22C05E !important;}
+.stations-grid{display:grid;grid-template-columns:repeat(4,1fr) !important;}
+.station-toggle-bar{display:flex;gap:6px;padding:8px 16px;background:var(--card);border-bottom:1px solid var(--border);}
+.stn-tog{padding:4px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.45);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.stn-tog.active{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);color:#fff;}
+.st-panel.hidden{display:none !important;}
+#train-detail{display:none;border-top:2px solid var(--red);background:#07111f;}
+#train-detail.open{display:block !important;}
+@keyframes blinkPlanned{0%,45%{opacity:1;}50%,95%{opacity:0;}100%{opacity:1;}}
+@keyframes blinkReal{0%,45%{opacity:0;}50%,95%{opacity:1;}100%{opacity:0;}}
+.tr-time-wrap{position:relative;display:inline-block;line-height:1;}
+.tr-time-planned{font-family:'Share Tech Mono',monospace;font-size:26px;font-weight:700;color:#F5C518;display:block;animation:blinkPlanned 2.5s ease-in-out infinite;}
+.tr-time-real{position:absolute;top:0;left:0;font-family:'Share Tech Mono',monospace;font-size:26px;font-weight:700;color:var(--orange);white-space:nowrap;animation:blinkReal 2.5s ease-in-out infinite;}
+
 </style>
 </head>
 <body>
+
 
 <div class="hdr">
   <div class="hdr-left">
@@ -1285,24 +1323,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h1')">H1</button>
       <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h2')">H2</button>
       <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h3')">H3</button>
-      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'blockquote')">&ldquo;</button>
-      <button class="ed-btn" onclick="document.execCommand('insertUnorderedList')">&#8226; Liste</button>
-      <button class="ed-btn" onclick="document.execCommand('removeFormat')">&#10006; Style</button>
-      <span style="flex:1"></span>
-      <button class="ed-btn" onclick="edPrint()">&#128424; Imprimer</button>
-      <button class="ed-btn" onclick="edCopy()">&#128203; Copier</button>
-      <button class="ed-btn" onclick="edSave()">&#128190; Sauver</button>
-      <button class="ed-btn" onclick="edClear()" style="color:rgba(255,100,100,.8);">&#128465;</button>
-    </div>
-    <div class="ed-doc" id="ed-doc" contenteditable="true" spellcheck="false">
-      <p>&#201;crivez votre note ici&hellip;</p>
-    </div>
-    <div class="ed-footer">
-      <span id="ed-wc">0 mot</span>
-      <span>Ctrl+B Gras &nbsp;&#183;&nbsp; Ctrl+I Italique</span>
-    </div>
-  </div>
-</div>
+      <button class="ed-btn" onclick=
+
+
+
 
 
 
@@ -1342,20 +1366,20 @@ var W='https://sncf-proxy.nicolas7lejeune.workers.dev';var TEST_MODE=false;var T
 function buildTrainRow(t){
   var s=t.statusClass||'ok';
   var bar='<div class="tr-bar '+s+'"></div>';
-  var th;
+  var timeHtml;
   if(t.delayMin>0&&t.planned&&t.display&&t.planned!==t.display){
-    th='<div class="tr-time-wrap"><span class="tr-time-planned">'+t.planned+'</span><span class="tr-time-real">'+t.display+'</span></div>';
+    timeHtml='<div class="tr-time-wrap"><span class="tr-time-planned">'+t.planned+'</span><span class="tr-time-real">'+t.display+'</span></div>';
   } else {
-    th='<span class="tr-time'+(s==='cancelled'?' cancelled':'')+'">'+t.planned+'</span>';
+    timeHtml='<span class="tr-time'+(s==='cancelled'?' cancelled':'')+'">'+t.planned+'</span>';
   }
-  var tc='<div class="tr-tc"><span class="tr-status '+s+'">'+(s==='delayed'?'Retard\u00e9':t.statusLabel)+'</span>'+th+'</div>';
+  var tc='<div class="tr-tc"><span class="tr-status '+s+'">'+(s==='delayed'?'Retard\xE9':t.statusLabel)+'</span>'+timeHtml+'</div>';
   var dly=t.delayMin>0?' <span style="font-size:11px;color:var(--orange);margin-left:6px;">+'+t.delayMin+'m</span>':'';
   if(s==='cancelled')dly='';
   var dest='<div class="tr-dest"><span class="tr-dname'+(s==='cancelled'?' x':'')+'">'+t.direction+dly+'</span><span class="tr-dsub">'+t.sub+'</span></div>';
   var da='';
-  if(t.tripId)   da+=' data-trip="'+encodeURIComponent(t.tripId)+'"';
-  if(t.trainNum) da+=' data-num="'+encodeURIComponent(t.trainNum)+'"';
-  if(t.direction)da+=' data-dir="'+encodeURIComponent(t.direction)+'"';
+  if(t.tripId)    da+=' data-trip="'+encodeURIComponent(t.tripId)+'"';
+  if(t.trainNum)  da+=' data-num="'+encodeURIComponent(t.trainNum)+'"';
+  if(t.direction) da+=' data-dir="'+encodeURIComponent(t.direction)+'"';
   return'<div class="train-row clickable"'+da+'>'+bar+tc+dest+'</div>';
 }
 function renderStation(st,el){if(!st||st.error){el.innerHTML='<div class="board-msg board-err">'+(st&&st.error?st.error:'Erreur')+'</div>';return;}if(!st.trains||!st.trains.length){el.innerHTML='<div class="board-msg">Aucun train</div>';return;}el.innerHTML=st.trains.map(buildTrainRow).join('');setTimeout(attachTrainClicks,50);}
@@ -1424,25 +1448,41 @@ function fetchAllRoutes(isTo){
   })).then(function(results){ return {results:results}; });
 }
 function renderSkeleton(){
-  var grid=document.getElementById('travel-grid');if(!grid)return;
   var isTo=travelDir==='to';
-  var dh=isTo
-    ?'<span class="travel-dir-label">Depuis</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-dest">Fontvieille &mdash; Monaco</span>'
-    :'<span class="travel-dir-dest">Fontvieille &mdash; Monaco</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-label">Vers</span>';
-  grid.innerHTML='<div class="travel-dir-header">'+dh+'</div>'
-    +'<div class="travel-chips-row" id="travel-chips">'
-    +ROUTES.map(function(r){return'<div class="travel-chip x"><span class="tc-dest">'+r.from+'</span><div class="tc-time"><span style="font-size:28px;color:rgba(255,255,255,.18);">&#8230;</span></div></div>';}).join('')
+  var grid=document.getElementById('travel-grid');if(!grid)return;
+  grid.innerHTML='<div class="travel-dir-header">'
+    +(isTo
+      ?'<span class="travel-dir-label">Depuis</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-dest">Fontvieille \u2014 Monaco</span>'
+      :'<span class="travel-dir-dest">Fontvieille \u2014 Monaco</span><span class="travel-dir-arrow">&#8594;</span><span class="travel-dir-label">Vers</span>')
+    +'</div>'
+    +'<div class="travel-col-head" style="grid-template-columns:4px 1fr auto">'
+    +'<div></div><div class="tch-city">Ville</div>'
+    +'<div class="tch-opt with" style="min-width:120px;"><span class="tch-icon">&#128663;</span><span class="tch-lbl">Temps de parcours</span></div>'
+    +'</div>'
+    +'<div class="travel-list">'
+    +ROUTES.map(function(r){
+      return'<div class="travel-row" style="grid-template-columns:4px 1fr auto">'
+        +'<div class="t-bar x"></div>'
+        +'<div class="t-city"><span class="t-city-name">'+r.from+'</span><span class="t-city-hint">'+r.hint+'</span></div>'
+        +'<div class="t-opt"><span class="t-time loading">...</span></div>'
+        +'</div>';
+    }).join('')
     +'</div>';
 }
 function loadTravel(){
   renderSkeleton();var isTo=travelDir==='to';
   fetchAllRoutes(isTo).then(function(res){
-    var rows=ROUTES.map(function(r,i){return{route:r,result:res.results[i],sort:res.results[i]?res.results[i].duration:999999};});
+    var rows=ROUTES.map(function(r,i){
+      return{route:r,result:res.results[i],
+             sort:res.results[i]?res.results[i].duration:999999};
+    });
     rows.sort(function(a,b){return a.sort-b.sort;});
-    var chips=document.getElementById('travel-chips');
-    if(chips)chips.innerHTML=rows.map(function(row){return buildSingleRow(row.route,row.result);}).join('');
+    var listEl=document.querySelector('#travel-grid .travel-list');
+    if(listEl)listEl.innerHTML=rows.map(function(row){
+      return buildSingleRow(row.route,row.result);
+    }).join('');
     var srcEl=document.getElementById('travel-source');
-    if(srcEl)srcEl.innerHTML='&#128994; TomTom — Trafic temps réel';
+    if(srcEl)srcEl.innerHTML='&#128994; TomTom \u2014 Trafic temps r\u00e9el';
     var u=document.getElementById('travel-upd');
     if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
   });
@@ -1465,21 +1505,28 @@ function optCell(result,refResult){
 }
 
 function buildSingleRow(route,result){
-  var barCls='x',col='rgba(255,255,255,.7)';
+  var barCls='x';
   if(result){
-    var dc=delayCls(result.noTrafDuration,result.duration);
-    barCls=dc;
-    col={g:'var(--green)',y:'var(--yellow)',r:'var(--red)',x:'rgba(255,255,255,.7)'}[dc]||'rgba(255,255,255,.7)';
+    var c=delayCls(result.noTrafDuration,result.duration);
+    barCls=c;
   }
-  var dur=result?fmtDur(result.duration):null;
-  var timeH=dur&&dur.val!=='-'
-    ?('<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:42px;font-weight:900;color:'+col+';line-height:1;">'+dur.val+'</span>'
-      +(dur.unit?'<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:14px;font-weight:600;color:rgba(255,255,255,.35);margin-left:4px;align-self:flex-end;padding-bottom:5px;">'+dur.unit+'</span>':''))
-    :'<span style="font-size:28px;color:rgba(255,255,255,.2);">—</span>';
-  return '<div class="travel-chip '+barCls+'">'
-    +'<span class="tc-dest">'+route.from+'</span>'
-    +'<div class="tc-time">'+timeH+'</div>'
-    +(route.highway?'':'<span class="tc-via">Nationale</span>')
+  var timeHtml='';
+  if(!result){
+    timeHtml='<div class="t-opt"><span class="t-time na">\u2014</span></div>';
+  } else {
+    var dur=fmtDurClean(result.duration);
+    var col={g:'var(--green)',y:'var(--yellow)',r:'var(--red)',x:'#fff'}[barCls]||'#fff';
+    timeHtml='<div class="t-opt" style="flex:1">'
+      +'<span class="t-time" style="color:'+col+';font-size:38px;">'+dur.val
+      +(dur.unit?'<span style="color:var(--muted);font-size:16px;margin-left:4px;">'+dur.unit+'</span>':'')
+      +'</span>'
+      +(route.highway?'':'<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;display:block;margin-top:2px;">Via nationale</span>')
+      +'</div>';
+  }
+  return'<div class="travel-row">'
+    +'<div class="t-bar '+barCls+'"></div>'
+    +'<div class="t-city"><span class="t-city-name">'+route.from+'</span><span class="t-city-hint">'+route.hint+'</span></div>'
+    +timeHtml
     +'</div>';
 }
 
@@ -1538,99 +1585,17 @@ setInterval(function(){if(traficLoaded)loadA8Traffic();},300000);
 setInterval(function(){if(weatherLoaded){rotIdxAM+=3;rotIdxIDF+=3;loadWeatherAM();loadWeatherIDF();loadVigilance();}},300000);
 
 
-function attachTrainClicks(){
-  var rows=document.querySelectorAll('.train-row.clickable');
-  rows.forEach(function(row){
-    if(row._cl)row.removeEventListener('click',row._cl);
-    row._cl=function(e){
-      e.stopPropagation();
-      var trip=row.dataset.trip?decodeURIComponent(row.dataset.trip):null;
-      var num =row.dataset.num ?decodeURIComponent(row.dataset.num) :'';
-      var dir =row.dataset.dir ?decodeURIComponent(row.dataset.dir) :'';
-      openTrainDetail(trip,num,dir,row);
-    };
-    row.addEventListener('click',row._cl);
-  });
-}
-
-function closeTrainDetail(){
-  var el=document.getElementById('train-detail');if(el)el.classList.remove('open');
-  _tid=null;
-  document.querySelectorAll('.train-row.selected').forEach(function(r){r.classList.remove('selected');});
-}
-
-function mv(e){if(!on)return;lx=e.clientX-ox;ly=e.clientY-oy;m.style.position='fixed';m.style.left=lx+'px';m.style.top=ly+'px';m.style.transform='none';}
-
-function toggleStation(key){
-  var p=document.getElementById('panel-'+key),b=document.getElementById('tog-'+key);
-  if(!p||!b)return;
-  var h=p.classList.toggle('hidden');
-  b.classList.toggle('active',!h);
-  var g=document.getElementById('stations-grid');if(!g)return;
-  var v=Array.from(g.querySelectorAll('.st-panel:not(.hidden)'));
-  v.forEach(function(e,i){e.style.borderRight=i<v.length-1?'1px solid var(--border)':'none';});
-  g.style.gridTemplateColumns='repeat('+Math.max(1,v.length)+',1fr)';
-}
-
-function openTrainDetail(tripId,num,dir,row){
-  if(_tid===tripId){closeTrainDetail();return;}_tid=tripId;
-  document.querySelectorAll('.train-row.selected').forEach(function(r){r.classList.remove('selected');});
-  if(row)row.classList.add('selected');
-  var panel=document.getElementById('train-detail'),tl=document.getElementById('td-timeline');
-  if(!panel||!tl)return;
-  var tn=document.getElementById('td-train-num'),tt=document.getElementById('td-title');
-  if(tn)tn.textContent=num||'Train';if(tt)tt.textContent=dir||'Arrêts';
-  tl.innerHTML='<div class="td-loading">Chargement…</div>';
-  panel.classList.add('open');
-  setTimeout(function(){panel.scrollIntoView({behavior:'smooth',block:'nearest'});},100);
-  if(!tripId){tl.innerHTML='<div class="td-loading" style="color:rgba(255,165,0,.7);">Détails non disponibles</div>';return;}
-  fetch(W+'/trip?id='+encodeURIComponent(tripId))
-    .then(function(r){return r.json();})
-    .then(function(d){
-      if(!d.stops||!d.stops.length){tl.innerHTML='<div class="td-loading">Aucun arrêt disponible</div>';return;}
-      tl.innerHTML=d.stops.map(function(s,i){
-        var cur=s.name===dir||i===d.stops.length-1;
-        return'<div class="td-stop'+(s.skipped?' skipped':'')+(cur?' current':'')+'"><div class="td-dot"></div><div class="td-sname">'+s.name+'</div><div class="td-stime">'+(s.depart||s.arrival||'')+'</div></div>';
-      }).join('');
-      var cur=tl.querySelector('.current');if(cur)setTimeout(function(){cur.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});},200);
-    })
-    .catch(function(){tl.innerHTML='<div class="td-loading">Impossible de charger les arrêts</div>';});
-}
-
-function edClear(){if(confirm('Vider le document ?')){document.getElementById('ed-doc').innerHTML='<p>&#201;crivez ici&hellip;</p>';try{localStorage.removeItem('rm_draft');}catch(e){}}}
-
-function edCopy(){navigator.clipboard.writeText(document.getElementById('ed-doc').innerText).catch(function(){});}
-
-function edSave(){
-  var html=document.getElementById('ed-doc').innerHTML;
-  try{localStorage.setItem('rm_draft',html);}catch(e){}
-  var blob=new Blob(['<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>'+html+'</body></html>'],{type:'text/html;charset=utf-8'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');a.href=url;a.download='note_'+new Date().toISOString().slice(0,10)+'.html';
-  document.body.appendChild(a);a.click();
-  setTimeout(function(){URL.revokeObjectURL(url);document.body.removeChild(a);},1000);
-}
-
-function edPrint(){
-  var html=document.getElementById('ed-doc').innerHTML;
-  var w=window.open('','_blank');if(!w)return;
-  w.document.open();w.document.close();
-  var s=w.document.createElement('style');
-  s.textContent='body{font-family:sans-serif;max-width:800px;margin:40px auto;font-size:14px;line-height:1.75}blockquote{border-left:3px solid #E4032E;padding-left:12px;color:#666}';
-  w.document.head.appendChild(s);w.document.body.innerHTML=html;
-  w.focus();setTimeout(function(){w.print();},300);
-}
-
-function openEditor(){
-  var ov=document.getElementById('ed-ov');if(ov)ov.classList.add('open');
-  var doc=document.getElementById('ed-doc');if(doc)doc.focus();
-  /* Restaurer brouillon */
-  try{var s=localStorage.getItem('rm_draft');if(s&&doc)doc.innerHTML=s;}catch(e){}
-}
-
-function mu(){on=false;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',mu);}
-
+function toggleStation(key){var p=document.getElementById('panel-'+key),b=document.getElementById('tog-'+key);if(!p||!b)return;var h=p.classList.toggle('hidden');b.classList.toggle('active',!h);var g=document.getElementById('stations-grid');if(!g)return;var v=Array.from(g.querySelectorAll('.st-panel:not(.hidden)'));v.forEach(function(e,i){e.style.borderRight=i<v.length-1?'1px solid var(--border)':'none';});g.style.gridTemplateColumns='repeat('+Math.max(1,v.length)+',1fr)';}
+var _tid=null;
+function closeTrainDetail(){var el=document.getElementById('train-detail');if(el)el.classList.remove('open');_tid=null;document.querySelectorAll('.train-row.selected').forEach(function(r){r.classList.remove('selected');});}
+function openTrainDetail(tripId,num,dir,row){if(_tid===tripId){closeTrainDetail();return;}_tid=tripId;document.querySelectorAll('.train-row.selected').forEach(function(r){r.classList.remove('selected');});if(row)row.classList.add('selected');var panel=document.getElementById('train-detail'),tl=document.getElementById('td-timeline');if(!panel||!tl)return;var tn=document.getElementById('td-train-num'),tt=document.getElementById('td-title');if(tn)tn.textContent=num||'Train';if(tt)tt.textContent=dir||'Arrêts';tl.innerHTML='<div class="td-loading">Chargement…</div>';panel.classList.add('open');setTimeout(function(){panel.scrollIntoView({behavior:'smooth',block:'nearest'});},100);var sn=num||(tripId&&tripId.split(':').find(function(p){return /^\d{5,6}$/.test(p);})||'');var fu=sn?'https://sncf-proxy.nicolas7lejeune.workers.dev/trip-search?num='+encodeURIComponent(sn):(tripId?'https://sncf-proxy.nicolas7lejeune.workers.dev/trip?id='+encodeURIComponent(tripId):null);if(!fu){tl.innerHTML='<div class="td-loading" style="color:rgba(255,165,0,.7);">Numéro non disponible</div>';return;}fetch(fu).then(function(r){return r.json();}).then(function(d){if(!d.stops||!d.stops.length){tl.innerHTML='<div class="td-loading">Aucun arrêt</div>';return;}tl.innerHTML=d.stops.map(function(s,i){var cur=s.name===dir||i===d.stops.length-1;return'<div class="td-stop'+(s.skipped?' skipped':'')+(cur?' current':'')+'"><div class="td-dot"></div><div class="td-sname">'+s.name+'</div><div class="td-stime">'+(s.depart||s.arrival||'')+'</div></div>';}).join('');var cur=tl.querySelector('.current');if(cur)setTimeout(function(){cur.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});},200);}).catch(function(){tl.innerHTML='<div class="td-loading">Impossible de charger</div>';});}
+function attachTrainClicks(){document.querySelectorAll('.train-row.clickable').forEach(function(row){if(row._cl)row.removeEventListener('click',row._cl);row._cl=function(){openTrainDetail(row.dataset.trip?decodeURIComponent(row.dataset.trip):null,row.dataset.num?decodeURIComponent(row.dataset.num):'',row.dataset.dir?decodeURIComponent(row.dataset.dir):'',row);};row.addEventListener('click',row._cl);});}
+function openEditor(){var ov=document.getElementById('ed-ov');if(ov)ov.classList.add('open');var doc=document.getElementById('ed-doc');if(doc){doc.focus();try{var s=localStorage.getItem('rm_draft');if(s)doc.innerHTML=s;}catch(e){}}}
 function closeEditor(){var ov=document.getElementById('ed-ov');if(ov)ov.classList.remove('open');}
+function edPrint(){var html=document.getElementById('ed-doc').innerHTML;var w=window.open('','_blank');if(!w)return;w.document.open();w.document.close();var s=w.document.createElement('style');s.textContent='body{font-family:sans-serif;max-width:800px;margin:40px auto;font-size:14px;line-height:1.75}';w.document.head.appendChild(s);w.document.body.innerHTML=html;w.focus();setTimeout(function(){w.print();},300);}
+function edCopy(){navigator.clipboard.writeText(document.getElementById('ed-doc').innerText).catch(function(){});}
+function edSave(){var html=document.getElementById('ed-doc').innerHTML;try{localStorage.setItem('rm_draft',html);}catch(e){}var blob=new Blob(['<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>'+html+'</body></html>'],{type:'text/html;charset=utf-8'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='note_'+new Date().toISOString().slice(0,10)+'.html';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(url);document.body.removeChild(a);},1000);}
+function edClear(){if(confirm('Vider ?')){document.getElementById('ed-doc').innerHTML='<p>Écrivez…</p>';try{localStorage.removeItem('rm_draft');}catch(e){}}}
 
 </script>
 
