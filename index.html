@@ -1604,14 +1604,22 @@ function toggleStation(key){var p=document.getElementById('panel-'+key),b=docume
 var _tid=null;
 function closeTrainDetail(){var el=document.getElementById('train-detail');if(el)el.classList.remove('open');_tid=null;document.querySelectorAll('.train-row.selected').forEach(function(r){r.classList.remove('selected');});}
 function openTrainDetail(tripId,num,dir,row){if(_tid===tripId){closeTrainDetail();return;}_tid=tripId;document.querySelectorAll('.train-row.selected').forEach(function(r){r.classList.remove('selected');});if(row)row.classList.add('selected');var panel=document.getElementById('train-detail'),tl=document.getElementById('td-timeline');if(!panel||!tl)return;var tn=document.getElementById('td-train-num'),tt=document.getElementById('td-title');if(tn)tn.textContent=num||'Train';if(tt)tt.textContent=dir||'';tl.innerHTML='<div class="td-loading">Chargement\u2026</div>';panel.classList.add('open');setTimeout(function(){panel.scrollIntoView({behavior:'smooth',block:'nearest'});},100);var sn=num||(tripId?tripId.split(':').find(function(p){return /^\d{5,6}$/.test(p);})||'':'');var fu=sn?'https://sncf-proxy.nicolas7lejeune.workers.dev/trip-search?num='+encodeURIComponent(sn):(tripId?'https://sncf-proxy.nicolas7lejeune.workers.dev/trip?id='+encodeURIComponent(tripId):null);if(!fu){tl.innerHTML='<div class="td-loading">Num\u00e9ro non disponible</div>';return;}fetch(fu).then(function(r){return r.json();}).then(function(d){if(!d.stops||!d.stops.length){tl.innerHTML='<div class="td-loading">Aucun arr\u00eat</div>';return;}var nowHH=(function(){var d=new Date(),t=d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',hour12:false});return t;})();
-  function t2m(t){if(!t||t.length<5)return-1;var p=t.split(':');return parseInt(p[0])*60+parseInt(p[1]);}
+  function t2m(t){
+    if(!t)return-1;
+    var s=String(t).replace(/^T/,'');
+    if(s.indexOf(':')>=0){var p=s.split(':');return parseInt(p[0])*60+parseInt(p[1]);}
+    if(s.length>=4){return parseInt(s.slice(0,2))*60+parseInt(s.slice(2,4));}
+    return-1;
+  }
   var nowM=t2m(nowHH),curIdx=-1;
   d.stops.forEach(function(s,i){var t=t2m(s.depart||s.arrival||'');if(t>=0&&t<=nowM)curIdx=i;});
   tl.innerHTML='<div class="td-progress-line" id="td-prog"></div>'
     +d.stops.map(function(s,i){
       var isPast=curIdx>=0&&i<curIdx,isCur=i===curIdx;
       var cls='td-stop'+(s.skipped?' skipped':'')+(isCur?' current':isPast?' past':'');
-      var t=s.depart||s.arrival||'';
+      var ta=s.arrival||'',td=s.depart||'';
+      var t=td||(ta||'');
+      var tDisplay=(ta&&td&&ta!==td)?'<span style="font-size:9px;opacity:.6;display:block;">'+ta+'</span><span>'+td+'</span>':t;
       return'<div class="'+cls+'"><div class="td-stime-top">'+t+'</div><div class="td-dot"></div><div class="td-sname">'+s.name+'</div></div>';
     }).join('');
   setTimeout(function(){
