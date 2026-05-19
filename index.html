@@ -1346,9 +1346,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 
 
-
-<button id="ed-fab" onclick="toggleEditor()" title="Éditeur" style="position:fixed;bottom:24px;right:24px;z-index:9002;width:52px;height:52px;border-radius:50%;background:var(--red);border:2px solid rgba(255,255,255,.15);cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);font-size:22px;color:#fff;">&#9999;&#65039;</button>
-
 <div class="ed-overlay" id="ed-ov">
   <div class="ed-modal" id="ed-modal">
     <div class="ed-drag" id="ed-drag">
@@ -1826,8 +1823,7 @@ function loadA8Traffic(){
   var sf=A8_PROBES.map(function(p){return fetchSeg(p.south.lat,p.south.lon);});
   var nf=A8_PROBES.map(function(p){return fetchSeg(p.north.lat,p.north.lon);});
   Promise.all([Promise.all(sf),Promise.all(nf)]).then(function(r){
-    function fillGaps(arr){var res=arr.slice(),last={cur:0,ff:0};for(var i=0;i<res.length;i++){if(res[i]&&res[i].cur>0)last=res[i];else if(last.cur>0)res[i]=last;}last={cur:0,ff:0};for(var j=res.length-1;j>=0;j--){if(res[j]&&res[j].cur>0)last=res[j];else if(last.cur>0)res[j]=last;}return res;}
-    renderRoad(idxs,fillGaps(r[0]),fillGaps(r[1]));
+    renderRoad(idxs,r[0],r[1]);
   }).catch(function(e){
     if(wrap)wrap.innerHTML='<div class="a8-loading" style="color:#ff8080">Erreur: '+e.message+'</div>';
   });
