@@ -1833,7 +1833,24 @@ function loadA8Traffic(){
   var sf=A8_PROBES.map(function(p){return fetchSeg(p.south.lat,p.south.lon);});
   var nf=A8_PROBES.map(function(p){return fetchSeg(p.north.lat,p.north.lon);});
   Promise.all([Promise.all(sf),Promise.all(nf)]).then(function(r){
-    renderRoad(idxs,r[0],r[1]);
+    /* Combler les trous : propager les valeurs voisines */
+    function fillGaps(arr){
+      var result=arr.slice();
+      /* Passe avant : propager la dernière valeur connue */
+      var last={cur:0,ff:0};
+      for(var i=0;i<result.length;i++){
+        if(result[i]&&result[i].cur>0) last=result[i];
+        else if(last.cur>0) result[i]=last;
+      }
+      /* Passe arrière */
+      last={cur:0,ff:0};
+      for(var j=result.length-1;j>=0;j--){
+        if(result[j]&&result[j].cur>0) last=result[j];
+        else if(last.cur>0) result[j]=last;
+      }
+      return result;
+    }
+    renderRoad(idxs,fillGaps(r[0]),fillGaps(r[1]));
   }).catch(function(e){
     if(wrap)wrap.innerHTML='<div class="a8-loading" style="color:#ff8080">Erreur: '+e.message+'</div>';
   });
