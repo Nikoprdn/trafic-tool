@@ -1154,32 +1154,129 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .td-close{margin-left:auto;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:18px;padding:2px 6px;}
 .td-scroll{overflow-x:auto;padding:16px 20px 14px;}
 .td-timeline{display:flex;align-items:flex-start;min-width:max-content;}
-.td-scroll{overflow-x:auto;padding:32px 28px 20px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent;}
-.td-timeline{display:flex;align-items:center;min-width:max-content;position:relative;padding:52px 0 36px;}
-.td-track{position:absolute;top:50%;left:0;right:0;height:5px;background:rgba(255,255,255,.1);border-radius:3px;z-index:0;transform:translateY(-50%);}
-.td-progress-line{position:absolute;top:50%;left:0;height:5px;background:#1B5EB8;border-radius:3px;z-index:1;transition:width .5s;pointer-events:none;box-shadow:0 0 12px rgba(27,94,184,.6);transform:translateY(-50%);}
-.td-stop{display:flex;flex-direction:column;align-items:center;min-width:90px;max-width:90px;position:relative;z-index:2;}
-.td-stime-top{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:rgba(255,255,255,.4);text-align:center;min-height:32px;margin-bottom:9px;white-space:nowrap;line-height:1.3;position:relative;}
-.td-stop.past    .td-stime-top{color:rgba(255,255,255,.7);}
-.td-stop.current .td-stime-top{color:#fff;font-size:15px;font-weight:900;}
+/* ═══ TIMELINE MÉTRO PARISIEN ═══ */
+.td-scroll{
+  overflow-x:auto;
+  padding:0 28px 16px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,.15) transparent;
+}
+.td-timeline{
+  display:flex;
+  align-items:flex-end;        /* noms sous la ligne */
+  min-width:max-content;
+  position:relative;
+  padding-top:68px;            /* espace pour les heures + noms verticaux */
+  padding-bottom:8px;
+}
+/* ── Ligne de fond ── */
+.td-track{
+  position:absolute;
+  top:68px;
+  left:0;right:0;
+  height:7px;
+  background:rgba(255,255,255,.1);
+  border-radius:4px;
+  z-index:0;
+}
+/* ── Progression bleue SNCF ── */
+.td-progress-line{
+  position:absolute;
+  top:68px;left:0;
+  height:7px;
+  background:#1B5EB8;
+  border-radius:4px;
+  z-index:1;
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;
+  box-shadow:0 0 14px rgba(27,94,184,.55);
+}
+/* ── Stop ── */
+.td-stop{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  position:relative;
+  z-index:2;
+  min-width:70px;
+  max-width:70px;
+}
+/* Heure au-dessus de la ligne */
+.td-stime-top{
+  position:absolute;
+  bottom:calc(100% + 4px);   /* juste au-dessus du point */
+  left:50%;
+  transform:translateX(-50%) rotate(-55deg);
+  transform-origin:bottom center;
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.45);
+  white-space:nowrap;
+  line-height:1;
+}
+.td-stop.past    .td-stime-top{color:rgba(255,255,255,.65);}
+.td-stop.current .td-stime-top{color:#F5C518;font-size:12px;font-weight:900;transform:translateX(-50%) rotate(-55deg);}
 .td-stop.next    .td-stime-top{color:#1B5EB8;}
-.td-dot{width:16px;height:16px;border-radius:50%;border:3px solid rgba(255,255,255,.35);background:#0b1a2e;z-index:2;flex-shrink:0;transition:all .3s;}
-.td-stop.past    .td-dot{border-color:#1B5EB8;background:#1B5EB8;box-shadow:0 0 8px rgba(27,94,184,.5);}
-.td-stop.current .td-dot{border-color:#fff;background:#fff;box-shadow:0 0 0 3px #1B5EB8,0 0 16px rgba(255,255,255,.4);width:20px;height:20px;}
-.td-stop.next    .td-dot{animation:blinkNextStop 1.4s ease-in-out infinite;}
-.td-stop.skipped .td-dot{border-color:rgba(255,255,255,.1);background:transparent;}
-@keyframes blinkNextStop{0%,100%{border-color:rgba(255,255,255,.2);background:#0b1a2e;}50%{border-color:#1B5EB8;background:rgba(27,94,184,.3);box-shadow:0 0 12px rgba(27,94,184,.5);}}
-.td-sname{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.5);text-align:center;max-width:85px;line-height:1.3;word-break:break-word;margin-top:10px;}
-.td-stop.past    .td-sname{color:rgba(255,255,255,.8);}
-.td-stop.current .td-sname{color:#fff;font-size:12px;font-weight:700;}
-.td-stop.next    .td-sname{color:#1B5EB8;font-weight:700;}
+/* Point ── style métro : cercle sur la ligne */
+.td-dot{
+  width:14px;height:14px;
+  border-radius:50%;
+  border:3px solid rgba(255,255,255,.4);
+  background:#0b1a2e;
+  flex-shrink:0;
+  z-index:2;
+  transition:all .3s;
+  margin-top:61px;            /* aligne le centre du point sur la ligne */
+}
+.td-stop.past    .td-dot{border-color:#fff;background:#1B5EB8;}
+.td-stop.current .td-dot{
+  border-color:#fff;background:#fff;
+  box-shadow:0 0 0 4px #1B5EB8,0 0 20px rgba(255,255,255,.5);
+  width:18px;height:18px;
+  margin-top:59px;
+}
+.td-stop.next    .td-dot{animation:metroNextBlink 1.4s ease-in-out infinite;}
+.td-stop.skipped .td-dot{border-color:rgba(255,255,255,.15);background:transparent;}
+@keyframes metroNextBlink{
+  0%,100%{border-color:rgba(255,255,255,.25);background:#0b1a2e;}
+  50%{border-color:#1B5EB8;background:rgba(27,94,184,.4);box-shadow:0 0 12px rgba(27,94,184,.6);}
+}
+/* Nom de la gare — vertical sous la ligne */
+.td-sname{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.02em;
+  color:rgba(255,255,255,.5);
+  writing-mode:vertical-rl;
+  text-orientation:mixed;
+  transform:rotate(180deg);
+  margin-top:10px;
+  max-height:90px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  line-height:1;
+  text-align:right;
+}
+.td-stop.past    .td-sname{color:rgba(255,255,255,.75);}
+.td-stop.current .td-sname{color:#fff;font-weight:800;font-size:12px;}
+.td-stop.next    .td-sname{color:#1B5EB8;font-weight:800;}
 .td-stop.skipped .td-sname{opacity:.2;text-decoration:line-through;}
+/* Retard clignotant */
 @keyframes blinkTimePlan{0%,45%{opacity:1;}50%,95%{opacity:0;}100%{opacity:1;}}
 @keyframes blinkTimeReal{0%,45%{opacity:0;}50%,95%{opacity:1;}100%{opacity:0;}}
 .td-time-planned{animation:blinkTimePlan 2.5s ease-in-out infinite;display:block;color:#F5C518;}
-.td-time-real{animation:blinkTimeReal 2.5s ease-in-out infinite;display:block;color:var(--orange);position:absolute;top:0;left:0;right:0;text-align:center;}
+.td-time-real{
+  animation:blinkTimeReal 2.5s ease-in-out infinite;
+  display:block;color:var(--orange);
+  position:absolute;top:0;left:0;right:0;text-align:center;
+}
 .td-time-wrap{position:relative;display:inline-block;}
-.td-loading{padding:20px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:12px;color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase;}
+.td-loading{
+  padding:24px;text-align:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;color:rgba(255,255,255,.35);
+  letter-spacing:.1em;text-transform:uppercase;
+}
 /* Travel chips */
 .travel-chips-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:10px 14px 12px;}
 .travel-chip{background:var(--card);border:1px solid rgba(255,255,255,.08);border-top:3px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 12px 8px;display:flex;flex-direction:column;gap:6px;}
@@ -1419,28 +1516,14 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h1')">H1</button>
       <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h2')">H2</button>
       <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h3')">H3</button>
-      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'blockquote')">&laquo;Citation&raquo;</button>
-      <button class="ed-btn" onclick="document.execCommand('insertUnorderedList')">&#8226; Liste</button>
-      <button class="ed-btn" onclick="document.execCommand('removeFormat')">&#10006; Style</button>
-      <span style="flex:1"></span>
-      <button class="ed-btn" onclick="edPrint()">&#128424; Imprimer</button>
-      <button class="ed-btn" onclick="edCopy()">&#128203; Copier</button>
-      <button class="ed-btn" onclick="edSave()">&#128190; Sauver</button>
-      <button class="ed-btn" onclick="edClear()" style="color:rgba(255,100,100,.8);">&#128465;</button>
+      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'blockquote')">&laquo;</button>
     </div>
-    <div class="ed-doc" id="ed-doc" contenteditable="true" spellcheck="false">
-      <p>&#201;crivez votre note ici&#8230;</p>
-    </div>
-    <div class="ed-footer">
-      <span id="ed-wc">0 mot</span>
-      <span>Ctrl+B Gras &middot; Ctrl+I Italique</span>
-    </div>
+    <div class="ed-doc" id="ed-doc" contenteditable="true" spellcheck="false"><p>Notes&hellip;</p></div>
+    <div class="ed-footer"><span id="ed-wc">0 mot</span></div>
   </div>
 </div>
+
 <script>
-
-
-
 /* THEME */
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
 function toggleTheme(){var cur=document.documentElement.getAttribute('data-theme')||'dark';applyTheme(cur==='dark'?'light':'dark');}
@@ -1692,32 +1775,63 @@ function openTrainDetail(tripId,num,dir,row,delayMin){
   if(!fu){tl.innerHTML='<div class="td-loading">Num\u00e9ro non disponible</div>';return;}
   fetch(fu).then(function(r){return r.json();})
   .then(function(d){
-    if(!d.stops||!d.stops.length){tl.innerHTML='<div class="td-loading">Aucun arr\u00eat</div>';return;}
-    function t2m(t){if(!t)return-1;var s=String(t).replace(/^T/,'');if(s.indexOf(':')>=0){var p=s.split(':');return parseInt(p[0])*60+parseInt(p[1]);}if(s.length>=4)return parseInt(s.slice(0,2))*60+parseInt(s.slice(2,4));return-1;}
-    function addMins(t,m){var b=t2m(t);if(b<0)return t;var tot=b+m,h=Math.floor(tot/60)%24,mn=tot%60;return(h<10?'0':'')+h+':'+(mn<10?'0':'')+mn;}
+    if(!d.stops||!d.stops.length){tl.innerHTML='<div class="td-loading">Aucun arr\u00eat disponible</div>';return;}
+    function t2m(t){
+      if(!t)return-1;
+      var s=String(t).replace(/^T/,'');
+      if(s.indexOf(':')>=0){var p=s.split(':');return parseInt(p[0])*60+parseInt(p[1]);}
+      if(s.length>=4)return parseInt(s.slice(0,2))*60+parseInt(s.slice(2,4));
+      return-1;
+    }
+    function addMins(t,m){
+      var b=t2m(t);if(b<0)return t;
+      var tot=b+m,h=Math.floor(tot/60)%24,mn=tot%60;
+      return(h<10?'0':'')+h+':'+(mn<10?'0':'')+mn;
+    }
     var nowM=t2m(new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',hour12:false}));
     var curIdx=-1;
-    d.stops.forEach(function(s,i){var t=t2m(s.depart||s.arrival||'');if(t>=0&&t<=nowM)curIdx=i;});
+    d.stops.forEach(function(s,i){
+      var t=t2m(s.depart||s.arrival||'');
+      if(t>=0&&t<=nowM)curIdx=i;
+    });
     var nextIdx=curIdx+1;
-    tl.innerHTML='<div class="td-track"></div><div class="td-progress-line" id="td-prog"></div>'
-      +d.stops.map(function(s,i){
-        var isPast=curIdx>=0&&i<curIdx,isCur=i===curIdx,isNext=i===nextIdx&&!s.skipped;
-        var cls='td-stop'+(s.skipped?' skipped':'')+(isCur?' current':isPast?' past':isNext?' next':'');
-        var tBase=s.depart||s.arrival||'',tDisplay;
-        if(delayMin>0&&tBase){var tReal=addMins(tBase,delayMin);tDisplay='<span class="td-time-wrap"><span class="td-time-planned">'+tBase+'</span><span class="td-time-real">'+tReal+'</span></span>';}
-        else{tDisplay=tBase;}
-        return'<div class="'+cls+'"><div class="td-stime-top">'+tDisplay+'</div><div class="td-dot"></div><div class="td-sname">'+s.name+'</div></div>';
-      }).join('');
+    /* Construire la timeline style métro */
+    var html='<div class="td-track"></div><div class="td-progress-line" id="td-prog"></div>';
+    d.stops.forEach(function(s,i){
+      var isPast=curIdx>=0&&i<curIdx,isCur=i===curIdx,isNext=i===nextIdx&&!s.skipped;
+      var cls='td-stop'+(s.skipped?' skipped':'')+(isCur?' current':isPast?' past':isNext?' next':'');
+      var tBase=s.depart||s.arrival||'';
+      /* Affichage heure avec retard */
+      var tDisplay;
+      if(delayMin>0&&tBase){
+        var tReal=addMins(tBase,delayMin);
+        tDisplay='<span class="td-time-wrap"><span class="td-time-planned">'+tBase+'</span><span class="td-time-real">'+tReal+'</span></span>';
+      } else {
+        tDisplay=tBase||'';
+      }
+      html+='<div class="'+cls+'">'
+        +'<div class="td-stime-top">'+tDisplay+'</div>'
+        +'<div class="td-dot"></div>'
+        +'<div class="td-sname">'+s.name+'</div>'
+        +'</div>';
+    });
+    tl.innerHTML=html;
+    /* Calculer la progression */
     setTimeout(function(){
-      var stops=tl.querySelectorAll('.td-stop'),prog=document.getElementById('td-prog');
+      var stops=tl.querySelectorAll('.td-stop');
+      var prog=document.getElementById('td-prog');
       if(prog&&stops.length&&curIdx>=0){
-        var first=stops[0].getBoundingClientRect(),cur2=stops[Math.min(curIdx,stops.length-1)].getBoundingClientRect(),tr=tl.getBoundingClientRect();
+        var first=stops[0].getBoundingClientRect();
+        var cur2=stops[Math.min(curIdx,stops.length-1)].getBoundingClientRect();
+        var tr=tl.getBoundingClientRect();
+        var lineY=tr.top+68+3.5; /* centre de la ligne */
         prog.style.left=(first.left+first.width/2-tr.left)+'px';
         prog.style.width=Math.max(0,(cur2.left+cur2.width/2)-(first.left+first.width/2))+'px';
       }
+      /* Scroller vers la gare actuelle */
       var curEl=tl.querySelector('.current');
       if(curEl)curEl.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
-    },120);
+    },150);
   })
   .catch(function(){tl.innerHTML='<div class="td-loading">Impossible de charger</div>';});
 }
@@ -1898,7 +2012,7 @@ function renderRoad(idxs,southData,northData){
   /* Noms sous la bande */
   var namesEl=document.createElement('div');
   namesEl.className='a8-exit-names';
-  exits.forEach(function(ex){
+  exits.forEach(function(ex,i){
     var pct=((ex.km-km0)/kmTotal*100).toFixed(3)+'%';
     var el=document.createElement('div');
     el.className='a8-exit-name-el';
