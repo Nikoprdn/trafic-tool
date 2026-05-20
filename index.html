@@ -1155,112 +1155,115 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .td-scroll{overflow-x:auto;padding:16px 20px 14px;}
 .td-timeline{display:flex;align-items:flex-start;min-width:max-content;}
 /* ═══ TIMELINE MÉTRO ═══ */
-
-/* Hauteur totale : 60px noms en haut + 7px ligne + 20px heure en bas */
 .td-scroll{
   overflow-x:auto;
-  padding:16px 32px 20px;
+  padding:0 40px 0 40px;
   scrollbar-width:thin;
   scrollbar-color:rgba(255,255,255,.2) transparent;
 }
-
-/* Container : alignItems=center → la ligne est au milieu */
+/* Hauteur totale: 100px noms + 8px ligne + 48px heures */
 .td-timeline{
   display:flex;
-  align-items:center;
+  align-items:flex-start;
   min-width:max-content;
   position:relative;
-  height:160px;          /* fixe : 60 haut + dot + 60 bas + marges */
+  height:170px;
 }
-
-/* Ligne de fond */
+/* Ligne de fond à 110px du haut */
 .td-track{
   position:absolute;
-  top:50%;
+  top:110px;
   left:0;right:0;
-  height:6px;
-  background:rgba(255,255,255,.1);
-  border-radius:3px;
+  height:7px;
+  background:rgba(255,255,255,.12);
+  border-radius:4px;
   z-index:0;
-  transform:translateY(-50%);
 }
-
-/* Ligne de progression bleue SNCF */
+/* Progression bleue */
 .td-progress-line{
   position:absolute;
-  top:50%;
-  left:0;
-  height:6px;
+  top:110px;left:0;
+  height:7px;
   background:#1B5EB8;
-  border-radius:3px;
+  border-radius:4px;
   z-index:1;
-  transition:width .6s cubic-bezier(.4,0,.2,1);
+  transition:width .5s cubic-bezier(.4,0,.2,1);
   pointer-events:none;
-  box-shadow:0 0 12px rgba(27,94,184,.5);
-  transform:translateY(-50%);
+  box-shadow:0 0 12px rgba(27,94,184,.6);
 }
-
-/* Chaque stop : flex-column centré */
+/* Icône position approximative du train */
+.td-train-pos{
+  position:absolute;
+  top:104px;
+  height:19px;width:32px;
+  background:#1B5EB8;
+  border-radius:4px;
+  z-index:5;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;
+  box-shadow:0 0 10px rgba(27,94,184,.8);
+  transform:translateX(-50%);
+  transition:left .8s ease;
+}
+.td-train-pos::after{
+  content:'';
+  position:absolute;
+  bottom:-5px;left:50%;
+  transform:translateX(-50%);
+  border:5px solid transparent;
+  border-top-color:#1B5EB8;
+}
+/* Chaque stop */
 .td-stop{
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
   position:relative;
   z-index:2;
-  min-width:80px;
-  max-width:80px;
-  height:160px;
+  min-width:88px;
+  max-width:88px;
 }
-
-/* ── Nom au-dessus (horizontal, lisible) ──
-   Alternance odd/even pour éviter les collisions */
+/* Nom en haut — horizontal, GRAS, lisible */
 .td-sname{
   position:absolute;
   top:0;
   left:50%;
   transform:translateX(-50%);
+  width:84px;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:.03em;
-  color:rgba(255,255,255,.55);
-  white-space:nowrap;
+  font-size:12px;font-weight:700;letter-spacing:.03em;
+  color:rgba(255,255,255,.6);
   text-align:center;
-  max-width:76px;
+  white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis;
-  /* Positionner : stops pairs en haut (top:4px), impairs un peu plus bas (top:20px) */
-  height:28px;
   line-height:1.2;
-  display:flex;align-items:flex-end;justify-content:center;
 }
-/* Alternance via nth-child */
-.td-stop:nth-child(odd)  .td-sname{ top:4px;  }
-.td-stop:nth-child(even) .td-sname{ top:22px; }
-
-.td-stop.past    .td-sname{ color:rgba(255,255,255,.8); }
-.td-stop.current .td-sname{ color:#fff;font-size:12px;font-weight:800; }
+/* Alternance : stops pairs un peu plus bas pour les noms longs */
+.td-stop:nth-child(2n+3) .td-sname{ top:18px; }
+.td-stop.past    .td-sname{ color:rgba(255,255,255,.85); }
+.td-stop.current .td-sname{ color:#fff;font-size:13px;font-weight:800; }
 .td-stop.next    .td-sname{ color:#1B5EB8;font-weight:800; }
 .td-stop.skipped .td-sname{ opacity:.25;text-decoration:line-through; }
 
-/* ── Trait vertical nom → point ── */
+/* Trait vertical nom → point */
 .td-name-line{
   position:absolute;
   width:1px;
-  background:rgba(255,255,255,.15);
-  left:50%;
-  transform:translateX(-50%);
+  background:rgba(255,255,255,.18);
+  left:50%;transform:translateX(-50%);
 }
-.td-stop:nth-child(odd)  .td-name-line{ top:32px; height:calc(50% - 40px); }
-.td-stop:nth-child(even) .td-name-line{ top:50px; height:calc(50% - 56px); }
+.td-stop:nth-child(2n+1) .td-name-line{ top:18px; height:86px; }
+.td-stop:nth-child(2n+2) .td-name-line{ top:18px; height:86px; }
+.td-stop:nth-child(2n+3) .td-name-line{ top:36px; height:68px; }
 
-/* ── Point (cercle) sur la ligne ── */
+/* Point sur la ligne */
 .td-dot{
   position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
+  top:107px;left:50%;
+  transform:translateX(-50%);
   width:13px;height:13px;
   border-radius:50%;
-  border:3px solid rgba(255,255,255,.35);
+  border:3px solid rgba(255,255,255,.4);
   background:#07111f;
   z-index:3;
   transition:all .3s;
@@ -1268,50 +1271,39 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .td-stop.past    .td-dot{ border-color:#fff;background:#1B5EB8; }
 .td-stop.current .td-dot{
   border-color:#fff;background:#fff;
-  box-shadow:0 0 0 4px #1B5EB8,0 0 20px rgba(255,255,255,.5);
-  width:18px;height:18px;
+  box-shadow:0 0 0 4px #1B5EB8,0 0 18px rgba(255,255,255,.5);
+  width:17px;height:17px;top:105px;
 }
 .td-stop.next    .td-dot{ animation:metroNextBlink 1.4s ease-in-out infinite; }
-.td-stop.skipped .td-dot{ border-color:rgba(255,255,255,.12);background:transparent; }
-
+.td-stop.skipped .td-dot{ border-color:rgba(255,255,255,.1);background:transparent; }
 @keyframes metroNextBlink{
   0%,100%{ border-color:rgba(255,255,255,.2);background:#07111f; }
   50%{ border-color:#1B5EB8;background:rgba(27,94,184,.4);box-shadow:0 0 12px rgba(27,94,184,.5); }
 }
-
-/* ── Heure en bas ── */
+/* Heure en bas — GRANDE */
 .td-stime-top{
   position:absolute;
-  bottom:8px;
-  left:50%;
-  transform:translateX(-50%);
+  top:128px;
+  left:50%;transform:translateX(-50%);
   font-family:'Share Tech Mono',monospace;
-  font-size:11px;font-weight:700;
-  color:rgba(255,255,255,.4);
+  font-size:14px;font-weight:700;
+  color:rgba(255,255,255,.45);
   white-space:nowrap;
   text-align:center;
-  line-height:1;
 }
-.td-stop.past    .td-stime-top{ color:rgba(255,255,255,.65); }
-.td-stop.current .td-stime-top{ color:#F5C518;font-size:12px;font-weight:900; }
-.td-stop.next    .td-stime-top{ color:#1B5EB8; }
-
+.td-stop.past    .td-stime-top{ color:rgba(255,255,255,.7); }
+.td-stop.current .td-stime-top{ color:#F5C518;font-size:16px;font-weight:900; }
+.td-stop.next    .td-stime-top{ color:#1B5EB8;font-size:14px; }
 /* Retard clignotant */
 @keyframes blinkTimePlan{0%,45%{opacity:1;}50%,95%{opacity:0;}100%{opacity:1;}}
 @keyframes blinkTimeReal{0%,45%{opacity:0;}50%,95%{opacity:1;}100%{opacity:0;}}
 .td-time-planned{animation:blinkTimePlan 2.5s ease-in-out infinite;display:block;color:#F5C518;}
-.td-time-real{
-  animation:blinkTimeReal 2.5s ease-in-out infinite;
-  display:block;color:var(--orange);
-  position:absolute;top:0;left:0;right:0;text-align:center;
-}
+.td-time-real{animation:blinkTimeReal 2.5s ease-in-out infinite;display:block;color:var(--orange);position:absolute;top:0;left:0;right:0;text-align:center;}
 .td-time-wrap{position:relative;display:inline-block;}
-
 .td-loading{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
   font-family:'Barlow Condensed',sans-serif;font-size:12px;
-  color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase;
-  white-space:nowrap;
+  color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;
 }
 /* Travel chips */
 .travel-chips-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:10px 14px 12px;}
@@ -1559,9 +1551,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <button class="ed-btn" onclick="edClear()" style="color:rgba(255,100,100,.8);">&#128465;</button>
     </div>
     <div class="ed-doc" id="ed-doc" contenteditable="true" spellcheck="false"><p>Notes&hellip;</p></div>
-    <div class="ed-footer"><span id="ed-wc">0 mot</span></div>
-  </div>
-</div>
+    <div class="ed-footer"><span id="ed-wc">0 mot</span></div></div></div>
 
 <script>
 /* THEME */
@@ -1836,7 +1826,7 @@ function openTrainDetail(tripId,num,dir,row,delayMin){
     });
     var nextIdx=curIdx+1;
     /* Construire la timeline style métro */
-    var html='<div class="td-track"></div><div class="td-progress-line" id="td-prog"></div>';
+    var html='<div class="td-track"></div><div class="td-progress-line" id="td-prog"></div><div class="td-train-pos" id="td-train-marker" style="display:none">&#128644;</div>';
     d.stops.forEach(function(s,i){
       var isPast=curIdx>=0&&i<curIdx,isCur=i===curIdx,isNext=i===nextIdx&&!s.skipped;
       var cls='td-stop'+(s.skipped?' skipped':'')+(isCur?' current':isPast?' past':isNext?' next':'');
@@ -1861,16 +1851,31 @@ function openTrainDetail(tripId,num,dir,row,delayMin){
     setTimeout(function(){
       var stops=tl.querySelectorAll('.td-stop');
       var prog=document.getElementById('td-prog');
-      if(prog&&stops.length&&curIdx>=0){
+      var trainM=document.getElementById('td-train-marker');
+      if(!stops.length)return;
+      var tr=tl.getBoundingClientRect();
+      /* Progression */
+      if(prog&&curIdx>=0){
         var first=stops[0].getBoundingClientRect();
         var cur2=stops[Math.min(curIdx,stops.length-1)].getBoundingClientRect();
-        var tr=tl.getBoundingClientRect();
-        /* progression : centre de la zone */
         prog.style.left=(first.left+first.width/2-tr.left)+'px';
         prog.style.width=Math.max(0,(cur2.left+cur2.width/2)-(first.left+first.width/2))+'px';
       }
-      /* Scroller vers la gare actuelle */
-      var curEl=tl.querySelector('.current');
+      /* Position approx du train */
+      if(trainM&&curIdx>=0&&nextIdx<stops.length){
+        var sC=stops[curIdx].getBoundingClientRect();
+        var sN=stops[nextIdx].getBoundingClientRect();
+        var tC=t2m(d.stops[curIdx]&&(d.stops[curIdx].depart||d.stops[curIdx].arrival)||'');
+        var tN=t2m(d.stops[nextIdx]&&(d.stops[nextIdx].depart||d.stops[nextIdx].arrival)||'');
+        var ratio=0.5;
+        if(tC>0&&tN>0&&tN>tC)ratio=Math.min(1,Math.max(0,(nowM-tC)/(tN-tC)));
+        var xC=sC.left+sC.width/2-tr.left;
+        var xN=sN.left+sN.width/2-tr.left;
+        trainM.style.left=(xC+(xN-xC)*ratio)+'px';
+        trainM.style.display='flex';
+      } else if(trainM){trainM.style.display='none';}
+      /* Scroller */
+      var curEl=tl.querySelector('.current')||tl.querySelector('.next');
       if(curEl)curEl.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
     },150);
   })
