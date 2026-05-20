@@ -1194,67 +1194,55 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 /* Icône position approximative du train */
 .td-train-pos{
   position:absolute;
-  top:104px;
-  height:19px;width:32px;
+  top:101px;
+  width:25px;height:25px;
+  border-radius:50%;
   background:#1B5EB8;
-  border-radius:4px;
-  z-index:5;
-  display:flex;align-items:center;justify-content:center;
-  font-size:13px;
-  box-shadow:0 0 10px rgba(27,94,184,.8);
+  border:3px solid #fff;
+  z-index:6;
+  box-shadow:0 0 0 3px rgba(27,94,184,.4), 0 0 16px rgba(27,94,184,.8);
   transform:translateX(-50%);
   transition:left .8s ease;
+  animation:trainPulse 2s ease-in-out infinite;
 }
-.td-train-pos::after{
-  content:'';
-  position:absolute;
-  bottom:-5px;left:50%;
-  transform:translateX(-50%);
-  border:5px solid transparent;
-  border-top-color:#1B5EB8;
+@keyframes trainPulse{
+  0%,100%{ box-shadow:0 0 0 3px rgba(27,94,184,.4),0 0 16px rgba(27,94,184,.8); }
+  50%{ box-shadow:0 0 0 7px rgba(27,94,184,.15),0 0 24px rgba(27,94,184,.6); }
 }
-/* Chaque stop */
+/* Chaque stop — largeur réduite car noms en diagonale */
 .td-stop{
   display:flex;
   flex-direction:column;
   align-items:center;
   position:relative;
   z-index:2;
-  min-width:88px;
-  max-width:88px;
+  min-width:64px;
+  max-width:64px;
 }
 /* Nom en haut — horizontal, GRAS, lisible */
 .td-sname{
   position:absolute;
-  top:0;
+  /* Ancre en bas du texte, centré horizontalement sur le point */
+  bottom:calc(100% - 104px);   /* remonte jusqu'à la ligne */
   left:50%;
-  transform:translateX(-50%);
-  width:84px;
+  transform-origin:bottom center;
+  transform:translateX(-2px) rotate(-45deg);
+  width:max-content;
+  max-width:110px;
   font-family:'Barlow Condensed',sans-serif;
   font-size:12px;font-weight:700;letter-spacing:.03em;
   color:rgba(255,255,255,.6);
-  text-align:center;
   white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis;
-  line-height:1.2;
+  line-height:1;
 }
-/* Alternance : stops pairs un peu plus bas pour les noms longs */
-.td-stop:nth-child(2n+3) .td-sname{ top:18px; }
 .td-stop.past    .td-sname{ color:rgba(255,255,255,.85); }
-.td-stop.current .td-sname{ color:#fff;font-size:13px;font-weight:800; }
+.td-stop.current .td-sname{ color:#fff;font-size:13px;font-weight:800;transform:translateX(-2px) rotate(-45deg); }
 .td-stop.next    .td-sname{ color:#1B5EB8;font-weight:800; }
 .td-stop.skipped .td-sname{ opacity:.25;text-decoration:line-through; }
 
-/* Trait vertical nom → point */
-.td-name-line{
-  position:absolute;
-  width:1px;
-  background:rgba(255,255,255,.18);
-  left:50%;transform:translateX(-50%);
-}
-.td-stop:nth-child(2n+1) .td-name-line{ top:18px; height:86px; }
-.td-stop:nth-child(2n+2) .td-name-line{ top:18px; height:86px; }
-.td-stop:nth-child(2n+3) .td-name-line{ top:36px; height:68px; }
+/* Pas de trait vertical avec noms en diagonale */
+.td-name-line{ display:none; }
 
 /* Point sur la ligne */
 .td-dot{
@@ -1826,7 +1814,7 @@ function openTrainDetail(tripId,num,dir,row,delayMin){
     });
     var nextIdx=curIdx+1;
     /* Construire la timeline style métro */
-    var html='<div class="td-track"></div><div class="td-progress-line" id="td-prog"></div><div class="td-train-pos" id="td-train-marker" style="display:none">&#128644;</div>';
+    var html='<div class="td-track"></div><div class="td-progress-line" id="td-prog"></div><div class="td-train-pos" id="td-train-marker" style="display:none"></div>';
     d.stops.forEach(function(s,i){
       var isPast=curIdx>=0&&i<curIdx,isCur=i===curIdx,isNext=i===nextIdx&&!s.skipped;
       var cls='td-stop'+(s.skipped?' skipped':'')+(isCur?' current':isPast?' past':isNext?' next':'');
@@ -1889,14 +1877,7 @@ function edPrint(){var html=document.getElementById('ed-doc').innerHTML;var w=wi
 function edCopy(){navigator.clipboard.writeText(document.getElementById('ed-doc').innerText).catch(function(){});}
 function edSave(){var html=document.getElementById('ed-doc').innerHTML;try{localStorage.setItem('rm_draft',html);}catch(e){}var blob=new Blob(['<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>'+html+'</body></html>'],{type:'text/html;charset=utf-8'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='note_'+new Date().toISOString().slice(0,10)+'.html';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(url);document.body.removeChild(a);},1000);}
 function edClear(){if(confirm('Vider ?')){document.getElementById('ed-doc').innerHTML='<p>\u00c9crivez\u2026</p>';try{localStorage.removeItem('rm_draft');}catch(e){}}}
-(function(){var doc=document.getElementById('ed-doc');if(!doc)return;doc.addEventListener('input',function(){var t=this.innerText.trim();var wc=t?t.split(/\s+/).length:0;var el=document.getElementById('ed-wc');if(el)el.textContent=wc+' mot'+(wc>1?'s':'')+' \u00b7 '+t.length+' car.';});var m=document.getElementById('ed-modal'),hd=document.getElementById('ed-drag'),ox=0,oy=0,on=false;if(!m||!hd)return;hd.addEventListener('mousedown',function(e){on=true;var ov=document.getElementById('ed-ov');if(ov){var r=ov.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;}document.addEventListener('mousemove',mv);document.addEventListener('mouseup',mu);});function mv(e){if(!on)return;var ov=document.getElementById('ed-ov');if(ov){ov.style.left=(e.clientX-ox)+'px';ov.style.top=(e.clientY-oy)+'px';ov.style.right='auto';ov.style.bottom='auto';}}function mu(){on=false;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',mu);}})();</script>
-
-<script>
-
-
-/* ═ A8 Traffic v6 ═ */
-var A8_KEY='Q9bOAv7gw7BcRZHYTIuiaWmZl65dHzAz';
-var A8_ZOOM='full';
+(function(){var doc=document.getElementById('ed-doc');if(!doc)return;doc.addEventListener('input',function(){var t=this.innerText.trim();var wc=t?t.split(/\s+/).length:0;var el=document.getElementById('ed-wc');if(el)el.textContent=wc+' mot'+(wc>1?'s':'')+' \u00b7 '+t.length+' car.';});var m=document.getElementById('ed-modal'),hd=document.getElementById('ed-drag'),ox=0,oy=0,on=false;if(!m||!hd)return;hd.addEventListener('mousedown',function(e){on=true;var ov=document.getElementById('ed-ov');if(ov){var r=ov.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;}document.addEventListener('mousemove',mv);document.addEventListener('mouseup',mu);});function mv(e){if(!on)return;var ov=document.getElementById('ed-ov');if(ov){ov.style.left=(e.clientX-ox)+'px';ov.style.top=(e.clientY-oy)+'px';ov.style.right='auto';ov.style.bottom='auto';}}function mu(){on=false;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',mu);}})();var A8_ZOOM='full';
 var A8_EXITS=[{"n": 36, "lbl": "St-Tropez / Le Muy", "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725}, {"n": 37, "lbl": "Puget / Fréjus O.", "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82}, {"n": 38, "lbl": "Fréjus / St-Raph", "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89}, {"n": 39, "lbl": "Les Adrets", "short": "Les Adrets", "km": 28, "lat": 43.52, "lon": 6.95}, {"n": 40, "lbl": "Mandelieu", "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01}, {"n": 41, "lbl": "Cannes La Bocca", "short": "Cns Bocca", "km": 44, "lat": 43.553, "lon": 7.04}, {"n": 42, "lbl": "Cannes / Mougins", "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07}, {"n": 44, "lbl": "Antibes / Sophia", "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12}, {"n": 46, "lbl": "VL Plage", "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16}, {"n": 47, "lbl": "VL Centre", "short": "VL Centre", "km": 67, "lat": 43.635, "lon": 7.18}, {"n": 48, "lbl": "Cagnes Est", "short": "Cagnes Est", "km": 70, "lat": 43.655, "lon": 7.195}, {"n": 49, "lbl": "St-Laurent-du-Var", "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205}, {"n": 50, "lbl": "Nice Ouest", "short": "Nice O.", "km": 77, "lat": 43.675, "lon": 7.215}, {"n": 51, "lbl": "Nice Aéroport", "short": "Nice Aéro", "km": 80, "lat": 43.665, "lon": 7.235}, {"n": 52, "lbl": "Nice St-Isidore", "short": "N.St-Isid.", "km": 83, "lat": 43.705, "lon": 7.265}, {"n": 54, "lbl": "Nice Nord", "short": "Nice Nord", "km": 86, "lat": 43.72, "lon": 7.285}, {"n": 55, "lbl": "Nice l'Ariane", "short": "Nice Ariane", "km": 89, "lat": 43.73, "lon": 7.31}, {"n": 56, "lbl": "Monaco", "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39}, {"n": 57, "lbl": "La Turbie", "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42}, {"n": 58, "lbl": "Roquebrune CM", "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47}, {"n": 59, "lbl": "Menton", "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5}, {"n": 0, "lbl": "Frontière italienne", "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57}];
 var A8_ZOOMS=[{"id": "full", "label": "A8 complète", "from": 36, "to": 0}, {"id": "cannes", "label": "Cannes (40→44)", "from": 40, "to": 44}, {"id": "antibes", "label": "Antibes (44→46)", "from": 44, "to": 46}, {"id": "nice", "label": "Nice (49→55)", "from": 49, "to": 55}, {"id": "monaco", "label": "Monaco/Menton (56→)", "from": 56, "to": 0}];
 
@@ -2156,6 +2137,9 @@ function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
 
 
 
+</script>
+
+<script>
 </script>
 <button id="ed-fab" onclick="toggleEditor()" style="position:fixed;bottom:24px;right:24px;z-index:9001;width:52px;height:52px;border-radius:50%;background:var(--red);border:2px solid rgba(255,255,255,.15);cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);font-size:22px;display:flex;align-items:center;justify-content:center;color:#fff;">&#9999;&#65039;</button>
 <div class="ed-overlay" id="ed-ov">
