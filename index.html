@@ -1154,113 +1154,148 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .td-close{margin-left:auto;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:18px;padding:2px 6px;}
 .td-scroll{overflow-x:auto;padding:16px 20px 14px;}
 .td-timeline{display:flex;align-items:flex-start;min-width:max-content;}
-/* ═══ TIMELINE MÉTRO PARISIEN ═══ */
+/* ═══ TIMELINE MÉTRO ═══ */
+
+/* Hauteur totale : 60px noms en haut + 7px ligne + 20px heure en bas */
 .td-scroll{
   overflow-x:auto;
-  padding:0 28px 16px;
+  padding:16px 32px 20px;
   scrollbar-width:thin;
-  scrollbar-color:rgba(255,255,255,.15) transparent;
+  scrollbar-color:rgba(255,255,255,.2) transparent;
 }
+
+/* Container : alignItems=center → la ligne est au milieu */
 .td-timeline{
   display:flex;
-  align-items:flex-end;        /* noms sous la ligne */
+  align-items:center;
   min-width:max-content;
   position:relative;
-  padding-top:68px;            /* espace pour les heures + noms verticaux */
-  padding-bottom:8px;
+  height:160px;          /* fixe : 60 haut + dot + 60 bas + marges */
 }
-/* ── Ligne de fond ── */
+
+/* Ligne de fond */
 .td-track{
   position:absolute;
-  top:68px;
+  top:50%;
   left:0;right:0;
-  height:7px;
+  height:6px;
   background:rgba(255,255,255,.1);
-  border-radius:4px;
+  border-radius:3px;
   z-index:0;
+  transform:translateY(-50%);
 }
-/* ── Progression bleue SNCF ── */
+
+/* Ligne de progression bleue SNCF */
 .td-progress-line{
   position:absolute;
-  top:68px;left:0;
-  height:7px;
+  top:50%;
+  left:0;
+  height:6px;
   background:#1B5EB8;
-  border-radius:4px;
+  border-radius:3px;
   z-index:1;
   transition:width .6s cubic-bezier(.4,0,.2,1);
   pointer-events:none;
-  box-shadow:0 0 14px rgba(27,94,184,.55);
+  box-shadow:0 0 12px rgba(27,94,184,.5);
+  transform:translateY(-50%);
 }
-/* ── Stop ── */
+
+/* Chaque stop : flex-column centré */
 .td-stop{
   display:flex;
   flex-direction:column;
   align-items:center;
+  justify-content:center;
   position:relative;
   z-index:2;
-  min-width:70px;
-  max-width:70px;
+  min-width:80px;
+  max-width:80px;
+  height:160px;
 }
-/* Heure au-dessus de la ligne */
-.td-stime-top{
+
+/* ── Nom au-dessus (horizontal, lisible) ──
+   Alternance odd/even pour éviter les collisions */
+.td-sname{
   position:absolute;
-  bottom:calc(100% + 4px);   /* juste au-dessus du point */
+  top:0;
   left:50%;
-  transform:translateX(-50%) rotate(-55deg);
-  transform-origin:bottom center;
-  font-family:'Share Tech Mono',monospace;
-  font-size:11px;font-weight:700;
-  color:rgba(255,255,255,.45);
+  transform:translateX(-50%);
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.03em;
+  color:rgba(255,255,255,.55);
   white-space:nowrap;
-  line-height:1;
+  text-align:center;
+  max-width:76px;
+  overflow:hidden;text-overflow:ellipsis;
+  /* Positionner : stops pairs en haut (top:4px), impairs un peu plus bas (top:20px) */
+  height:28px;
+  line-height:1.2;
+  display:flex;align-items:flex-end;justify-content:center;
 }
-.td-stop.past    .td-stime-top{color:rgba(255,255,255,.65);}
-.td-stop.current .td-stime-top{color:#F5C518;font-size:12px;font-weight:900;transform:translateX(-50%) rotate(-55deg);}
-.td-stop.next    .td-stime-top{color:#1B5EB8;}
-/* Point ── style métro : cercle sur la ligne */
+/* Alternance via nth-child */
+.td-stop:nth-child(odd)  .td-sname{ top:4px;  }
+.td-stop:nth-child(even) .td-sname{ top:22px; }
+
+.td-stop.past    .td-sname{ color:rgba(255,255,255,.8); }
+.td-stop.current .td-sname{ color:#fff;font-size:12px;font-weight:800; }
+.td-stop.next    .td-sname{ color:#1B5EB8;font-weight:800; }
+.td-stop.skipped .td-sname{ opacity:.25;text-decoration:line-through; }
+
+/* ── Trait vertical nom → point ── */
+.td-name-line{
+  position:absolute;
+  width:1px;
+  background:rgba(255,255,255,.15);
+  left:50%;
+  transform:translateX(-50%);
+}
+.td-stop:nth-child(odd)  .td-name-line{ top:32px; height:calc(50% - 40px); }
+.td-stop:nth-child(even) .td-name-line{ top:50px; height:calc(50% - 56px); }
+
+/* ── Point (cercle) sur la ligne ── */
 .td-dot{
-  width:14px;height:14px;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:13px;height:13px;
   border-radius:50%;
-  border:3px solid rgba(255,255,255,.4);
-  background:#0b1a2e;
-  flex-shrink:0;
-  z-index:2;
+  border:3px solid rgba(255,255,255,.35);
+  background:#07111f;
+  z-index:3;
   transition:all .3s;
-  margin-top:61px;            /* aligne le centre du point sur la ligne */
 }
-.td-stop.past    .td-dot{border-color:#fff;background:#1B5EB8;}
+.td-stop.past    .td-dot{ border-color:#fff;background:#1B5EB8; }
 .td-stop.current .td-dot{
   border-color:#fff;background:#fff;
   box-shadow:0 0 0 4px #1B5EB8,0 0 20px rgba(255,255,255,.5);
   width:18px;height:18px;
-  margin-top:59px;
 }
-.td-stop.next    .td-dot{animation:metroNextBlink 1.4s ease-in-out infinite;}
-.td-stop.skipped .td-dot{border-color:rgba(255,255,255,.15);background:transparent;}
+.td-stop.next    .td-dot{ animation:metroNextBlink 1.4s ease-in-out infinite; }
+.td-stop.skipped .td-dot{ border-color:rgba(255,255,255,.12);background:transparent; }
+
 @keyframes metroNextBlink{
-  0%,100%{border-color:rgba(255,255,255,.25);background:#0b1a2e;}
-  50%{border-color:#1B5EB8;background:rgba(27,94,184,.4);box-shadow:0 0 12px rgba(27,94,184,.6);}
+  0%,100%{ border-color:rgba(255,255,255,.2);background:#07111f; }
+  50%{ border-color:#1B5EB8;background:rgba(27,94,184,.4);box-shadow:0 0 12px rgba(27,94,184,.5); }
 }
-/* Nom de la gare — vertical sous la ligne */
-.td-sname{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:.02em;
-  color:rgba(255,255,255,.5);
-  writing-mode:vertical-rl;
-  text-orientation:mixed;
-  transform:rotate(180deg);
-  margin-top:10px;
-  max-height:90px;
-  overflow:hidden;
-  text-overflow:ellipsis;
+
+/* ── Heure en bas ── */
+.td-stime-top{
+  position:absolute;
+  bottom:8px;
+  left:50%;
+  transform:translateX(-50%);
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.4);
   white-space:nowrap;
+  text-align:center;
   line-height:1;
-  text-align:right;
 }
-.td-stop.past    .td-sname{color:rgba(255,255,255,.75);}
-.td-stop.current .td-sname{color:#fff;font-weight:800;font-size:12px;}
-.td-stop.next    .td-sname{color:#1B5EB8;font-weight:800;}
-.td-stop.skipped .td-sname{opacity:.2;text-decoration:line-through;}
+.td-stop.past    .td-stime-top{ color:rgba(255,255,255,.65); }
+.td-stop.current .td-stime-top{ color:#F5C518;font-size:12px;font-weight:900; }
+.td-stop.next    .td-stime-top{ color:#1B5EB8; }
+
 /* Retard clignotant */
 @keyframes blinkTimePlan{0%,45%{opacity:1;}50%,95%{opacity:0;}100%{opacity:1;}}
 @keyframes blinkTimeReal{0%,45%{opacity:0;}50%,95%{opacity:1;}100%{opacity:0;}}
@@ -1271,11 +1306,12 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   position:absolute;top:0;left:0;right:0;text-align:center;
 }
 .td-time-wrap{position:relative;display:inline-block;}
+
 .td-loading{
-  padding:24px;text-align:center;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:12px;color:rgba(255,255,255,.35);
-  letter-spacing:.1em;text-transform:uppercase;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;
+  color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase;
+  white-space:nowrap;
 }
 /* Travel chips */
 .travel-chips-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:10px 14px 12px;}
@@ -1511,18 +1547,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     </div>
     <div class="ed-toolbar">
       <button class="ed-btn" onclick="document.execCommand('bold')"><b>G</b></button>
-      <button class="ed-btn" onclick="document.execCommand('italic')"><i>I</i></button>
-      <button class="ed-btn" onclick="document.execCommand('underline')"><u>S</u></button>
-      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h1')">H1</button>
-      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h2')">H2</button>
-      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h3')">H3</button>
-      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'blockquote')">&laquo;</button>
-    </div>
-    <div class="ed-doc" id="ed-doc" contenteditable="true" spellcheck="false"><p>Notes&hellip;</p></div>
-    <div class="ed-footer"><span id="ed-wc">0 mot</span></div>
-  </div>
-</div>
-
+      <button class="ed-btn" onclick="documen
 <script>
 /* THEME */
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
@@ -1810,9 +1835,10 @@ function openTrainDetail(tripId,num,dir,row,delayMin){
         tDisplay=tBase||'';
       }
       html+='<div class="'+cls+'">'
-        +'<div class="td-stime-top">'+tDisplay+'</div>'
-        +'<div class="td-dot"></div>'
         +'<div class="td-sname">'+s.name+'</div>'
+        +'<div class="td-name-line"></div>'
+        +'<div class="td-dot"></div>'
+        +'<div class="td-stime-top">'+tDisplay+'</div>'
         +'</div>';
     });
     tl.innerHTML=html;
@@ -1824,7 +1850,7 @@ function openTrainDetail(tripId,num,dir,row,delayMin){
         var first=stops[0].getBoundingClientRect();
         var cur2=stops[Math.min(curIdx,stops.length-1)].getBoundingClientRect();
         var tr=tl.getBoundingClientRect();
-        var lineY=tr.top+68+3.5; /* centre de la ligne */
+        /* progression : centre de la zone */
         prog.style.left=(first.left+first.width/2-tr.left)+'px';
         prog.style.width=Math.max(0,(cur2.left+cur2.width/2)-(first.left+first.width/2))+'px';
       }
@@ -1843,8 +1869,7 @@ function edPrint(){var html=document.getElementById('ed-doc').innerHTML;var w=wi
 function edCopy(){navigator.clipboard.writeText(document.getElementById('ed-doc').innerText).catch(function(){});}
 function edSave(){var html=document.getElementById('ed-doc').innerHTML;try{localStorage.setItem('rm_draft',html);}catch(e){}var blob=new Blob(['<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>'+html+'</body></html>'],{type:'text/html;charset=utf-8'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='note_'+new Date().toISOString().slice(0,10)+'.html';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(url);document.body.removeChild(a);},1000);}
 function edClear(){if(confirm('Vider ?')){document.getElementById('ed-doc').innerHTML='<p>\u00c9crivez\u2026</p>';try{localStorage.removeItem('rm_draft');}catch(e){}}}
-(function(){var doc=document.getElementById('ed-doc');if(!doc)return;doc.addEventListener('input',function(){var t=this.innerText.trim();var wc=t?t.split(/\s+/).length:0;var el=document.getElementById('ed-wc');if(el)el.textContent=wc+' mot'+(wc>1?'s':'')+' \u00b7 '+t.length+' car.';});var m=document.getElementById('ed-modal'),hd=document.getElementById('ed-drag'),ox=0,oy=0,on=false;if(!m||!hd)return;hd.addEventListener('mousedown',function(e){on=true;var ov=document.getElementById('ed-ov');if(ov){var r=ov.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;}document.addEventListener('mousemove',mv);document.addEventListener('mouseup',mu);});function mv(e){if(!on)return;var ov=document.getElementById('ed-ov');if(ov){ov.style.left=(e.clientX-ox)+'px';ov.style.top=(e.clientY-oy)+'px';ov.style.right='auto';ov.style.bottom='auto';}}function mu(){on=false;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',mu);}})();
-</script>
+(function(){var doc=document.getElementById('ed-doc');if(!doc)return;doc.addEventListener('input',function(){var t=this.innerText.trim();var wc=t?t.split(/\s+/).length:0;var el=document.getElementById('ed-wc');if(el)el.textContent=wc+' mot'+(wc>1?'s':'')+' \u00b7 '+t.length+' car.';});var m=document.getElementById('ed-modal'),hd=document.getElementById('ed-drag'),ox=0,oy=0,on=false;if(!m||!hd)return;hd.addEventListener('mousedown',function(e){on=true;var ov=document.getElementById('ed-ov');if(ov){var r=ov.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;}document.addEventListener('mousemove',mv);document.addEventListener('mouseup',mu);});function mv(e){if(!on)return;var ov=document.getElementById('ed-ov');if(ov){ov.style.left=(e.clientX-ox)+'px';ov.style.top=(e.clientY-oy)+'px';ov.style.right='auto';ov.style.bottom='auto';}}function mu(){on=false;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',mu);}})();</script>
 
 <script>
 
