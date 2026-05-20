@@ -1157,22 +1157,22 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 /* ═══ TIMELINE MÉTRO ═══ */
 .td-scroll{
   overflow-x:auto;
-  padding:0 40px 0 40px;
+  padding:0 48px 0 48px;
   scrollbar-width:thin;
   scrollbar-color:rgba(255,255,255,.2) transparent;
 }
-/* Hauteur totale: 100px noms + 8px ligne + 48px heures */
+/* Hauteur totale: 145px noms en diagonale + ligne + heures */
 .td-timeline{
   display:flex;
   align-items:flex-start;
   min-width:max-content;
   position:relative;
-  height:170px;
+  height:210px;
 }
-/* Ligne de fond à 110px du haut */
+/* Ligne de fond à 148px du haut */
 .td-track{
   position:absolute;
-  top:110px;
+  top:148px;
   left:0;right:0;
   height:7px;
   background:rgba(255,255,255,.12);
@@ -1182,7 +1182,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 /* Progression bleue */
 .td-progress-line{
   position:absolute;
-  top:110px;left:0;
+  top:148px;left:0;
   height:7px;
   background:#1B5EB8;
   border-radius:4px;
@@ -1191,53 +1191,52 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   pointer-events:none;
   box-shadow:0 0 12px rgba(27,94,184,.6);
 }
-/* Icône position approximative du train */
+/* Marqueur position train */
 .td-train-pos{
   position:absolute;
-  top:101px;
-  width:25px;height:25px;
+  top:137px;
+  width:29px;height:29px;
   border-radius:50%;
   background:#1B5EB8;
   border:3px solid #fff;
   z-index:6;
-  box-shadow:0 0 0 3px rgba(27,94,184,.4), 0 0 16px rgba(27,94,184,.8);
+  box-shadow:0 0 0 3px rgba(27,94,184,.4),0 0 16px rgba(27,94,184,.8);
   transform:translateX(-50%);
   transition:left .8s ease;
   animation:trainPulse 2s ease-in-out infinite;
 }
 @keyframes trainPulse{
-  0%,100%{ box-shadow:0 0 0 3px rgba(27,94,184,.4),0 0 16px rgba(27,94,184,.8); }
-  50%{ box-shadow:0 0 0 7px rgba(27,94,184,.15),0 0 24px rgba(27,94,184,.6); }
+  0%,100%{box-shadow:0 0 0 3px rgba(27,94,184,.4),0 0 16px rgba(27,94,184,.8);}
+  50%{box-shadow:0 0 0 8px rgba(27,94,184,.15),0 0 24px rgba(27,94,184,.6);}
 }
-/* Chaque stop — largeur réduite car noms en diagonale */
+/* Chaque stop */
 .td-stop{
   display:flex;
   flex-direction:column;
   align-items:center;
   position:relative;
   z-index:2;
-  min-width:64px;
-  max-width:64px;
+  min-width:80px;
+  max-width:80px;
 }
 /* Nom en haut — horizontal, GRAS, lisible */
 .td-sname{
   position:absolute;
-  /* Ancre en bas du texte, centré horizontalement sur le point */
-  bottom:calc(100% - 104px);   /* remonte jusqu'à la ligne */
+  bottom:calc(100% - 142px); /* remonte jusqu'à la ligne */
   left:50%;
   transform-origin:bottom center;
   transform:translateX(-2px) rotate(-45deg);
   width:max-content;
-  max-width:110px;
+  max-width:150px;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:12px;font-weight:700;letter-spacing:.03em;
-  color:rgba(255,255,255,.6);
+  font-size:14px;font-weight:700;letter-spacing:.04em;
+  color:rgba(255,255,255,.65);
   white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis;
   line-height:1;
 }
 .td-stop.past    .td-sname{ color:rgba(255,255,255,.85); }
-.td-stop.current .td-sname{ color:#fff;font-size:13px;font-weight:800;transform:translateX(-2px) rotate(-45deg); }
+.td-stop.current .td-sname{ color:#fff;font-size:15px;font-weight:800;transform:translateX(-2px) rotate(-45deg); }
 .td-stop.next    .td-sname{ color:#1B5EB8;font-weight:800; }
 .td-stop.skipped .td-sname{ opacity:.25;text-decoration:line-through; }
 
@@ -1247,9 +1246,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 /* Point sur la ligne */
 .td-dot{
   position:absolute;
-  top:107px;left:50%;
+  top:145px;left:50%;
   transform:translateX(-50%);
-  width:13px;height:13px;
+  width:14px;height:14px;
   border-radius:50%;
   border:3px solid rgba(255,255,255,.4);
   background:#07111f;
@@ -1260,7 +1259,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .td-stop.current .td-dot{
   border-color:#fff;background:#fff;
   box-shadow:0 0 0 4px #1B5EB8,0 0 18px rgba(255,255,255,.5);
-  width:17px;height:17px;top:105px;
+  width:18px;height:18px;top:143px;
 }
 .td-stop.next    .td-dot{ animation:metroNextBlink 1.4s ease-in-out infinite; }
 .td-stop.skipped .td-dot{ border-color:rgba(255,255,255,.1);background:transparent; }
@@ -1268,18 +1267,18 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   0%,100%{ border-color:rgba(255,255,255,.2);background:#07111f; }
   50%{ border-color:#1B5EB8;background:rgba(27,94,184,.4);box-shadow:0 0 12px rgba(27,94,184,.5); }
 }
-/* Heure en bas — GRANDE */
+/* Heure en bas */
 .td-stime-top{
   position:absolute;
-  top:128px;
+  top:168px;
   left:50%;transform:translateX(-50%);
   font-family:'Share Tech Mono',monospace;
   font-size:14px;font-weight:700;
-  color:rgba(255,255,255,.45);
+  color:rgba(255,255,255,.5);
   white-space:nowrap;
   text-align:center;
 }
-.td-stop.past    .td-stime-top{ color:rgba(255,255,255,.7); }
+.td-stop.past    .td-stime-top{ color:rgba(255,255,255,.75); }
 .td-stop.current .td-stime-top{ color:#F5C518;font-size:16px;font-weight:900; }
 .td-stop.next    .td-stime-top{ color:#1B5EB8;font-size:14px; }
 /* Retard clignotant */
