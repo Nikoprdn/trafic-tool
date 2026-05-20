@@ -1547,7 +1547,22 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     </div>
     <div class="ed-toolbar">
       <button class="ed-btn" onclick="document.execCommand('bold')"><b>G</b></button>
-      <button class="ed-btn" onclick="documen
+      <button class="ed-btn" onclick="document.execCommand('italic')"><i>I</i></button>
+      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h1')">H1</button>
+      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'h2')">H2</button>
+      <button class="ed-btn" onclick="document.execCommand('formatBlock',false,'blockquote')">&laquo;</button>
+      <button class="ed-btn" onclick="document.execCommand('insertUnorderedList')">&#8226;</button>
+      <span style="flex:1"></span>
+      <button class="ed-btn" onclick="edPrint()">&#128424;</button>
+      <button class="ed-btn" onclick="edCopy()">&#128203;</button>
+      <button class="ed-btn" onclick="edSave()">&#128190;</button>
+      <button class="ed-btn" onclick="edClear()" style="color:rgba(255,100,100,.8);">&#128465;</button>
+    </div>
+    <div class="ed-doc" id="ed-doc" contenteditable="true" spellcheck="false"><p>Notes&hellip;</p></div>
+    <div class="ed-footer"><span id="ed-wc">0 mot</span></div>
+  </div>
+</div>
+
 <script>
 /* THEME */
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
@@ -2159,4 +2174,14 @@ function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
 </div>
 
 </body>
-</html>
+</html>onclick="document.execCommand('insertUnorderedList')">&#8226;</button>
+      <span style="flex:1"></span>
+      <button class="ed-btn" onclick="edPrint()">&#128424;</button>
+      <button class="ed-btn" onclick="edCopy()">&#128203;</button>
+      <button class="ed-btn" onclick="edSave()">&#128190;</button>
+      <button class="ed-btn" onclick="edClear()" style="color:rgba(255,100,100,.8);">&#128465;</button>
+    </div>
+    <div class="ed-doc" id="ed-doc" contenteditable="true" spellcheck="false"><p>Notes&hellip;</p></div>
+    <div class="ed-footer"><span id="ed-wc">0 mot</span></div>
+  </div>
+</div>
