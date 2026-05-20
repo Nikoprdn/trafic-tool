@@ -1222,21 +1222,21 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 /* Nom en haut — horizontal, GRAS, lisible */
 .td-sname{
   position:absolute;
-  bottom:calc(100% - 142px); /* remonte jusqu'à la ligne */
+  bottom:90px; /* bien au-dessus de la ligne (62px du bas) */
   left:50%;
-  transform-origin:bottom center;
-  transform:translateX(-2px) rotate(-45deg);
+  transform-origin:bottom left;
+  transform:rotate(-45deg);
   width:max-content;
-  max-width:150px;
+  max-width:160px;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:14px;font-weight:700;letter-spacing:.04em;
+  font-size:13px;font-weight:700;letter-spacing:.04em;
   color:rgba(255,255,255,.65);
   white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis;
   line-height:1;
 }
 .td-stop.past    .td-sname{ color:rgba(255,255,255,.85); }
-.td-stop.current .td-sname{ color:#fff;font-size:15px;font-weight:800;transform:translateX(-2px) rotate(-45deg); }
+.td-stop.current .td-sname{ color:#fff;font-size:14px;font-weight:800;transform:rotate(-45deg); }
 .td-stop.next    .td-sname{ color:#1B5EB8;font-weight:800; }
 .td-stop.skipped .td-sname{ opacity:.25;text-decoration:line-through; }
 
