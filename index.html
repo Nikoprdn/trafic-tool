@@ -1537,7 +1537,68 @@ body.mode-drive .sncf-section{display:none!important;}
       <div class="map-footer"><a class="map-lnk red" href="https://voyage.aprr.fr/information-trafic" target="_blank" rel="noopener">&#128279; APRR</a><a class="map-lnk muted" href="https://www.bison-fute.gouv.fr/" target="_blank" rel="noopener" style="margin-left:14px">&#128279; Bison Futé</a><span style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted)">Données TomTom Traffic Flow</span></div>
     </div>
 
+  </div>
+</div>
+<div class="tab-content" id="tab-weather">
+  <div class="wrap">
+
+    <!-- Sous-onglets -->
+    <div class="w-sub-nav" style="display:flex;gap:8px;padding:12px 16px 0;">
+      <button class="w-sub-btn active" id="wsub-btn-am" onclick="switchWeather('am')">&#9728; C\u00f4te d'Azur</button>
+      <button class="w-sub-btn" id="wsub-btn-idf" onclick="switchWeather('idf')">&#127968; \u00cele-de-France</button>
+    </div>
+
+    <!-- C\u00f4te d'Azur -->
+    <div class="w-sub-content active" id="wsub-am">
+      <div class="section-card">
+        <div class="card-h"><span class="card-title">M\u00e9t\u00e9o du jour</span>
+          <div style="display:flex;gap:6px;margin-left:8px;">
+            <button class="w-day-btn active" onclick="switchDay('am',0)">Aujourd'hui</button>
+            <button class="w-day-btn" onclick="switchDay('am',1)">Demain</button>
+          </div>
+        </div>
+        <div id="w-hero-am"><div class="w-loading">Chargement...</div></div>
+        <div style="padding:8px 16px;"><div class="w-day-title" id="w-today-title-am">\u2014</div><div class="w-day-meta" id="w-today-meta-am"></div></div>
+        <div id="w-today-tl-am"></div>
+        <div style="padding:8px 16px;margin-top:4px;"><div class="w-day-title" id="w-tom-title-am">\u2014</div><div class="w-day-meta" id="w-tom-meta-am"></div></div>
+        <div id="w-tom-tl-am"></div>
+      </div>
+      <div class="section-card">
+        <div class="card-h"><span class="card-title">&#127961;&#65039; Villes</span></div>
+        <div id="w-cities-body-am" class="w-cities-grid"></div>
+      </div>
+    </div>
+
+    <!-- \u00cele-de-France -->
+    <div class="w-sub-content" id="wsub-idf">
+      <div class="section-card">
+        <div class="card-h"><span class="card-title">M\u00e9t\u00e9o du jour</span>
+          <div style="display:flex;gap:6px;margin-left:8px;">
+            <button class="w-day-btn active" onclick="switchDay('idf',0)">Aujourd'hui</button>
+            <button class="w-day-btn" onclick="switchDay('idf',1)">Demain</button>
+          </div>
+        </div>
+        <div id="w-hero-idf"><div class="w-loading">Chargement...</div></div>
+        <div style="padding:8px 16px;"><div class="w-day-title" id="w-today-title-idf">\u2014</div><div class="w-day-meta" id="w-today-meta-idf"></div></div>
+        <div id="w-today-tl-idf"></div>
+        <div style="padding:8px 16px;margin-top:4px;"><div class="w-day-title" id="w-tom-title-idf">\u2014</div><div class="w-day-meta" id="w-tom-meta-idf"></div></div>
+        <div id="w-tom-tl-idf"></div>
+      </div>
+      <div class="section-card">
+        <div class="card-h"><span class="card-title">&#127961;&#65039; Villes</span></div>
+        <div id="w-cities-body-idf" class="w-cities-grid"></div>
+      </div>
+    </div>
+
+    <!-- Vigilances -->
     <div class="section-card">
+      <div class="card-h"><span class="card-title">&#9888;&#65039; Vigilances M\u00e9t\u00e9o France</span><div class="pill" id="vig-count" style="margin-left:8px;">Actives</div></div>
+      <div id="vig-body"><div class="w-loading">Chargement...</div></div>
+    </div>
+
+  </div>
+</div>
+
 
 <script>
 /* THEME */
