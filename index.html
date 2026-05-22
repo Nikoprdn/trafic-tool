@@ -1159,134 +1159,129 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 /* ═══ TIMELINE TRAIN ═══ */
 .td-scroll{
   overflow-x:auto;
-  padding:8px 40px 8px;
+  padding:0 32px 0;
   scrollbar-width:thin;
   scrollbar-color:rgba(255,255,255,.2) transparent;
 }
-/* Container : hauteur fixe pour positions absolues */
 .td-timeline{
   display:flex;
   align-items:flex-start;
   min-width:max-content;
   position:relative;
-  height:190px;
+  height:230px;          /* plus de hauteur pour les noms */
+  padding-top:140px;     /* réserve les 140px du haut pour les noms */
+  box-sizing:border-box;
 }
-/* ── Ligne de fond (trajet total) ── */
+/* Ligne de fond */
 .td-track{
   position:absolute;
-  top:56px; /* centre vertical */
-  left:0;right:0;
-  height:5px;
+  top:140px;left:0;right:0;
+  height:4px;
   background:rgba(255,255,255,.1);
-  border-radius:3px;
-  z-index:0;
+  border-radius:2px;z-index:0;
 }
-/* ── Ligne bleue (portion parcourue) ── */
+/* Ligne bleue parcourue */
 .td-progress-line{
   position:absolute;
-  top:56px;left:0;
-  height:5px;
+  top:140px;left:0;
+  height:4px;
   background:#1B5EB8;
-  border-radius:3px 0 0 3px;
+  border-radius:2px 0 0 2px;
   z-index:1;
-  transition:width .6s ease;
-  box-shadow:0 0 10px rgba(27,94,184,.5);
+  box-shadow:0 0 8px rgba(27,94,184,.6);
 }
-/* ── Marqueur position du train ── */
+/* Marqueur train */
 .td-train-pos{
   position:absolute;
-  top:45px;
-  width:23px;height:23px;
+  top:130px;
+  width:20px;height:20px;
   border-radius:50%;
   background:#1B5EB8;
   border:3px solid #fff;
   z-index:6;
   transform:translateX(-50%);
-  transition:left .8s ease;
-  box-shadow:0 0 0 3px rgba(27,94,184,.3),0 0 14px rgba(27,94,184,.7);
+  box-shadow:0 0 0 3px rgba(27,94,184,.3),0 0 12px rgba(27,94,184,.8);
   animation:trainPulse 2s ease-in-out infinite;
 }
 @keyframes trainPulse{
-  0%,100%{box-shadow:0 0 0 3px rgba(27,94,184,.3),0 0 14px rgba(27,94,184,.7);}
-  50%{box-shadow:0 0 0 7px rgba(27,94,184,.1),0 0 20px rgba(27,94,184,.5);}
+  0%,100%{box-shadow:0 0 0 3px rgba(27,94,184,.3),0 0 12px rgba(27,94,184,.8);}
+  50%{box-shadow:0 0 0 6px rgba(27,94,184,.1),0 0 20px rgba(27,94,184,.5);}
 }
-/* ── Stop ── */
+/* Stop */
 .td-stop{
   display:flex;flex-direction:column;align-items:center;
   position:relative;z-index:2;
-  min-width:80px;max-width:80px;
-  height:190px;
+  min-width:100px;max-width:100px;
+  height:100%;
+  flex-shrink:0;
 }
-/* Nom en diagonale -45° au-dessus */
+/* Nom : en diagonale, ancré au bas de la zone de 140px */
 .td-sname{
   position:absolute;
-  bottom:108px; /* au-dessus du point (56+14/2+38) */
+  bottom:calc(100% - 140px + 18px);  /* pointe vers le dot */
   left:50%;
   transform-origin:bottom left;
   transform:rotate(-45deg);
-  width:max-content;max-width:130px;
+  width:max-content;max-width:120px;
   font-family:'Barlow Condensed',sans-serif;
-  font-size:12px;font-weight:700;letter-spacing:.03em;
-  color:rgba(255,255,255,.6);
+  font-size:11px;font-weight:700;letter-spacing:.04em;
+  color:rgba(255,255,255,.55);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  line-height:1;
+  line-height:1;pointer-events:none;
 }
-.td-stop.past    .td-sname{color:rgba(255,255,255,.8);}
-.td-stop.current .td-sname{color:#fff;font-size:13px;font-weight:800;}
+.td-stop.past    .td-sname{color:rgba(255,255,255,.75);}
+.td-stop.current .td-sname{color:#fff;font-size:12px;font-weight:900;}
 .td-stop.next    .td-sname{color:#1B5EB8;font-weight:800;}
 .td-stop.skipped .td-sname{opacity:.2;text-decoration:line-through;}
-/* ── Point sur la ligne ── */
+/* Dot */
 .td-dot{
   position:absolute;
-  top:50px;left:50%;
+  top:134px;left:50%;
   transform:translateX(-50%);
-  width:13px;height:13px;
+  width:12px;height:12px;
   border-radius:50%;
-  border:3px solid rgba(255,255,255,.4);
+  border:2.5px solid rgba(255,255,255,.35);
   background:#07111f;
-  z-index:3;transition:all .3s;
+  z-index:3;transition:all .25s;
 }
 .td-stop.past    .td-dot{border-color:#fff;background:#1B5EB8;}
 .td-stop.current .td-dot{
   border-color:#fff;background:#fff;
-  box-shadow:0 0 0 4px #1B5EB8,0 0 16px rgba(255,255,255,.4);
-  width:17px;height:17px;top:48px;
+  box-shadow:0 0 0 4px #1B5EB8,0 0 14px rgba(255,255,255,.4);
+  width:16px;height:16px;top:132px;
 }
 .td-stop.next    .td-dot{animation:blinkDotNext 1.4s ease-in-out infinite;}
 .td-stop.skipped .td-dot{border-color:rgba(255,255,255,.1);background:transparent;}
 @keyframes blinkDotNext{
   0%,100%{border-color:rgba(255,255,255,.25);background:#07111f;}
-  50%{border-color:#1B5EB8;background:rgba(27,94,184,.35);box-shadow:0 0 10px rgba(27,94,184,.5);}
+  50%{border-color:#1B5EB8;background:rgba(27,94,184,.3);box-shadow:0 0 8px rgba(27,94,184,.5);}
 }
-/* ── Heure SOUS le point ── */
+/* Heure SOUS le dot */
 .td-stime-top{
   position:absolute;
-  top:74px; /* juste sous le point */
+  top:154px;
   left:50%;transform:translateX(-50%);
   font-family:'Share Tech Mono',monospace;
   font-size:13px;font-weight:700;
-  color:#F5C518; /* jaune par défaut */
-  white-space:nowrap;text-align:center;
-  line-height:1;
+  color:#F5C518;
+  white-space:nowrap;text-align:center;line-height:1;
 }
-.td-stop.past    .td-stime-top{color:rgba(255,255,255,.5);}
+.td-stop.past    .td-stime-top{color:rgba(255,255,255,.4);font-size:11px;}
 .td-stop.current .td-stime-top{color:#F5C518;font-size:14px;font-weight:900;}
 .td-stop.next    .td-stime-top{color:#F5C518;}
-.td-stop.delayed .td-stime-top{color:var(--orange);} /* orange si retard */
-/* Retard : heure barée + heure réelle orange */
-.td-time-planned{animation:blinkTimePlan 2.5s ease-in-out infinite;display:block;color:#F5C518;}
-.td-time-real{animation:blinkTimeReal 2.5s ease-in-out infinite;display:block;color:var(--orange);position:absolute;top:0;left:0;right:0;text-align:center;}
+.td-stop.delayed .td-stime-top{color:#FF6B35;}
+/* Retard : heure planifiée ↔ heure réelle en alternance */
 .td-time-wrap{position:relative;display:inline-block;}
+.td-time-planned{animation:blinkTimePlan 2.5s ease-in-out infinite;display:block;color:#F5C518;}
+.td-time-real{animation:blinkTimeReal 2.5s ease-in-out infinite;display:block;color:#FF6B35;position:absolute;top:0;left:0;right:0;text-align:center;}
 @keyframes blinkTimePlan{0%,45%{opacity:1;}50%,95%{opacity:0;}100%{opacity:1;}}
 @keyframes blinkTimeReal{0%,45%{opacity:0;}50%,95%{opacity:1;}100%{opacity:0;}}
-/* Pas de trait vertical */
 .td-name-line{display:none;}
 .td-loading{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
   font-family:'Barlow Condensed',sans-serif;font-size:12px;
   color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;
 }
-/* Travel chips */
 .travel-chips-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;padding:10px 14px 12px;}
 .travel-chip{background:var(--card);border:1px solid rgba(255,255,255,.08);border-top:3px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 12px 8px;display:flex;flex-direction:column;gap:6px;}
 .travel-chip.g{border-top-color:var(--green);}
@@ -1625,7 +1620,6 @@ body.mode-drive .sncf-section{display:none!important;}
 
 
 <script>
-
 /* THEME */
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
 function toggleTheme(){var cur=document.documentElement.getAttribute('data-theme')||'dark';applyTheme(cur==='dark'?'light':'dark');}
@@ -1937,6 +1931,7 @@ function edSaveTemplate(){
 }
 
 /* ═ A8 Traffic ═ */
+var A8_KEY='nFt8c40zRLaLYYghcApBurt0ZyK7FIbA';
 var A8_ZOOM='full';
 var A8_EXITS=[{"n": 36, "lbl": "St-Tropez / Le Muy", "short": "St-Tropez", "km": 0, "lat": 43.478, "lon": 6.725}, {"n": 37, "lbl": "Puget / Fréjus O.", "short": "Puget", "km": 11, "lat": 43.495, "lon": 6.82}, {"n": 38, "lbl": "Fréjus / St-Raph", "short": "Fréjus", "km": 18, "lat": 43.51, "lon": 6.89}, {"n": 39, "lbl": "Les Adrets", "short": "Les Adrets", "km": 28, "lat": 43.52, "lon": 6.95}, {"n": 40, "lbl": "Mandelieu", "short": "Mandelieu", "km": 38, "lat": 43.538, "lon": 7.01}, {"n": 41, "lbl": "Cannes La Bocca", "short": "Cns Bocca", "km": 44, "lat": 43.553, "lon": 7.04}, {"n": 42, "lbl": "Cannes / Mougins", "short": "Cannes", "km": 48, "lat": 43.568, "lon": 7.07}, {"n": 44, "lbl": "Antibes / Sophia", "short": "Antibes", "km": 56, "lat": 43.59, "lon": 7.12}, {"n": 46, "lbl": "VL Plage", "short": "VL Plage", "km": 64, "lat": 43.62, "lon": 7.16}, {"n": 47, "lbl": "VL Centre", "short": "VL Centre", "km": 67, "lat": 43.635, "lon": 7.18}, {"n": 48, "lbl": "Cagnes Est", "short": "Cagnes Est", "km": 70, "lat": 43.655, "lon": 7.195}, {"n": 49, "lbl": "St-Laurent-du-Var", "short": "St-Laurent", "km": 73, "lat": 43.67, "lon": 7.205}, {"n": 50, "lbl": "Nice Ouest", "short": "Nice O.", "km": 77, "lat": 43.675, "lon": 7.215}, {"n": 51, "lbl": "Nice Aéroport", "short": "Nice Aéro", "km": 80, "lat": 43.665, "lon": 7.235}, {"n": 52, "lbl": "Nice St-Isidore", "short": "N.St-Isid.", "km": 83, "lat": 43.705, "lon": 7.265}, {"n": 54, "lbl": "Nice Nord", "short": "Nice Nord", "km": 86, "lat": 43.72, "lon": 7.285}, {"n": 55, "lbl": "Nice l'Ariane", "short": "Nice Ariane", "km": 89, "lat": 43.73, "lon": 7.31}, {"n": 56, "lbl": "Monaco", "short": "Monaco", "km": 93, "lat": 43.735, "lon": 7.39}, {"n": 57, "lbl": "La Turbie", "short": "La Turbie", "km": 97, "lat": 43.74, "lon": 7.42}, {"n": 58, "lbl": "Roquebrune CM", "short": "Roquebrune", "km": 101, "lat": 43.76, "lon": 7.47}, {"n": 59, "lbl": "Menton", "short": "Menton", "km": 105, "lat": 43.775, "lon": 7.5}, {"n": 0, "lbl": "Frontière italienne", "short": "Frontière", "km": 112, "lat": 43.79, "lon": 7.57}];
 var A8_ZOOMS=[{"id": "full", "label": "A8 complète", "from": 36, "to": 0}, {"id": "cannes", "label": "Cannes (40→44)", "from": 40, "to": 44}, {"id": "antibes", "label": "Antibes (44→46)", "from": 44, "to": 46}, {"id": "nice", "label": "Nice (49→55)", "from": 49, "to": 55}, {"id": "monaco", "label": "Monaco/Menton (56→)", "from": 56, "to": 0}];
@@ -2245,7 +2240,6 @@ function refreshA8Traffic(){loadA8Traffic();}
   }
 })();
 function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
-
 </script>
 
 </body>
