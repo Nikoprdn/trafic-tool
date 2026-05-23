@@ -1472,6 +1472,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .ed-tpl-save:hover{background:rgba(245,197,24,.18);}
 
 
+/* ── Weather dark mode fix ── */
+.w-sub-nav{display:flex;gap:6px;padding:10px 16px;background:var(--card);border-bottom:1px solid var(--border);}
+.w-sub-btn{flex:1;padding:8px 16px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.45);cursor:pointer;transition:all .15s;}
+.w-sub-btn:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.8);}
+.w-sub-btn.active{background:rgba(27,94,184,.25);border-color:#1B5EB8;color:#fff;}
+.w-day-btns{display:flex;gap:4px;margin-left:8px;}
+.w-day-btn{padding:4px 12px;border-radius:5px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.4);cursor:pointer;transition:all .15s;}
+.w-day-btn.active{background:#1B5EB8;border-color:#1B5EB8;color:#fff;}
+
 /* ══ THÈME CLAIR ══════════════════════════════════════════════ */
 [data-theme="light"]{
   --bg:#F0F2F7;
@@ -1621,7 +1630,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     <!-- ▸ Temps de parcours -->
     <div class="section-card">
       <div class="card-h">
-        <span class="card-title">&#128663; Temps de parcours &mdash; Fontvieille, Monaco</span>
+        <span class="card-title" id="travel-title">&#128663; Vers Monaco</span>
         <div class="dir-toggle" style="margin-left:8px;">
           <button class="dir-btn active" onclick="setTravelDir('to',this)">&#8594; Vers Monaco</button>
           <button class="dir-btn" onclick="setTravelDir('from',this)">&#8592; Depuis Monaco</button>
@@ -1806,7 +1815,7 @@ function testDis(){TEST_MODE=true;renderDis(TEST_DATA,true);}
 /* TRAVEL */
 var TOMTOM_KEY='nFt8c40zRLaLYYghcApBurt0ZyK7FIbA';var WORKER_URL='https://apitom.nicolas7lejeune.workers.dev';
 var FONTVIEILLE={"lat": 43.7272, "lon": 7.4142};var ROUTES=[{"from": "Port de Nice", "hint": "Quai des Docks / Moy. Corniche", "lat": 43.7033, "lon": 7.2742, "highway": false}, {"from": "Aéroport de Nice", "hint": "Nice Côte d'Azur", "lat": 43.6584, "lon": 7.2159, "highway": true}, {"from": "Antibes", "hint": "Centre-ville / Port", "lat": 43.5795, "lon": 7.1282, "highway": true}, {"from": "Cannes", "hint": "Palais des Festivals", "lat": 43.5513, "lon": 7.0128, "highway": true}, {"from": "Roquebrune-Cap-Martin", "hint": "Cap Martin", "lat": 43.7651, "lon": 7.4756, "highway": false}, {"from": "Menton", "hint": "Centre-ville", "lat": 43.7765, "lon": 7.4973, "highway": true}];var travelDir='to';
-function setTravelDir(dir,btn){travelDir=dir;document.querySelectorAll('.dir-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');loadTravel();}
+function setTravelDir(dir,btn){travelDir=dir;document.querySelectorAll('.dir-btn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');var t=document.getElementById('travel-title');if(t)t.innerHTML='&#128663; '+(dir==='to'?'Vers Monaco':'Depuis Monaco');loadTravel();}
 function fmtDur(sec){if(sec===null||sec===undefined)return{val:'-',unit:''};var m=Math.round(sec/60);if(m<60)return{val:m,unit:'min'};var h=Math.floor(m/60),r=m%60;return{val:h+'h'+(r<10?'0':'')+r,unit:''};}
 function delayCls(noT,withT){
   if(!noT||noT===0)return'g';
