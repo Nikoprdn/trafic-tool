@@ -1115,7 +1115,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .td-scroll{overflow-x:auto;padding:16px 20px 14px;}
 .td-timeline{display:flex;align-items:flex-start;min-width:max-content;}
 /* ═══ TIMELINE TRAIN ═══ */
-#train-detail{display:none;border-top:3px solid #1B5EB8;background:#05101f;}
+#train-detail{display:none;background:#05101f;border:1px solid var(--border);border-top:3px solid #1B5EB8;border-radius:12px;overflow:hidden;}
 #train-detail.open{display:block!important;}
 .td-header{display:flex;align-items:center;gap:10px;padding:10px 16px 8px;
   background:#071626;border-bottom:1px solid rgba(255,255,255,.07);}
@@ -1596,6 +1596,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 <div class="tab-content" id="tab-trafic">
   <div class="wrap">
+
+    <!-- ▸ SNCF Gares -->
     <div class="section-card sncf-section">
       <div class="card-h">
         <span style="font-size:15px">&#128642;</span>
@@ -1608,11 +1610,13 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 <div class="stations-grid" id="stations-grid">
 <div class="st-panel" id="panel-cannes"><div class="st-head"><span class="st-name">Cannes</span><span class="st-dot"></span></div><div class="st-board" id="board-cannes"><div class="board-msg">Chargement...</div></div></div><div class="st-panel" id="panel-nice"><div class="st-head"><span class="st-name">Nice-Ville</span><span class="st-dot"></span></div><div class="st-board" id="board-nice"><div class="board-msg">Chargement...</div></div></div><div class="st-panel" id="panel-monaco"><div class="st-head"><span class="st-name">Monaco</span><span class="st-dot"></span></div><div class="st-board" id="board-monaco"><div class="board-msg">Chargement...</div></div></div><div class="st-panel" id="panel-menton"><div class="st-head"><span class="st-name">Menton</span><span class="st-dot"></span></div><div class="st-board" id="board-menton"><div class="board-msg">Chargement...</div></div></div>
       </div>
-      
-<div id="train-detail"><div class="td-header"><span class="td-train-num" id="td-train-num"></span><span class="td-title" id="td-title">Arrêts</span><button class="td-close" onclick="closeTrainDetail()">&#10005;</button></div><div class="td-scroll"><div class="td-timeline" id="td-timeline"><div class="td-loading">Sélectionnez un train</div></div></div></div>
+    </div>
 
-    <!-- Temps de trajet -->
-    <div class="section-card" style="margin-top:12px;">
+    <!-- ▸ Itinéraire train (s'ouvre au clic) -->
+    <div id="train-detail"><div class="td-header"><span class="td-train-num" id="td-train-num"></span><span class="td-title" id="td-title">Arrêts</span><button class="td-close" onclick="closeTrainDetail()">&#10005;</button></div><div class="td-scroll"><div class="td-timeline" id="td-timeline"><div class="td-loading">Sélectionnez un train</div></div></div></div>
+
+    <!-- ▸ Temps de parcours -->
+    <div class="section-card">
       <div class="card-h">
         <span class="card-title">&#128663; Temps de parcours &mdash; Fontvieille, Monaco</span>
         <div class="dir-toggle" style="margin-left:8px;">
@@ -1626,7 +1630,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <div id="travel-grid"></div>
     </div>
 
-    <!-- A8 Trafic -->
+    <!-- ▸ A8 Trafic -->
     <div class="section-card">
       <div class="card-h">
         <span style="font-size:15px">&#128739;&#65039;</span>
@@ -1643,7 +1647,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       </div>
     </div>
 
-    <!-- Waze -->
+    <!-- ▸ Carte Waze -->
     <div class="section-card" style="overflow:hidden;padding:0;">
       <div class="card-h" style="padding:10px 16px;">
         <span class="card-title">&#128663; Carte Trafic &mdash; Waze</span>
@@ -1653,7 +1657,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     </div>
 
   </div>
-</div>
 
 <div class="tab-content" id="tab-weather">
   <div class="wrap">
