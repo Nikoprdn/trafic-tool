@@ -1161,7 +1161,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   display:flex;
   flex-direction:row;
   align-items:flex-start;
-  min-width:max-content;
+  min-width:100%;
   position:relative;
   height:170px;
   padding:0 28px;
@@ -1190,15 +1190,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .td-stop{
   display:flex;flex-direction:column;align-items:center;
   position:relative;
-  flex-shrink:0;
-  width:72px;
+  flex:1;
+  min-width:60px;
   height:170px;
 }
 /* Nom : ancré au bas de la zone 0→98px, rotation -45° */
 .td-sname{
   position:absolute;
-  /* Le pivot (transform-origin bottom left) est à left:50%, bottom:72px */
-  bottom:72px;
+  /* Le pivot (transform-origin bottom left) est à left:50%, bottom:82px */
+  bottom:82px;
   left:50%;
   transform-origin:bottom left;
   transform:rotate(-45deg);
@@ -1258,9 +1258,19 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .td-stop.current .td-stime{color:#F5C518;font-size:13px;font-weight:900;}
 .td-stop.next    .td-stime{color:#F5C518;}
 .td-stop.delayed .td-stime{color:#FF6B35;}
-.td-time-wrap{display:flex;flex-direction:column;align-items:center;gap:0;}
-.td-time-plan{color:rgba(255,255,255,.3);font-size:9px;text-decoration:line-through;line-height:1.2;}
-.td-time-real{color:#FF6B35;font-size:12px;font-weight:900;line-height:1;}
+/* Retard : heure réelle clignote en orange sur l'heure théorique */
+.td-time-wrap{position:relative;display:inline-block;line-height:1;}
+.td-time-plan{font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;
+  color:#F5C518;display:block;
+  animation:tdBlinkPlan 2.5s ease-in-out infinite;}
+.td-time-real{position:absolute;top:0;left:0;right:0;text-align:center;
+  font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:900;
+  color:#FF6B35;white-space:nowrap;
+  animation:tdBlinkReal 2.5s ease-in-out infinite;}
+.td-stop.current .td-time-plan{font-size:13px;}
+.td-stop.current .td-time-real{font-size:13px;}
+@keyframes tdBlinkPlan{0%,45%{opacity:1;}50%,95%{opacity:0;}100%{opacity:1;}}
+@keyframes tdBlinkReal{0%,45%{opacity:0;}50%,95%{opacity:1;}100%{opacity:0;}}
 .td-loading{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
   font-family:'Barlow Condensed',sans-serif;font-size:12px;
@@ -1574,7 +1584,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
         <span class="card-title">&#128663; Carte Trafic &mdash; Waze</span>
         <a href="https://www.waze.com/fr/livemap?ll=43.7384,7.4246&zoom=12" target="_blank" class="pill" style="margin-left:auto;text-decoration:none;font-size:10px;">Ouvrir Waze</a>
       </div>
-      <iframe src="https://embed.waze.com/iframe?zoom=12&lat=43.7384&lon=7.4246&ct=livemap&pin=0" width="100%" height="300" frameborder="0" style="display:block;border:none;" allowfullscreen loading="lazy"></iframe>
+      <iframe src="https://embed.waze.com/iframe?zoom=12&lat=43.7384&lon=7.4246&ct=livemap&pin=0" width="100%" height="480" frameborder="0" style="display:block;border:none;" allowfullscreen loading="lazy"></iframe>
     </div>
 
   </div>
@@ -1887,7 +1897,6 @@ function openTrainDetail(tripId,num,dir,row){if(_tid===tripId){closeTrainDetail(
   }
   var nextIdx=(curIdx+1<stops.length)?curIdx+1:-1;
   var nS=stops.length;
-  /* Ligne bleue : de 0 jusqu'au milieu du stop courant */
   var progPct=curIdx>=0?((curIdx+0.5)/nS*100).toFixed(2)+'%':'0%';
   var html='<div class="td-track"></div>';
   html+='<div class="td-progress" style="width:'+progPct+'"></div>';
@@ -1903,14 +1912,18 @@ function openTrainDetail(tripId,num,dir,row){if(_tid===tripId){closeTrainDetail(
     }
     var hasDelay=delay>0&&!isPast&&tReal;
     var cls='td-stop'+(s.skipped?' skipped':'')+(isCur?' current':isPast?' past':isNext?' next':'')+(hasDelay?' delayed':'');
+    /* Horaire : toujours afficher tPlan ; si retard, clignoter tReal en orange */
     var timeHtml='';
-    if(hasDelay){
-      timeHtml='<div class="td-stime"><div class="td-time-wrap">'
-        +'<span class="td-time-plan">'+tPlan+'</span>'
-        +'<span class="td-time-real">'+tReal+'</span>'
-        +'</div></div>';
-    } else if(tPlan){
-      timeHtml='<div class="td-stime">'+tPlan+'</div>';
+    if(tPlan){
+      if(hasDelay){
+        /* Superposition clignotante : théorique ↔ retard */
+        timeHtml='<div class="td-stime"><div class="td-time-wrap">'
+          +'<span class="td-time-plan">'+tPlan+'</span>'
+          +'<span class="td-time-real">'+tReal+'</span>'
+          +'</div></div>';
+      } else {
+        timeHtml='<div class="td-stime">'+tPlan+'</div>';
+      }
     }
     return'<div class="'+cls+'">'
       +'<div class="td-sname">'+s.name+'</div>'
