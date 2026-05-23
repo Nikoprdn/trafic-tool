@@ -11,7 +11,7 @@
 
 
 
-:root{--red:#E4032E;--bg:#0D1016;--panel:#12151C;--card:#181B26;--border:#232730;--text:#E8EAF0;--muted:#5E6474;--muted2:#42465A;--yellow:#F5C518;--orange:#FF6B35;--green:#27AE60;--sb-bg:#003580;--sb-head:#002055;--sb-row:#004AC0;--sb-alt:#0041A8;--sb-sep:rgba(255,255,255,.06);--blue-deep:#071830;--blue-mid:#0A2A5E;--sc-bg:#181B26;--shadow:rgba(0,0,0,.4);}
+:root{--red:#E4032E;--bg:#0D1016;--panel:#12151C;--card:#181B26;--border:#232730;--text:#E8EAF0;--muted:#5E6474;--muted2:#42465A;--yellow:#F5C518;--orange:#FF6B35;--green:#27AE60;--sb-bg:#003580;--sb-head:#002055;--sb-row:#004AC0;--sb-alt:#0041A8;--sb-sep:rgba(255,255,255,.06);--blue-deep:#071830;--blue-mid:#0A2A5E;--sc-bg:#181B26;--shadow:rgba(0,0,0,.4);--hero-grad:linear-gradient(135deg,#0A1628 0%,#0D2250 60%,#0A1830 100%);--hero-border:rgba(27,94,184,.3);}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow',sans-serif;}
 .hdr{background:var(--red);height:84px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;padding:0 36px;gap:32px;position:sticky;top:0;z-index:100;box-shadow:0 4px 28px rgba(0,0,0,.7);}
@@ -60,6 +60,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .w-meta-item{display:flex;flex-direction:column;gap:2px;}
 .w-meta-label{font-size:10px;color:rgba(255,255,255,.35);font-family:'Share Tech Mono',monospace;letter-spacing:.06em;text-transform:uppercase;}
 .w-meta-val{font-family:'Share Tech Mono',monospace;font-size:14px;color:rgba(255,255,255,.8);}
+.w-hero-left{display:flex;flex-direction:column;gap:8px;}
 .w-hero-right{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;}
 .w-hero-icon{font-size:60px;line-height:1;filter:drop-shadow(0 4px 16px rgba(0,0,0,.3));}
 .w-hero-temp{font-family:'Share Tech Mono',monospace;font-size:70px;font-weight:700;color:#fff;line-height:1;}
@@ -1474,6 +1475,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 /* ══ THÈME CLAIR ══════════════════════════════════════════════ */
 [data-theme="light"]{
   --bg:#F0F2F7;
+  --hero-grad:linear-gradient(135deg,#1B5EB8 0%,#2E7DD1 60%,#163F80 100%);
+  --hero-border:rgba(27,94,184,.4);
   --panel:#FFFFFF;
   --card:#F7F8FC;
   --border:#D8DCE8;
@@ -1668,8 +1671,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <div class="section-card">
         <div class="card-h"><span class="card-title">Météo du jour</span>
           <div style="display:flex;gap:6px;margin-left:8px;">
-            <button class="w-day-btn active" onclick="switchDay('am',0)">Aujourd'hui</button>
-            <button class="w-day-btn" onclick="switchDay('am',1)">Demain</button>
+            <button class="w-day-btn active" data-sfx="am" data-day="0" onclick="switchDay('am',0)">Aujourd'hui</button>
+            <button class="w-day-btn" data-sfx="am" data-day="1" onclick="switchDay('am',1)">Demain</button>
           </div>
         </div>
         <div id="w-hero-am"><div class="w-loading">Chargement...</div></div>
@@ -1687,8 +1690,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <div class="section-card">
         <div class="card-h"><span class="card-title">Météo Île-de-France</span>
           <div style="display:flex;gap:6px;margin-left:8px;">
-            <button class="w-day-btn active" onclick="switchDay('idf',0)">Aujourd'hui</button>
-            <button class="w-day-btn" onclick="switchDay('idf',1)">Demain</button>
+            <button class="w-day-btn active" data-sfx="idf" data-day="0" onclick="switchDay('idf',0)">Aujourd'hui</button>
+            <button class="w-day-btn" data-sfx="idf" data-day="1" onclick="switchDay('idf',1)">Demain</button>
           </div>
         </div>
         <div id="w-hero-idf"><div class="w-loading">Chargement...</div></div>
@@ -1740,8 +1743,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   </div>
 </div>
 <button id="ed-fab" onclick="toggleEditor()" style="position:fixed;bottom:24px;right:24px;z-index:9001;background:var(--red);color:#fff;border:none;border-radius:24px;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);">Editer</button>
-
-
 <script>
 /* THEME */
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
@@ -1763,6 +1764,14 @@ function switchWeather(z){
   document.querySelectorAll('.w-sub-content').forEach(function(c){c.classList.remove('active');});
   document.getElementById('wsub-btn-'+z).classList.add('active');
   document.getElementById('wsub-'+z).classList.add('active');
+}
+function switchDay(sfx,day){
+  if(sfx==='am')citiesDayAM=day;
+  else citiesDayIDF=day;
+  document.querySelectorAll('.w-day-btn').forEach(function(b){
+    if(b.dataset.sfx===sfx)b.classList.toggle('active',parseInt(b.dataset.day)===day);
+  });
+  loadWeatherFor(sfx,sfx==='am'?REGION_AM:REGION_IDF,sfx==='am'?FIXED_AM:FIXED_IDF,sfx==='am'?ROT_AM:ROT_IDF,sfx==='am'?rotIdxAM:rotIdxIDF);
 }
 function tick(){var e=document.getElementById('clk');if(e)e.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});}
 setInterval(tick,1000);tick();
@@ -2309,61 +2318,7 @@ function refreshA8Traffic(){loadA8Traffic();}
     },{passive:false});
   }
 })();
-function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
-
-
-
-
-  var nf=A8_PROBES.map(function(p){return fetchSeg(p.north.lat,p.north.lon);});
-  Promise.all([Promise.all(sf),Promise.all(nf)]).then(function(r){
-    function fg(arr){var res=arr.slice(),last={cur:0,ff:0};for(var i=0;i<res.length;i++){if(res[i]&&res[i].cur>0)last=res[i];else if(last.cur>0)res[i]=last;}last={cur:0,ff:0};for(var j=res.length-1;j>=0;j--){if(res[j]&&res[j].cur>0)last=res[j];else if(last.cur>0)res[j]=last;}return res;}
-    renderRoad(idxs,fg(r[0]),fg(r[1]));
-  }).catch(function(e){
-    if(wrap)wrap.innerHTML='<div class="a8-loading" style="color:#ff8080">Erreur: '+e.message+'</div>';
-  });
-
-/* Charger quand le tab trafic est visible */
-function initA8IfVisible(){
-  var wrap=document.getElementById('a8-timeline-wrap');
-  if(wrap&&wrap.offsetParent!==null){
-    loadA8Traffic();
-  } else {
-    setTimeout(initA8IfVisible,500);
-  }
-}
-document.addEventListener('DOMContentLoaded',function(){setTimeout(initA8IfVisible,800);});
-setInterval(function(){
-  var wrap=document.getElementById('a8-timeline-wrap');
-  if(wrap&&wrap.offsetParent!==null)loadA8Traffic();
-},300000);
-function refreshA8Traffic(){loadA8Traffic();}
-
-/* ── Zoom molette A8 ── */
-(function(){
-  var ZOOM_ORDER=['full','cannes','antibes','nice','monaco'];
-  function initWheel(){
-    var el=document.getElementById('a8-timeline-wrap');
-    el.addEventListener('wheel',function(e){
-      e.preventDefault();
-      if(e.ctrlKey||e.metaKey||Math.abs(e.deltaX)<Math.abs(e.deltaY)){
-        /* Zoom in/out */
-        var idx=ZOOM_ORDER.indexOf(A8_ZOOM);
-        if(e.deltaY<0)idx=Math.max(0,idx-1);
-        else idx=Math.min(ZOOM_ORDER.length-1,idx+1);
-        if(ZOOM_ORDER[idx]!==A8_ZOOM){
-          A8_ZOOM=ZOOM_ORDER[idx];
-          document.querySelectorAll('.a8-zoom-btn').forEach(function(b){b.classList.toggle('active',b.dataset.zoom===A8_ZOOM);});
-          loadA8Traffic();
-        }
-      } else {
-        /* Scroll horizontal */
-        el.scrollLeft+=e.deltaX;
-      }
-    },{passive:false});
-  }
-})();
-function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
-</script>
+function initA8Map(){}function syncMapTheme(){}function resetMapView(){}</script>
 
 </body>
 </html>
