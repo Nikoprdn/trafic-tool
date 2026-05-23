@@ -44,13 +44,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .w-section-label::before{content:'';display:inline-block;width:22px;height:1px;background:rgba(255,255,255,.18);}
 
 /* SUB TABS */
-.w-sub-tabs{display:flex;gap:4px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px;margin-bottom:20px;}
-.w-sub-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);cursor:pointer;border:none;background:transparent;transition:all .2s;white-space:nowrap;}
-.w-sub-btn:hover{color:#fff;background:rgba(255,255,255,.06);}
-.w-sub-btn.active{background:rgba(255,255,255,.12);color:#fff;}
-.w-sub-content{display:none;}
-.w-sub-content.active{display:block;}
-
+.w-sub-tabs{display:flex;gap:4px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px;margin-bottom:20px;}.w-sub-btn:hover{color:#fff;background:rgba(255,255,255,.06);}.w-sub-content{display:none;}
 /* WEATHER */
 .w-hero{background:var(--hero-grad);border:1px solid var(--hero-border);border-radius:12px;padding:28px 36px;margin-bottom:20px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;position:relative;overflow:hidden;}
 .w-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 40%,rgba(100,180,255,.08) 0%,transparent 60%);pointer-events:none;}
@@ -74,11 +68,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .w-slot-temp{font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:700;color:var(--yellow);}
 .w-slot-pop{font-family:'Share Tech Mono',monospace;font-size:11px;color:#5A9FEF;}
 .w-slot-pop.zero{color:rgba(255,255,255,.2);}
-.w-day-toggle{display:flex;gap:4px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:3px;margin-bottom:12px;width:fit-content;}
-.w-day-btn{padding:6px 20px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);cursor:pointer;border:none;background:transparent;transition:all .2s;white-space:nowrap;}
-.w-day-btn:hover{color:#fff;background:rgba(255,255,255,.06);}
-.w-day-btn.active{background:rgba(255,255,255,.12);color:#fff;}
-.w-cities-grid{display:grid;grid-template-columns:repeat(6,1fr);}
+.w-day-toggle{display:flex;gap:4px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:3px;margin-bottom:12px;width:fit-content;}.w-day-btn:hover{color:#fff;background:rgba(255,255,255,.06);}.w-cities-grid{display:grid;grid-template-columns:repeat(6,1fr);}
 .w-city{padding:18px 10px 20px;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;gap:12px;position:relative;}
 .w-city:last-child{border-right:none;}
 .w-city-badge{position:absolute;top:8px;right:8px;font-family:'Barlow Condensed',sans-serif;font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:10px;}
@@ -1472,14 +1462,62 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .ed-tpl-save:hover{background:rgba(245,197,24,.18);}
 
 
-/* ── Weather dark mode fix ── */
+/* ══ MÉTÉO ══════════════════════════════════════════════════════ */
+/* Navigation sous-onglets */
 .w-sub-nav{display:flex;gap:6px;padding:10px 16px;background:var(--card);border-bottom:1px solid var(--border);}
 .w-sub-btn{flex:1;padding:8px 16px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.45);cursor:pointer;transition:all .15s;}
 .w-sub-btn:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.8);}
 .w-sub-btn.active{background:rgba(27,94,184,.25);border-color:#1B5EB8;color:#fff;}
+.w-sub-content{display:none;}
+.w-sub-content.active{display:block;}
+/* Boutons jour */
 .w-day-btns{display:flex;gap:4px;margin-left:8px;}
-.w-day-btn{padding:4px 12px;border-radius:5px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.4);cursor:pointer;transition:all .15s;}
+.w-day-btn{padding:3px 12px;border-radius:5px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.4);cursor:pointer;transition:all .12s;}
 .w-day-btn.active{background:#1B5EB8;border-color:#1B5EB8;color:#fff;}
+/* Hero météo */
+.w-hero{background:var(--hero-grad);border:1px solid var(--hero-border);border-radius:10px;padding:20px 28px;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;position:relative;overflow:hidden;margin:0;}
+.w-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 40%,rgba(255,255,255,.04),transparent 70%);pointer-events:none;}
+.w-hero-left{display:flex;flex-direction:column;gap:6px;position:relative;}
+.w-hero-loc{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);}
+.w-hero-cond{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#fff;}
+.w-hero-meta{display:flex;gap:20px;flex-wrap:wrap;margin-top:4px;}
+.w-meta-item{display:flex;flex-direction:column;gap:2px;}
+.w-meta-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);}
+.w-meta-val{font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:700;color:rgba(255,255,255,.85);}
+.w-hero-right{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;position:relative;}
+.w-hero-icon{font-size:54px;line-height:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.3));}
+.w-hero-temp{font-family:'Share Tech Mono',monospace;font-size:64px;font-weight:700;color:#fff;line-height:1;}
+.w-hero-region{font-size:11px;color:rgba(255,255,255,.35);font-family:'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase;}
+/* Titre jour */
+.w-day-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;padding:8px 0 2px;}
+.w-day-meta{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:rgba(255,255,255,.45);padding-bottom:6px;}
+/* Timeline horaire */
+.w-timeline{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;padding:6px 0;}
+.w-tl-slot{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 14px;min-width:70px;border-right:1px solid rgba(255,255,255,.06);flex-shrink:0;}
+.w-tl-slot:last-child{border-right:none;}
+.w-tl-hour{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);}
+.w-tl-icon{font-size:22px;line-height:1;}
+.w-tl-temp{font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:700;color:#fff;}
+.w-tl-pop{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:#1B5EB8;letter-spacing:.04em;}
+/* Grille villes */
+.w-cities-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;padding:12px 16px;}
+.w-city-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;}
+.w-city-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.w-city-icon{font-size:20px;line-height:1;}
+.w-city-temps{display:flex;gap:6px;align-items:baseline;}
+.w-temp-max{font-family:'Share Tech Mono',monospace;font-size:18px;font-weight:700;color:#fff;}
+.w-temp-min{font-family:'Share Tech Mono',monospace;font-size:13px;color:rgba(255,255,255,.35);}
+.w-city-rot{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.2);}
+/* Vigilances */
+.vig-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);}
+.vig-item:last-child{border-bottom:none;}
+.vig-dept{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:#fff;min-width:80px;}
+.vig-pheno{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:rgba(255,255,255,.7);}
+.vig-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;}
+.vig-no-alert{padding:16px;font-family:'Barlow Condensed',sans-serif;font-size:14px;color:var(--green);letter-spacing:.06em;}
+/* Chargement/erreur */
+.w-loading{padding:20px 16px;font-family:'Barlow Condensed',sans-serif;font-size:12px;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;}
+.w-err{color:rgba(255,100,100,.6)!important;}
 
 /* ══ THÈME CLAIR ══════════════════════════════════════════════ */
 [data-theme="light"]{
@@ -1632,8 +1670,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <div class="card-h">
         <span class="card-title" id="travel-title">&#128663; Vers Monaco</span>
         <div class="dir-toggle" style="margin-left:8px;">
-          <button class="dir-btn active" onclick="setTravelDir('to',this)">&#8594; Vers Monaco</button>
-          <button class="dir-btn" onclick="setTravelDir('from',this)">&#8592; Depuis Monaco</button>
+          <button class="dir-btn active" onclick="setTravelDir('to',this)">Vers Monaco</button>
+          <button class="dir-btn" onclick="setTravelDir('from',this)">Depuis Monaco</button>
         </div>
         <span class="pill" id="travel-source" style="margin-left:8px;"></span>
         <span class="travel-upd" id="travel-upd" style="margin-left:8px;"></span>
