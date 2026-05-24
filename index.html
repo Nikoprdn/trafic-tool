@@ -1619,7 +1619,70 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 [data-theme="light"] .wx-hero{background:linear-gradient(135deg,#1B5EB8 0%,#2E7DD1 100%);}
 [data-theme="light"] .wx-hourly-wrap{background:#e8eaf3;}
 [data-theme="light"] .wx-day-card,[data-theme="light"] .wx-cities-card{background:#fff;}
-[data-theme="light"] .wx-city-row{background:rgba(0,0,0,.04);}</style>
+[data-theme="light"] .wx-city-row{background:rgba(0,0,0,.04);}
+/* ── Panel 3 jours ── */
+.wx-3days{border-top:1px solid rgba(255,255,255,.07);}
+.wx-3d-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:0;
+}
+.wx-3d-col{
+  padding:22px 28px;
+  border-right:1px solid rgba(255,255,255,.07);
+  display:flex;flex-direction:column;gap:16px;
+}
+.wx-3d-col:last-child{border-right:none;}
+.wx-3d-today{background:rgba(27,94,184,.07);}
+.wx-3d-head{display:flex;flex-direction:column;gap:6px;}
+.wx-3d-day{
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);
+}
+.wx-3d-today .wx-3d-day{color:#4A90D9;}
+.wx-3d-icon{font-size:36px;line-height:1;}
+.wx-3d-cond{
+  font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;
+  color:rgba(255,255,255,.75);
+}
+/* Températures + barre */
+.wx-3d-temps{
+  display:flex;align-items:center;gap:10px;
+}
+.wx-3d-tmax{
+  font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:900;
+  color:#fff;line-height:1;white-space:nowrap;
+}
+.wx-3d-tmin{
+  font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:600;
+  color:rgba(255,255,255,.3);line-height:1;white-space:nowrap;
+}
+.wx-3d-bar{flex:1;}
+.wx-3d-bar-bg{
+  height:6px;border-radius:3px;
+  background:rgba(255,255,255,.1);
+  position:relative;
+}
+.wx-3d-bar-fill{
+  position:absolute;top:0;height:100%;border-radius:3px;
+  background:linear-gradient(90deg,#4A90D9,#F5C518);
+}
+/* Métadonnées */
+.wx-3d-meta{display:flex;flex-direction:column;gap:6px;}
+.wx-3d-meta-row{display:flex;justify-content:space-between;align-items:center;}
+.wx-3d-ml{
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);
+}
+.wx-3d-mv{
+  font-family:'Share Tech Mono',monospace;font-size:12px;
+  color:rgba(255,255,255,.65);
+}
+/* Light mode */
+[data-theme="light"] .wx-3d-col{background:#fff;}
+[data-theme="light"] .wx-3d-today{background:#EBF0FB;}
+[data-theme="light"] .wx-3d-bar-bg{background:rgba(0,0,0,.1);}
+[data-theme="light"] .wx-3d-mv{color:rgba(0,0,0,.6);}
+[data-theme="light"] .wx-3d-cond{color:rgba(0,0,0,.7);}</style>
 </head>
 <body>
 
@@ -1733,6 +1796,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <div class="wx-day-card" id="wx-am-d1"><div class="wx-loading-msg">Chargement…</div></div>
       <div class="wx-cities-card" id="wx-am-cities"><div class="wx-loading-msg">Chargement…</div></div>
     </div>
+
+    <div class="wx-3days" id="wx-am-3days"><div class="wx-loading-msg" style="padding:20px 28px">Chargement…</div></div>
   </div>
 
   <div class="wx-zone" id="wxzone-idf">
@@ -1743,6 +1808,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <div class="wx-day-card" id="wx-idf-d1"><div class="wx-loading-msg">Chargement…</div></div>
       <div class="wx-cities-card" id="wx-idf-cities"><div class="wx-loading-msg">Chargement…</div></div>
     </div>
+
+    <div class="wx-3days" id="wx-idf-3days"><div class="wx-loading-msg" style="padding:20px 28px">Chargement…</div></div>
   </div>
 
 </div>
@@ -2395,13 +2462,14 @@ function wxLoadAll(){wxLoaded.am=false;wxLoaded.idf=false;wxLoadZone('am');wxLoa
 function wxLoadZone(z){
   wxLoaded[z]=true;
   var zone=WX_ZONES[z];
-  fetch('https://api.open-meteo.com/v1/forecast?latitude='+zone.lat+'&longitude='+zone.lon+'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weathercode,windspeed_10m,winddirection_10m,precipitation&hourly=temperature_2m,weathercode,precipitation_probability,windspeed_10m,winddirection_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,windspeed_10m_max,winddirection_10m_dominant,sunrise,sunset&timezone=Europe%2FParis&forecast_days=2')
+  fetch('https://api.open-meteo.com/v1/forecast?latitude='+zone.lat+'&longitude='+zone.lon+'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weathercode,windspeed_10m,winddirection_10m,precipitation&hourly=temperature_2m,weathercode,precipitation_probability,windspeed_10m,winddirection_10m&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,windspeed_10m_max,winddirection_10m_dominant,sunrise,sunset&timezone=Europe%2FParis&forecast_days=3')
     .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
     .then(function(d){
       wxRenderHero(z,d.current,d.daily,zone.name);
       wxRenderHourly(z,d.hourly);
       wxRenderDay(z,'d0',d.daily,0);
       wxRenderDay(z,'d1',d.daily,1);
+      wxRender3Days(z,d.daily);
       var u=document.getElementById('wx-upd');
       if(u)u.textContent='Mis à jour '+new Date().toLocaleTimeString('fr-FR',{hour12:false});
     })
@@ -2410,7 +2478,7 @@ function wxLoadZone(z){
       if(el)el.innerHTML='<div style="padding:32px 40px;color:#E4032E;font-family:\'Barlow Condensed\',sans-serif;font-size:16px;">Erreur : '+e.message+'</div>';
     });
   Promise.allSettled(zone.cities.map(function(city){
-    return fetch('https://api.open-meteo.com/v1/forecast?latitude='+city.lat+'&longitude='+city.lon+'&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FParis&forecast_days=2')
+    return fetch('https://api.open-meteo.com/v1/forecast?latitude='+city.lat+'&longitude='+city.lon+'&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FParis&forecast_days=3')
       .then(function(r){return r.json();}).then(function(d){return{name:city.name,d:d.daily};});
   })).then(function(results){
     var el=document.getElementById('wx-'+z+'-cities');if(!el)return;
@@ -2615,6 +2683,63 @@ function wxSynthesize(z,slot,daily,off){
       +'</div>';
   })
   .catch(function(){synthDiv.innerHTML='';});
+}
+
+function wxRender3Days(z,daily){
+  var el=document.getElementById('wx-'+z+'-3days');if(!el)return;
+  var days=['Aujourd\'hui','Demain','Après-demain'];
+  var html='<div class="wx-3d-grid">';
+  for(var d=0;d<3;d++){
+    if(!daily.weathercode[d]&&daily.weathercode[d]!==0)continue;
+    var tmax=Math.round(daily.temperature_2m_max[d]);
+    var tmin=Math.round(daily.temperature_2m_min[d]);
+    var pop=daily.precipitation_probability_max?daily.precipitation_probability_max[d]:0;
+    var wind=Math.round(daily.windspeed_10m_max[d]);
+    var wdir=daily.winddirection_10m_dominant?wxDir(daily.winddirection_10m_dominant[d]):'';
+    var precip=(daily.precipitation_sum[d]||0).toFixed(1);
+    var sunrise=daily.sunrise?daily.sunrise[d].slice(11,16):'—';
+    var sunset=daily.sunset?daily.sunset[d].slice(11,16):'—';
+    html+='<div class="wx-3d-col'+(d===0?' wx-3d-today':'')+'">'
+      /* Jour + icône */
+      +'<div class="wx-3d-head">'
+        +'<div class="wx-3d-day">'+days[d]+'</div>'
+        +'<div class="wx-3d-icon">'+wxIco(daily.weathercode[d])+'</div>'
+        +'<div class="wx-3d-cond">'+wxShort(daily.weathercode[d])+'</div>'
+      +'</div>'
+      /* Températures */
+      +'<div class="wx-3d-temps">'
+        +'<span class="wx-3d-tmax">'+tmax+'°</span>'
+        +'<span class="wx-3d-bar">'
+          +wxTempBar(tmin,tmax,daily)
+        +'</span>'
+        +'<span class="wx-3d-tmin">'+tmin+'°</span>'
+      +'</div>'
+      /* Détails */
+      +'<div class="wx-3d-meta">'
+        +'<div class="wx-3d-meta-row"><span class="wx-3d-ml">Vent</span><span class="wx-3d-mv">'+wind+' km/h '+wdir+'</span></div>'
+        +'<div class="wx-3d-meta-row"><span class="wx-3d-ml">Pluie</span><span class="wx-3d-mv">'+precip+' mm ('+pop+'%)</span></div>'
+        +'<div class="wx-3d-meta-row"><span class="wx-3d-ml">&#9728; Lever</span><span class="wx-3d-mv">'+sunrise+'</span></div>'
+        +'<div class="wx-3d-meta-row"><span class="wx-3d-ml">&#127769; Coucher</span><span class="wx-3d-mv">'+sunset+'</span></div>'
+      +'</div>'
+    +'</div>';
+  }
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+function wxTempBar(tmin,tmax,daily){
+  /* Barre de température relative aux 3 jours */
+  var allMax=daily.temperature_2m_max.slice(0,3);
+  var allMin=daily.temperature_2m_min.slice(0,3);
+  var globalMin=Math.min.apply(null,allMin)-1;
+  var globalMax=Math.max.apply(null,allMax)+1;
+  var range=globalMax-globalMin||1;
+  var pctMin=((tmin-globalMin)/range*100).toFixed(1);
+  var pctMax=((tmax-globalMin)/range*100).toFixed(1);
+  var width=(pctMax-pctMin).toFixed(1);
+  return '<div class="wx-3d-bar-bg">'
+    +'<div class="wx-3d-bar-fill" style="left:'+pctMin+'%;width:'+width+'%"></div>'
+    +'</div>';
 }</script>
 
 </body>
