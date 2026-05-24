@@ -1495,63 +1495,143 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .ed-tpl-save:hover{background:rgba(245,197,24,.18);}
 
 
-/* ══ MÉTÉO ══════════════════════════════════════════════════════ */
-/* Navigation sous-onglets */
-.w-sub-nav{display:flex;gap:6px;padding:10px 16px;background:var(--card);border-bottom:1px solid var(--border);}
-.w-sub-btn{flex:1;padding:8px 16px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.45);cursor:pointer;transition:all .15s;}
-.w-sub-btn:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.8);}
-.w-sub-btn.active{background:rgba(27,94,184,.25);border-color:#1B5EB8;color:#fff;}
-.w-sub-content{display:none;}
-.w-sub-content.active{display:flex;flex-direction:column;gap:20px;}
-/* Boutons jour */
-.w-day-btns{display:flex;gap:4px;margin-left:8px;}
-.w-day-btn{padding:3px 12px;border-radius:5px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(255,255,255,.1);background:transparent;color:rgba(255,255,255,.4);cursor:pointer;transition:all .12s;}
-.w-day-btn.active{background:#1B5EB8;border-color:#1B5EB8;color:#fff;}
-/* Hero météo */
-.w-hero{background:var(--hero-grad);border:1px solid var(--hero-border);border-radius:10px;padding:20px 28px;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;position:relative;overflow:hidden;margin:0;}
-.w-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 40%,rgba(255,255,255,.04),transparent 70%);pointer-events:none;}
-.w-hero-left{display:flex;flex-direction:column;gap:6px;position:relative;}
-.w-hero-loc{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);}
-.w-hero-cond{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:#fff;}
-.w-hero-meta{display:flex;gap:20px;flex-wrap:wrap;margin-top:4px;}
-.w-meta-item{display:flex;flex-direction:column;gap:2px;}
-.w-meta-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);}
-.w-meta-val{font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:700;color:rgba(255,255,255,.85);}
-.w-hero-right{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;position:relative;}
-.w-hero-icon{font-size:54px;line-height:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.3));}
-.w-hero-temp{font-family:'Share Tech Mono',monospace;font-size:64px;font-weight:700;color:#fff;line-height:1;}
-.w-hero-region{font-size:11px;color:rgba(255,255,255,.35);font-family:'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase;}
-/* Titre jour */
-.w-day-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;padding:8px 0 2px;}
-.w-day-meta{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:rgba(255,255,255,.45);padding-bottom:6px;}
-/* Timeline horaire */
-.w-timeline{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;padding:6px 0;}
-.w-tl-slot{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 14px;min-width:70px;border-right:1px solid rgba(255,255,255,.06);flex-shrink:0;}
-.w-tl-slot:last-child{border-right:none;}
-.w-tl-hour{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);}
-.w-tl-icon{font-size:22px;line-height:1;}
-.w-tl-temp{font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:700;color:#fff;}
-.w-tl-pop{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:#1B5EB8;letter-spacing:.04em;}
-/* Grille villes */
-.w-cities-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;padding:12px 16px;}
-.w-city-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;}
-.w-city-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.w-city-icon{font-size:20px;line-height:1;}
-.w-city-temps{display:flex;gap:6px;align-items:baseline;}
-.w-temp-max{font-family:'Share Tech Mono',monospace;font-size:18px;font-weight:700;color:#fff;}
-.w-temp-min{font-family:'Share Tech Mono',monospace;font-size:13px;color:rgba(255,255,255,.35);}
-.w-city-rot{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.2);}
-/* Vigilances */
-.vig-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);}
-.vig-item:last-child{border-bottom:none;}
-.vig-dept{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:#fff;min-width:80px;}
-.vig-pheno{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:rgba(255,255,255,.7);}
-.vig-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;}
-.vig-no-alert{padding:16px;font-family:'Barlow Condensed',sans-serif;font-size:14px;color:var(--green);letter-spacing:.06em;}
-/* Chargement/erreur */
-.w-loading{padding:20px 16px;font-family:'Barlow Condensed',sans-serif;font-size:12px;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;}
-.w-err{color:rgba(255,100,100,.6)!important;}
+/* ══ MÉTÉO ══════════════════════════════════════════════════════════════ */
+.wx-loading{padding:28px;text-align:center;font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
 
+/* ── Conditions actuelles ── */
+.wx-now{
+  display:flex;align-items:center;gap:0;
+  padding:0;
+}
+.wx-now-main{
+  flex:1;display:flex;align-items:center;gap:24px;
+  padding:24px 28px;
+}
+.wx-now-icon{font-size:64px;line-height:1;flex-shrink:0;}
+.wx-now-temp{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:72px;font-weight:900;line-height:1;
+  color:#fff;letter-spacing:-.02em;
+}
+.wx-now-temp sup{font-size:32px;font-weight:700;color:rgba(255,255,255,.7);}
+.wx-now-info{display:flex;flex-direction:column;gap:4px;}
+.wx-now-cond{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  color:rgba(255,255,255,.85);
+}
+.wx-now-loc{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);
+}
+.wx-now-stats{
+  display:flex;flex-direction:column;gap:0;
+  padding:16px 28px;
+  border-left:1px solid var(--border);
+  min-width:180px;
+}
+.wx-stat{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);
+  gap:16px;
+}
+.wx-stat:last-child{border-bottom:none;}
+.wx-stat-label{
+  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+}
+.wx-stat-val{
+  font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:700;
+  color:rgba(255,255,255,.8);
+}
+
+/* ── Horaires ── */
+.wx-hourly{
+  display:flex;gap:0;overflow-x:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent;
+  padding:8px 16px 12px;
+}
+.wx-hour{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  min-width:72px;padding:10px 4px;
+  border-right:1px solid rgba(255,255,255,.05);
+  flex-shrink:0;
+  transition:background .1s;
+}
+.wx-hour:last-child{border-right:none;}
+.wx-hour:hover{background:rgba(255,255,255,.04);}
+.wx-hour.now{background:rgba(27,94,184,.15);border-radius:8px;}
+.wx-hour-time{
+  font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;
+  color:var(--muted);
+}
+.wx-hour.now .wx-hour-time{color:#1B5EB8;}
+.wx-hour-icon{font-size:22px;line-height:1;}
+.wx-hour-temp{
+  font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;
+  color:#fff;
+}
+.wx-hour-pop{
+  font-family:'Share Tech Mono',monospace;font-size:10px;
+  color:#1B5EB8;
+}
+.wx-hour-pop.zero{color:rgba(255,255,255,.2);}
+.wx-hour-wind{
+  font-family:'Share Tech Mono',monospace;font-size:9px;
+  color:var(--muted);white-space:nowrap;
+}
+
+/* ── Jours J+0/J+1 ── */
+.wx-days{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.wx-day{
+  padding:20px 24px;
+  border-right:1px solid var(--border);
+}
+.wx-day:last-child{border-right:none;}
+.wx-day-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+}
+.wx-day-label{
+  font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);
+}
+.wx-day-icon{font-size:32px;}
+.wx-day-cond{
+  font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;
+  color:rgba(255,255,255,.7);margin-bottom:12px;
+}
+.wx-day-temps{
+  display:flex;align-items:baseline;gap:12px;margin-bottom:14px;
+}
+.wx-day-tmax{
+  font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:900;
+  color:#fff;line-height:1;
+}
+.wx-day-tmin{
+  font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:600;
+  color:var(--muted);line-height:1;
+}
+.wx-day-stats{display:flex;flex-wrap:wrap;gap:8px 16px;}
+.wx-day-stat{
+  font-family:'Share Tech Mono',monospace;font-size:11px;
+  color:var(--muted);
+}
+.wx-day-stat span{color:rgba(255,255,255,.65);}
+
+/* Onglets jour */
+.wx-day-tabs{display:flex;gap:4px;margin-left:8px;}
+.wx-day-btn{
+  padding:4px 14px;border-radius:5px;
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.1);background:transparent;
+  color:rgba(255,255,255,.4);cursor:pointer;transition:all .15s;
+}
+.wx-day-btn.active{background:#1B5EB8;border-color:#1B5EB8;color:#fff;}
+.wx-day-btn:hover{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8);}
 /* ══ THÈME CLAIR ══════════════════════════════════════════════ */
 [data-theme="light"]{
   --bg:#F0F2F7;
@@ -1744,93 +1824,32 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 <div class="tab-content" id="tab-weather">
   <div class="wrap">
 
-    <!-- Onglets région -->
-    <div class="w-sub-nav">
-      <button class="w-sub-btn active" id="wsub-btn-am" onclick="switchWeather('am')">&#9728; Côte d'Azur</button>
-      <button class="w-sub-btn" id="wsub-btn-idf" onclick="switchWeather('idf')">&#127968; Île-de-France</button>
+    <!-- ▸ Conditions actuelles -->
+    <div class="section-card" id="wx-now-card">
+      <div class="card-h">
+        <span class="card-title">&#127757; Conditions actuelles &mdash; Monaco</span>
+        <span id="wx-now-upd" style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);"></span>
+        <button class="rbtn" onclick="loadWeatherNow()">&#8635;</button>
+      </div>
+      <div id="wx-now-body"><div class="wx-loading">Chargement...</div></div>
     </div>
 
-    <!-- Côte d'Azur -->
-    <div class="w-sub-content active" id="wsub-am">
-
-      <div class="section-card">
-        <div class="card-h">
-          <span class="card-title">Météo actuelle</span>
-          <div class="w-day-btns">
-            <button class="w-day-btn active" data-sfx="am" data-day="0" onclick="switchDay('am',0)">Aujourd'hui</button>
-            <button class="w-day-btn" data-sfx="am" data-day="1" onclick="switchDay('am',1)">Demain</button>
-          </div>
-        </div>
-        <div id="w-hero-am"><div class="w-loading">Chargement...</div></div>
-      </div>
-
-      <div class="section-card">
-        <div class="card-h"><span class="card-title">Prévisions heure par heure</span></div>
-        <div style="padding:0 16px 16px;">
-          <div style="margin-bottom:8px;">
-            <div class="w-day-title" id="w-today-title-am"></div>
-            <div class="w-day-meta" id="w-today-meta-am"></div>
-          </div>
-          <div id="w-today-tl-am"></div>
-          <div style="margin-top:14px;margin-bottom:8px;">
-            <div class="w-day-title" id="w-tom-title-am"></div>
-            <div class="w-day-meta" id="w-tom-meta-am"></div>
-          </div>
-          <div id="w-tom-tl-am"></div>
-        </div>
-      </div>
-
-      <div class="section-card">
-        <div class="card-h"><span class="card-title">&#127961;&#65039; Villes &mdash; Côte d'Azur</span></div>
-        <div id="w-cities-body-am" class="w-cities-grid"></div>
-      </div>
-
-    </div>
-
-    <!-- Île-de-France -->
-    <div class="w-sub-content" id="wsub-idf">
-
-      <div class="section-card">
-        <div class="card-h">
-          <span class="card-title">Météo actuelle</span>
-          <div class="w-day-btns">
-            <button class="w-day-btn active" data-sfx="idf" data-day="0" onclick="switchDay('idf',0)">Aujourd'hui</button>
-            <button class="w-day-btn" data-sfx="idf" data-day="1" onclick="switchDay('idf',1)">Demain</button>
-          </div>
-        </div>
-        <div id="w-hero-idf"><div class="w-loading">Chargement...</div></div>
-      </div>
-
-      <div class="section-card">
-        <div class="card-h"><span class="card-title">Prévisions heure par heure</span></div>
-        <div style="padding:0 16px 16px;">
-          <div style="margin-bottom:8px;">
-            <div class="w-day-title" id="w-today-title-idf"></div>
-            <div class="w-day-meta" id="w-today-meta-idf"></div>
-          </div>
-          <div id="w-today-tl-idf"></div>
-          <div style="margin-top:14px;margin-bottom:8px;">
-            <div class="w-day-title" id="w-tom-title-idf"></div>
-            <div class="w-day-meta" id="w-tom-meta-idf"></div>
-          </div>
-          <div id="w-tom-tl-idf"></div>
-        </div>
-      </div>
-
-      <div class="section-card">
-        <div class="card-h"><span class="card-title">&#127961;&#65039; Villes &mdash; Île-de-France</span></div>
-        <div id="w-cities-body-idf" class="w-cities-grid"></div>
-      </div>
-
-    </div>
-
-    <!-- Vigilances -->
+    <!-- ▸ Prévisions horaires aujourd'hui -->
     <div class="section-card">
       <div class="card-h">
-        <span class="card-title">&#9888;&#65039; Vigilances Météo France</span>
-        <div class="pill" id="vig-count" style="margin-left:8px;">Actives</div>
+        <span class="card-title">&#128336; Aujourd'hui heure par heure</span>
+        <div class="wx-day-tabs">
+          <button class="wx-day-btn active" id="wx-tab-today" onclick="wxShowDay(0)">Aujourd'hui</button>
+          <button class="wx-day-btn" id="wx-tab-tom" onclick="wxShowDay(1)">Demain</button>
+        </div>
       </div>
-      <div id="vig-body"><div class="w-loading">Chargement...</div></div>
+      <div id="wx-hourly-body"><div class="wx-loading">Chargement...</div></div>
+    </div>
+
+    <!-- ▸ Prévisions J+0 / J+1 -->
+    <div class="section-card">
+      <div class="card-h"><span class="card-title">&#128197; Prévisions J+0 / J+1</span></div>
+      <div id="wx-days-body"><div class="wx-loading">Chargement...</div></div>
     </div>
 
   </div>
@@ -1880,22 +1899,10 @@ function switchTab(n){
   document.getElementById('tab-btn-'+n).classList.add('active');
   document.getElementById('tab-'+n).classList.add('active');
   if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);traficLoaded=true;}
-  if(n==='weather'&&!weatherLoaded){switchWeather('am');loadWeatherAM();loadWeatherIDF();loadVigilance();weatherLoaded=true;}
+  if(n==='weather'&&!weatherLoaded){loadWeatherAll();weatherLoaded=true;}
 }
-function switchWeather(z){
-  document.querySelectorAll('.w-sub-btn').forEach(function(b){b.classList.remove('active');});
-  document.querySelectorAll('.w-sub-content').forEach(function(c){c.classList.remove('active');});
-  document.getElementById('wsub-btn-'+z).classList.add('active');
-  document.getElementById('wsub-'+z).classList.add('active');
-}
-function switchDay(sfx,day){
-  if(sfx==='am')citiesDayAM=day;
-  else citiesDayIDF=day;
-  document.querySelectorAll('.w-day-btn').forEach(function(b){
-    if(b.dataset.sfx===sfx)b.classList.toggle('active',parseInt(b.dataset.day)===day);
-  });
-  loadWeatherFor(sfx,sfx==='am'?REGION_AM:REGION_IDF,sfx==='am'?FIXED_AM:FIXED_IDF,sfx==='am'?ROT_AM:ROT_IDF,sfx==='am'?rotIdxAM:rotIdxIDF);
-}
+
+
 function tick(){var e=document.getElementById('clk');if(e)e.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});}
 setInterval(tick,1000);tick();
 
@@ -2046,29 +2053,28 @@ function buildTableRow(route,withR,withoutR){
 var renderTravelSkeleton=renderSkeleton;
 
 /* WEATHER */
-var REGION_AM={"lat": 43.7102, "lon": 7.262, "name": "C\u00f4te d'Azur"};var REGION_IDF={"lat": 48.8566, "lon": 2.3522, "name": "\u00cele-de-France"};var FIXED_AM=[{"name": "Nice", "lat": 43.7102, "lon": 7.262}, {"name": "Cannes", "lat": 43.5528, "lon": 7.0174}, {"name": "Menton", "lat": 43.7765, "lon": 7.4973}];var ROT_AM=[{"name": "Antibes", "lat": 43.5808, "lon": 7.1239}, {"name": "Grasse", "lat": 43.6585, "lon": 6.9224}, {"name": "St-Martin-V\u00e9s.", "lat": 44.0663, "lon": 7.2526}, {"name": "Vence", "lat": 43.7224, "lon": 7.1133}, {"name": "Mougins", "lat": 43.6, "lon": 7.0}, {"name": "Sospel", "lat": 43.8783, "lon": 7.4499}, {"name": "Roquebrune", "lat": 43.7704, "lon": 7.4694}, {"name": "Vallauris", "lat": 43.58, "lon": 7.054}, {"name": "Cagnes-s-Mer", "lat": 43.6644, "lon": 7.1494}];var FIXED_IDF=[{"name": "Paris", "lat": 48.8566, "lon": 2.3522}, {"name": "Versailles", "lat": 48.8014, "lon": 2.1301}, {"name": "Creil", "lat": 49.2583, "lon": 2.4847}];var ROT_IDF=[{"name": "Fontainebleau", "lat": 48.404, "lon": 2.6967}, {"name": "Cergy", "lat": 49.036, "lon": 2.0751}, {"name": "\u00c9vry", "lat": 48.6267, "lon": 2.4281}, {"name": "Meaux", "lat": 48.96, "lon": 2.8878}, {"name": "Pontoise", "lat": 49.05, "lon": 2.1006}, {"name": "Argenteuil", "lat": 48.9472, "lon": 2.2467}, {"name": "Boulogne-B.", "lat": 48.835, "lon": 2.24}, {"name": "Vincennes", "lat": 48.8478, "lon": 2.4392}, {"name": "Roissy", "lat": 49.0097, "lon": 2.5479}];
-var rotIdxAM=0,rotIdxIDF=0;var citiesDayAM=0,citiesDayIDF=0;var lastFixedAM=null,lastRotAM=null,lastFixedIDF=null,lastRotIDF=null;
-function wmo(c){var n=Number(c);if(n===0)return{icon:'\u2600\ufe0f',short:'Ensoleill\u00e9'};if(n===1)return{icon:'\ud83c\udf24\ufe0f',short:'Peu nuageux'};if(n===2)return{icon:'\u26c5',short:'Mi-nuageux'};if(n===3)return{icon:'\u2601\ufe0f',short:'Couvert'};if(n<=48)return{icon:'\ud83c\udf2b\ufe0f',short:'Brouillard'};if(n<=55)return{icon:'\ud83c\udf26\ufe0f',short:'Bruine'};if(n<=65)return{icon:'\ud83c\udf27\ufe0f',short:'Pluie'};if(n<=75)return{icon:'\u2744\ufe0f',short:'Neige'};if(n<=82)return{icon:'\ud83c\udf26\ufe0f',short:'Averses'};if(n===95)return{icon:'\u26c8\ufe0f',short:'Orage'};return{icon:'\u26c8\ufe0f',short:'Orage'};}
-function windDir(d){return['N','NE','E','SE','S','SO','O','NO'][Math.round(d/45)%8];}
-function hourIdx(times,dayOff,hr){var base=new Date();base.setHours(0,0,0,0);base.setDate(base.getDate()+dayOff);var target=base.getTime()+hr*3600000;for(var i=0;i<times.length;i++){if(new Date(times[i]).getTime()===target)return i;}return-1;}
-function dayLabel(off){var d=new Date();d.setDate(d.getDate()+off);var days=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];var months=['Jan','F\u00e9v','Mar','Avr','Mai','Jun','Jul','Ao\u00fb','Sep','Oct','Nov','D\u00e9c'];return days[d.getDay()]+' '+d.getDate()+' '+months[d.getMonth()];}
-function fetchRegion(reg){return fetch('https://api.open-meteo.com/v1/forecast?latitude='+reg.lat+'&longitude='+reg.lon+'&hourly=temperature_2m,precipitation_probability,weathercode,windspeed_10m,relativehumidity_2m&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_sum,windspeed_10m_max,precipitation_probability_max&current_weather=true&timezone=Europe%2FParis&forecast_days=2').then(function(r){return r.json();});}
-function fetchCity(city){return fetch('https://api.open-meteo.com/v1/forecast?latitude='+city.lat+'&longitude='+city.lon+'&hourly=temperature_2m,weathercode&timezone=Europe%2FParis&forecast_days=2').then(function(r){return r.json();}).then(function(d){return{city:city,data:d};});}
-function renderHero(d,reg,heroId){var el=document.getElementById(heroId);if(!el)return;var cw=d.current_weather||{};var info=wmo(cw.weathercode);var hTimes=(d.hourly&&d.hourly.time)||[];var idx=hourIdx(hTimes,0,new Date().getHours());var humidity=idx>=0&&d.hourly.relativehumidity_2m?d.hourly.relativehumidity_2m[idx]+'%':'\u2014';var pop=idx>=0&&d.hourly.precipitation_probability?d.hourly.precipitation_probability[idx]+'%':'\u2014';el.innerHTML='<div class="w-hero-left"><div class="w-hero-loc">&#127757; '+reg.name+'</div><div class="w-hero-cond">'+info.icon+' '+info.short+'</div><div class="w-hero-meta"><div class="w-meta-item"><span class="w-meta-label">Vent</span><span class="w-meta-val">'+Math.round(cw.windspeed)+' km/h '+windDir(cw.winddirection||0)+'</span></div><div class="w-meta-item"><span class="w-meta-label">Humidit\u00e9</span><span class="w-meta-val">'+humidity+'</span></div><div class="w-meta-item"><span class="w-meta-label">Pluie</span><span class="w-meta-val">'+pop+'</span></div></div></div><div class="w-hero-right"><div class="w-hero-icon">'+info.icon+'</div><div class="w-hero-temp">'+Math.round(cw.temperature)+'°</div><div class="w-hero-region">'+reg.name+'</div></div>';}
-function renderTimeline(d,dayOff,elId){var el=document.getElementById(elId);if(!el)return;var hours=[7,10,13,16,19,22];var hTimes=(d.hourly&&d.hourly.time)||[];var html='<div class="w-timeline">';hours.forEach(function(hr){var idx=hourIdx(hTimes,dayOff,hr);var temp=idx>=0?Math.round(d.hourly.temperature_2m[idx])+'°':'\u2014';var code=idx>=0?d.hourly.weathercode[idx]:0;var pop=idx>=0&&d.hourly.precipitation_probability?d.hourly.precipitation_probability[idx]:0;var info=wmo(code);html+='<div class="w-slot"><span class="w-slot-hour">'+(hr<10?'0':'')+hr+'h</span><span class="w-slot-icon">'+info.icon+'</span><span class="w-slot-temp">'+temp+'</span><span class="w-slot-pop'+(pop>0?'':' zero')+'">'+pop+'%</span></div>';});html+='</div>';el.innerHTML=html;}
-function updateHead(d,dayOff,titleId,metaId){var tEl=document.getElementById(titleId),mEl=document.getElementById(metaId);var daily=d.daily||{};var maxT=daily.temperature_2m_max&&daily.temperature_2m_max[dayOff]!==undefined?Math.round(daily.temperature_2m_max[dayOff])+'°':'\u2014';var minT=daily.temperature_2m_min&&daily.temperature_2m_min[dayOff]!==undefined?Math.round(daily.temperature_2m_min[dayOff])+'°':'\u2014';var info=wmo(daily.weathercode&&daily.weathercode[dayOff]||0);if(tEl)tEl.textContent=(dayOff===0?"Aujourd'hui":"Demain")+' \u2014 '+dayLabel(dayOff);if(mEl)mEl.innerHTML='<span class="bc-minmax">'+maxT+'<span> / </span>'+minT+'</span><span class="bc-cond">'+info.icon+' '+info.short+'</span>';}
-function pickRot(pool,idx,n){var picks=[];for(var i=0;i<n;i++)picks.push(pool[(idx+i)%pool.length]);return picks;}
+
+
+
+
+
+
+
+
+
+
+
 function setCitiesDay(sfx,day,btn){if(sfx==='am')citiesDayAM=day;else citiesDayIDF=day;var bs=btn.parentElement.querySelectorAll('.w-day-btn');bs.forEach(function(b){b.classList.remove('active');});btn.classList.add('active');if(sfx==='am'&&lastFixedAM)renderCities(lastFixedAM,lastRotAM,'w-cities-body-am',citiesDayAM);else if(lastFixedIDF)renderCities(lastFixedIDF,lastRotIDF,'w-cities-body-idf',citiesDayIDF);}
-function renderCities(fixedRes,rotRes,gridId,dayOff){if(dayOff===undefined)dayOff=0;if(gridId==='w-cities-body-am'){lastFixedAM=fixedRes;lastRotAM=rotRes;}if(gridId==='w-cities-body-idf'){lastFixedIDF=fixedRes;lastRotIDF=rotRes;}var el=document.getElementById(gridId);if(!el)return;var slots=[{r:fixedRes[0],f:true},{r:fixedRes[1],f:true},{r:rotRes[0],f:false},{r:fixedRes[2],f:true},{r:rotRes[1],f:false},{r:rotRes[2],f:false}];var html='<div class="w-cities-grid">';slots.forEach(function(slot){var res=slot.r;if(!res){html+='<div class="w-city"><div class="w-city-name">\u2014</div></div>';return;}var city=res.city,d=res.data;var hTimes=(d.hourly&&d.hourly.time)||[];var idxM=hourIdx(hTimes,dayOff,9),idxA=hourIdx(hTimes,dayOff,15);var tempM=idxM>=0?Math.round(d.hourly.temperature_2m[idxM])+'°':'\u2014';var tempA=idxA>=0?Math.round(d.hourly.temperature_2m[idxA])+'°':'\u2014';var condM=wmo(idxM>=0?d.hourly.weathercode[idxM]:0).short;var condA=wmo(idxA>=0?d.hourly.weathercode[idxA]:0).short;html+='<div class="w-city entering"><span class="w-city-badge '+(slot.f?'fixed':'rotate')+'">'+(slot.f?'\u25cf':'\u21bb')+'</span><div class="w-city-name">'+city.name+'</div><div class="w-city-periods"><div class="w-period"><span class="w-period-lbl">Matin</span><span class="w-period-temp">'+tempM+'</span><span class="w-period-cond">'+condM+'</span></div><div class="w-period"><span class="w-period-lbl">Apr\u00e8s-midi</span><span class="w-period-temp">'+tempA+'</span><span class="w-period-cond">'+condA+'</span></div></div></div>';});html+='</div>';el.innerHTML=html;}
-function loadWeatherFor(sfx,reg,fixedC,rotC,rotIdx){var heroEl=document.getElementById('w-hero-'+sfx);if(heroEl)heroEl.innerHTML='<div class="w-loading">Chargement...</div>';fetchRegion(reg).then(function(d){renderHero(d,reg,'w-hero-'+sfx);updateHead(d,0,'w-today-title-'+sfx,'w-today-meta-'+sfx);updateHead(d,1,'w-tom-title-'+sfx,'w-tom-meta-'+sfx);renderTimeline(d,0,'w-today-tl-'+sfx);renderTimeline(d,1,'w-tom-tl-'+sfx);}).catch(function(e){var el=document.getElementById('w-hero-'+sfx);if(el)el.innerHTML='<div class="w-loading w-err">'+e.message+'</div>';});var rot=pickRot(rotC,rotIdx,3);Promise.allSettled(fixedC.concat(rot).map(fetchCity)).then(function(res){var vals=res.map(function(r){return r.status==='fulfilled'?r.value:null;});var dayOff=sfx==='am'?citiesDayAM:citiesDayIDF;renderCities(vals.slice(0,3),vals.slice(3),'w-cities-body-'+sfx,dayOff);});}
-function loadWeatherAM(){loadWeatherFor('am',REGION_AM,FIXED_AM,ROT_AM,rotIdxAM);}
-function loadWeatherIDF(){loadWeatherFor('idf',REGION_IDF,FIXED_IDF,ROT_IDF,rotIdxIDF);}
+
+
+
+
 
 /* VIGILANCES */
-var VIG_DEPTS={'Alpes-Maritimes':['06'],'Var':['83'],'Paris / \u00cele-de-France':['75','77','78','91','92','93','94','95']};
-var VIG_PHENO={1:'Vent',2:'Pluie-Inondation',3:'Orage',4:'Inondation',5:'Neige-Verglas',6:'Canicule',7:'Grand Froid',8:'Avalanche',9:'Submersion'};
-var VIG_COLOR={1:'vert',2:'jaune',3:'orange',4:'rouge'};
-function loadVigilance(){var el=document.getElementById('vig-body');if(!el)return;el.innerHTML='<div class="w-loading">Chargement...</div>';fetch('https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/mf-vigilance-color-bulletins-departments/records?limit=100&select=department_id,phenomenon_id,phenomenon_max_color_id&order_by=phenomenon_max_color_id%20DESC').then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(function(data){var records=data.results||[];var idx={};records.forEach(function(rec){var dept=(rec.department_id||'').toString().padStart(2,'0');var pheno=Number(rec.phenomenon_id||0);var color=Number(rec.phenomenon_max_color_id||1);if(color>1){if(!idx[dept])idx[dept]=[];idx[dept].push({pheno:pheno,color:color});}});var html='<div class="vig-grid">';Object.keys(VIG_DEPTS).forEach(function(label){var depts=VIG_DEPTS[label],active=[];depts.forEach(function(d){if(idx[d])idx[d].forEach(function(item){var ex=active.find(function(a){return a.pheno===item.pheno;});if(ex){if(item.color>ex.color)ex.color=item.color;}else active.push({pheno:item.pheno,color:item.color});});});active.sort(function(a,b){return b.color-a.color;});html+='<div class="vig-dept"><div class="vig-dept-name">'+label+'</div>';if(!active.length){html+='<div class="vig-ok">&#10004; Aucune vigilance</div>';}else{html+='<div class="vig-list">';active.forEach(function(item){var cn=VIG_COLOR[item.color]||'vert';var pn=VIG_PHENO[item.pheno]||('Ph\u00e9nom\u00e8ne '+item.pheno);html+='<div class="vig-item"><div class="vig-color '+cn+'"></div><span class="vig-pheno '+cn+'">'+pn+'</span></div>';});html+='</div>';}html+='</div>';});html+='</div>';el.innerHTML=html;}).catch(function(e){el.innerHTML='<div class="w-loading w-err">Vigilances : '+e.message+'</div>';});}
+
+
+
+
 
 /* INIT */
 /* Lire le paramètre URL ?tab=weather ou ?tab=trafic */
@@ -2459,7 +2465,161 @@ function refreshA8Traffic(){loadA8Traffic();}
     },{passive:false});
   }
 })();
-function initA8Map(){}function syncMapTheme(){}function resetMapView(){}</script>
+function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
+
+/* ══ MÉTÉO ══════════════════════════════════════════════════════════════ */
+var WX_LAT=43.7384,WX_LON=7.4246,WX_NAME='Monaco';
+var wxHourlyData=null,wxDailyData=null,wxCurrentData=null;
+var wxDayShown=0;
+
+var WX_CODES={
+  0:{icon:'☀️',short:'Ensoleillé'},
+  1:{icon:'🌤️',short:'Peu nuageux'},
+  2:{icon:'⛅',short:'Partiellement nuageux'},
+  3:{icon:'☁️',short:'Couvert'},
+  45:{icon:'🌫️',short:'Brouillard'},48:{icon:'🌫️',short:'Brouillard givrant'},
+  51:{icon:'🌦️',short:'Bruine légère'},53:{icon:'🌦️',short:'Bruine'},55:{icon:'🌧️',short:'Bruine dense'},
+  61:{icon:'🌧️',short:'Pluie légère'},63:{icon:'🌧️',short:'Pluie'},65:{icon:'🌧️',short:'Pluie forte'},
+  71:{icon:'🌨️',short:'Neige légère'},73:{icon:'🌨️',short:'Neige'},75:{icon:'🌨️',short:'Neige forte'},
+  77:{icon:'🌨️',short:'Grains de neige'},
+  80:{icon:'🌦️',short:'Averses légères'},81:{icon:'🌧️',short:'Averses'},82:{icon:'⛈️',short:'Averses violentes'},
+  85:{icon:'🌨️',short:'Averses de neige'},86:{icon:'🌨️',short:'Averses neige fortes'},
+  95:{icon:'⛈️',short:'Orage'},96:{icon:'⛈️',short:'Orage avec grêle'},99:{icon:'⛈️',short:'Orage violent'}
+};
+function wxCode(c){return WX_CODES[c]||WX_CODES[Math.floor(c/10)*10]||{icon:'🌡️',short:'—'};}
+function wxDir(d){return['N','NE','E','SE','S','SO','O','NO'][Math.round(d/45)%8];}
+
+function loadWeatherAll(){
+  var url='https://api.open-meteo.com/v1/forecast'
+    +'?latitude='+WX_LAT+'&longitude='+WX_LON
+    +'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weathercode,windspeed_10m,winddirection_10m,precipitation'
+    +'&hourly=temperature_2m,weathercode,precipitation_probability,windspeed_10m,winddirection_10m'
+    +'&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max,winddirection_10m_dominant,sunrise,sunset,precipitation_probability_max'
+    +'&timezone=Europe%2FParis&forecast_days=2';
+
+  ['wx-now-body','wx-hourly-body','wx-days-body'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.innerHTML='<div class="wx-loading">Chargement...</div>';
+  });
+
+  fetch(url)
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(d){
+      wxCurrentData=d.current;
+      wxHourlyData=d.hourly;
+      wxDailyData=d.daily;
+      renderWxNow(d.current);
+      renderWxHourly(d.hourly,0);
+      renderWxDays(d.daily,d.hourly);
+      var u=document.getElementById('wx-now-upd');
+      if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
+    })
+    .catch(function(e){
+      ['wx-now-body','wx-hourly-body','wx-days-body'].forEach(function(id){
+        var el=document.getElementById(id);
+        if(el)el.innerHTML='<div class="wx-loading" style="color:var(--red)">Erreur : '+e.message+'</div>';
+      });
+    });
+}
+function loadWeatherNow(){loadWeatherAll();}
+
+function renderWxNow(cur){
+  var el=document.getElementById('wx-now-body');if(!el)return;
+  var info=wxCode(cur.weathercode);
+  var ta=Math.round(cur.apparent_temperature);
+  el.innerHTML='<div class="wx-now">'
+    +'<div class="wx-now-main">'
+      +'<div class="wx-now-icon">'+info.icon+'</div>'
+      +'<div class="wx-now-temp">'+Math.round(cur.temperature_2m)+'<sup>°C</sup></div>'
+      +'<div class="wx-now-info">'
+        +'<div class="wx-now-cond">'+info.short+'</div>'
+        +'<div class="wx-now-loc">&#127757; '+WX_NAME+'</div>'
+      +'</div>'
+    +'</div>'
+    +'<div class="wx-now-stats">'
+      +'<div class="wx-stat"><span class="wx-stat-label">Ressenti</span><span class="wx-stat-val">'+ta+'°C</span></div>'
+      +'<div class="wx-stat"><span class="wx-stat-label">Humidité</span><span class="wx-stat-val">'+Math.round(cur.relative_humidity_2m)+'%</span></div>'
+      +'<div class="wx-stat"><span class="wx-stat-label">Vent</span><span class="wx-stat-val">'+Math.round(cur.windspeed_10m)+' km/h '+wxDir(cur.winddirection_10m)+'</span></div>'
+      +'<div class="wx-stat"><span class="wx-stat-label">Précip.</span><span class="wx-stat-val">'+cur.precipitation.toFixed(1)+' mm</span></div>'
+    +'</div>'
+  +'</div>';
+}
+
+function renderWxHourly(hourly,dayOff){
+  var el=document.getElementById('wx-hourly-body');if(!el)return;
+  var now=new Date();
+  var today=now.toISOString().slice(0,10);
+  var targetDate=new Date(now);targetDate.setDate(targetDate.getDate()+dayOff);
+  var targetStr=targetDate.toISOString().slice(0,10);
+  var nowH=now.getHours();
+  var html='<div class="wx-hourly">';
+  hourly.time.forEach(function(t,i){
+    if(t.slice(0,10)!==targetStr)return;
+    var h=parseInt(t.slice(11,13));
+    var isNow=(dayOff===0&&h===nowH);
+    var info=wxCode(hourly.weathercode[i]);
+    var pop=hourly.precipitation_probability?hourly.precipitation_probability[i]:0;
+    var wind=Math.round(hourly.windspeed_10m[i]);
+    var wdir=hourly.winddirection_10m?wxDir(hourly.winddirection_10m[i]):'';
+    html+='<div class="wx-hour'+(isNow?' now':'')+'">'
+      +'<div class="wx-hour-time">'+(isNow?'NOW':(h<10?'0':'')+h+'h')+'</div>'
+      +'<div class="wx-hour-icon">'+info.icon+'</div>'
+      +'<div class="wx-hour-temp">'+Math.round(hourly.temperature_2m[i])+'°</div>'
+      +'<div class="wx-hour-pop'+(pop>0?'':' zero')+'">'+pop+'%</div>'
+      +'<div class="wx-hour-wind">'+wind+' km/h '+wdir+'</div>'
+    +'</div>';
+  });
+  html+='</div>';
+  el.innerHTML=html;
+  /* Scroller sur l'heure courante */
+  if(dayOff===0){setTimeout(function(){var now2=el.querySelector('.now');if(now2)now2.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});},100);}
+}
+
+function wxShowDay(day){
+  wxDayShown=day;
+  document.getElementById('wx-tab-today').classList.toggle('active',day===0);
+  document.getElementById('wx-tab-tom').classList.toggle('active',day===1);
+  if(wxHourlyData)renderWxHourly(wxHourlyData,day);
+}
+
+function renderWxDays(daily,hourly){
+  var el=document.getElementById('wx-days-body');if(!el)return;
+  var labels=['Aujourd\'hui','Demain'];
+  var html='<div class="wx-days">';
+  for(var d=0;d<2;d++){
+    var code=daily.weathercode[d];
+    var info=wxCode(code);
+    var tmax=Math.round(daily.temperature_2m_max[d]);
+    var tmin=Math.round(daily.temperature_2m_min[d]);
+    var precip=(daily.precipitation_sum[d]||0).toFixed(1);
+    var pop=daily.precipitation_probability_max?daily.precipitation_probability_max[d]:0;
+    var wind=Math.round(daily.windspeed_10m_max[d]);
+    var wdir=daily.winddirection_10m_dominant?wxDir(daily.winddirection_10m_dominant[d]):'';
+    var sunrise=daily.sunrise?daily.sunrise[d].slice(11,16):'—';
+    var sunset=daily.sunset?daily.sunset[d].slice(11,16):'—';
+    html+='<div class="wx-day">'
+      +'<div class="wx-day-head">'
+        +'<span class="wx-day-label">'+labels[d]+'</span>'
+        +'<span class="wx-day-icon">'+info.icon+'</span>'
+      +'</div>'
+      +'<div class="wx-day-cond">'+info.short+'</div>'
+      +'<div class="wx-day-temps">'
+        +'<span class="wx-day-tmax">'+tmax+'°</span>'
+        +'<span class="wx-day-tmin">'+tmin+'°</span>'
+      +'</div>'
+      +'<div class="wx-day-stats">'
+        +'<div class="wx-day-stat">&#127783; <span>'+precip+' mm</span></div>'
+        +'<div class="wx-day-stat">&#127783; <span>'+pop+'%</span></div>'
+        +'<div class="wx-day-stat">&#128168; <span>'+wind+' km/h '+wdir+'</span></div>'
+        +'<div class="wx-day-stat">&#127774; <span>'+sunrise+'</span></div>'
+        +'<div class="wx-day-stat">&#127769; <span>'+sunset+'</span></div>'
+      +'</div>'
+    +'</div>';
+  }
+  html+='</div>';
+  el.innerHTML=html;
+}
+</script>
 
 </body>
 </html>
