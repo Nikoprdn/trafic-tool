@@ -1899,7 +1899,7 @@ function switchTab(n){
   document.getElementById('tab-btn-'+n).classList.add('active');
   document.getElementById('tab-'+n).classList.add('active');
   if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);traficLoaded=true;}
-  if(n==='weather'&&!weatherLoaded){loadWeatherAll();weatherLoaded=true;}
+  if(n==='weather'&&!weatherLoaded){console.log('[WX] Loading weather...');loadWeatherAll();weatherLoaded=true;}
 }
 
 
@@ -2473,20 +2473,20 @@ var wxHourlyData=null,wxDailyData=null,wxCurrentData=null;
 var wxDayShown=0;
 
 var WX_CODES={
-  0:{icon:'☀️',short:'Ensoleillé'},
-  1:{icon:'🌤️',short:'Peu nuageux'},
-  2:{icon:'⛅',short:'Partiellement nuageux'},
-  3:{icon:'☁️',short:'Couvert'},
-  45:{icon:'🌫️',short:'Brouillard'},48:{icon:'🌫️',short:'Brouillard givrant'},
-  51:{icon:'🌦️',short:'Bruine légère'},53:{icon:'🌦️',short:'Bruine'},55:{icon:'🌧️',short:'Bruine dense'},
-  61:{icon:'🌧️',short:'Pluie légère'},63:{icon:'🌧️',short:'Pluie'},65:{icon:'🌧️',short:'Pluie forte'},
-  71:{icon:'🌨️',short:'Neige légère'},73:{icon:'🌨️',short:'Neige'},75:{icon:'🌨️',short:'Neige forte'},
-  77:{icon:'🌨️',short:'Grains de neige'},
-  80:{icon:'🌦️',short:'Averses légères'},81:{icon:'🌧️',short:'Averses'},82:{icon:'⛈️',short:'Averses violentes'},
-  85:{icon:'🌨️',short:'Averses de neige'},86:{icon:'🌨️',short:'Averses neige fortes'},
-  95:{icon:'⛈️',short:'Orage'},96:{icon:'⛈️',short:'Orage avec grêle'},99:{icon:'⛈️',short:'Orage violent'}
+  0:{icon:'&#9728;&#65039;',short:'Ensoleillé'},
+  1:{icon:'&#127780;&#65039;',short:'Peu nuageux'},
+  2:{icon:'&#9925;',short:'Partiellement nuageux'},
+  3:{icon:'&#9729;',short:'Couvert'},
+  45:{icon:'&#127783;&#65039;',short:'Brouillard'},48:{icon:'&#127783;&#65039;',short:'Brouillard givrant'},
+  51:{icon:'&#127782;&#65039;',short:'Bruine légère'},53:{icon:'&#127782;&#65039;',short:'Bruine'},55:{icon:'&#127783;&#65039;',short:'Bruine dense'},
+  61:{icon:'&#127783;&#65039;',short:'Pluie légère'},63:{icon:'&#127783;&#65039;',short:'Pluie'},65:{icon:'&#127783;&#65039;',short:'Pluie forte'},
+  71:{icon:'&#127784;&#65039;',short:'Neige légère'},73:{icon:'&#127784;&#65039;',short:'Neige'},75:{icon:'&#127784;&#65039;',short:'Neige forte'},
+  77:{icon:'&#127784;&#65039;',short:'Grains de neige'},
+  80:{icon:'&#127782;&#65039;',short:'Averses légères'},81:{icon:'&#127783;&#65039;',short:'Averses'},82:{icon:'&#9928;&#65039;',short:'Averses violentes'},
+  85:{icon:'&#127784;&#65039;',short:'Averses de neige'},86:{icon:'&#127784;&#65039;',short:'Averses neige fortes'},
+  95:{icon:'&#9928;&#65039;',short:'Orage'},96:{icon:'&#9928;&#65039;',short:'Orage avec grêle'},99:{icon:'&#9928;&#65039;',short:'Orage violent'}
 };
-function wxCode(c){return WX_CODES[c]||WX_CODES[Math.floor(c/10)*10]||{icon:'🌡️',short:'—'};}
+function wxCode(c){return WX_CODES[c]||WX_CODES[Math.floor(c/10)*10]||{icon:'&#127777;&#65039;',short:'—'};}
 function wxDir(d){return['N','NE','E','SE','S','SO','O','NO'][Math.round(d/45)%8];}
 
 function loadWeatherAll(){
@@ -2502,8 +2502,9 @@ function loadWeatherAll(){
     if(el)el.innerHTML='<div class="wx-loading">Chargement...</div>';
   });
 
+  console.log('[WX] Fetching:', url.slice(0,80));
   fetch(url)
-    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(r){console.log('[WX] Response:', r.status);if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
     .then(function(d){
       wxCurrentData=d.current;
       wxHourlyData=d.hourly;
@@ -2515,6 +2516,7 @@ function loadWeatherAll(){
       if(u)u.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});
     })
     .catch(function(e){
+      console.error('[WX] Error:', e);
       ['wx-now-body','wx-hourly-body','wx-days-body'].forEach(function(id){
         var el=document.getElementById(id);
         if(el)el.innerHTML='<div class="wx-loading" style="color:var(--red)">Erreur : '+e.message+'</div>';
