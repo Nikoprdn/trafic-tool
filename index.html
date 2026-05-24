@@ -1532,6 +1532,29 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 [data-theme="light"] .ed-footer{background:#F5F7FC;border-top-color:#E2E6EF;color:#9CA3AF;}
 /* Bouton thème */
 [data-theme="light"] #theme-toggle{background:rgba(255,255,255,.2)!important;}
+/* ── Synthèse météo ── */
+.wx-synth{
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.07);
+}
+.wx-synth-loading{
+  font-family:'Barlow Condensed',sans-serif;font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(255,255,255,.25);
+  animation:wxSynthPulse 1.5s ease-in-out infinite;
+}
+@keyframes wxSynthPulse{0%,100%{opacity:.3;}50%{opacity:.7;}}
+.wx-synth-content p{
+  font-family:'Inter',sans-serif;font-size:13px;line-height:1.6;
+  color:rgba(255,255,255,.6);margin:0 0 6px 0;
+}
+.wx-synth-content p:last-child{margin-bottom:0;}
+.wx-synth-content p::before{
+  content:'';
+  display:inline-block;width:4px;height:4px;border-radius:50%;
+  background:#1B5EB8;margin-right:8px;vertical-align:middle;
+}
 /* ══ WEATHER TOOL ═════════════════════════════════════════════════════ */
 #tab-weather{background:var(--bg);}
 .wx-zone{display:none;}.wx-zone.active{display:block;}
@@ -2353,9 +2376,10 @@ var WX_ZONES={
   idf:{lat:48.8566,lon:2.3522,name:'Paris \u2014 \u00cele-de-France',cities:[{name:'Paris',lat:48.8566,lon:2.3522},{name:'Versailles',lat:48.8014,lon:2.1301},{name:'Pontoise',lat:49.0503,lon:2.1006},{name:'Meaux',lat:48.96,lon:2.8883},{name:'Melun',lat:48.5404,lon:2.6568},{name:'Évry',lat:48.6265,lon:2.4271}]}
 };
 var wxLoaded={am:false,idf:false},wxCurrentZone='am';
-var WXCO={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'🌨️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️'};
+var WXCO_DAY={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'🌨️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️'};
+var WXCO_NGT={0:'🌙',1:'🌙',2:'☁️',3:'☁️',45:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'🌨️',80:'🌧️',81:'🌧️',82:'⛈️',95:'⛈️'};
 var WXSH={0:'Ensoleillé',1:'Peu nuageux',2:'Mi-nuageux',3:'Couvert',45:'Brouillard',51:'Bruine légère',61:'Pluie légère',63:'Pluie',65:'Forte pluie',71:'Neige légère',80:'Averses',81:'Averses fortes',95:'Orage'};
-function wxIco(c){var n=Number(c);return WXCO[n]||WXCO[Math.floor(n/10)*10]||'🌡️';}
+function wxIco(c,h){var n=Number(c);var night=(h!==undefined)&&(h>=22||h<6);var map=night?WXCO_NGT:WXCO_DAY;return map[n]||map[Math.floor(n/10)*10]||'🌡️';}
 function wxShort(c){var n=Number(c);return WXSH[n]||WXSH[Math.floor(n/10)*10]||'—';}
 function wxDir(d){return['N','NE','E','SE','S','SO','O','NO'][Math.round(d/45)%8]||'';}
 function wxDayName(off){var d=new Date();d.setDate(d.getDate()+off);return['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'][d.getDay()];}
@@ -2494,7 +2518,7 @@ function wxRenderHourly(z,hourly){
     svgParts.push('<text x="'+x+'" y="'+yH+'" text-anchor="middle" font-family="\'Barlow Condensed\',sans-serif" font-size="'+(isNow?13:12)+'" font-weight="'+(isNow?800:600)+'" fill="'+(isNow?'#4A90D9':'rgba(255,255,255,0.45)')+'">'+p.lbl+'</text>');
 
     /* Icône météo */
-    svgParts.push('<text x="'+x+'" y="'+(yH+24)+'" text-anchor="middle" font-size="20">'+wxIco(p.code)+'</text>');
+    svgParts.push('<text x="'+x+'" y="'+(yH+24)+'" text-anchor="middle" font-size="20">'+wxIco(p.code,p.h)+'</text>');
 
     /* Pluie */
     var popColor=p.pop>0?'#1B5EB8':'rgba(255,255,255,0.2)';
@@ -2522,7 +2546,52 @@ function wxRenderDay(z,slot,daily,off){
   var wdir=daily.winddirection_10m_dominant?wxDir(daily.winddirection_10m_dominant[off]):'';
   var sunrise=daily.sunrise?daily.sunrise[off].slice(11,16):'—';
   var sunset=daily.sunset?daily.sunset[off].slice(11,16):'—';
-  el.innerHTML='<div class="wx-day-lbl">'+(off===0?'Aujourd\'hui — '+wxDayName(0):'Demain — '+wxDayName(1))+'</div><div class="wx-day-top"><div class="wx-day-icon">'+wxIco(daily.weathercode[off])+'</div><div class="wx-day-cond">'+wxShort(daily.weathercode[off])+'</div></div><div class="wx-day-temps"><span class="wx-day-tmax">'+tmax+'°</span><span class="wx-day-tmin">'+tmin+'°</span></div><div class="wx-day-meta"><span class="wx-day-meta-item">&#127783; <b>'+precip+' mm</b> ('+pop+'%)</span><span class="wx-day-meta-item">&#128168; <b>'+wind+' km/h</b> '+wdir+'</span><span class="wx-day-meta-item">&#9728; <b>'+sunrise+'</b></span><span class="wx-day-meta-item">&#127769; <b>'+sunset+'</b></span></div>';
+  el.innerHTML='<div class="wx-day-lbl">'+(off===0?'Aujourd\'hui — '+wxDayName(0):'Demain — '+wxDayName(1))+'</div><div class="wx-day-top"><div class="wx-day-icon">'+wxIco(daily.weathercode[off])+'</div><div class="wx-day-cond">'+wxShort(daily.weathercode[off])+'</div></div><div class="wx-day-temps"><span class="wx-day-tmax">'+tmax+'°</span><span class="wx-day-tmin">'+tmin+'°</span></div><div class="wx-day-meta"><span class="wx-day-meta-item">&#127783; <b>'+precip+' mm</b> ('+pop+'%)</span><span class="wx-day-meta-item">&#128168; <b>'+wind+' km/h</b> '+wdir+'</span><span class="wx-day-meta-item">&#9728; <b>'+sunrise+'</b></span><span class="wx-day-meta-item">&#127769; <b>'+sunset+'</b></span></div>';}
+
+function wxSynthesize(z,slot,daily,off){
+  var el=document.getElementById('wx-'+z+'-'+slot);if(!el)return;
+  /* Ajouter le conteneur de synthèse */
+  var synthDiv=document.createElement('div');
+  synthDiv.className='wx-synth';
+  synthDiv.id='wx-synth-'+z+'-'+slot;
+  synthDiv.innerHTML='<div class="wx-synth-loading">Rédaction du bulletin&#8230;</div>';
+  el.appendChild(synthDiv);
+
+  var tmax=Math.round(daily.temperature_2m_max[off]);
+  var tmin=Math.round(daily.temperature_2m_min[off]);
+  var precip=(daily.precipitation_sum[off]||0).toFixed(1);
+  var pop=daily.precipitation_probability_max?daily.precipitation_probability_max[off]:0;
+  var wind=Math.round(daily.windspeed_10m_max[off]);
+  var wdir=daily.winddirection_10m_dominant?wxDir(daily.winddirection_10m_dominant[off]):'';
+  var cond=wxShort(daily.weathercode[off]);
+  var dayLbl=off===0?'aujourd\'hui':'demain';
+  var zone=WX_ZONES[z];
+
+  var prompt='Tu es un présentateur météo radio. Rédige exactement 3 phrases courtes et naturelles pour décrire la météo '
+    +dayLbl+' en '+zone.name+'. '
+    +'Données : '+cond+', température max '+tmax+'°C, min '+tmin+'°C, '
+    +'vent jusqu\'à '+wind+' km/h '+wdir+', précipitations '+precip+' mm ('+pop+'% de probabilité). '
+    +'Style : direct, professionnel, radio. Pas de titre, juste 3 phrases séparées par des retours à la ligne.';
+
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:200,
+      messages:[{role:'user',content:prompt}]
+    })
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var text=(data.content&&data.content[0]&&data.content[0].text)||'';
+    if(!text){synthDiv.innerHTML='';return;}
+    var lines=text.trim().split('\n').filter(function(l){return l.trim();}).slice(0,3);
+    synthDiv.innerHTML='<div class="wx-synth-content">'
+      +lines.map(function(l){return'<p>'+l.trim()+'</p>';}).join('')
+      +'</div>';
+  })
+  .catch(function(){synthDiv.innerHTML='';});
 }</script>
 
 </body>
