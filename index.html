@@ -1607,10 +1607,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .wx-day-meta-item{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,255,255,.4);}
 .wx-day-meta-item b{color:rgba(255,255,255,.7);}
 .wx-cities-list{display:flex;flex-direction:column;gap:8px;}
-.wx-city-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);}
+.wx-city-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);flex-wrap:wrap;}
 .wx-city-icon{font-size:20px;flex-shrink:0;}
 .wx-city-name{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:.04em;color:rgba(255,255,255,.75);flex:1;}
-.wx-city-t{font-family:'Share Tech Mono',monospace;font-size:13px;}
+.wx-city-days{display:flex;gap:10px;margin-left:auto;}.wx-city-day{display:flex;align-items:baseline;gap:3px;}.wx-city-dlbl{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.3);}.wx-city-t{font-family:'Share Tech Mono',monospace;font-size:13px;}
 .wx-city-tmax{color:#fff;font-weight:700;}.wx-city-tmin{color:rgba(255,255,255,.35);font-size:11px;}
 .wx-loading-msg{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);padding:8px 0;}
 [data-theme="light"] .wx-rgn-bar{background:#e8eaf3;border-bottom-color:#D1D5DB;}
@@ -2372,7 +2372,7 @@ function wxDay(off){var d=new Date();d.setDate(d.getDate()+off);return['Dim','Lu
 
 /* ══ WEATHER TOOL ═══════════════════════════════════════════════════════ */
 var WX_ZONES={
-  am:{lat:43.7102,lon:7.262,name:'C\u00f4te d\'Azur',cities:[{name:'Nice',lat:43.7102,lon:7.262},{name:'Monaco',lat:43.7384,lon:7.4246},{name:'Cannes',lat:43.5528,lon:7.0174},{name:'Antibes',lat:43.5808,lon:7.1239},{name:'Menton',lat:43.7753,lon:7.5022},{name:'Grasse',lat:43.6581,lon:6.9239}]},
+  am:{lat:43.7384,lon:7.4246,name:'Monaco',cities:[{name:'Nice',lat:43.7102,lon:7.262},{name:'Cannes',lat:43.5528,lon:7.0174},{name:'Antibes',lat:43.5808,lon:7.1239},{name:'Menton',lat:43.7753,lon:7.5022},{name:'Grasse',lat:43.6581,lon:6.9239},{name:'Juan-les-Pins',lat:43.5667,lon:7.1167}]},
   idf:{lat:48.8566,lon:2.3522,name:'Paris \u2014 \u00cele-de-France',cities:[{name:'Paris',lat:48.8566,lon:2.3522},{name:'Versailles',lat:48.8014,lon:2.1301},{name:'Pontoise',lat:49.0503,lon:2.1006},{name:'Meaux',lat:48.96,lon:2.8883},{name:'Melun',lat:48.5404,lon:2.6568},{name:'Évry',lat:48.6265,lon:2.4271}]}
 };
 var wxLoaded={am:false,idf:false},wxCurrentZone='am';
@@ -2410,7 +2410,7 @@ function wxLoadZone(z){
       if(el)el.innerHTML='<div style="padding:32px 40px;color:#E4032E;font-family:\'Barlow Condensed\',sans-serif;font-size:16px;">Erreur : '+e.message+'</div>';
     });
   Promise.allSettled(zone.cities.map(function(city){
-    return fetch('https://api.open-meteo.com/v1/forecast?latitude='+city.lat+'&longitude='+city.lon+'&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FParis&forecast_days=1')
+    return fetch('https://api.open-meteo.com/v1/forecast?latitude='+city.lat+'&longitude='+city.lon+'&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe%2FParis&forecast_days=2')
       .then(function(r){return r.json();}).then(function(d){return{name:city.name,d:d.daily};});
   })).then(function(results){
     var el=document.getElementById('wx-'+z+'-cities');if(!el)return;
@@ -2418,7 +2418,7 @@ function wxLoadZone(z){
     results.forEach(function(res){
       if(res.status!=='fulfilled'){html+='<div class="wx-city-row"><span class="wx-city-name">—</span></div>';return;}
       var v=res.value;
-      html+='<div class="wx-city-row"><span class="wx-city-icon">'+wxIco(v.d.weathercode[0])+'</span><span class="wx-city-name">'+v.name+'</span><span class="wx-city-t"><span class="wx-city-tmax">'+Math.round(v.d.temperature_2m_max[0])+'°</span> <span class="wx-city-tmin">'+Math.round(v.d.temperature_2m_min[0])+'°</span></span></div>';
+      var t0max=Math.round(v.d.temperature_2m_max[0]),t0min=Math.round(v.d.temperature_2m_min[0]);var t1max=v.d.temperature_2m_max[1]?Math.round(v.d.temperature_2m_max[1]):null;var t1min=v.d.temperature_2m_min[1]?Math.round(v.d.temperature_2m_min[1]):null;html+='<div class="wx-city-row">';html+='<span class="wx-city-icon">'+wxIco(v.d.weathercode[0])+'</span>';html+='<span class="wx-city-name">'+v.name+'</span>';html+='<span class="wx-city-days">';html+='<span class="wx-city-day"><span class="wx-city-dlbl">Auj.</span> <span class="wx-city-tmax">'+t0max+'°</span><span class="wx-city-tmin">'+t0min+'°</span></span>';if(t1max!==null)html+='<span class="wx-city-day"><span class="wx-city-dlbl">Dem.</span> <span class="wx-city-tmax">'+t1max+'°</span><span class="wx-city-tmin">'+t1min+'°</span></span>';html+='</span></div>';
     });
     el.innerHTML=html+'</div>';
   });
@@ -2436,105 +2436,128 @@ function wxRenderHourly(z,hourly){
   var el=document.getElementById('wx-'+z+'-hourly');if(!el)return;
   var now=new Date(),todayStr=now.toISOString().slice(0,10),nowH=now.getHours();
 
-  /* Collecter les points : de -1h à +23h (aujourd'hui + demain partiel) */
+  /* Collecter les points */
   var pts=[];
   for(var i=0;i<hourly.time.length;i++){
     var t=hourly.time[i],h=parseInt(t.slice(11,13)),day=t.slice(0,10);
     if(day===todayStr&&h<nowH-1)continue;
     pts.push({
-      h:h, day:day, isNow:(day===todayStr&&h===nowH),
-      lbl:day!==todayStr?wxDayName(1)+' '+(h<10?'0':'')+h+'h':(h<10?'0':'')+h+'h',
+      h:h,day:day,
+      isNow:(day===todayStr&&h===nowH),
+      isFirstOfDay:(pts.length===0||(pts.length>0&&pts[pts.length-1].day!==day)),
+      dayName:day===todayStr?'Aujourd\'hui':wxDayName(1),
+      hLabel:(h<10?'0':'')+h+'h',
       temp:Math.round(hourly.temperature_2m[i]),
       code:hourly.weathercode[i],
       pop:hourly.precipitation_probability?hourly.precipitation_probability[i]:0,
       wind:Math.round(hourly.windspeed_10m[i]),
       wdir:hourly.winddirection_10m?wxDir(hourly.winddirection_10m[i]):''
     });
-    if(pts.length>=28)break; /* max 28h */
+    if(pts.length>=30)break;
   }
   if(!pts.length){el.innerHTML='<div class="wx-loading-msg" style="padding:20px">Pas de données</div>';return;}
 
-  /* Dimensions SVG */
-  var COL_W=72, PAD_L=20, PAD_R=20;
+  var COL_W=70,PAD_L=16,PAD_R=16;
   var TOTAL_W=PAD_L+pts.length*COL_W+PAD_R;
-  var SVG_H=220; /* hauteur totale du SVG */
-  var CURVE_TOP=48; /* espace pour les étiquettes de temp au-dessus de la courbe */
-  var CURVE_BOT=100; /* espace pour heure/icône/pluie en dessous */
-  var CURVE_H=SVG_H-CURVE_TOP-CURVE_BOT; /* hauteur utile de la courbe */
+  /* Layout vertical :
+     0→20   : bandeau jour (en haut)
+     20→70  : espace noms de jour
+     70→120 : courbe de température
+     120→200: zone étiquettes (heure, icône, pluie)
+  */
+  var DAY_BAND_H=20;  /* hauteur du bandeau coloré du jour */
+  var DAY_LBL_Y=44;   /* y du texte du jour */
+  var CURVE_TOP=72;   /* début de la zone courbe */
+  var CURVE_H=60;     /* hauteur de la zone courbe */
+  var CURVE_BOT=CURVE_TOP+CURVE_H; /* 132 */
+  var HOUR_Y=CURVE_BOT+18;  /* 150 : heure seule */
+  var ICON_Y=CURVE_BOT+38;  /* 170 : icône */
+  var POP_Y=CURVE_BOT+56;   /* 188 : pluie */
+  var SVG_H=200;
 
   var temps=pts.map(function(p){return p.temp;});
   var tMin=Math.min.apply(null,temps)-2;
   var tMax=Math.max.apply(null,temps)+2;
   var tRange=tMax-tMin||1;
 
-  function cx(i){return PAD_L+i*COL_W+COL_W/2;}
+  function cx(k){return PAD_L+k*COL_W+COL_W/2;}
   function cy(temp){return CURVE_TOP+CURVE_H-(temp-tMin)/tRange*CURVE_H;}
 
-  /* Construire le path de la courbe (cubic bezier) */
+  /* Path courbe */
   var pathD='M'+cx(0)+','+cy(pts[0].temp);
   for(var k=1;k<pts.length;k++){
-    var x0=cx(k-1),y0=cy(pts[k-1].temp);
-    var x1=cx(k),  y1=cy(pts[k].temp);
-    var cpx=(x0+x1)/2;
+    var x0=cx(k-1),y0=cy(pts[k-1].temp),x1=cx(k),y1=cy(pts[k].temp),cpx=(x0+x1)/2;
     pathD+=' C'+cpx+','+y0+' '+cpx+','+y1+' '+x1+','+y1;
   }
+  var areaD=pathD+' L'+cx(pts.length-1)+','+CURVE_BOT+' L'+cx(0)+','+CURVE_BOT+' Z';
 
-  /* Aire sous la courbe */
-  var areaD=pathD+' L'+cx(pts.length-1)+','+(CURVE_TOP+CURVE_H)+' L'+cx(0)+','+(CURVE_TOP+CURVE_H)+' Z';
+  /* Identifier les groupes de jours */
+  var dayGroups=[];
+  pts.forEach(function(p,k){
+    if(k===0||p.day!==pts[k-1].day){dayGroups.push({day:p.day,name:p.dayName,startK:k});}
+  });
 
-  /* Chercher l'index NOW pour la ligne verticale */
-  var nowIdx=pts.findIndex(function(p){return p.isNow;});
-
-  /* Construire le SVG */
   var svgParts=[];
   svgParts.push('<svg xmlns="http://www.w3.org/2000/svg" width="'+TOTAL_W+'" height="'+SVG_H+'" style="display:block;">');
-  svgParts.push('<defs>'
-    +'<linearGradient id="wx-area-'+z+'" x1="0" y1="0" x2="0" y2="1">'
-    +'<stop offset="0%" stop-color="#1B5EB8" stop-opacity="0.35"/>'
-    +'<stop offset="100%" stop-color="#1B5EB8" stop-opacity="0.02"/>'
-    +'</linearGradient></defs>');
+  svgParts.push('<defs><linearGradient id="wx-area-'+z+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1B5EB8" stop-opacity="0.4"/><stop offset="100%" stop-color="#1B5EB8" stop-opacity="0.03"/></linearGradient></defs>');
 
-  /* Aire */
+  /* ── Bandeaux de jour (en haut) ── */
+  dayGroups.forEach(function(g,gi){
+    var endK=gi+1<dayGroups.length?dayGroups[gi+1].startK:pts.length;
+    var x1b=PAD_L+g.startK*COL_W;
+    var x2b=PAD_L+endK*COL_W;
+    var isToday=(g.day===todayStr);
+    /* Bandeau couleur */
+    svgParts.push('<rect x="'+x1b+'" y="0" width="'+(x2b-x1b)+'" height="'+DAY_BAND_H+'" fill="'+(isToday?'rgba(27,94,184,0.35)':'rgba(255,255,255,0.06)')+'" rx="0"/>');
+    /* Nom du jour centré dans le bandeau */
+    var midX=(x1b+x2b)/2;
+    svgParts.push('<text x="'+midX+'" y="14" text-anchor="middle" font-family="\'Barlow Condensed\',sans-serif" font-size="11" font-weight="800" letter-spacing="0.1em" fill="'+(isToday?'rgba(100,160,255,0.9)':'rgba(255,255,255,0.35)')+'">'+g.name.toUpperCase()+'</text>');
+    /* Séparateur vertical entre jours */
+    if(gi>0){
+      svgParts.push('<line x1="'+x1b+'" y1="0" x2="'+x1b+'" y2="'+SVG_H+'" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>');
+    }
+  });
+
+  /* ── Aire + courbe ── */
   svgParts.push('<path d="'+areaD+'" fill="url(#wx-area-'+z+')" />');
-  /* Courbe */
   svgParts.push('<path d="'+pathD+'" fill="none" stroke="#4A90D9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>');
 
-  /* Ligne verticale NOW */
+  /* ── Ligne NOW ── */
+  var nowIdx=pts.findIndex(function(p){return p.isNow;});
   if(nowIdx>=0){
-    svgParts.push('<line x1="'+cx(nowIdx)+'" y1="'+CURVE_TOP+'" x2="'+cx(nowIdx)+'" y2="'+(CURVE_TOP+CURVE_H)+'" stroke="rgba(255,255,255,.2)" stroke-width="1" stroke-dasharray="3,3"/>');
+    svgParts.push('<line x1="'+cx(nowIdx)+'" y1="'+DAY_BAND_H+'" x2="'+cx(nowIdx)+'" y2="'+CURVE_BOT+'" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-dasharray="3,3"/>');
   }
 
+  /* ── Points, température, heure, icône, pluie ── */
   pts.forEach(function(p,k){
-    var x=cx(k), y=cy(p.temp);
+    var x=cx(k),y=cy(p.temp);
     var isNow=p.isNow;
-    /* Dot sur la courbe */
+    var col=isNow?'#fff':'rgba(255,255,255,0.85)';
+
+    /* Dot */
     svgParts.push('<circle cx="'+x+'" cy="'+y+'" r="'+(isNow?5:3)+'" fill="'+(isNow?'#fff':'#4A90D9')+'" stroke="'+(isNow?'#1B5EB8':'none')+'" stroke-width="'+(isNow?2.5:0)+'"/>');
 
     /* Température au-dessus du dot */
-    svgParts.push('<text x="'+x+'" y="'+(y-10)+'" text-anchor="middle" font-family="\'Share Tech Mono\',monospace" font-size="13" font-weight="700" fill="'+(isNow?'#fff':'rgba(255,255,255,0.85)')+'" >'+p.temp+'°</text>');
+    svgParts.push('<text x="'+x+'" y="'+(y-9)+'" text-anchor="middle" font-family="\'Share Tech Mono\',monospace" font-size="12" font-weight="700" fill="'+col+'">'+p.temp+'°</text>');
 
-    /* Heure en bas */
-    var yH=CURVE_TOP+CURVE_H+18;
-    svgParts.push('<text x="'+x+'" y="'+yH+'" text-anchor="middle" font-family="\'Barlow Condensed\',sans-serif" font-size="'+(isNow?13:12)+'" font-weight="'+(isNow?800:600)+'" fill="'+(isNow?'#4A90D9':'rgba(255,255,255,0.45)')+'">'+p.lbl+'</text>');
+    /* Heure (UNIQUEMENT) */
+    var hlbl=isNow?'NOW':p.hLabel;
+    svgParts.push('<text x="'+x+'" y="'+HOUR_Y+'" text-anchor="middle" font-family="\'Barlow Condensed\',sans-serif" font-size="'+(isNow?13:11)+'" font-weight="'+(isNow?800:600)+'" fill="'+(isNow?'#4A90D9':'rgba(255,255,255,0.45)')+'">'+hlbl+'</text>');
 
-    /* Icône météo */
-    svgParts.push('<text x="'+x+'" y="'+(yH+24)+'" text-anchor="middle" font-size="20">'+wxIco(p.code,p.h)+'</text>');
+    /* Icône */
+    svgParts.push('<text x="'+x+'" y="'+ICON_Y+'" text-anchor="middle" font-size="18">'+wxIco(p.code,p.h)+'</text>');
 
     /* Pluie */
-    var popColor=p.pop>0?'#1B5EB8':'rgba(255,255,255,0.2)';
-    svgParts.push('<text x="'+x+'" y="'+(yH+46)+'" text-anchor="middle" font-family="\'Share Tech Mono\',monospace" font-size="10" fill="'+popColor+'">'+p.pop+'%</text>');
+    svgParts.push('<text x="'+x+'" y="'+POP_Y+'" text-anchor="middle" font-family="\'Share Tech Mono\',monospace" font-size="9" fill="'+(p.pop>0?'#5599ff':'rgba(255,255,255,0.2)')+'">'+p.pop+'%</text>');
   });
 
   svgParts.push('</svg>');
 
   el.innerHTML='<div style="overflow-x:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent;">'+svgParts.join('')+'</div>';
-
-  /* Scroll sur NOW */
   setTimeout(function(){
     var wrap=el.querySelector('div');
     if(!wrap||nowIdx<0)return;
-    var scrollX=cx(nowIdx)-wrap.clientWidth/2;
-    wrap.scrollLeft=Math.max(0,scrollX);
+    wrap.scrollLeft=Math.max(0,cx(nowIdx)-wrap.clientWidth/2);
   },100);
 }
 function wxRenderDay(z,slot,daily,off){
