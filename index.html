@@ -1533,201 +1533,45 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 /* Bouton thème */
 [data-theme="light"] #theme-toggle{background:rgba(255,255,255,.2)!important;}
 
-
-/* ══ WEATHER TOOL ══════════════════════════════════════════════ */
-/* Bulma CDN chargé dynamiquement quand l'onglet s'ouvre */
+/* ══ WEATHER TOOL ═══════════════════════════════════════════ */
 .wx-shell{padding:20px 24px 40px;}
-
-/* Barre de zone */
-.wx-zone-bar{
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:20px;flex-wrap:wrap;
-}
-.wx-zone-btn{
-  font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;
-  padding:8px 20px;border-radius:6px;
-  border:2px solid rgba(255,255,255,.15);
-  background:transparent;color:rgba(255,255,255,.4);
-  cursor:pointer;transition:all .15s;
-}
-.wx-zone-btn:hover{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.7);}
-.wx-zone-btn.active{
-  background:#1B5EB8;border-color:#1B5EB8;color:#fff;
-}
-.wx-upd-lbl{
-  font-family:'Share Tech Mono',monospace;font-size:10px;
-  color:var(--muted);margin-left:8px;
-}
-.wx-refresh-btn{
-  margin-left:auto;
-  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;
-  letter-spacing:.08em;text-transform:uppercase;
-  padding:6px 14px;border-radius:6px;
-  border:1px solid rgba(255,255,255,.2);
-  background:transparent;color:rgba(255,255,255,.5);cursor:pointer;
-  transition:all .15s;
-}
-.wx-refresh-btn:hover{border-color:rgba(255,255,255,.4);color:#fff;}
-
-/* Zones */
-.wx-zone{display:none;}
-.wx-zone.active{display:block;}
-
-/* Carte générique */
-.wx-card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:20px;
-  height:100%;
-}
-.wx-card-title{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--muted);margin-bottom:14px;
-}
-
-/* Carte conditions actuelles */
-.wx-card--current{
-  display:flex;flex-direction:column;gap:8px;
-  background:linear-gradient(140deg,#0A1628 0%,#0D2250 100%);
-  border-color:rgba(27,94,184,.3);
-}
-.wx-cur-label{
-  font-family:'Barlow Condensed',sans-serif;font-size:11px;
-  font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(255,255,255,.4);
-}
-.wx-cur-zone{color:#1B5EB8;}
-.wx-cur-icon{font-size:52px;line-height:1;margin:4px 0;}
-.wx-cur-temp{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:64px;font-weight:900;line-height:1;color:#fff;
-  letter-spacing:-.02em;
-}
-.wx-cur-temp sup{font-size:28px;font-weight:700;color:rgba(255,255,255,.6);}
-.wx-cur-cond{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:18px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-  color:rgba(255,255,255,.8);
-}
-.wx-cur-stats{
-  margin-top:8px;display:flex;flex-direction:column;gap:6px;
-  border-top:1px solid rgba(255,255,255,.08);padding-top:12px;
-}
-.wx-cur-stat{
-  display:flex;justify-content:space-between;align-items:center;
-}
-.wx-cur-stat-lbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);}
-.wx-cur-stat-val{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:rgba(255,255,255,.75);}
-
-/* Carte prévision jour */
-.wx-card--day{}
-.wx-day-label{
-  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);
-  margin-bottom:10px;
-}
-.wx-day-icon{font-size:36px;margin-bottom:6px;}
-.wx-day-cond{
-  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;
-  color:rgba(255,255,255,.75);margin-bottom:10px;line-height:1.2;
-}
-.wx-day-temps{
-  display:flex;align-items:baseline;gap:10px;margin-bottom:12px;
-}
-.wx-day-tmax{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;color:#fff;line-height:1;}
-.wx-day-tmin{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:600;color:var(--muted);line-height:1;}
-.wx-day-details{display:flex;flex-direction:column;gap:5px;border-top:1px solid var(--border);padding-top:10px;}
-.wx-day-detail{display:flex;justify-content:space-between;}
-.wx-day-detail-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
-.wx-day-detail-val{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,255,255,.65);}
-
-/* Grille villes */
-.wx-cities-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:8px;
-}
-.wx-city{
-  display:flex;flex-direction:column;gap:3px;
-  padding:10px 12px;border-radius:8px;
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
-}
-.wx-city-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.7);}
-.wx-city-icon{font-size:18px;}
-.wx-city-temps{font-family:'Share Tech Mono',monospace;font-size:12px;}
-.wx-city-tmax{color:#fff;font-weight:700;}
-.wx-city-tmin{color:var(--muted);}
-
-/* Loading */
-.wx-loading-msg{
-  font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted);padding:16px 0;
-}
-
-/* ══ WEATHER TOOL ═════════════════════════════════════════════════════ */
-.wx-shell{padding:20px 24px 40px;}
-
-/* Barre de zone */
 .wx-zone-bar{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
 .wx-zone-btn{
   font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;
-  padding:9px 24px;border-radius:8px;
-  border:2px solid rgba(255,255,255,.15);
-  background:transparent;color:rgba(255,255,255,.4);
+  letter-spacing:.1em;text-transform:uppercase;padding:9px 24px;border-radius:8px;
+  border:2px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.4);
   cursor:pointer;transition:all .15s;
 }
 .wx-zone-btn:hover{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.7);}
 .wx-zone-btn.active{background:#1B5EB8;border-color:#1B5EB8;color:#fff;}
 .wx-upd-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:8px;}
 .wx-refresh-btn{
-  margin-left:auto;
-  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;
-  letter-spacing:.08em;text-transform:uppercase;
-  padding:7px 16px;border-radius:6px;
-  border:1px solid rgba(255,255,255,.2);background:transparent;
-  color:rgba(255,255,255,.5);cursor:pointer;transition:all .15s;
+  margin-left:auto;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;padding:7px 16px;border-radius:6px;
+  border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.5);
+  cursor:pointer;transition:all .15s;
 }
 .wx-refresh-btn:hover{border-color:rgba(255,255,255,.4);color:#fff;}
-
-/* Zones */
 .wx-zone{display:none;}
 .wx-zone.active{display:block;}
-
-/* Layout 3 colonnes */
 .wx-layout{
-  display:grid;
-  grid-template-columns:220px 1fr 220px;
+  display:grid;grid-template-columns:220px 1fr 220px;
   grid-template-areas:'current days cities';
-  gap:16px;
-  align-items:start;
+  gap:16px;align-items:start;
 }
 .wx-col-current{grid-area:current;}
-.wx-col-days{
-  grid-area:days;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-}
+.wx-col-days{grid-area:days;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .wx-col-cities{grid-area:cities;}
-
-/* Carte générique */
 .wx-card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:18px 20px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:18px 20px;
 }
 .wx-card-title{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--muted);margin-bottom:12px;
+  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;
 }
-
-/* Actuel */
 .wx-card--current{
-  background:linear-gradient(140deg,#0A1628 0%,#0D2250 100%);
+  background:linear-gradient(140deg,#071828 0%,#0D2250 100%);
   border-color:rgba(27,94,184,.35);
   display:flex;flex-direction:column;gap:6px;
 }
@@ -1741,9 +1585,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .wx-cur-stat{display:flex;justify-content:space-between;align-items:center;}
 .wx-cur-stat-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);}
 .wx-cur-stat-val{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,255,255,.7);}
-
-/* Jours */
-.wx-card--day{}
 .wx-day-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
 .wx-day-icon{font-size:32px;margin-bottom:4px;}
 .wx-day-cond{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:rgba(255,255,255,.75);margin-bottom:8px;line-height:1.3;}
@@ -1754,25 +1595,19 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .wx-day-detail{display:flex;justify-content:space-between;}
 .wx-day-detail-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
 .wx-day-detail-val{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,255,255,.6);}
-
-/* Villes */
 .wx-cities-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.wx-city{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);}
+.wx-city{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);}
 .wx-city-name{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.65);}
 .wx-city-icon{font-size:16px;line-height:1;}
 .wx-city-temps{display:flex;gap:6px;align-items:baseline;}
 .wx-city-tmax{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:#fff;}
 .wx-city-tmin{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);}
-
-/* Chargement */
 .wx-loading-msg{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:12px 0;}
-
-/* Light mode */
 [data-theme="light"] .wx-card{background:#fff;border-color:#E2E6EF;}
 [data-theme="light"] .wx-card--current{background:linear-gradient(140deg,#1B5EB8 0%,#2E7DD1 100%);}
 [data-theme="light"] .wx-city{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.08);}
 [data-theme="light"] .wx-day-detail-val{color:rgba(0,0,0,.6);}
-</style>
+[data-theme="light"] .wx-day-cond{color:rgba(0,0,0,.75);}</style>
 </head>
 <body>
 
@@ -2617,6 +2452,9 @@ function wxLoadAll(){
 
 function wxLoadZone(z){
   var zone=WX_ZONES[z];
+  var testEl=document.getElementById('wx-'+z+'-current');
+  if(testEl){testEl.innerHTML='<div style="color:#F5C518;font-size:13px">Connexion API...</div>';}
+  else{console.error('[WX] wx-'+z+'-current introuvable');return;}
   wxLoaded[z]=true;
 
   /* Loader les 3 blocs */
