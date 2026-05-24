@@ -1698,39 +1698,129 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   gap:8px;
 }
 .wx-city-tile{
-  display:flex;flex-direction:column;gap:6px;
-  padding:12px 14px;border-radius:10px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.07);
-  transition:background .1s;
+  display:flex;flex-direction:column;gap:8px;
+  padding:16px 18px;border-radius:12px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  transition:background .15s;
 }
-.wx-city-tile:hover{background:rgba(255,255,255,.08);}
+.wx-city-tile:hover{background:rgba(255,255,255,.1);}
 .wx-city-tile-name{
   font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;
-  letter-spacing:.05em;text-transform:uppercase;
-  color:rgba(255,255,255,.6);
+  letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);
 }
-.wx-city-tile-icon{font-size:22px;line-height:1;}
-.wx-city-tile-row{display:flex;flex-direction:column;gap:3px;}
+.wx-city-tile-icon{font-size:28px;line-height:1;}
+.wx-city-tile-row{display:flex;flex-direction:column;gap:6px;}
 .wx-city-tile-day{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:6px;
+  display:flex;flex-direction:column;gap:2px;
 }
 .wx-city-tile-dlbl{
   font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;
-  letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.25);
-  flex-shrink:0;
+  letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.25);
 }
 .wx-city-tile-temps{
-  font-family:'Share Tech Mono',monospace;font-size:12px;
-  display:flex;gap:4px;align-items:baseline;
+  display:flex;align-items:baseline;gap:6px;
 }
-.wx-city-tile-tmax{color:#fff;font-weight:700;}
-.wx-city-tile-tmin{color:rgba(255,255,255,.3);font-size:10px;}
+.wx-city-tile-tmax{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:36px;font-weight:900;color:#fff;line-height:1;
+}
+.wx-city-tile-tmin{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:600;color:rgba(255,255,255,.3);line-height:1;
+}
 [data-theme="light"] .wx-city-tile{background:#F5F7FC;border-color:#E2E6EF;}
 [data-theme="light"] .wx-city-tile:hover{background:#EAEDFA;}
 [data-theme="light"] .wx-city-tile-name{color:rgba(0,0,0,.6);}
-[data-theme="light"] .wx-city-tile-tmax{color:#111;}</style>
+[data-theme="light"] .wx-city-tile-tmax{color:#111;}
+/* ── Prêt à lire ── */
+.wx-pal{
+  border-top:2px solid rgba(228,3,46,.3);
+  background:linear-gradient(135deg,rgba(228,3,46,.05) 0%,transparent 100%);
+  margin-top:0;
+}
+.wx-pal-head{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 24px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  flex-wrap:wrap;gap:10px;
+}
+.wx-pal-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;
+  letter-spacing:.12em;text-transform:uppercase;color:#E4032E;
+  margin-right:6px;
+}
+.wx-pal-tabs{display:flex;gap:0;background:rgba(0,0,0,.2);border-radius:6px;overflow:hidden;}
+.wx-pal-tab{
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  padding:6px 16px;border:none;background:transparent;
+  color:rgba(255,255,255,.4);cursor:pointer;transition:all .12s;
+}
+.wx-pal-tab.active{background:#1B5EB8;color:#fff;}
+.wx-pal-tab:hover:not(.active){color:rgba(255,255,255,.7);}
+.wx-pal-gen{
+  margin-left:auto;
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:8px 20px;border-radius:6px;
+  border:2px solid #E4032E;background:transparent;color:#E4032E;
+  cursor:pointer;transition:all .15s;
+}
+.wx-pal-gen:hover{background:#E4032E;color:#fff;}
+.wx-pal-copy{
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  padding:8px 16px;border-radius:6px;
+  border:1px solid rgba(255,255,255,.2);background:transparent;
+  color:rgba(255,255,255,.6);cursor:pointer;transition:all .12s;
+}
+.wx-pal-copy:hover{background:rgba(255,255,255,.1);color:#fff;}
+.wx-pal-body{
+  padding:24px 28px;
+  min-height:80px;
+}
+.wx-pal-hint{
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;
+  letter-spacing:.06em;color:rgba(255,255,255,.25);
+}
+.wx-pal-hint b{color:rgba(255,255,255,.4);}
+.wx-pal-loading{
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);
+  animation:wxPalPulse 1.5s ease-in-out infinite;
+}
+@keyframes wxPalPulse{0%,100%{opacity:.3;}50%{opacity:.8;}}
+.wx-pal-text{
+  font-family:'Inter',sans-serif;font-size:18px;line-height:1.7;
+  color:#E8EAF0;font-style:italic;
+  border-left:3px solid #E4032E;
+  padding-left:20px;
+}
+.wx-pal-temps{
+  margin-top:16px;
+  display:flex;gap:20px;flex-wrap:wrap;
+  padding:14px 20px;
+  background:rgba(255,255,255,.04);border-radius:8px;
+  border:1px solid rgba(255,255,255,.07);
+}
+.wx-pal-temp-item{
+  display:flex;flex-direction:column;gap:2px;
+}
+.wx-pal-temp-city{
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);
+}
+.wx-pal-temp-val{
+  font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;
+  color:#fff;line-height:1;
+}
+.wx-pal-temp-val span{font-size:13px;font-weight:600;color:rgba(255,255,255,.35);}
+[data-theme="light"] .wx-pal{background:linear-gradient(135deg,rgba(228,3,46,.06) 0%,#fff 100%);}
+[data-theme="light"] .wx-pal-body{background:#fff;}
+[data-theme="light"] .wx-pal-text{color:#111;}</style>
 </head>
 <body>
 
@@ -1844,6 +1934,22 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
     <!-- 6 villes -->
     <div class="wx-cities-strip" id="wx-am-cities"><div class="wx-loading-msg" style="padding:16px 28px">Chargement…</div></div>
+
+    <!-- Prêt à lire -->
+    <div class="wx-pal" id="wx-am-pal">
+      <div class="wx-pal-head">
+        <span class="wx-pal-title">&#128222; Prêt à lire</span>
+        <div class="wx-pal-tabs">
+          <button class="wx-pal-tab active" id="wx-am-pal-tab0" onclick="wxPalSwitch('am',0)">Aujourd'hui</button>
+          <button class="wx-pal-tab" id="wx-am-pal-tab1" onclick="wxPalSwitch('am',1)">Demain</button>
+        </div>
+        <button class="wx-pal-gen" id="wx-am-pal-btn" onclick="wxPalGenerate('am')">&#9997; Générer</button>
+        <button class="wx-pal-copy" id="wx-am-pal-copy" onclick="wxPalCopy('am')" style="display:none">&#128203; Copier</button>
+      </div>
+      <div class="wx-pal-body" id="wx-am-pal-body">
+        <div class="wx-pal-hint">Cliquez sur <b>Générer</b> pour rédiger le bulletin météo.</div>
+      </div>
+    </div>
   </div>
 
   <div class="wx-zone" id="wxzone-idf">
@@ -1854,6 +1960,22 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
     <!-- 6 villes -->
     <div class="wx-cities-strip" id="wx-idf-cities"><div class="wx-loading-msg" style="padding:16px 28px">Chargement…</div></div>
+
+    <!-- Prêt à lire -->
+    <div class="wx-pal" id="wx-idf-pal">
+      <div class="wx-pal-head">
+        <span class="wx-pal-title">&#128222; Prêt à lire</span>
+        <div class="wx-pal-tabs">
+          <button class="wx-pal-tab active" id="wx-idf-pal-tab0" onclick="wxPalSwitch('idf',0)">Aujourd'hui</button>
+          <button class="wx-pal-tab" id="wx-idf-pal-tab1" onclick="wxPalSwitch('idf',1)">Demain</button>
+        </div>
+        <button class="wx-pal-gen" id="wx-idf-pal-btn" onclick="wxPalGenerate('idf')">&#9997; Générer</button>
+        <button class="wx-pal-copy" id="wx-idf-pal-copy" onclick="wxPalCopy('idf')" style="display:none">&#128203; Copier</button>
+      </div>
+      <div class="wx-pal-body" id="wx-idf-pal-body">
+        <div class="wx-pal-hint">Cliquez sur <b>Générer</b> pour rédiger le bulletin météo.</div>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -2511,7 +2633,7 @@ function wxLoadZone(z){
     .then(function(d){
       wxRenderHero(z,d.current,d.daily,zone.name);
       wxRenderHourly(z,d.hourly);
-      wxRender3Days(z,d.daily);
+      wxPalData[z]=d;wxRender3Days(z,d.daily);
       var u=document.getElementById('wx-upd');
       if(u)u.textContent='Mis à jour '+new Date().toLocaleTimeString('fr-FR',{hour12:false});
     })
@@ -2791,6 +2913,100 @@ function wxTempBar(tmin,tmax,daily){
   return '<div class="wx-3d-bar-bg">'
     +'<div class="wx-3d-bar-fill" style="left:'+pctMin+'%;width:'+width+'%"></div>'
     +'</div>';
+}
+
+/* ── Prêt à lire ── */
+var wxPalDay={am:0,idf:0};
+var wxPalData={am:null,idf:null};
+
+function wxPalSwitch(z,day){
+  wxPalDay[z]=day;
+  document.getElementById('wx-'+z+'-pal-tab0').classList.toggle('active',day===0);
+  document.getElementById('wx-'+z+'-pal-tab1').classList.toggle('active',day===1);
+  /* Si déjà généré, régénérer */
+  var body=document.getElementById('wx-'+z+'-pal-body');
+  if(body&&body.querySelector('.wx-pal-text')){wxPalGenerate(z);}
+}
+
+function wxPalGenerate(z){
+  var body=document.getElementById('wx-'+z+'-pal-body');if(!body)return;
+  var copyBtn=document.getElementById('wx-'+z+'-pal-copy');
+  if(copyBtn)copyBtn.style.display='none';
+  body.innerHTML='<div class="wx-pal-loading">Rédaction du bulletin en cours&#8230;</div>';
+
+  var d=wxPalData[z];
+  if(!d){body.innerHTML='<div class="wx-pal-hint">Données pas encore chargées. Veuillez patienter.</div>';return;}
+
+  var off=wxPalDay[z];
+  var daily=d.daily;
+  var zone=WX_ZONES[z];
+  var tmax=Math.round(daily.temperature_2m_max[off]);
+  var tmin=Math.round(daily.temperature_2m_min[off]);
+  var cond=wxShort(daily.weathercode[off]);
+  var wind=Math.round(daily.windspeed_10m_max[off]);
+  var wdir=daily.winddirection_10m_dominant?wxDir(daily.winddirection_10m_dominant[off]):'';
+  var precip=(daily.precipitation_sum[off]||0).toFixed(1);
+  var pop=daily.precipitation_probability_max?daily.precipitation_probability_max[off]:0;
+  var dayLbl=off===0?'aujourd\'hui':'demain';
+
+  /* Récupérer les températures des villes pour les ajouter */
+  var citiesEl=document.getElementById('wx-'+z+'-cities');
+  var cityTemps=[];
+  if(citiesEl){
+    citiesEl.querySelectorAll('.wx-city-tile').forEach(function(tile){
+      var name=tile.querySelector('.wx-city-tile-name');
+      var tmax2=tile.querySelector('.wx-city-tile-tmax');
+      var tmin2=tile.querySelector('.wx-city-tile-tmin');
+      if(name&&tmax2)cityTemps.push({name:name.textContent,tmax:tmax2.textContent,tmin:tmin2?tmin2.textContent:''});
+    });
+  }
+
+  var cityLine=cityTemps.length?'\nTempératures dans les villes : '+cityTemps.map(function(ct){return ct.name+' '+ct.tmax+'/'+ct.tmin;}).join(', '):'' ;
+
+  var prompt='Tu es présentateur météo à Radio Monaco. Rédige un bulletin météo à lire en direct pour '+dayLbl+' sur '+zone.name+'.\n'
+    +'Météo : '+cond+', max '+tmax+'°C, min '+tmin+'°C, vent '+wind+' km/h '+wdir+', pluie '+precip+' mm ('+pop+'%).\n'
+    +cityLine+'\n'
+    +'Format : 4-5 phrases fluides et naturelles, style radio professionnel, sans titre ni numérotation. '
+    +'Termine par une phrase récapitulative avec les températures clés.';
+
+  fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:prompt}]})
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    var text=(data.content&&data.content[0]&&data.content[0].text)||'';
+    if(!text){body.innerHTML='<div class="wx-pal-hint">Erreur de génération.</div>';return;}
+
+    /* Construire le bloc températures villes */
+    var tempsHtml='';
+    if(cityTemps.length){
+      tempsHtml='<div class="wx-pal-temps">';
+      cityTemps.forEach(function(ct){
+        tempsHtml+='<div class="wx-pal-temp-item">'
+          +'<span class="wx-pal-temp-city">'+ct.name+'</span>'
+          +'<span class="wx-pal-temp-val">'+ct.tmax+' <span>'+ct.tmin+'</span></span>'
+          +'</div>';
+      });
+      tempsHtml+='</div>';
+    }
+
+    body.innerHTML='<div class="wx-pal-text">'+text.trim().replace(/\n/g,'<br>')+'</div>'+tempsHtml;
+    body.dataset.text=text.trim()+'\n\n'+cityTemps.map(function(ct){return ct.name+' : '+ct.tmax+' / '+ct.tmin;}).join(' | ');
+    if(copyBtn)copyBtn.style.display='';
+  })
+  .catch(function(e){
+    body.innerHTML='<div class="wx-pal-hint" style="color:#E4032E">Erreur : '+e.message+'</div>';
+  });
+}
+
+function wxPalCopy(z){
+  var body=document.getElementById('wx-'+z+'-pal-body');if(!body)return;
+  var text=body.dataset.text||body.innerText;
+  if(navigator.clipboard){navigator.clipboard.writeText(text);}
+  var btn=document.getElementById('wx-'+z+'-pal-copy');
+  if(btn){btn.textContent='✓ Copié';setTimeout(function(){btn.innerHTML='&#128203; Copier';},2000);}
 }</script>
 
 </body>
