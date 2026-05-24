@@ -1664,8 +1664,115 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--muted);padding:16px 0;
 }
+
+/* ══ WEATHER TOOL ═════════════════════════════════════════════════════ */
+.wx-shell{padding:20px 24px 40px;}
+
+/* Barre de zone */
+.wx-zone-bar{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.wx-zone-btn{
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:9px 24px;border-radius:8px;
+  border:2px solid rgba(255,255,255,.15);
+  background:transparent;color:rgba(255,255,255,.4);
+  cursor:pointer;transition:all .15s;
+}
+.wx-zone-btn:hover{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.7);}
+.wx-zone-btn.active{background:#1B5EB8;border-color:#1B5EB8;color:#fff;}
+.wx-upd-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-left:8px;}
+.wx-refresh-btn{
+  margin-left:auto;
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  padding:7px 16px;border-radius:6px;
+  border:1px solid rgba(255,255,255,.2);background:transparent;
+  color:rgba(255,255,255,.5);cursor:pointer;transition:all .15s;
+}
+.wx-refresh-btn:hover{border-color:rgba(255,255,255,.4);color:#fff;}
+
+/* Zones */
+.wx-zone{display:none;}
+.wx-zone.active{display:block;}
+
+/* Layout 3 colonnes */
+.wx-layout{
+  display:grid;
+  grid-template-columns:220px 1fr 220px;
+  grid-template-areas:'current days cities';
+  gap:16px;
+  align-items:start;
+}
+.wx-col-current{grid-area:current;}
+.wx-col-days{
+  grid-area:days;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+.wx-col-cities{grid-area:cities;}
+
+/* Carte générique */
+.wx-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:18px 20px;
+}
+.wx-card-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:12px;
+}
+
+/* Actuel */
+.wx-card--current{
+  background:linear-gradient(140deg,#0A1628 0%,#0D2250 100%);
+  border-color:rgba(27,94,184,.35);
+  display:flex;flex-direction:column;gap:6px;
+}
+.wx-cur-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);}
+.wx-cur-zone{color:#4A90D9;display:block;margin-bottom:4px;}
+.wx-cur-icon{font-size:48px;line-height:1;margin:6px 0 2px;}
+.wx-cur-temp{font-family:'Barlow Condensed',sans-serif;font-size:58px;font-weight:900;line-height:1;color:#fff;letter-spacing:-.02em;}
+.wx-cur-temp sup{font-size:24px;font-weight:700;color:rgba(255,255,255,.6);}
+.wx-cur-cond{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.8);margin-bottom:4px;}
+.wx-cur-stats{margin-top:6px;display:flex;flex-direction:column;gap:5px;border-top:1px solid rgba(255,255,255,.08);padding-top:10px;}
+.wx-cur-stat{display:flex;justify-content:space-between;align-items:center;}
+.wx-cur-stat-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3);}
+.wx-cur-stat-val{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,255,255,.7);}
+
+/* Jours */
+.wx-card--day{}
+.wx-day-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.wx-day-icon{font-size:32px;margin-bottom:4px;}
+.wx-day-cond{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:rgba(255,255,255,.75);margin-bottom:8px;line-height:1.3;}
+.wx-day-temps{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;}
+.wx-day-tmax{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:#fff;line-height:1;}
+.wx-day-tmin{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:600;color:var(--muted);line-height:1;}
+.wx-day-details{display:flex;flex-direction:column;gap:4px;border-top:1px solid var(--border);padding-top:8px;}
+.wx-day-detail{display:flex;justify-content:space-between;}
+.wx-day-detail-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+.wx-day-detail-val{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,255,255,.6);}
+
+/* Villes */
+.wx-cities-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.wx-city{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);}
+.wx-city-name{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.65);}
+.wx-city-icon{font-size:16px;line-height:1;}
+.wx-city-temps{display:flex;gap:6px;align-items:baseline;}
+.wx-city-tmax{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:#fff;}
+.wx-city-tmin{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);}
+
+/* Chargement */
+.wx-loading-msg{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:12px 0;}
+
+/* Light mode */
+[data-theme="light"] .wx-card{background:#fff;border-color:#E2E6EF;}
+[data-theme="light"] .wx-card--current{background:linear-gradient(140deg,#1B5EB8 0%,#2E7DD1 100%);}
+[data-theme="light"] .wx-city{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.08);}
+[data-theme="light"] .wx-day-detail-val{color:rgba(0,0,0,.6);}
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" id="bulma-css" disabled>
 </head>
 <body>
 
@@ -1763,11 +1870,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 
 <div class="tab-content" id="tab-weather">
-
-  <!-- Lien Bulma CDN injecté une seule fois via JS -->
   <div class="wx-shell">
 
-    <!-- Zone selector -->
+    <!-- Barre de zone -->
     <div class="wx-zone-bar">
       <button class="wx-zone-btn active" id="wxz-am" onclick="wxSetZone('am')">
         &#127754; Alpes-Maritimes
@@ -1779,38 +1884,32 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <button class="wx-refresh-btn" onclick="wxLoadAll()">&#8635; Actualiser</button>
     </div>
 
-    <!-- Alpes-Maritimes -->
+    <!-- Zone Alpes-Maritimes -->
     <div class="wx-zone active" id="wxzone-am">
 
-      <div class="columns is-desktop">
+      <div class="wx-layout">
 
-        <!-- Colonne gauche : Actuel -->
-        <div class="column is-one-quarter-desktop">
+        <!-- Bloc 1 : Conditions actuelles -->
+        <div class="wx-col-current">
           <div class="wx-card wx-card--current" id="wx-am-current">
             <div class="wx-loading-msg">Chargement…</div>
           </div>
         </div>
 
-        <!-- Colonne centre : Prévisions J0 + J+1 -->
-        <div class="column is-two-fifths-desktop">
-          <div class="columns is-mobile">
-            <div class="column">
-              <div class="wx-card wx-card--day" id="wx-am-d0">
-                <div class="wx-loading-msg">Chargement…</div>
-              </div>
-            </div>
-            <div class="column">
-              <div class="wx-card wx-card--day" id="wx-am-d1">
-                <div class="wx-loading-msg">Chargement…</div>
-              </div>
-            </div>
+        <!-- Bloc 2 : Prévisions J0 + J+1 -->
+        <div class="wx-col-days">
+          <div class="wx-card wx-card--day" id="wx-am-d0">
+            <div class="wx-loading-msg">Chargement…</div>
+          </div>
+          <div class="wx-card wx-card--day" id="wx-am-d1">
+            <div class="wx-loading-msg">Chargement…</div>
           </div>
         </div>
 
-        <!-- Colonne droite : 6 villes -->
-        <div class="column">
+        <!-- Bloc 3 : 6 villes -->
+        <div class="wx-col-cities">
           <div class="wx-card">
-            <p class="wx-card-title">&#127961;&#65039; Villes — Alpes-Maritimes</p>
+            <p class="wx-card-title">&#127961;&#65039; Villes</p>
             <div id="wx-am-cities" class="wx-cities-grid">
               <div class="wx-loading-msg">Chargement…</div>
             </div>
@@ -1820,35 +1919,29 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       </div>
     </div>
 
-    <!-- Paris IDF -->
+    <!-- Zone Paris IDF -->
     <div class="wx-zone" id="wxzone-idf">
 
-      <div class="columns is-desktop">
+      <div class="wx-layout">
 
-        <div class="column is-one-quarter-desktop">
+        <div class="wx-col-current">
           <div class="wx-card wx-card--current" id="wx-idf-current">
             <div class="wx-loading-msg">Chargement…</div>
           </div>
         </div>
 
-        <div class="column is-two-fifths-desktop">
-          <div class="columns is-mobile">
-            <div class="column">
-              <div class="wx-card wx-card--day" id="wx-idf-d0">
-                <div class="wx-loading-msg">Chargement…</div>
-              </div>
-            </div>
-            <div class="column">
-              <div class="wx-card wx-card--day" id="wx-idf-d1">
-                <div class="wx-loading-msg">Chargement…</div>
-              </div>
-            </div>
+        <div class="wx-col-days">
+          <div class="wx-card wx-card--day" id="wx-idf-d0">
+            <div class="wx-loading-msg">Chargement…</div>
+          </div>
+          <div class="wx-card wx-card--day" id="wx-idf-d1">
+            <div class="wx-loading-msg">Chargement…</div>
           </div>
         </div>
 
-        <div class="column">
+        <div class="wx-col-cities">
           <div class="wx-card">
-            <p class="wx-card-title">&#127961;&#65039; Villes — Île-de-France</p>
+            <p class="wx-card-title">&#127961;&#65039; Villes</p>
             <div id="wx-idf-cities" class="wx-cities-grid">
               <div class="wx-loading-msg">Chargement…</div>
             </div>
@@ -1905,7 +1998,6 @@ function switchTab(n){
   document.getElementById('tab-btn-'+n).classList.add('active');
   document.getElementById('tab-'+n).classList.add('active');
   if(n==='weather'&&!weatherLoaded){wxLoadZone('am');weatherLoaded=true;}
-  var bulmaEl=document.getElementById('bulma-css');if(bulmaEl)bulmaEl.disabled=(n!=='weather');
   if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);traficLoaded=true;}
 }
 
