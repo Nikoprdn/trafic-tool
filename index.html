@@ -2511,8 +2511,6 @@ function wxLoadZone(z){
     .then(function(d){
       wxRenderHero(z,d.current,d.daily,zone.name);
       wxRenderHourly(z,d.hourly);
-      wxRenderDay(z,'d0',d.daily,0);
-      wxRenderDay(z,'d1',d.daily,1);
       wxRender3Days(z,d.daily);
       var u=document.getElementById('wx-upd');
       if(u)u.textContent='Mis à jour '+new Date().toLocaleTimeString('fr-FR',{hour12:false});
