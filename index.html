@@ -1682,7 +1682,55 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 [data-theme="light"] .wx-3d-today{background:#EBF0FB;}
 [data-theme="light"] .wx-3d-bar-bg{background:rgba(0,0,0,.1);}
 [data-theme="light"] .wx-3d-mv{color:rgba(0,0,0,.6);}
-[data-theme="light"] .wx-3d-cond{color:rgba(0,0,0,.7);}</style>
+[data-theme="light"] .wx-3d-cond{color:rgba(0,0,0,.7);}
+/* ── Strip 6 villes (horizontal) ── */
+.wx-cities-strip{
+  border-top:1px solid rgba(255,255,255,.07);
+  padding:16px 20px;
+}
+.wx-cities-strip-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);margin-bottom:12px;
+}
+.wx-cities-row{
+  display:grid;grid-template-columns:repeat(6,1fr);
+  gap:8px;
+}
+.wx-city-tile{
+  display:flex;flex-direction:column;gap:6px;
+  padding:12px 14px;border-radius:10px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  transition:background .1s;
+}
+.wx-city-tile:hover{background:rgba(255,255,255,.08);}
+.wx-city-tile-name{
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;
+  letter-spacing:.05em;text-transform:uppercase;
+  color:rgba(255,255,255,.6);
+}
+.wx-city-tile-icon{font-size:22px;line-height:1;}
+.wx-city-tile-row{display:flex;flex-direction:column;gap:3px;}
+.wx-city-tile-day{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:6px;
+}
+.wx-city-tile-dlbl{
+  font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.25);
+  flex-shrink:0;
+}
+.wx-city-tile-temps{
+  font-family:'Share Tech Mono',monospace;font-size:12px;
+  display:flex;gap:4px;align-items:baseline;
+}
+.wx-city-tile-tmax{color:#fff;font-weight:700;}
+.wx-city-tile-tmin{color:rgba(255,255,255,.3);font-size:10px;}
+[data-theme="light"] .wx-city-tile{background:#F5F7FC;border-color:#E2E6EF;}
+[data-theme="light"] .wx-city-tile:hover{background:#EAEDFA;}
+[data-theme="light"] .wx-city-tile-name{color:rgba(0,0,0,.6);}
+[data-theme="light"] .wx-city-tile-tmax{color:#111;}</style>
 </head>
 <body>
 
@@ -1791,25 +1839,21 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   <div class="wx-zone active" id="wxzone-am">
     <div class="wx-hero" id="wx-am-hero"><div class="wx-loading-msg">Chargement…</div></div>
     <div class="wx-hourly-wrap"><div class="wx-hourly-scroll" id="wx-am-hourly"><div class="wx-loading-msg" style="padding:20px">Chargement…</div></div></div>
-    <div class="wx-bottom-row">
-      <div class="wx-day-card" id="wx-am-d0"><div class="wx-loading-msg">Chargement…</div></div>
-      <div class="wx-day-card" id="wx-am-d1"><div class="wx-loading-msg">Chargement…</div></div>
-      <div class="wx-cities-card" id="wx-am-cities"><div class="wx-loading-msg">Chargement…</div></div>
-    </div>
-
+    <!-- J / J+1 / J+2 -->
     <div class="wx-3days" id="wx-am-3days"><div class="wx-loading-msg" style="padding:20px 28px">Chargement…</div></div>
+
+    <!-- 6 villes -->
+    <div class="wx-cities-strip" id="wx-am-cities"><div class="wx-loading-msg" style="padding:16px 28px">Chargement…</div></div>
   </div>
 
   <div class="wx-zone" id="wxzone-idf">
     <div class="wx-hero" id="wx-idf-hero"><div class="wx-loading-msg">Chargement…</div></div>
     <div class="wx-hourly-wrap"><div class="wx-hourly-scroll" id="wx-idf-hourly"><div class="wx-loading-msg" style="padding:20px">Chargement…</div></div></div>
-    <div class="wx-bottom-row">
-      <div class="wx-day-card" id="wx-idf-d0"><div class="wx-loading-msg">Chargement…</div></div>
-      <div class="wx-day-card" id="wx-idf-d1"><div class="wx-loading-msg">Chargement…</div></div>
-      <div class="wx-cities-card" id="wx-idf-cities"><div class="wx-loading-msg">Chargement…</div></div>
-    </div>
-
+    <!-- J / J+1 / J+2 -->
     <div class="wx-3days" id="wx-idf-3days"><div class="wx-loading-msg" style="padding:20px 28px">Chargement…</div></div>
+
+    <!-- 6 villes -->
+    <div class="wx-cities-strip" id="wx-idf-cities"><div class="wx-loading-msg" style="padding:16px 28px">Chargement…</div></div>
   </div>
 
 </div>
@@ -2482,11 +2526,20 @@ function wxLoadZone(z){
       .then(function(r){return r.json();}).then(function(d){return{name:city.name,d:d.daily};});
   })).then(function(results){
     var el=document.getElementById('wx-'+z+'-cities');if(!el)return;
-    var html='<div class="wx-cities-lbl">&#127961; Villes</div><div class="wx-cities-list">';
+    var html='<div class="wx-cities-strip-title">&#127761; Températures — Villes côtières</div><div class="wx-cities-row">';
     results.forEach(function(res){
-      if(res.status!=='fulfilled'){html+='<div class="wx-city-row"><span class="wx-city-name">—</span></div>';return;}
+      if(res.status!=='fulfilled'){html+='<div class="wx-city-tile"><span class="wx-city-tile-name">—</span></div>';return;}
       var v=res.value;
-      var t0max=Math.round(v.d.temperature_2m_max[0]),t0min=Math.round(v.d.temperature_2m_min[0]);var t1max=v.d.temperature_2m_max[1]?Math.round(v.d.temperature_2m_max[1]):null;var t1min=v.d.temperature_2m_min[1]?Math.round(v.d.temperature_2m_min[1]):null;html+='<div class="wx-city-row">';html+='<span class="wx-city-icon">'+wxIco(v.d.weathercode[0])+'</span>';html+='<span class="wx-city-name">'+v.name+'</span>';html+='<span class="wx-city-days">';html+='<span class="wx-city-day"><span class="wx-city-dlbl">Auj.</span> <span class="wx-city-tmax">'+t0max+'°</span><span class="wx-city-tmin">'+t0min+'°</span></span>';if(t1max!==null)html+='<span class="wx-city-day"><span class="wx-city-dlbl">Dem.</span> <span class="wx-city-tmax">'+t1max+'°</span><span class="wx-city-tmin">'+t1min+'°</span></span>';html+='</span></div>';
+      var t0max=Math.round(v.d.temperature_2m_max[0]),t0min=Math.round(v.d.temperature_2m_min[0]);
+      var t1max=v.d.temperature_2m_max[1]!=null?Math.round(v.d.temperature_2m_max[1]):null;
+      var t1min=v.d.temperature_2m_min[1]!=null?Math.round(v.d.temperature_2m_min[1]):null;
+      html+='<div class="wx-city-tile">';
+      html+='<div class="wx-city-tile-name">'+v.name+'</div>';
+      html+='<div class="wx-city-tile-icon">'+wxIco(v.d.weathercode[0])+'</div>';
+      html+='<div class="wx-city-tile-row">';
+      html+='<div class="wx-city-tile-day"><span class="wx-city-tile-dlbl">Auj.</span><span class="wx-city-tile-temps"><span class="wx-city-tile-tmax">'+t0max+'°</span><span class="wx-city-tile-tmin">'+t0min+'°</span></span></div>';
+      if(t1max!=null)html+='<div class="wx-city-tile-day"><span class="wx-city-tile-dlbl">Dem.</span><span class="wx-city-tile-temps"><span class="wx-city-tile-tmax">'+t1max+'°</span><span class="wx-city-tile-tmin">'+t1min+'°</span></span></div>';
+      html+='</div></div>';
     });
     el.innerHTML=html+'</div>';
   });
