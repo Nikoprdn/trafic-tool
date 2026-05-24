@@ -1559,7 +1559,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .wx-hero-sun-row{font-family:'Share Tech Mono',monospace;font-size:14px;color:rgba(255,255,255,.5);}
 .wx-hero-sun-row b{color:rgba(255,197,24,.8);}
 .wx-hourly-wrap{background:#07111f;border-bottom:1px solid rgba(255,255,255,.07);}
-.wx-hourly-scroll{display:flex;overflow-x:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent;padding:0 8px;}
+.wx-hourly-scroll{overflow-x:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent;}
 .wx-hour{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:76px;padding:14px 6px;border-right:1px solid rgba(255,255,255,.05);flex-shrink:0;transition:background .1s;}
 .wx-hour:hover{background:rgba(255,255,255,.04);}.wx-hour:last-child{border-right:none;}
 .wx-hour.wx-now{background:rgba(27,94,184,.2);}
@@ -2411,19 +2411,107 @@ function wxRenderHero(z,cur,daily,name){
 function wxRenderHourly(z,hourly){
   var el=document.getElementById('wx-'+z+'-hourly');if(!el)return;
   var now=new Date(),todayStr=now.toISOString().slice(0,10),nowH=now.getHours();
-  var html='';
+
+  /* Collecter les points : de -1h à +23h (aujourd'hui + demain partiel) */
+  var pts=[];
   for(var i=0;i<hourly.time.length;i++){
     var t=hourly.time[i],h=parseInt(t.slice(11,13)),day=t.slice(0,10);
     if(day===todayStr&&h<nowH-1)continue;
-    var isNow=(day===todayStr&&h===nowH);
-    var lbl=day!==todayStr?wxDayName(1)+' ':'';
-    var pop=hourly.precipitation_probability?hourly.precipitation_probability[i]:0;
-    var wind=Math.round(hourly.windspeed_10m[i]);
-    var wdir=hourly.winddirection_10m?wxDir(hourly.winddirection_10m[i]):'';
-    html+='<div class="wx-hour'+(isNow?' wx-now':'')+'"><div class="wx-hour-time">'+(isNow?'NOW':lbl+(h<10?'0':'')+h+'h')+'</div><div class="wx-hour-icon">'+wxIco(hourly.weathercode[i])+'</div><div class="wx-hour-temp">'+Math.round(hourly.temperature_2m[i])+'°</div><div class="wx-hour-pop'+(pop>0?'':' zero')+'">'+pop+'%</div><div class="wx-hour-wind">'+wind+' '+wdir+'</div></div>';
+    pts.push({
+      h:h, day:day, isNow:(day===todayStr&&h===nowH),
+      lbl:day!==todayStr?wxDayName(1)+' '+(h<10?'0':'')+h+'h':(h<10?'0':'')+h+'h',
+      temp:Math.round(hourly.temperature_2m[i]),
+      code:hourly.weathercode[i],
+      pop:hourly.precipitation_probability?hourly.precipitation_probability[i]:0,
+      wind:Math.round(hourly.windspeed_10m[i]),
+      wdir:hourly.winddirection_10m?wxDir(hourly.winddirection_10m[i]):''
+    });
+    if(pts.length>=28)break; /* max 28h */
   }
-  el.innerHTML=html;
-  setTimeout(function(){var n2=el.querySelector('.wx-now');if(n2)n2.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});},200);
+  if(!pts.length){el.innerHTML='<div class="wx-loading-msg" style="padding:20px">Pas de données</div>';return;}
+
+  /* Dimensions SVG */
+  var COL_W=72, PAD_L=20, PAD_R=20;
+  var TOTAL_W=PAD_L+pts.length*COL_W+PAD_R;
+  var SVG_H=220; /* hauteur totale du SVG */
+  var CURVE_TOP=48; /* espace pour les étiquettes de temp au-dessus de la courbe */
+  var CURVE_BOT=100; /* espace pour heure/icône/pluie en dessous */
+  var CURVE_H=SVG_H-CURVE_TOP-CURVE_BOT; /* hauteur utile de la courbe */
+
+  var temps=pts.map(function(p){return p.temp;});
+  var tMin=Math.min.apply(null,temps)-2;
+  var tMax=Math.max.apply(null,temps)+2;
+  var tRange=tMax-tMin||1;
+
+  function cx(i){return PAD_L+i*COL_W+COL_W/2;}
+  function cy(temp){return CURVE_TOP+CURVE_H-(temp-tMin)/tRange*CURVE_H;}
+
+  /* Construire le path de la courbe (cubic bezier) */
+  var pathD='M'+cx(0)+','+cy(pts[0].temp);
+  for(var k=1;k<pts.length;k++){
+    var x0=cx(k-1),y0=cy(pts[k-1].temp);
+    var x1=cx(k),  y1=cy(pts[k].temp);
+    var cpx=(x0+x1)/2;
+    pathD+=' C'+cpx+','+y0+' '+cpx+','+y1+' '+x1+','+y1;
+  }
+
+  /* Aire sous la courbe */
+  var areaD=pathD+' L'+cx(pts.length-1)+','+(CURVE_TOP+CURVE_H)+' L'+cx(0)+','+(CURVE_TOP+CURVE_H)+' Z';
+
+  /* Chercher l'index NOW pour la ligne verticale */
+  var nowIdx=pts.findIndex(function(p){return p.isNow;});
+
+  /* Construire le SVG */
+  var svgParts=[];
+  svgParts.push('<svg xmlns="http://www.w3.org/2000/svg" width="'+TOTAL_W+'" height="'+SVG_H+'" style="display:block;">');
+  svgParts.push('<defs>'
+    +'<linearGradient id="wx-area-'+z+'" x1="0" y1="0" x2="0" y2="1">'
+    +'<stop offset="0%" stop-color="#1B5EB8" stop-opacity="0.35"/>'
+    +'<stop offset="100%" stop-color="#1B5EB8" stop-opacity="0.02"/>'
+    +'</linearGradient></defs>');
+
+  /* Aire */
+  svgParts.push('<path d="'+areaD+'" fill="url(#wx-area-'+z+')" />');
+  /* Courbe */
+  svgParts.push('<path d="'+pathD+'" fill="none" stroke="#4A90D9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>');
+
+  /* Ligne verticale NOW */
+  if(nowIdx>=0){
+    svgParts.push('<line x1="'+cx(nowIdx)+'" y1="'+CURVE_TOP+'" x2="'+cx(nowIdx)+'" y2="'+(CURVE_TOP+CURVE_H)+'" stroke="rgba(255,255,255,.2)" stroke-width="1" stroke-dasharray="3,3"/>');
+  }
+
+  pts.forEach(function(p,k){
+    var x=cx(k), y=cy(p.temp);
+    var isNow=p.isNow;
+    /* Dot sur la courbe */
+    svgParts.push('<circle cx="'+x+'" cy="'+y+'" r="'+(isNow?5:3)+'" fill="'+(isNow?'#fff':'#4A90D9')+'" stroke="'+(isNow?'#1B5EB8':'none')+'" stroke-width="'+(isNow?2.5:0)+'"/>');
+
+    /* Température au-dessus du dot */
+    svgParts.push('<text x="'+x+'" y="'+(y-10)+'" text-anchor="middle" font-family="\'Share Tech Mono\',monospace" font-size="13" font-weight="700" fill="'+(isNow?'#fff':'rgba(255,255,255,0.85)')+'" >'+p.temp+'°</text>');
+
+    /* Heure en bas */
+    var yH=CURVE_TOP+CURVE_H+18;
+    svgParts.push('<text x="'+x+'" y="'+yH+'" text-anchor="middle" font-family="\'Barlow Condensed\',sans-serif" font-size="'+(isNow?13:12)+'" font-weight="'+(isNow?800:600)+'" fill="'+(isNow?'#4A90D9':'rgba(255,255,255,0.45)')+'">'+p.lbl+'</text>');
+
+    /* Icône météo */
+    svgParts.push('<text x="'+x+'" y="'+(yH+24)+'" text-anchor="middle" font-size="20">'+wxIco(p.code)+'</text>');
+
+    /* Pluie */
+    var popColor=p.pop>0?'#1B5EB8':'rgba(255,255,255,0.2)';
+    svgParts.push('<text x="'+x+'" y="'+(yH+46)+'" text-anchor="middle" font-family="\'Share Tech Mono\',monospace" font-size="10" fill="'+popColor+'">'+p.pop+'%</text>');
+  });
+
+  svgParts.push('</svg>');
+
+  el.innerHTML='<div style="overflow-x:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent;">'+svgParts.join('')+'</div>';
+
+  /* Scroll sur NOW */
+  setTimeout(function(){
+    var wrap=el.querySelector('div');
+    if(!wrap||nowIdx<0)return;
+    var scrollX=cx(nowIdx)-wrap.clientWidth/2;
+    wrap.scrollLeft=Math.max(0,scrollX);
+  },100);
 }
 function wxRenderDay(z,slot,daily,off){
   var el=document.getElementById('wx-'+z+'-'+slot);if(!el)return;
