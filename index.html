@@ -1532,7 +1532,140 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 [data-theme="light"] .ed-footer{background:#F5F7FC;border-top-color:#E2E6EF;color:#9CA3AF;}
 /* Bouton thème */
 [data-theme="light"] #theme-toggle{background:rgba(255,255,255,.2)!important;}
+
+
+/* ══ WEATHER TOOL ══════════════════════════════════════════════ */
+/* Bulma CDN chargé dynamiquement quand l'onglet s'ouvre */
+.wx-shell{padding:20px 24px 40px;}
+
+/* Barre de zone */
+.wx-zone-bar{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:20px;flex-wrap:wrap;
+}
+.wx-zone-btn{
+  font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:8px 20px;border-radius:6px;
+  border:2px solid rgba(255,255,255,.15);
+  background:transparent;color:rgba(255,255,255,.4);
+  cursor:pointer;transition:all .15s;
+}
+.wx-zone-btn:hover{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.7);}
+.wx-zone-btn.active{
+  background:#1B5EB8;border-color:#1B5EB8;color:#fff;
+}
+.wx-upd-lbl{
+  font-family:'Share Tech Mono',monospace;font-size:10px;
+  color:var(--muted);margin-left:8px;
+}
+.wx-refresh-btn{
+  margin-left:auto;
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  padding:6px 14px;border-radius:6px;
+  border:1px solid rgba(255,255,255,.2);
+  background:transparent;color:rgba(255,255,255,.5);cursor:pointer;
+  transition:all .15s;
+}
+.wx-refresh-btn:hover{border-color:rgba(255,255,255,.4);color:#fff;}
+
+/* Zones */
+.wx-zone{display:none;}
+.wx-zone.active{display:block;}
+
+/* Carte générique */
+.wx-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  height:100%;
+}
+.wx-card-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:14px;
+}
+
+/* Carte conditions actuelles */
+.wx-card--current{
+  display:flex;flex-direction:column;gap:8px;
+  background:linear-gradient(140deg,#0A1628 0%,#0D2250 100%);
+  border-color:rgba(27,94,184,.3);
+}
+.wx-cur-label{
+  font-family:'Barlow Condensed',sans-serif;font-size:11px;
+  font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);
+}
+.wx-cur-zone{color:#1B5EB8;}
+.wx-cur-icon{font-size:52px;line-height:1;margin:4px 0;}
+.wx-cur-temp{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:64px;font-weight:900;line-height:1;color:#fff;
+  letter-spacing:-.02em;
+}
+.wx-cur-temp sup{font-size:28px;font-weight:700;color:rgba(255,255,255,.6);}
+.wx-cur-cond{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  color:rgba(255,255,255,.8);
+}
+.wx-cur-stats{
+  margin-top:8px;display:flex;flex-direction:column;gap:6px;
+  border-top:1px solid rgba(255,255,255,.08);padding-top:12px;
+}
+.wx-cur-stat{
+  display:flex;justify-content:space-between;align-items:center;
+}
+.wx-cur-stat-lbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);}
+.wx-cur-stat-val{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:rgba(255,255,255,.75);}
+
+/* Carte prévision jour */
+.wx-card--day{}
+.wx-day-label{
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;
+  letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);
+  margin-bottom:10px;
+}
+.wx-day-icon{font-size:36px;margin-bottom:6px;}
+.wx-day-cond{
+  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;
+  color:rgba(255,255,255,.75);margin-bottom:10px;line-height:1.2;
+}
+.wx-day-temps{
+  display:flex;align-items:baseline;gap:10px;margin-bottom:12px;
+}
+.wx-day-tmax{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;color:#fff;line-height:1;}
+.wx-day-tmin{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:600;color:var(--muted);line-height:1;}
+.wx-day-details{display:flex;flex-direction:column;gap:5px;border-top:1px solid var(--border);padding-top:10px;}
+.wx-day-detail{display:flex;justify-content:space-between;}
+.wx-day-detail-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+.wx-day-detail-val{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,255,255,.65);}
+
+/* Grille villes */
+.wx-cities-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+}
+.wx-city{
+  display:flex;flex-direction:column;gap:3px;
+  padding:10px 12px;border-radius:8px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+}
+.wx-city-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.7);}
+.wx-city-icon{font-size:18px;}
+.wx-city-temps{font-family:'Share Tech Mono',monospace;font-size:12px;}
+.wx-city-tmax{color:#fff;font-weight:700;}
+.wx-city-tmin{color:var(--muted);}
+
+/* Loading */
+.wx-loading-msg{
+  font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);padding:16px 0;
+}
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" id="bulma-css" disabled>
 </head>
 <body>
 
@@ -1555,6 +1688,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   </div>
   <div class="hdr-tabs">
     <button class="tab-btn" id="tab-btn-trafic" onclick="switchTab('trafic')"><span class="ti">&#128642;</span> Trafic Tool</button>
+    <button class="tab-btn" id="tab-btn-weather" onclick="switchTab('weather')"><span class="ti">&#9928;&#65039;</span> Weather Tool</button>
   </div>
   <div style="display:flex;align-items:center;gap:12px;justify-content:flex-end;">
     <button id="theme-toggle" onclick="toggleTheme()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:6px 12px;color:#fff;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;" title="Changer de thème">&#9790; Sombre</button>
@@ -1628,6 +1762,105 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 
 
+<div class="tab-content" id="tab-weather">
+
+  <!-- Lien Bulma CDN injecté une seule fois via JS -->
+  <div class="wx-shell">
+
+    <!-- Zone selector -->
+    <div class="wx-zone-bar">
+      <button class="wx-zone-btn active" id="wxz-am" onclick="wxSetZone('am')">
+        &#127754; Alpes-Maritimes
+      </button>
+      <button class="wx-zone-btn" id="wxz-idf" onclick="wxSetZone('idf')">
+        &#127968; Paris — Île-de-France
+      </button>
+      <span id="wx-upd" class="wx-upd-lbl"></span>
+      <button class="wx-refresh-btn" onclick="wxLoadAll()">&#8635; Actualiser</button>
+    </div>
+
+    <!-- Alpes-Maritimes -->
+    <div class="wx-zone active" id="wxzone-am">
+
+      <div class="columns is-desktop">
+
+        <!-- Colonne gauche : Actuel -->
+        <div class="column is-one-quarter-desktop">
+          <div class="wx-card wx-card--current" id="wx-am-current">
+            <div class="wx-loading-msg">Chargement…</div>
+          </div>
+        </div>
+
+        <!-- Colonne centre : Prévisions J0 + J+1 -->
+        <div class="column is-two-fifths-desktop">
+          <div class="columns is-mobile">
+            <div class="column">
+              <div class="wx-card wx-card--day" id="wx-am-d0">
+                <div class="wx-loading-msg">Chargement…</div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="wx-card wx-card--day" id="wx-am-d1">
+                <div class="wx-loading-msg">Chargement…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Colonne droite : 6 villes -->
+        <div class="column">
+          <div class="wx-card">
+            <p class="wx-card-title">&#127961;&#65039; Villes — Alpes-Maritimes</p>
+            <div id="wx-am-cities" class="wx-cities-grid">
+              <div class="wx-loading-msg">Chargement…</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Paris IDF -->
+    <div class="wx-zone" id="wxzone-idf">
+
+      <div class="columns is-desktop">
+
+        <div class="column is-one-quarter-desktop">
+          <div class="wx-card wx-card--current" id="wx-idf-current">
+            <div class="wx-loading-msg">Chargement…</div>
+          </div>
+        </div>
+
+        <div class="column is-two-fifths-desktop">
+          <div class="columns is-mobile">
+            <div class="column">
+              <div class="wx-card wx-card--day" id="wx-idf-d0">
+                <div class="wx-loading-msg">Chargement…</div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="wx-card wx-card--day" id="wx-idf-d1">
+                <div class="wx-loading-msg">Chargement…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="wx-card">
+            <p class="wx-card-title">&#127961;&#65039; Villes — Île-de-France</p>
+            <div id="wx-idf-cities" class="wx-cities-grid">
+              <div class="wx-loading-msg">Chargement…</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <div class="ed-overlay" id="ed-ov">
   <div class="ed-modal" id="ed-modal">
     <div class="ed-drag" id="ed-drag">
@@ -1665,12 +1898,14 @@ function toggleTheme(){var cur=document.documentElement.getAttribute('data-theme
 (function(){applyTheme(localStorage.getItem('rm_theme')||'dark');})();
 
 /* TABS */
-var traficLoaded=false;
+var traficLoaded=false,weatherLoaded=false;
 function switchTab(n){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
   document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
   document.getElementById('tab-btn-'+n).classList.add('active');
   document.getElementById('tab-'+n).classList.add('active');
+  if(n==='weather'&&!weatherLoaded){wxLoadZone('am');weatherLoaded=true;}
+  var bulmaEl=document.getElementById('bulma-css');if(bulmaEl)bulmaEl.disabled=(n!=='weather');
   if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);traficLoaded=true;}
 }
 
@@ -2240,6 +2475,164 @@ function refreshA8Traffic(){loadA8Traffic();}
 function initA8Map(){}function syncMapTheme(){}function resetMapView(){}
 
 /* ══ MÉTÉO ══════════════════════════════════════════════════════════════ */
+
+/* ══ WEATHER TOOL ═══════════════════════════════════════════════ */
+var WX_ZONES={
+  am:{lat:43.7102,lon:7.262,name:'Côte d\'Azur',
+      cities:[
+        {name:'Nice',lat:43.7102,lon:7.262},{name:'Monaco',lat:43.7384,lon:7.4246},
+        {name:'Cannes',lat:43.5528,lon:7.0174},{name:'Antibes',lat:43.5808,lon:7.1239},
+        {name:'Menton',lat:43.7753,lon:7.5022},{name:'Grasse',lat:43.6581,lon:6.9239}
+      ]},
+  idf:{lat:48.8566,lon:2.3522,name:'Paris — Île-de-France',
+       cities:[
+        {name:'Paris',lat:48.8566,lon:2.3522},{name:'Versailles',lat:48.8014,lon:2.1301},
+        {name:'Pontoise',lat:49.0503,lon:2.1006},{name:'Meaux',lat:48.9600,lon:2.8883},
+        {name:'Melun',lat:48.5404,lon:2.6568},{name:'Évry',lat:48.6265,lon:2.4271}
+       ]}
+};
+var wxLoaded={am:false,idf:false};
+var wxCurrentZone='am';
+var wxBulmaLoaded=false;
+
+var WX_CODES={
+  0:{icon:'☀️',short:'Ensoleillé'},1:{icon:'🌤️',short:'Peu nuageux'},
+  2:{icon:'⛅',short:'Mi-nuageux'},3:{icon:'☁️',short:'Couvert'},
+  45:{icon:'🌫️',short:'Brouillard'},48:{icon:'🌫️',short:'Brouillard givrant'},
+  51:{icon:'🌦️',short:'Bruine légère'},53:{icon:'🌦️',short:'Bruine'},
+  61:{icon:'🌧️',short:'Pluie légère'},63:{icon:'🌧️',short:'Pluie'},65:{icon:'🌧️',short:'Forte pluie'},
+  71:{icon:'🌨️',short:'Neige légère'},73:{icon:'🌨️',short:'Neige'},75:{icon:'🌨️',short:'Forte neige'},
+  80:{icon:'🌦️',short:'Averses'},81:{icon:'🌧️',short:'Averses fortes'},82:{icon:'⛈️',short:'Averses violentes'},
+  95:{icon:'⛈️',short:'Orage'},96:{icon:'⛈️',short:'Orage + grêle'},99:{icon:'⛈️',short:'Orage violent'}
+};
+function wxCode(c){var n=Number(c);return WX_CODES[n]||WX_CODES[Math.floor(n/10)*10]||{icon:'🌡️',short:'—'};}
+function wxDir(d){return['N','NE','E','SE','S','SO','O','NO'][Math.round(d/45)%8]||'';}
+function wxDay(off){var d=new Date();d.setDate(d.getDate()+off);return['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'][d.getDay()];}
+
+function wxSetZone(z){
+  wxCurrentZone=z;
+  document.getElementById('wxz-am').classList.toggle('active',z==='am');
+  document.getElementById('wxz-idf').classList.toggle('active',z==='idf');
+  document.getElementById('wxzone-am').classList.toggle('active',z==='am');
+  document.getElementById('wxzone-idf').classList.toggle('active',z==='idf');
+  if(!wxLoaded[z]) wxLoadZone(z);
+}
+
+function wxLoadAll(){
+  wxLoaded.am=false; wxLoaded.idf=false;
+  wxLoadZone('am'); wxLoadZone('idf');
+}
+
+function wxLoadZone(z){
+  var zone=WX_ZONES[z];
+  wxLoaded[z]=true;
+
+  /* Loader les 3 blocs */
+  ['current','d0','d1'].forEach(function(id){
+    var el=document.getElementById('wx-'+z+'-'+id);
+    if(el)el.innerHTML='<div class="wx-loading-msg">Chargement…</div>';
+  });
+  var el=document.getElementById('wx-'+z+'-cities');
+  if(el)el.innerHTML='<div class="wx-loading-msg">Chargement…</div>';
+
+  /* API zone principale */
+  var url='https://api.open-meteo.com/v1/forecast'
+    +'?latitude='+zone.lat+'&longitude='+zone.lon
+    +'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weathercode,windspeed_10m,winddirection_10m,precipitation'
+    +'&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,windspeed_10m_max,winddirection_10m_dominant,sunrise,sunset'
+    +'&timezone=Europe%2FParis&forecast_days=2';
+
+  fetch(url)
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(d){
+      wxRenderCurrent(z,d.current,zone.name);
+      wxRenderDay(z,'d0',d.daily,0);
+      wxRenderDay(z,'d1',d.daily,1);
+      var u=document.getElementById('wx-upd');
+      if(u)u.textContent='Mis à jour : '+new Date().toLocaleTimeString('fr-FR',{hour12:false});
+    })
+    .catch(function(e){
+      ['current','d0','d1'].forEach(function(id){
+        var el=document.getElementById('wx-'+z+'-'+id);
+        if(el)el.innerHTML='<div class="wx-loading-msg" style="color:#E4032E">Erreur : '+e.message+'</div>';
+      });
+    });
+
+  /* API villes (Promise.allSettled) */
+  var cityUrls=zone.cities.map(function(city){
+    return fetch('https://api.open-meteo.com/v1/forecast'
+      +'?latitude='+city.lat+'&longitude='+city.lon
+      +'&daily=weathercode,temperature_2m_max,temperature_2m_min'
+      +'&timezone=Europe%2FParis&forecast_days=1')
+      .then(function(r){return r.json();})
+      .then(function(d){return{name:city.name,d:d.daily};});
+  });
+  Promise.allSettled(cityUrls).then(function(results){
+    var citiesEl=document.getElementById('wx-'+z+'-cities');
+    if(!citiesEl)return;
+    var html='';
+    results.forEach(function(res){
+      if(res.status!=='fulfilled'){html+='<div class="wx-city"><span class="wx-city-name">—</span></div>';return;}
+      var city=res.value;
+      var info=wxCode(city.d.weathercode[0]);
+      var tmax=Math.round(city.d.temperature_2m_max[0]);
+      var tmin=Math.round(city.d.temperature_2m_min[0]);
+      html+='<div class="wx-city">'
+        +'<span class="wx-city-name">'+city.name+'</span>'
+        +'<span class="wx-city-icon">'+info.icon+'</span>'
+        +'<span class="wx-city-temps"><span class="wx-city-tmax">'+tmax+'°</span>'
+        +' <span class="wx-city-tmin">'+tmin+'°</span></span>'
+        +'</div>';
+    });
+    citiesEl.innerHTML=html;
+  });
+}
+
+function wxRenderCurrent(z,cur,name){
+  var el=document.getElementById('wx-'+z+'-current');
+  if(!el)return;
+  var info=wxCode(cur.weathercode);
+  el.innerHTML=''
+    +'<span class="wx-cur-label wx-cur-zone">'+name+'</span>'
+    +'<span class="wx-cur-label">En ce moment</span>'
+    +'<div class="wx-cur-icon">'+info.icon+'</div>'
+    +'<div class="wx-cur-temp">'+Math.round(cur.temperature_2m)+'<sup>°C</sup></div>'
+    +'<div class="wx-cur-cond">'+info.short+'</div>'
+    +'<div class="wx-cur-stats">'
+      +'<div class="wx-cur-stat"><span class="wx-cur-stat-lbl">Ressenti</span><span class="wx-cur-stat-val">'+Math.round(cur.apparent_temperature)+'°C</span></div>'
+      +'<div class="wx-cur-stat"><span class="wx-cur-stat-lbl">Humidité</span><span class="wx-cur-stat-val">'+Math.round(cur.relative_humidity_2m)+'%</span></div>'
+      +'<div class="wx-cur-stat"><span class="wx-cur-stat-lbl">Vent</span><span class="wx-cur-stat-val">'+Math.round(cur.windspeed_10m)+' km/h '+wxDir(cur.winddirection_10m)+'</span></div>'
+      +'<div class="wx-cur-stat"><span class="wx-cur-stat-lbl">Précip.</span><span class="wx-cur-stat-val">'+cur.precipitation.toFixed(1)+' mm</span></div>'
+    +'</div>';
+}
+
+function wxRenderDay(z,slot,daily,off){
+  var el=document.getElementById('wx-'+z+'-'+slot);
+  if(!el)return;
+  var info=wxCode(daily.weathercode[off]);
+  var tmax=Math.round(daily.temperature_2m_max[off]);
+  var tmin=Math.round(daily.temperature_2m_min[off]);
+  var precip=(daily.precipitation_sum[off]||0).toFixed(1);
+  var pop=daily.precipitation_probability_max?daily.precipitation_probability_max[off]:0;
+  var wind=Math.round(daily.windspeed_10m_max[off]);
+  var wdir=daily.winddirection_10m_dominant?wxDir(daily.winddirection_10m_dominant[off]):'';
+  var sunrise=daily.sunrise?daily.sunrise[off].slice(11,16):'—';
+  var sunset=daily.sunset?daily.sunset[off].slice(11,16):'—';
+  el.innerHTML=''
+    +'<p class="wx-card-title">'+(off===0?'Aujourd\'hui — '+wxDay(0):'Demain — '+wxDay(1))+'</p>'
+    +'<div class="wx-day-icon">'+info.icon+'</div>'
+    +'<div class="wx-day-cond">'+info.short+'</div>'
+    +'<div class="wx-day-temps">'
+      +'<span class="wx-day-tmax">'+tmax+'°</span>'
+      +'<span class="wx-day-tmin">'+tmin+'°</span>'
+    +'</div>'
+    +'<div class="wx-day-details">'
+      +'<div class="wx-day-detail"><span class="wx-day-detail-lbl">Pluie</span><span class="wx-day-detail-val">'+precip+' mm ('+pop+'%)</span></div>'
+      +'<div class="wx-day-detail"><span class="wx-day-detail-lbl">Vent max</span><span class="wx-day-detail-val">'+wind+' km/h '+wdir+'</span></div>'
+      +'<div class="wx-day-detail"><span class="wx-day-detail-lbl">Lever</span><span class="wx-day-detail-val">'+sunrise+'</span></div>'
+      +'<div class="wx-day-detail"><span class="wx-day-detail-lbl">Coucher</span><span class="wx-day-detail-val">'+sunset+'</span></div>'
+    +'</div>';
+}
 </script>
 
 </body>
