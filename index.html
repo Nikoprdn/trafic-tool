@@ -1822,6 +1822,62 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 [data-theme="light"] .wx-pal-body{background:#fff;}
 [data-theme="light"] .wx-pal-text{color:#111;}
 
+/* ── Bandeau antenne live ── */
+.na-live-banner{
+  display:flex;align-items:center;gap:16px;
+  background:#37333E;
+  border:1px solid rgba(255,255,255,.08);
+  border-left:4px solid #E4032E;
+  border-radius:12px;
+  padding:16px 24px;
+}
+.na-live-left{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.na-live-dot{
+  width:10px;height:10px;border-radius:50%;background:#E4032E;
+  flex-shrink:0;
+  animation:naLivePulse 1.4s ease-in-out infinite;
+  box-shadow:0 0 10px #E4032E;
+}
+@keyframes naLivePulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.85);}}
+.na-live-antenne{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;
+  color:#E4032E;
+}
+.na-live-center{
+  flex:1;display:flex;align-items:center;gap:12px;
+  flex-wrap:wrap;
+  min-width:0;
+}
+.na-live-emission{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:900;letter-spacing:.04em;
+  color:#fff;white-space:nowrap;
+}
+.na-live-sep{color:rgba(255,255,255,.2);font-size:18px;}
+.na-live-titre{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:600;
+  color:rgba(255,255,255,.55);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  max-width:500px;
+}
+.na-live-right{display:flex;align-items:center;gap:14px;flex-shrink:0;margin-left:auto;}
+.na-live-heure{
+  font-family:'Share Tech Mono',monospace;
+  font-size:20px;font-weight:700;color:rgba(255,255,255,.5);
+  letter-spacing:.06em;
+}
+.na-live-refresh{
+  background:none;border:1px solid rgba(255,255,255,.15);border-radius:6px;
+  color:rgba(255,255,255,.4);font-size:16px;width:32px;height:32px;
+  cursor:pointer;transition:all .15s;
+}
+.na-live-refresh:hover{border-color:rgba(255,255,255,.4);color:#fff;}
+.na-live-err{
+  font-family:'Barlow Condensed',sans-serif;font-size:14px;
+  letter-spacing:.06em;color:rgba(255,255,255,.3);
+}
 /* ══ NOTE ANTENNE ═════════════════════════════════════════════════════════ */
 #tab-antenne{background:#1e1b22;}
 .na-page{
@@ -2134,6 +2190,23 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 <div class="tab-content" id="tab-antenne">
   <div class="na-page">
+
+    <!-- ▸ EN COURS sur Radio Monaco -->
+    <div class="na-live-banner" id="na-live-banner">
+      <div class="na-live-left">
+        <span class="na-live-dot"></span>
+        <span class="na-live-antenne">ANTENNE</span>
+      </div>
+      <div class="na-live-center" id="na-live-center">
+        <span class="na-live-emission" id="na-live-emission">Chargement…</span>
+        <span class="na-live-sep">—</span>
+        <span class="na-live-titre" id="na-live-titre"></span>
+      </div>
+      <div class="na-live-right">
+        <span class="na-live-heure" id="na-live-heure"></span>
+        <button class="na-live-refresh" onclick="naFetchLive()" title="Actualiser">&#8635;</button>
+      </div>
+    </div>
 
     <!-- ▸ MORNING -->
     <div class="na-block na-block--morning">
@@ -3330,8 +3403,79 @@ function naRenderBlock(show){
 }
 
 function initNoteAntenne(){
+  naInitLive();
   naRenderBlock('morning');
   naRenderBlock('charly');
+}
+
+/* ── Live antenne Radio Monaco ── */
+var NA_GRILLE_HEURES=[
+  {h:5, name:'Nuit Monaco'},
+  {h:6, name:'Monaco Morning',host:'Romain Pastor'},
+  {h:9, name:'Monaco en Musique'},
+  {h:12,name:'Monaco Midi'},
+  {h:14,name:'L\'Après-midi'},
+  {h:16,name:'Charly Family',host:'Charly'},
+  {h:19,name:'Monaco Soir'},
+  {h:22,name:'Monaco Night'},
+];
+
+function naGetEmissionFromGrille(){
+  var now=new Date();
+  var hNow=now.getHours();
+  var found=NA_GRILLE_HEURES[0];
+  for(var i=0;i<NA_GRILLE_HEURES.length;i++){
+    if(hNow>=NA_GRILLE_HEURES[i].h){found=NA_GRILLE_HEURES[i];}
+  }
+  return found;
+}
+
+function naUpdateClock(){
+  var el=document.getElementById('na-live-heure');
+  if(el)el.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+
+function naFetchLive(){
+  /* Tentative 1 : API widget Radio Monaco */
+  var endpoints=[
+    'https://radio-monaco.com/api/live',
+    'https://radio-monaco.com/wp-json/wp/v2/posts?per_page=1',
+    'https://api.radio-monaco.com/now-playing',
+  ];
+
+  var emEl=document.getElementById('na-live-emission');
+  var titEl=document.getElementById('na-live-titre');
+
+  /* Fallback immédiat : grille locale */
+  var em=naGetEmissionFromGrille();
+  if(emEl)emEl.textContent=em.name;
+  if(titEl)titEl.textContent=em.host||'';
+
+  /* Tentative fetch depuis le browser */
+  fetch('https://radio-monaco.com/',{mode:'no-cors',cache:'no-cache'})
+    .then(function(){
+      /* no-cors : on sait que le site répond, mais on ne peut pas lire le body */
+      /* → on reste sur la grille locale */
+    })
+    .catch(function(){});
+
+  /* Essai API JSON si disponible */
+  fetch('https://radio-monaco.com/api/live')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d&&d.emission&&emEl)emEl.textContent=d.emission;
+      if(d&&d.titre&&titEl)titEl.textContent=d.titre;
+    })
+    .catch(function(){
+      /* API non disponible → garder la grille */
+    });
+}
+
+function naInitLive(){
+  naFetchLive();
+  naUpdateClock();
+  setInterval(naUpdateClock,1000);
+  setInterval(naFetchLive,60000);
 }</script>
 
 </body>
