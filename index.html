@@ -1823,158 +1823,155 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 [data-theme="light"] .wx-pal-text{color:#111;}
 
 /* ══ NOTE ANTENNE ═════════════════════════════════════════════════════════ */
-#tab-antenne{background:#07111f;}
-.na-page{padding:24px;max-width:1600px;margin:0 auto;}
-.na-columns{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:20px;align-items:start;
+#tab-antenne{background:#1e1b22;}
+.na-page{
+  padding:28px 32px 56px;
+  max-width:1400px;margin:0 auto;
+  display:flex;flex-direction:column;gap:20px;
 }
+
 /* ── Bloc émission ── */
-.na-show-block{
-  background:#0d1a2d;
-  border:1px solid rgba(255,255,255,.08);
+.na-block{
   border-radius:14px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.07);
 }
-/* Header émission */
-.na-show-header{
-  display:flex;align-items:center;gap:12px;
-  padding:16px 22px;
+/* Header du bloc */
+.na-block-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 28px;gap:16px;
 }
-.na-show-header--morning{
-  background:linear-gradient(135deg,#1a0a00 0%,#3d1a00 100%);
-  border-bottom:3px solid #E4732E;
+.na-block--morning .na-block-header{
+  background:#37333E;
+  border-bottom:4px solid #E4032E;
 }
-.na-show-header--charly{
-  background:linear-gradient(135deg,#001a33 0%,#003366 100%);
-  border-bottom:3px solid #1B5EB8;
+.na-block--charly .na-block-header{
+  background:#37333E;
+  border-bottom:4px solid #E4032E;
 }
-.na-show-label{
+.na-block-title-group{display:flex;align-items:baseline;gap:16px;}
+.na-block-name{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:26px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;
-  color:#fff;
+  font-size:34px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;
+  color:#fff;line-height:1;
 }
-.na-show-time{
+.na-block-time{
   font-family:'Share Tech Mono',monospace;
-  font-size:14px;color:rgba(255,255,255,.4);
+  font-size:15px;color:rgba(255,255,255,.4);
 }
 .na-planning-btn{
-  margin-left:auto;
   font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;
   letter-spacing:.08em;text-transform:uppercase;
-  padding:7px 16px;border-radius:7px;
-  border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);
-  color:rgba(255,255,255,.6);cursor:pointer;transition:all .15s;
+  padding:8px 18px;border-radius:7px;
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.07);color:rgba(255,255,255,.6);
+  cursor:pointer;transition:all .15s;white-space:nowrap;
 }
-.na-planning-btn:hover{background:rgba(255,255,255,.14);color:#fff;}
+.na-planning-btn:hover{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.35);}
+
 /* Planning semaine */
-.na-planning{
-  background:rgba(0,0,0,.25);
-  border-bottom:1px solid rgba(255,255,255,.07);
-  padding:14px 22px;
+.na-planning-wrap{
+  background:rgba(0,0,0,.3);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:16px 28px;
 }
 .na-planning-grid{
-  display:grid;grid-template-columns:repeat(5,1fr);gap:8px;
+  display:grid;grid-template-columns:repeat(5,1fr);gap:10px;
 }
 .na-plan-day{
-  background:rgba(255,255,255,.05);border-radius:8px;
-  padding:10px 12px;
+  background:rgba(255,255,255,.05);border-radius:10px;
+  padding:12px 14px;
 }
 .na-plan-day.today{
-  background:rgba(27,94,184,.2);
-  border:1px solid rgba(27,94,184,.4);
+  background:rgba(228,3,46,.15);
+  border:1px solid rgba(228,3,46,.35);
 }
 .na-plan-day-name{
   font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;
-  letter-spacing:.1em;text-transform:uppercase;
-  color:rgba(255,255,255,.4);margin-bottom:6px;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);margin-bottom:8px;
 }
-.na-plan-day.today .na-plan-day-name{color:#4A90D9;}
+.na-plan-day.today .na-plan-day-name{color:#E4032E;}
 .na-plan-person{
-  font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;
-  color:rgba(255,255,255,.8);line-height:1.2;
+  font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;
+  color:#fff;line-height:1.2;
 }
-.na-plan-role{
-  font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;
-  letter-spacing:.06em;text-transform:uppercase;
-  color:rgba(255,255,255,.3);margin-top:2px;
+.na-plan-person.empty{color:rgba(255,255,255,.2);font-weight:600;font-size:14px;}
+
+/* Corps du bloc : 3 colonnes */
+.na-block-body{
+  background:#2a2630;
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:0;
 }
-/* Sections internes */
-.na-section{
-  padding:16px 22px;
-  border-bottom:1px solid rgba(255,255,255,.05);
+.na-col{
+  padding:20px 24px;
+  border-right:1px solid rgba(255,255,255,.06);
 }
-.na-section:last-child{border-bottom:none;}
-.na-section-title{
+.na-col:last-child{border-right:none;}
+.na-col-label{
   font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;
   letter-spacing:.14em;text-transform:uppercase;
   color:rgba(255,255,255,.3);margin-bottom:12px;
 }
-/* Équipe */
-.na-team{display:flex;flex-direction:column;gap:8px;}
-.na-team-item{display:flex;align-items:baseline;gap:10px;}
-.na-team-role{
-  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;
-  letter-spacing:.08em;text-transform:uppercase;
-  color:rgba(255,255,255,.25);min-width:80px;flex-shrink:0;
+
+/* Équipe aujourd'hui */
+.na-today-team{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:28px;font-weight:900;letter-spacing:.02em;
+  color:#fff;line-height:1.2;
 }
-.na-team-name{
-  font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;
-  color:#fff;letter-spacing:.02em;
+.na-today-team.empty{
+  font-size:16px;font-weight:600;color:rgba(255,255,255,.2);
 }
+
 /* Jeu */
-.na-jeu-display{}
 .na-jeu-nom{
-  font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;
-  color:#fff;margin-bottom:3px;
+  font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;
+  color:#fff;margin-bottom:4px;
 }
 .na-jeu-desc{
-  font-family:'Inter',sans-serif;font-size:13px;color:rgba(255,255,255,.5);
-  line-height:1.5;margin-bottom:4px;
+  font-family:'Inter',sans-serif;font-size:13px;
+  color:rgba(255,255,255,.5);line-height:1.5;margin-bottom:6px;
 }
 .na-jeu-heure{
   font-family:'Share Tech Mono',monospace;font-size:12px;color:#F5C518;
 }
-/* Commercial Editor */
+
+/* Commercial */
 .na-commercial{display:flex;flex-direction:column;gap:8px;}
-.na-commercial-item{
-  display:flex;align-items:flex-start;gap:10px;
-  padding:10px 12px;border-radius:8px;
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+.na-comm-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:8px;
+  background:rgba(255,255,255,.05);
+  border-left:3px solid #E4032E;
 }
 .na-comm-time{
   font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;
-  color:#F5C518;flex-shrink:0;min-width:48px;
+  color:#F5C518;flex-shrink:0;min-width:44px;
 }
-.na-comm-body{flex:1;}
 .na-comm-nom{
   font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;
-  color:#fff;line-height:1;margin-bottom:2px;
+  color:#fff;flex:1;
 }
 .na-comm-type{
-  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;
   letter-spacing:.08em;text-transform:uppercase;
   color:rgba(255,255,255,.3);
 }
-.na-comm-dot{
-  width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;
-  background:#27AE60;
-}
-.na-comm-dot.sponsored{background:#F5C518;}
-.na-comm-dot.chrono{background:#1B5EB8;}
-/* Vide */
+
 .na-empty{
   font-family:'Barlow Condensed',sans-serif;font-size:12px;
   letter-spacing:.08em;text-transform:uppercase;
-  color:rgba(255,255,255,.2);padding:4px 0;
+  color:rgba(255,255,255,.2);
 }
+
 /* Light mode */
-[data-theme="light"] #tab-antenne{background:#F0F2F7;}
-[data-theme="light"] .na-show-block{background:#fff;border-color:#E2E6EF;}
-[data-theme="light"] .na-section{border-bottom-color:#E2E6EF;}
-[data-theme="light"] .na-commercial-item{background:#F5F7FC;}
-[data-theme="light"] .na-plan-day{background:#F5F7FC;}
-[data-theme="light"] .na-team-name{color:#111;}
-[data-theme="light"] .na-jeu-nom{color:#111;}</style>
+[data-theme="light"] #tab-antenne{background:#EEEDF0;}
+[data-theme="light"] .na-block-body{background:#F5F4F7;}
+[data-theme="light"] .na-plan-day{background:rgba(0,0,0,.04);}
+[data-theme="light"] .na-col{border-right-color:rgba(0,0,0,.07);}
+[data-theme="light"] .na-today-team{color:#111;}
+[data-theme="light"] .na-comm-nom{color:#111;}</style>
 </head>
 <body>
 
@@ -2138,116 +2135,82 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 <div class="tab-content" id="tab-antenne">
   <div class="na-page">
 
-    <div class="na-columns">
+    <!-- ▸ MORNING -->
+    <div class="na-block na-block--morning">
+      <div class="na-block-header">
+        <div class="na-block-title-group">
+          <span class="na-block-name">MORNING</span>
+          <span class="na-block-time">06:00 — 09:00</span>
+        </div>
+        <button class="na-planning-btn" onclick="naTogglePlanning('morning')">
+          &#128197; Équipe de la semaine
+        </button>
+      </div>
 
-      <!-- ▸ MORNING -->
-      <div class="na-show-block" id="na-block-morning">
-        <div class="na-show-header na-show-header--morning">
-          <span class="na-show-label">MORNING</span>
-          <span class="na-show-time">06:00 — 10:00</span>
-          <button class="na-planning-btn" onclick="naTogglePlanning('morning')">
-            &#128197; Planning semaine
-          </button>
+      <div class="na-planning-wrap" id="na-planning-morning" style="display:none">
+        <div class="na-planning-grid" id="na-planning-grid-morning"></div>
+      </div>
+
+      <div class="na-block-body">
+        <div class="na-col">
+          <div class="na-col-label">&#127908; Antenne aujourd'hui</div>
+          <div class="na-today-team" id="na-today-morning">—</div>
         </div>
 
-        <!-- Planning semaine (caché par défaut) -->
-        <div class="na-planning" id="na-planning-morning" style="display:none">
-          <div class="na-planning-grid" id="na-planning-grid-morning">
-            <!-- Généré par JS -->
-          </div>
-        </div>
-
-        <!-- Équipe en cours -->
-        <div class="na-section">
-          <div class="na-section-title">&#127908; Équipe antenne</div>
-          <div class="na-team" id="na-team-morning">
-            <div class="na-team-item">
-              <div class="na-team-role">Animateur</div>
-              <div class="na-team-name" id="na-host-morning">—</div>
-            </div>
-            <div class="na-team-item">
-              <div class="na-team-role">Chroniqueur</div>
-              <div class="na-team-name" id="na-chrono-morning">—</div>
-            </div>
-            <div class="na-team-item">
-              <div class="na-team-role">Technique</div>
-              <div class="na-team-name" id="na-tech-morning">—</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Jeu antenne -->
-        <div class="na-section">
-          <div class="na-section-title">&#127918; Jeu antenne</div>
-          <div class="na-jeu-display" id="na-jeu-morning">
+        <div class="na-col">
+          <div class="na-col-label">&#127918; Jeu antenne</div>
+          <div class="na-jeu" id="na-jeu-morning">
             <div class="na-empty">Aucun jeu configuré</div>
           </div>
         </div>
 
-        <!-- Commercial Editor -->
-        <div class="na-section">
-          <div class="na-section-title">&#128188; Commercial Editor</div>
+        <div class="na-col">
+          <div class="na-col-label">&#128188; Commercial Editor</div>
           <div class="na-commercial" id="na-commercial-morning">
-            <div class="na-empty">Aucun rendez-vous commercial</div>
+            <div class="na-empty">Aucun rendez-vous</div>
           </div>
         </div>
+      </div>
+    </div>
 
+    <!-- ▸ CHARLY FAMILY -->
+    <div class="na-block na-block--charly">
+      <div class="na-block-header">
+        <div class="na-block-title-group">
+          <span class="na-block-name">CHARLY FAMILY</span>
+          <span class="na-block-time">16:00 — 19:00</span>
+        </div>
+        <button class="na-planning-btn" onclick="naTogglePlanning('charly')">
+          &#128197; Équipe de la semaine
+        </button>
       </div>
 
-      <!-- ▸ CHARLY FAMILY -->
-      <div class="na-show-block" id="na-block-charly">
-        <div class="na-show-header na-show-header--charly">
-          <span class="na-show-label">CHARLY FAMILY</span>
-          <span class="na-show-time">10:00 — 14:00</span>
-          <button class="na-planning-btn" onclick="naTogglePlanning('charly')">
-            &#128197; Planning semaine
-          </button>
+      <div class="na-planning-wrap" id="na-planning-charly" style="display:none">
+        <div class="na-planning-grid" id="na-planning-grid-charly"></div>
+      </div>
+
+      <div class="na-block-body">
+        <div class="na-col">
+          <div class="na-col-label">&#127908; Antenne aujourd'hui</div>
+          <div class="na-today-team" id="na-today-charly">—</div>
         </div>
 
-        <!-- Planning semaine -->
-        <div class="na-planning" id="na-planning-charly" style="display:none">
-          <div class="na-planning-grid" id="na-planning-grid-charly">
-          </div>
-        </div>
-
-        <!-- Équipe en cours -->
-        <div class="na-section">
-          <div class="na-section-title">&#127908; Équipe antenne</div>
-          <div class="na-team" id="na-team-charly">
-            <div class="na-team-item">
-              <div class="na-team-role">Animateur</div>
-              <div class="na-team-name" id="na-host-charly">—</div>
-            </div>
-            <div class="na-team-item">
-              <div class="na-team-role">Chroniqueur</div>
-              <div class="na-team-name" id="na-chrono-charly">—</div>
-            </div>
-            <div class="na-team-item">
-              <div class="na-team-role">Technique</div>
-              <div class="na-team-name" id="na-tech-charly">—</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Jeu antenne -->
-        <div class="na-section">
-          <div class="na-section-title">&#127918; Jeu antenne</div>
-          <div class="na-jeu-display" id="na-jeu-charly">
+        <div class="na-col">
+          <div class="na-col-label">&#127918; Jeu antenne</div>
+          <div class="na-jeu" id="na-jeu-charly">
             <div class="na-empty">Aucun jeu configuré</div>
           </div>
         </div>
 
-        <!-- Commercial Editor -->
-        <div class="na-section">
-          <div class="na-section-title">&#128188; Commercial Editor</div>
+        <div class="na-col">
+          <div class="na-col-label">&#128188; Commercial Editor</div>
           <div class="na-commercial" id="na-commercial-charly">
-            <div class="na-empty">Aucun rendez-vous commercial</div>
+            <div class="na-empty">Aucun rendez-vous</div>
           </div>
         </div>
-
       </div>
-
     </div>
+
   </div>
 </div>
 <div class="ed-overlay" id="ed-ov">
@@ -3281,31 +3244,19 @@ function wxPalCopy(z){
 }
 
 /* ══ NOTE ANTENNE ═════════════════════════════════════════════════════════ */
-/* Données des émissions - à compléter avec les vraies infos */
 var NA_DATA={
   morning:{
-    label:'MORNING',timeRange:'06:00 — 10:00',
     planning:[
-      /* {day:'Lun', host:'Prénom Nom', chrono:'Prénom Nom', tech:'Prénom Nom'} */
-      {day:'Lun',host:'—',chrono:'—',tech:'—'},
-      {day:'Mar',host:'—',chrono:'—',tech:'—'},
-      {day:'Mer',host:'—',chrono:'—',tech:'—'},
-      {day:'Jeu',host:'—',chrono:'—',tech:'—'},
-      {day:'Ven',host:'—',chrono:'—',tech:'—'}
+      {day:'Lun',team:'—'},{day:'Mar',team:'—'},
+      {day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}
     ],
     jeu:{nom:'',desc:'',heure:''},
-    commercial:[
-      /* {time:'07h30',nom:'',type:'Chronique',dot:'chrono'} */
-    ]
+    commercial:[]
   },
   charly:{
-    label:'CHARLY FAMILY',timeRange:'10:00 — 14:00',
     planning:[
-      {day:'Lun',host:'—',chrono:'—',tech:'—'},
-      {day:'Mar',host:'—',chrono:'—',tech:'—'},
-      {day:'Mer',host:'—',chrono:'—',tech:'—'},
-      {day:'Jeu',host:'—',chrono:'—',tech:'—'},
-      {day:'Ven',host:'—',chrono:'—',tech:'—'}
+      {day:'Lun',team:'—'},{day:'Mar',team:'—'},
+      {day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}
     ],
     jeu:{nom:'',desc:'',heure:''},
     commercial:[]
@@ -3313,8 +3264,7 @@ var NA_DATA={
 };
 
 function naTogglePlanning(show){
-  var el=document.getElementById('na-planning-'+show);
-  if(!el)return;
+  var el=document.getElementById('na-planning-'+show);if(!el)return;
   var open=el.style.display==='none';
   el.style.display=open?'block':'none';
   if(open)naRenderPlanning(show);
@@ -3323,43 +3273,42 @@ function naTogglePlanning(show){
 function naRenderPlanning(show){
   var el=document.getElementById('na-planning-grid-'+show);if(!el)return;
   var days=NA_DATA[show].planning;
-  var todayIdx=new Date().getDay()-1; /* 0=Lun */
+  var todayIdx=new Date().getDay()-1;
   var html='';
   days.forEach(function(d,i){
     var isToday=(i===todayIdx);
+    var isEmpty=(!d.team||d.team==='—');
     html+='<div class="na-plan-day'+(isToday?' today':'')+'">'
       +'<div class="na-plan-day-name">'+d.day+'</div>'
-      +'<div class="na-plan-person">'+d.host+'</div>'
-      +(d.chrono&&d.chrono!=='—'?'<div class="na-plan-role">'+d.chrono+'</div>':'')
+      +'<div class="na-plan-person'+(isEmpty?' empty':'')+'">'+d.team+'</div>'
     +'</div>';
   });
   el.innerHTML=html;
 }
 
-function naRenderShowBlock(show){
+function naRenderBlock(show){
   var data=NA_DATA[show];
-  var days=data.planning;
   var todayIdx=new Date().getDay()-1;
-  var today=todayIdx>=0&&todayIdx<5?days[todayIdx]:{host:'—',chrono:'—',tech:'—'};
+  var today=todayIdx>=0&&todayIdx<5?data.planning[todayIdx]:{team:'—'};
 
-  /* Équipe */
-  var nh=document.getElementById('na-host-'+show);
-  var nc=document.getElementById('na-chrono-'+show);
-  var nt=document.getElementById('na-tech-'+show);
-  if(nh)nh.textContent=today.host;
-  if(nc)nc.textContent=today.chrono;
-  if(nt)nt.textContent=today.tech;
+  /* Équipe aujourd'hui */
+  var tEl=document.getElementById('na-today-'+show);
+  if(tEl){
+    var isEmpty=(!today.team||today.team==='—');
+    tEl.className='na-today-team'+(isEmpty?' empty':'');
+    tEl.textContent=today.team;
+  }
 
   /* Jeu */
-  var jeu=data.jeu;
   var jEl=document.getElementById('na-jeu-'+show);
   if(jEl){
+    var jeu=data.jeu;
     if(!jeu||!jeu.nom){
       jEl.innerHTML='<div class="na-empty">Aucun jeu configuré</div>';
     } else {
       jEl.innerHTML='<div class="na-jeu-nom">'+jeu.nom+'</div>'
         +(jeu.desc?'<div class="na-jeu-desc">'+jeu.desc+'</div>':'')
-        +(jeu.heure?'<div class="na-jeu-heure">&#128336; '+jeu.heure+'</div>':'');
+        +(jeu.heure?'<div class="na-jeu-heure">'+jeu.heure+'</div>':'');
     }
   }
 
@@ -3367,16 +3316,13 @@ function naRenderShowBlock(show){
   var cEl=document.getElementById('na-commercial-'+show);
   if(cEl){
     if(!data.commercial||!data.commercial.length){
-      cEl.innerHTML='<div class="na-empty">Aucun rendez-vous commercial</div>';
+      cEl.innerHTML='<div class="na-empty">Aucun rendez-vous</div>';
     } else {
       cEl.innerHTML=data.commercial.map(function(item){
-        return'<div class="na-commercial-item">'
-          +'<div class="na-comm-dot'+(item.dot?' '+item.dot:'')+'"></div>'
+        return'<div class="na-comm-item">'
           +'<span class="na-comm-time">'+item.time+'</span>'
-          +'<div class="na-comm-body">'
-            +'<div class="na-comm-nom">'+item.nom+'</div>'
-            +(item.type?'<div class="na-comm-type">'+item.type+'</div>':'')
-          +'</div>'
+          +'<span class="na-comm-nom">'+item.nom+'</span>'
+          +(item.type?'<span class="na-comm-type">'+item.type+'</span>':'')
         +'</div>';
       }).join('');
     }
@@ -3384,10 +3330,9 @@ function naRenderShowBlock(show){
 }
 
 function initNoteAntenne(){
-  naRenderShowBlock('morning');
-  naRenderShowBlock('charly');
-}
-</script>
+  naRenderBlock('morning');
+  naRenderBlock('charly');
+}</script>
 
 </body>
 </html>
