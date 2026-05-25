@@ -2200,7 +2200,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <div class="na-live-center" id="na-live-center">
         <span class="na-live-emission" id="na-live-emission">Chargement…</span>
         <span class="na-live-sep">—</span>
-        <span class="na-live-titre" id="na-live-titre"></span>
+        <span class="na-live-titre" id="na-live-titre"></span><span id="na-live-source" style="margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,255,255,.2);"></span>
       </div>
       <div class="na-live-right">
         <span class="na-live-heure" id="na-live-heure"></span>
@@ -2315,9 +2315,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   </div>
 </div>
 
-<button id="ed-fab" onclick="toggleEditor()" style="position:fixed;bottom:24px;right:24px;z-index:9001;background:var(--red);color:#fff;border:none;border-radius:24px;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);">Editer</button>
-
+<button id="ed-fab" onclick="toggleEditor()" style="position:fixed;bottom:24px;right:24px;z-index:9001;background:var(--red);color:#fff;border:none;border-radius:24px;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);">&#9997; Éditer</button>
 <script>
+
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
 function toggleTheme(){var cur=document.documentElement.getAttribute('data-theme')||'dark';applyTheme(cur==='dark'?'light':'dark');}
 (function(){applyTheme(localStorage.getItem('rm_theme')||'dark');})();
@@ -3410,66 +3410,58 @@ function initNoteAntenne(){
 
 /* ── Live antenne Radio Monaco ── */
 var NA_GRILLE_HEURES=[
-  {h:5, name:'Nuit Monaco'},
-  {h:6, name:'Monaco Morning',host:'Romain Pastor'},
-  {h:9, name:'Monaco en Musique'},
-  {h:12,name:'Monaco Midi'},
-  {h:14,name:'L\'Après-midi'},
-  {h:16,name:'Charly Family',host:'Charly'},
-  {h:19,name:'Monaco Soir'},
-  {h:22,name:'Monaco Night'},
+  {h:0,name:'Non-stop Music',host:''},
+  {h:6,name:'Le Morning Made in Monte-Carlo',host:'Léo Barraband, Giulia Testaverde, Marie Marquet'},
+  {h:9,name:'Non-stop Music',host:''},
+  {h:12,name:'Non-stop Music',host:''},
+  {h:16,name:'La Charly Family',host:'Charly'},
+  {h:19,name:'Non-stop Music',host:''},
+  {h:22,name:'Non-stop Music',host:''}
 ];
-
 function naGetEmissionFromGrille(){
-  var now=new Date();
-  var hNow=now.getHours();
-  var found=NA_GRILLE_HEURES[0];
-  for(var i=0;i<NA_GRILLE_HEURES.length;i++){
-    if(hNow>=NA_GRILLE_HEURES[i].h){found=NA_GRILLE_HEURES[i];}
-  }
+  var hNow=new Date().getHours(),found=NA_GRILLE_HEURES[0];
+  for(var i=0;i<NA_GRILLE_HEURES.length;i++){if(hNow>=NA_GRILLE_HEURES[i].h)found=NA_GRILLE_HEURES[i];}
   return found;
 }
-
 function naUpdateClock(){
   var el=document.getElementById('na-live-heure');
   if(el)el.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
 }
-
+function naApplyEmission(name,host,src){
+  var eEl=document.getElementById('na-live-emission');
+  var tEl=document.getElementById('na-live-titre');
+  var sEl=document.getElementById('na-live-source');
+  if(eEl)eEl.textContent=name;
+  if(tEl)tEl.textContent=host||'';
+  if(sEl)sEl.textContent=src||'';
+}
 function naFetchLive(){
-  /* Tentative 1 : API widget Radio Monaco */
-  var endpoints=[
-    'https://radio-monaco.com/api/live',
-    'https://radio-monaco.com/wp-json/wp/v2/posts?per_page=1',
-    'https://api.radio-monaco.com/now-playing',
-  ];
-
-  var emEl=document.getElementById('na-live-emission');
-  var titEl=document.getElementById('na-live-titre');
-
-  /* Fallback immédiat : grille locale */
-  var em=naGetEmissionFromGrille();
-  if(emEl)emEl.textContent=em.name;
-  if(titEl)titEl.textContent=em.host||'';
-
-  /* Tentative fetch depuis le browser */
-  fetch('https://radio-monaco.com/',{mode:'no-cors',cache:'no-cache'})
-    .then(function(){
-      /* no-cors : on sait que le site répond, mais on ne peut pas lire le body */
-      /* → on reste sur la grille locale */
-    })
-    .catch(function(){});
-
-  /* Essai API JSON si disponible */
-  fetch('https://radio-monaco.com/api/live')
-    .then(function(r){return r.json();})
-    .then(function(d){
-      if(d&&d.emission&&emEl)emEl.textContent=d.emission;
-      if(d&&d.titre&&titEl)titEl.textContent=d.titre;
+  fetch('https://radio-monaco.com/',{cache:'no-cache'})
+    .then(function(r){return r.text();})
+    .then(function(html){
+      var m1=html.match(/aintenant[\s\S]{0,30}<[^>]+>([^<]{3,60})</);
+      var emName=m1?m1[1].replace(/&[^;]+;/g,'').trim():'';
+      if(emName.length>2){
+        naApplyEmission(emName,'','● Live');
+      } else {
+        var em=naGetEmissionFromGrille();
+        naApplyEmission(em.name,em.host,'↻ Grille locale');
+      }
     })
     .catch(function(){
-      /* API non disponible → garder la grille */
+      var em=naGetEmissionFromGrille();
+      naApplyEmission(em.name,em.host,'↻ Grille locale');
     });
 }
+function naInitLive(){
+  var em=naGetEmissionFromGrille();
+  naApplyEmission(em.name,em.host,'...');
+  naFetchLive();
+  naUpdateClock();
+  setInterval(naUpdateClock,1000);
+  setInterval(naFetchLive,60000);
+}
+
 
 function naInitLive(){
   naFetchLive();
