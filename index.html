@@ -1531,8 +1531,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 [data-theme="light"] .ed-doc{color:#111827;}
 [data-theme="light"] .ed-footer{background:#F5F7FC;border-top-color:#E2E6EF;color:#9CA3AF;}
 /* Bouton thème */
-[data-theme="light"] #theme-toggle{background:rgba(255,255,255,.2)!important;}
-/* ── Synthèse météo ── */
+[data-theme="light"] /* ── Synthèse météo ── */
 .wx-synth{
   margin-top:14px;
   padding-top:14px;
@@ -1972,7 +1971,177 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 [data-theme="light"] .na-plan-day{background:rgba(0,0,0,.04);}
 [data-theme="light"] .na-col{border-right-color:rgba(0,0,0,.07);}
 [data-theme="light"] .na-today-team{color:#111;}
-[data-theme="light"] .na-comm-nom{color:#111;}</style>
+[data-theme="light"] .na-comm-nom{color:#111;}
+
+/* ── Incident Antenne ── */
+.na-incident-card{
+  background:#1a0a0a;
+  border:1px solid rgba(228,3,46,.25);
+  border-left:4px solid #E4032E;
+  border-radius:14px;overflow:hidden;
+}
+.na-incident-header{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 22px;
+  background:linear-gradient(135deg,#2a0808 0%,#1a0a0a 100%);
+  border-bottom:1px solid rgba(228,3,46,.15);
+}
+.na-incident-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:#E4032E;flex-shrink:0;
+  box-shadow:0 0 10px #E4032E;
+  animation:naPulse 1.5s ease-in-out infinite;
+}
+.na-incident-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
+  color:#E4032E;
+}
+.na-incident-date{
+  margin-left:auto;font-family:'Share Tech Mono',monospace;
+  font-size:12px;color:rgba(255,255,255,.3);
+}
+.na-incident-body{padding:20px 22px;display:flex;flex-direction:column;gap:16px;}
+
+/* Types d'incidents */
+.na-inc-types{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.na-inc-type{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  padding:14px 10px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);
+  color:rgba(255,255,255,.65);cursor:pointer;
+  transition:all .15s;
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;
+  letter-spacing:.04em;text-transform:uppercase;
+}
+.na-inc-type:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);color:#fff;}
+.na-inc-type.selected{
+  background:rgba(228,3,46,.15);border-color:#E4032E;color:#fff;
+}
+.na-inc-type--major{border-color:rgba(228,3,46,.3);}
+.na-inc-type--major:hover,.na-inc-type--major.selected{
+  background:rgba(228,3,46,.25);border-color:#E4032E;
+}
+.na-inc-type-icon{font-size:24px;line-height:1;}
+
+/* Formulaire */
+.na-inc-form{display:flex;flex-direction:column;gap:10px;}
+.na-inc-form-row{display:grid;grid-template-columns:1fr 160px 160px;gap:12px;}
+.na-inc-field{display:flex;flex-direction:column;gap:4px;}
+.na-inc-label{
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);
+}
+.na-inc-selected-type{
+  font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;
+  color:#E4032E;padding:6px 0;
+}
+.na-inc-input{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:6px;padding:8px 12px;
+  font-family:'Share Tech Mono',monospace;font-size:14px;color:#fff;
+  outline:none;transition:border-color .12s;width:100%;box-sizing:border-box;
+  color-scheme:dark;
+}
+.na-inc-input:focus{border-color:#E4032E;}
+.na-inc-textarea{resize:vertical;font-family:'Inter',sans-serif;font-size:13px;}
+.na-inc-actions{display:flex;gap:10px;align-items:center;}
+.na-inc-btn{
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;
+  letter-spacing:.08em;text-transform:uppercase;
+  padding:10px 24px;border-radius:8px;cursor:pointer;transition:all .15s;
+}
+.na-inc-btn--declare{
+  background:#E4032E;border:none;color:#fff;
+  box-shadow:0 4px 16px rgba(228,3,46,.3);
+}
+.na-inc-btn--declare:hover{background:#c0021f;box-shadow:0 4px 20px rgba(228,3,46,.5);}
+.na-inc-btn--cancel{
+  background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);
+}
+.na-inc-btn--cancel:hover{border-color:rgba(255,255,255,.35);color:#fff;}
+
+/* Incidents récents */
+.na-inc-recent{display:flex;flex-direction:column;gap:8px;}
+.na-inc-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:10px 14px;border-radius:8px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);
+  border-left:3px solid #E4032E;
+}
+.na-inc-item--major{
+  background:rgba(228,3,46,.08);border-color:rgba(228,3,46,.3);
+  border-left-color:#E4032E;
+}
+.na-inc-item-time{
+  font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;
+  color:rgba(255,255,255,.4);white-space:nowrap;flex-shrink:0;
+}
+.na-inc-item-body{flex:1;}
+.na-inc-item-type{
+  font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;
+  color:#fff;margin-bottom:2px;
+}
+.na-inc-item-desc{
+  font-family:'Inter',sans-serif;font-size:12px;color:rgba(255,255,255,.4);
+}
+.na-inc-item-status{
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 8px;border-radius:4px;
+  background:rgba(228,3,46,.2);color:#E4032E;
+  flex-shrink:0;
+}
+
+/* ── Bouton incident header ── */
+.inc-fab-btn{
+  background:none;border:none;font-size:22px;cursor:pointer;
+  padding:4px 8px;border-radius:8px;
+  transition:transform .15s;
+  filter:drop-shadow(0 0 6px rgba(255,200,0,.4));
+}
+.inc-fab-btn:hover{transform:scale(1.15);}
+/* ── Modal incident ── */
+.inc-modal-overlay{
+  display:none;position:fixed;inset:0;z-index:9600;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;
+}
+.inc-modal{
+  background:#181B26;border:1px solid rgba(228,3,46,.3);
+  border-top:3px solid #E4032E;
+  border-radius:16px;width:560px;max-width:92vw;
+  box-shadow:0 24px 80px rgba(0,0,0,.8);
+  overflow:hidden;
+}
+.inc-modal-header{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 22px;
+  background:linear-gradient(135deg,#2a0808 0%,#1a0a0a 100%);
+  border-bottom:1px solid rgba(228,3,46,.15);
+}
+.inc-modal-dot{
+  width:10px;height:10px;border-radius:50%;background:#E4032E;
+  box-shadow:0 0 10px #E4032E;
+  animation:naPulse 1.5s ease-in-out infinite;
+}
+.inc-modal-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
+  color:#E4032E;
+}
+.inc-modal-date{
+  margin-left:auto;font-family:'Share Tech Mono',monospace;
+  font-size:11px;color:rgba(255,255,255,.3);
+}
+.inc-modal-close{
+  background:none;border:none;color:rgba(255,255,255,.4);
+  font-size:18px;cursor:pointer;padding:2px 6px;
+  transition:color .12s;
+}
+.inc-modal-close:hover{color:#fff;}
+.inc-modal-body{padding:20px 22px;display:flex;flex-direction:column;gap:14px;}</style>
 </head>
 <body>
 
@@ -1998,8 +2167,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     <button class="tab-btn" id="tab-btn-weather" onclick="switchTab('weather')"><span class="ti">&#9928;&#65039;</span> Weather Tool</button>
     <button class="tab-btn" id="tab-btn-antenne" onclick="switchTab('antenne')"><span class="ti">&#127897;&#65039;</span> Note Antenne</button>
   </div>
-  <div style="display:flex;align-items:center;gap:12px;justify-content:flex-end;">
-    <button id="theme-toggle" onclick="toggleTheme()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:6px 12px;color:#fff;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;" title="Changer de thème">&#9790; Sombre</button>
+  <div style="display:flex;align-items:center;gap:12px;justify-content:flex-end;"><button id="inc-fab" onclick="naIncOpenModal()" title="Déclarer un incident" class="inc-fab-btn">&#9888;&#65039;</button>
     <div class="hdr-clock" id="clk">--:--:--</div>
   </div>
 </div>
@@ -2138,82 +2306,137 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
     <!-- ▸ MORNING -->
     <div class="na-block na-block--morning">
-      <div class="na-block-header">
+      <div class="na-block-header" style="background:#37333E;border-bottom:4px solid #E4032E;">
         <div class="na-block-title-group">
           <span class="na-block-name">MORNING</span>
           <span class="na-block-time">06:00 — 09:00</span>
         </div>
-        <button class="na-planning-btn" onclick="naTogglePlanning('morning')">
-          &#128197; Équipe de la semaine
-        </button>
+        <button class="na-planning-btn" onclick="naTogglePlanning('morning')">&#128197; Équipe de la semaine</button>
       </div>
-
       <div class="na-planning-wrap" id="na-planning-morning" style="display:none">
         <div class="na-planning-grid" id="na-planning-grid-morning"></div>
       </div>
-
       <div class="na-block-body">
-        <div class="na-col">
-          <div class="na-col-label">&#127908; Antenne aujourd'hui</div>
-          <div class="na-today-team" id="na-today-morning">—</div>
-        </div>
+        <div class="na-col"><div class="na-col-label">&#127908; Antenne aujourd'hui</div><div class="na-today-team empty" id="na-today-morning">—</div></div>
+        <div class="na-col"><div class="na-col-label">&#127918; Jeu antenne</div><div class="na-jeu" id="na-jeu-morning"><div class="na-empty">Aucun jeu configuré</div></div></div>
+        <div class="na-col"><div class="na-col-label">&#128188; Commercial Editor</div><div class="na-commercial" id="na-commercial-morning"><div class="na-empty">Aucun rendez-vous</div></div></div>
+      </div>
+    </div>
 
-        <div class="na-col">
-          <div class="na-col-label">&#127918; Jeu antenne</div>
-          <div class="na-jeu" id="na-jeu-morning">
-            <div class="na-empty">Aucun jeu configuré</div>
-          </div>
+    <!-- ▸ FEEL GOOD -->
+    <div class="na-block na-block--feelgood">
+      <div class="na-block-header" style="background:#37333E;border-bottom:4px solid #E4032E;">
+        <div class="na-block-title-group">
+          <span class="na-block-name">FEEL GOOD</span>
+          <span class="na-block-time">09:00 — 12:00</span>
         </div>
-
-        <div class="na-col">
-          <div class="na-col-label">&#128188; Commercial Editor</div>
-          <div class="na-commercial" id="na-commercial-morning">
-            <div class="na-empty">Aucun rendez-vous</div>
-          </div>
-        </div>
+        <button class="na-planning-btn" onclick="naTogglePlanning('feelgood')">&#128197; Équipe de la semaine</button>
+      </div>
+      <div class="na-planning-wrap" id="na-planning-feelgood" style="display:none">
+        <div class="na-planning-grid" id="na-planning-grid-feelgood"></div>
+      </div>
+      <div class="na-block-body">
+        <div class="na-col"><div class="na-col-label">&#127908; Antenne aujourd'hui</div><div class="na-today-team empty" id="na-today-feelgood">—</div></div>
+        <div class="na-col"><div class="na-col-label">&#127918; Jeu antenne</div><div class="na-jeu" id="na-jeu-feelgood"><div class="na-empty">Aucun jeu configuré</div></div></div>
+        <div class="na-col"><div class="na-col-label">&#128188; Commercial Editor</div><div class="na-commercial" id="na-commercial-feelgood"><div class="na-empty">Aucun rendez-vous</div></div></div>
       </div>
     </div>
 
     <!-- ▸ CHARLY FAMILY -->
     <div class="na-block na-block--charly">
-      <div class="na-block-header">
+      <div class="na-block-header" style="background:#37333E;border-bottom:4px solid #E4032E;">
         <div class="na-block-title-group">
           <span class="na-block-name">CHARLY FAMILY</span>
           <span class="na-block-time">16:00 — 19:00</span>
         </div>
-        <button class="na-planning-btn" onclick="naTogglePlanning('charly')">
-          &#128197; Équipe de la semaine
-        </button>
+        <button class="na-planning-btn" onclick="naTogglePlanning('charly')">&#128197; Équipe de la semaine</button>
       </div>
-
       <div class="na-planning-wrap" id="na-planning-charly" style="display:none">
         <div class="na-planning-grid" id="na-planning-grid-charly"></div>
       </div>
-
       <div class="na-block-body">
-        <div class="na-col">
-          <div class="na-col-label">&#127908; Antenne aujourd'hui</div>
-          <div class="na-today-team" id="na-today-charly">—</div>
-        </div>
+        <div class="na-col"><div class="na-col-label">&#127908; Antenne aujourd'hui</div><div class="na-today-team empty" id="na-today-charly">—</div></div>
+        <div class="na-col"><div class="na-col-label">&#127918; Jeu antenne</div><div class="na-jeu" id="na-jeu-charly"><div class="na-empty">Aucun jeu configuré</div></div></div>
+        <div class="na-col"><div class="na-col-label">&#128188; Commercial Editor</div><div class="na-commercial" id="na-commercial-charly"><div class="na-empty">Aucun rendez-vous</div></div></div>
+      </div>
+    </div>
 
-        <div class="na-col">
-          <div class="na-col-label">&#127918; Jeu antenne</div>
-          <div class="na-jeu" id="na-jeu-charly">
-            <div class="na-empty">Aucun jeu configuré</div>
-          </div>
+    <!-- ▸ DJ -->
+    <div class="na-block na-block--dj">
+      <div class="na-block-header" style="background:#37333E;border-bottom:4px solid #E4032E;">
+        <div class="na-block-title-group">
+          <span class="na-block-name">DJ</span>
+          <span class="na-block-time">19:00 — 22:00</span>
         </div>
-
-        <div class="na-col">
-          <div class="na-col-label">&#128188; Commercial Editor</div>
-          <div class="na-commercial" id="na-commercial-charly">
-            <div class="na-empty">Aucun rendez-vous</div>
-          </div>
-        </div>
+        <button class="na-planning-btn" onclick="naTogglePlanning('dj')">&#128197; Équipe de la semaine</button>
+      </div>
+      <div class="na-planning-wrap" id="na-planning-dj" style="display:none">
+        <div class="na-planning-grid" id="na-planning-grid-dj"></div>
+      </div>
+      <div class="na-block-body">
+        <div class="na-col"><div class="na-col-label">&#127908; Antenne aujourd'hui</div><div class="na-today-team empty" id="na-today-dj">—</div></div>
+        <div class="na-col"><div class="na-col-label">&#127918; Jeu antenne</div><div class="na-jeu" id="na-jeu-dj"><div class="na-empty">Aucun jeu configuré</div></div></div>
+        <div class="na-col"><div class="na-col-label">&#128188; Commercial Editor</div><div class="na-commercial" id="na-commercial-dj"><div class="na-empty">Aucun rendez-vous</div></div></div>
       </div>
     </div>
 
   </div>
 </div>
+<!-- ▸ Modal Incident Antenne -->
+<div class="inc-modal-overlay" id="inc-modal-overlay" onclick="naIncCloseModal(event)">
+  <div class="inc-modal">
+    <div class="inc-modal-header">
+      <span class="inc-modal-dot"></span>
+      <span class="inc-modal-title">INCIDENT ANTENNE</span>
+      <span class="inc-modal-date" id="inc-modal-date"></span>
+      <button class="inc-modal-close" onclick="naIncCloseModal()">&#10005;</button>
+    </div>
+    <div class="inc-modal-body">
+      <div class="na-inc-types">
+        <button class="na-inc-type" data-type="Diffusion Publicitaire" onclick="naIncSelect(this)">
+          <span class="na-inc-type-icon">&#128267;</span>Diffusion Publicitaire
+        </button>
+        <button class="na-inc-type" data-type="Blanc Antenne" onclick="naIncSelect(this)">
+          <span class="na-inc-type-icon">&#9898;</span>Blanc Antenne
+        </button>
+        <button class="na-inc-type" data-type="Incident diffuseur" onclick="naIncSelect(this)">
+          <span class="na-inc-type-icon">&#128225;</span>Incident diffuseur
+        </button>
+        <button class="na-inc-type na-inc-type--major" data-type="Incident Majeur" onclick="naIncSelect(this)">
+          <span class="na-inc-type-icon">&#9888;&#65039;</span>Incident Majeur
+        </button>
+      </div>
+      <div class="na-inc-form" id="na-inc-form" style="display:none">
+        <div class="na-inc-form-row">
+          <div class="na-inc-field">
+            <label class="na-inc-label">Type</label>
+            <div class="na-inc-selected-type" id="na-inc-selected-type">—</div>
+          </div>
+          <div class="na-inc-field">
+            <label class="na-inc-label">Début</label>
+            <input class="na-inc-input" type="time" id="na-inc-heure-debut" />
+          </div>
+          <div class="na-inc-field">
+            <label class="na-inc-label">Fin <span style="opacity:.4">(opt.)</span></label>
+            <input class="na-inc-input" type="time" id="na-inc-heure-fin" />
+          </div>
+        </div>
+        <div class="na-inc-field">
+          <label class="na-inc-label">Description <span style="opacity:.4">(optionnel)</span></label>
+          <textarea class="na-inc-input na-inc-textarea" id="na-inc-desc" rows="2" placeholder="Détails…"></textarea>
+        </div>
+        <div class="na-inc-actions">
+          <button class="na-inc-btn na-inc-btn--declare" onclick="naIncDeclare()">&#9889; Déclarer</button>
+          <button class="na-inc-btn na-inc-btn--cancel" onclick="naIncCancel()">Annuler</button>
+        </div>
+      </div>
+      <div class="na-inc-recent" id="na-inc-recent">
+        <div class="na-empty">Aucun incident aujourd'hui</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="ed-overlay" id="ed-ov">
   <div class="ed-modal" id="ed-modal">
     <div class="ed-drag" id="ed-drag">
@@ -2246,8 +2469,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 <button id="ed-fab" onclick="toggleEditor()" style="position:fixed;bottom:24px;right:24px;z-index:9001;background:var(--red);color:#fff;border:none;border-radius:24px;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);">&#9997; Éditer</button>
 <script>
 
-function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('rm_theme',t);var btn=document.getElementById('theme-toggle');if(btn)btn.innerHTML=t==='dark'?'&#9790; Sombre':'&#9788; Clair';}
-function toggleTheme(){var cur=document.documentElement.getAttribute('data-theme')||'dark';applyTheme(cur==='dark'?'light':'dark');}
+
+
 (function(){applyTheme(localStorage.getItem('rm_theme')||'dark');})();
 
 /* TABS */
@@ -2841,7 +3064,11 @@ function wxDay(off){var d=new Date();d.setDate(d.getDate()+off);return['Dim','Lu
 /* ══ WEATHER TOOL ═══════════════════════════════════════════════════════ */
 var WX_ZONES={
   am:{lat:43.7384,lon:7.4246,name:'Monaco',cities:[{name:'Nice',lat:43.7102,lon:7.262},{name:'Cannes',lat:43.5528,lon:7.0174},{name:'Antibes',lat:43.5808,lon:7.1239},{name:'Menton',lat:43.7753,lon:7.5022},{name:'Grasse',lat:43.6581,lon:6.9239},{name:'Juan-les-Pins',lat:43.5667,lon:7.1167}]},
-  idf:{lat:48.8566,lon:2.3522,name:'Paris \u2014 \u00cele-de-France',cities:[{name:'Paris',lat:48.8566,lon:2.3522},{name:'Versailles',lat:48.8014,lon:2.1301},{name:'Pontoise',lat:49.0503,lon:2.1006},{name:'Meaux',lat:48.96,lon:2.8883},{name:'Melun',lat:48.5404,lon:2.6568},{name:'Évry',lat:48.6265,lon:2.4271}]}
+  idf:{lat:48.8566,lon:2.3522,name:'Paris \u2014 \u00cele-de-France',cities:[{name:'Paris',lat:48.8566,lon:2.3522},{name:'Versailles',lat:48.8014,lon:2.1301},{name:'Pontoise',lat:49.0503,lon:2.1006},{name:'Meaux',lat:48.96,lon:2.8883},{name:'Melun',lat:48.5404,lon:2.6568},{name:'Évry',lat:48.6265,lon:2.4271}]},
+  dj:{
+    planning:[{day:'Lun',team:'—'},{day:'Mar',team:'—'},{day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}],
+    jeu:{nom:'',desc:'',heure:''},commercial:[]
+  }
 };
 var wxLoaded={am:false,idf:false},wxCurrentZone='am';
 var WXCO_DAY={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'🌨️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️'};
@@ -3072,9 +3299,10 @@ function wxSynthesize(z,slot,daily,off){
     +'vent jusqu\'à '+wind+' km/h '+wdir+', précipitations '+precip+' mm ('+pop+'% de probabilité). '
     +'Style : direct, professionnel, radio. Pas de titre, juste 3 phrases séparées par des retours à la ligne.';
 
+  console.log('[PAL] Sending to Anthropic API...');
   fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
     body:JSON.stringify({
       model:'claude-sonnet-4-20250514',
       max_tokens:200,
@@ -3083,6 +3311,7 @@ function wxSynthesize(z,slot,daily,off){
   })
   .then(function(r){return r.json();})
   .then(function(data){
+    console.log('[PAL] Anthropic response:', JSON.stringify(data).slice(0,200));
     var text=(data.content&&data.content[0]&&data.content[0].text)||'';
     if(!text){synthDiv.innerHTML='';return;}
     var lines=text.trim().split('\n').filter(function(l){return l.trim();}).slice(0,3);
@@ -3167,10 +3396,10 @@ function wxPalGenerate(z){
   var body=document.getElementById('wx-'+z+'-pal-body');if(!body)return;
   var copyBtn=document.getElementById('wx-'+z+'-pal-copy');
   if(copyBtn)copyBtn.style.display='none';
-  body.innerHTML='<div class="wx-pal-loading">Rédaction du bulletin en cours&#8230;</div>';
+  body.innerHTML='<div class="wx-pal-loading">G\u00e9n\u00e9ration\u2026</div>';
 
   var d=wxPalData[z];
-  if(!d){body.innerHTML='<div class="wx-pal-hint">Données pas encore chargées. Veuillez patienter.</div>';return;}
+  if(!d){body.innerHTML='<div class="wx-pal-hint">Donn\u00e9es m\u00e9t\u00e9o non charg\u00e9es. Patientez.</div>';return;}
 
   var off=wxPalDay[z];
   var daily=d.daily;
@@ -3180,60 +3409,58 @@ function wxPalGenerate(z){
   var cond=wxShort(daily.weathercode[off]);
   var wind=Math.round(daily.windspeed_10m_max[off]);
   var wdir=daily.winddirection_10m_dominant?wxDir(daily.winddirection_10m_dominant[off]):'';
-  var precip=(daily.precipitation_sum[off]||0).toFixed(1);
+  var precip=parseFloat((daily.precipitation_sum[off]||0).toFixed(1));
   var pop=daily.precipitation_probability_max?daily.precipitation_probability_max[off]:0;
   var dayLbl=off===0?'aujourd\'hui':'demain';
+  var dayFull=off===0?wxDayName(0)+' '+new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long'}):wxDayName(1);
 
-  /* Récupérer les températures des villes pour les ajouter */
+  /* Villes */
   var citiesEl=document.getElementById('wx-'+z+'-cities');
   var cityTemps=[];
   if(citiesEl){
     citiesEl.querySelectorAll('.wx-city-tile').forEach(function(tile){
-      var name=tile.querySelector('.wx-city-tile-name');
-      var tmax2=tile.querySelector('.wx-city-tile-tmax');
-      var tmin2=tile.querySelector('.wx-city-tile-tmin');
-      if(name&&tmax2)cityTemps.push({name:name.textContent,tmax:tmax2.textContent,tmin:tmin2?tmin2.textContent:''});
+      var n=tile.querySelector('.wx-city-tile-name');
+      var tm=tile.querySelector('.wx-city-tile-tmax');
+      var tn=tile.querySelector('.wx-city-tile-tmin');
+      if(n&&tm)cityTemps.push({name:n.textContent.trim(),tmax:tm.textContent.trim(),tmin:tn?tn.textContent.trim():''});
     });
   }
 
-  var cityLine=cityTemps.length?'\nTempératures dans les villes : '+cityTemps.map(function(ct){return ct.name+' '+ct.tmax+'/'+ct.tmin;}).join(', '):'' ;
+  /* Bulletin local */
+  var phrTemps=dayFull+' sur '+zone.name+', '+cond.toLowerCase()+' avec un maximum de '+tmax+'\u00b0C et un minimum de '+tmin+'\u00b0C.';
+  var phrVent=wind>=30?'Le vent souffle jusqu\'\u00e0 '+wind+' km/h'+( wdir?' en provenance du '+wdir:'')+'.' :'';
+  var phrPluie=precip>1||pop>40?'Des pr\u00e9cipitations sont possibles ('+pop+'%).' :'Pas de pr\u00e9cipitations pr\u00e9vues.';
+  var phrVilles=cityTemps.length?'Les temp\u00e9ratures maximales : '+cityTemps.slice(0,5).map(function(ct){return ct.name+' '+ct.tmax;}).join(', ')+'.':'';
+  var bulletin=[phrTemps,phrVent,phrPluie,phrVilles].filter(function(s){return s.length>2;}).join(' ');
 
-  var prompt='Tu es présentateur météo à Radio Monaco. Rédige un bulletin météo à lire en direct pour '+dayLbl+' sur '+zone.name+'.\n'
-    +'Météo : '+cond+', max '+tmax+'°C, min '+tmin+'°C, vent '+wind+' km/h '+wdir+', pluie '+precip+' mm ('+pop+'%).\n'
-    +cityLine+'\n'
-    +'Format : 4-5 phrases fluides et naturelles, style radio professionnel, sans titre ni numérotation. '
-    +'Termine par une phrase récapitulative avec les températures clés.';
+  function showResult(text){
+    var th='';
+    if(cityTemps.length){
+      th='<div class="wx-pal-temps">';
+      cityTemps.forEach(function(ct){
+        th+='<div class="wx-pal-temp-item"><span class="wx-pal-temp-city">'+ct.name+'</span><span class="wx-pal-temp-val">'+ct.tmax+' <span>'+ct.tmin+'</span></span></div>';
+      });
+      th+='</div>';
+    }
+    body.innerHTML='<div class="wx-pal-text">'+text.replace(/\n/g,'<br>')+'</div>'+th;
+    body.dataset.text=text+(cityTemps.length?'\n\n'+cityTemps.map(function(ct){return ct.name+' : '+ct.tmax+' / '+ct.tmin;}).join(' | '):'');
+    if(copyBtn)copyBtn.style.display='';
+  }
 
-  fetch('https://api.anthropic.com/v1/messages',{
+  showResult(bulletin);
+
+  /* Upgrade via Worker (si disponible) */
+  fetch(W+'/ai',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,messages:[{role:'user',content:prompt}]})
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',max_tokens:350,
+      messages:[{role:'user',content:'Bulletin m\u00e9t\u00e9o radio 4 phrases pour '+dayLbl+' \u00e0 '+zone.name+': '+cond+', max '+tmax+'\u00b0, min '+tmin+'\u00b0, vent '+wind+' km/h '+wdir+', pluie '+precip+'mm ('+pop+'%). '+(cityTemps.length?'Villes max: '+cityTemps.map(function(ct){return ct.name+' '+ct.tmax;}).join(', ')+'. ':'')}]
+    })
   })
-  .then(function(r){return r.json();})
-  .then(function(data){
-    var text=(data.content&&data.content[0]&&data.content[0].text)||'';
-    if(!text){body.innerHTML='<div class="wx-pal-hint">Erreur de génération.</div>';return;}
-
-    /* Construire le bloc températures villes */
-    var tempsHtml='';
-    if(cityTemps.length){
-      tempsHtml='<div class="wx-pal-temps">';
-      cityTemps.forEach(function(ct){
-        tempsHtml+='<div class="wx-pal-temp-item">'
-          +'<span class="wx-pal-temp-city">'+ct.name+'</span>'
-          +'<span class="wx-pal-temp-val">'+ct.tmax+' <span>'+ct.tmin+'</span></span>'
-          +'</div>';
-      });
-      tempsHtml+='</div>';
-    }
-
-    body.innerHTML='<div class="wx-pal-text">'+text.trim().replace(/\n/g,'<br>')+'</div>'+tempsHtml;
-    body.dataset.text=text.trim()+'\n\n'+cityTemps.map(function(ct){return ct.name+' : '+ct.tmax+' / '+ct.tmin;}).join(' | ');
-    if(copyBtn)copyBtn.style.display='';
-  })
-  .catch(function(e){
-    body.innerHTML='<div class="wx-pal-hint" style="color:#E4032E">Erreur : '+e.message+'</div>';
-  });
+  .then(function(r){if(!r.ok)throw 0;return r.json();})
+  .then(function(data){var t=(data.content&&data.content[0]&&data.content[0].text)||'';if(t.length>20)showResult(t);})
+  .catch(function(){});
 }
 
 function wxPalCopy(z){
@@ -3247,20 +3474,20 @@ function wxPalCopy(z){
 /* ══ NOTE ANTENNE ═════════════════════════════════════════════════════════ */
 var NA_DATA={
   morning:{
-    planning:[
-      {day:'Lun',team:'—'},{day:'Mar',team:'—'},
-      {day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}
-    ],
-    jeu:{nom:'',desc:'',heure:''},
-    commercial:[]
+    planning:[{day:'Lun',team:'—'},{day:'Mar',team:'—'},{day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}],
+    jeu:{nom:'',desc:'',heure:''},commercial:[]
+  },
+  feelgood:{
+    planning:[{day:'Lun',team:'—'},{day:'Mar',team:'—'},{day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}],
+    jeu:{nom:'',desc:'',heure:''},commercial:[]
   },
   charly:{
-    planning:[
-      {day:'Lun',team:'—'},{day:'Mar',team:'—'},
-      {day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}
-    ],
-    jeu:{nom:'',desc:'',heure:''},
-    commercial:[]
+    planning:[{day:'Lun',team:'—'},{day:'Mar',team:'—'},{day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}],
+    jeu:{nom:'',desc:'',heure:''},commercial:[]
+  },
+  dj:{
+    planning:[{day:'Lun',team:'—'},{day:'Mar',team:'—'},{day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}],
+    jeu:{nom:'',desc:'',heure:''},commercial:[]
   }
 };
 
@@ -3444,18 +3671,146 @@ function naTogglePlanningDyn(key){
   el.style.display = (el.style.display === 'none') ? 'block' : 'none';
 }
 
+
+/* ── INCIDENT ANTENNE ── */
+var naIncSelectedType = '';
+
+function naIncInit(){
+  var dateEl = document.getElementById('na-inc-date');
+  if(dateEl) dateEl.textContent = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  /* Heure de début = maintenant par défaut */
+  var now = new Date();
+  var hh = ('0'+now.getHours()).slice(-2);
+  var mm = ('0'+now.getMinutes()).slice(-2);
+  var heureEl = document.getElementById('na-inc-heure-debut');
+  if(heureEl) heureEl.value = hh+':'+mm;
+  /* Charger les incidents récents depuis le storage */
+  naIncLoadRecent();
+}
+
+function naIncSelect(btn){
+  document.querySelectorAll('.na-inc-type').forEach(function(b){ b.classList.remove('selected'); });
+  btn.classList.add('selected');
+  naIncSelectedType = btn.dataset.type;
+  var typeEl = document.getElementById('na-inc-selected-type');
+  if(typeEl) typeEl.textContent = naIncSelectedType;
+  var form = document.getElementById('na-inc-form');
+  if(form) form.style.display = 'flex';
+}
+
+function naIncCancel(){
+  naIncSelectedType = '';
+  document.querySelectorAll('.na-inc-type').forEach(function(b){ b.classList.remove('selected'); });
+  var form = document.getElementById('na-inc-form');
+  if(form) form.style.display = 'none';
+}
+
+function naIncDeclare(){
+  if(!naIncSelectedType) return;
+  var heureDebut = document.getElementById('na-inc-heure-debut').value || '—';
+  var heureFin   = document.getElementById('na-inc-heure-fin').value   || '';
+  var desc       = document.getElementById('na-inc-desc').value.trim() || '';
+
+  var incident = {
+    id:        'inc_' + Date.now(),
+    type:      naIncSelectedType,
+    date:      new Date().toLocaleDateString('fr-FR'),
+    heureDebut: heureDebut,
+    heureFin:   heureFin,
+    desc:       desc,
+    declaredAt: new Date().toISOString(),
+    status:     'actif'
+  };
+
+  /* Sauvegarder dans le storage partagé (lu par la page incidents) */
+  var key = 'rm_incidents';
+  var save = function(existing){
+    var list = existing ? JSON.parse(existing) : [];
+    list.unshift(incident);  /* Plus récent en premier */
+    if(list.length > 50) list = list.slice(0, 50);  /* Max 50 incidents */
+    if(typeof window.storage !== 'undefined'){
+      window.storage.set(key, JSON.stringify(list), true)
+        .catch(function(){ localStorage.setItem(key, JSON.stringify(list)); });
+    } else {
+      localStorage.setItem(key, JSON.stringify(list));
+    }
+  };
+
+  if(typeof window.storage !== 'undefined'){
+    window.storage.get(key, true)
+      .then(function(r){ save(r && r.value ? r.value : null); })
+      .catch(function(){ save(localStorage.getItem(key)); });
+  } else {
+    save(localStorage.getItem(key));
+  }
+
+  /* Rafraîchir l'affichage */
+  naIncLoadRecent();
+  naIncCancel();
+  /* Reset desc */
+  var descEl = document.getElementById('na-inc-desc');
+  if(descEl) descEl.value = '';
+}
+
+function naIncLoadRecent(){
+  var el = document.getElementById('na-inc-recent'); if(!el) return;
+
+  function render(list){
+    if(!list || !list.length){
+      el.innerHTML = '<div class="na-empty">Aucun incident d\u00e9clar\u00e9</div>';
+      return;
+    }
+    var today = new Date().toLocaleDateString('fr-FR');
+    var todayItems = list.filter(function(i){ return i.date === today; });
+    if(!todayItems.length){
+      el.innerHTML = '<div class="na-empty">Aucun incident aujourd\'hui</div>';
+      return;
+    }
+    el.innerHTML = todayItems.slice(0,5).map(function(inc){
+      var isMajor = inc.type === 'Incident Majeur';
+      var timeStr = inc.heureDebut + (inc.heureFin ? ' \u2192 ' + inc.heureFin : '');
+      return '<div class="na-inc-item'+(isMajor?' na-inc-item--major':'')+'">'
+        +'<span class="na-inc-item-time">'+timeStr+'</span>'
+        +'<div class="na-inc-item-body">'
+          +'<div class="na-inc-item-type">'+inc.type+'</div>'
+          +(inc.desc?'<div class="na-inc-item-desc">'+inc.desc+'</div>':'')
+        +'</div>'
+        +'<span class="na-inc-item-status">'+inc.status+'</span>'
+      +'</div>';
+    }).join('');
+  }
+
+  var key = 'rm_incidents';
+  if(typeof window.storage !== 'undefined'){
+    window.storage.get(key, true)
+      .then(function(r){
+        var list = (r && r.value) ? JSON.parse(r.value) : [];
+        render(list);
+      })
+      .catch(function(){
+        render(JSON.parse(localStorage.getItem(key)||'[]'));
+      });
+  } else {
+    render(JSON.parse(localStorage.getItem(key)||'[]'));
+  }
+}
 function initNoteAntenne(){
+  naIncInit();
   if(typeof window.storage !== 'undefined'){
     naLoadFromStorage().then(function(loaded){
       if(!loaded){
         naRenderBlock('morning');
-        naRenderBlock('charly');
+    naRenderBlock('feelgood');
+    naRenderBlock('charly');
+    naRenderBlock('dj');
       }
     });
     setInterval(naLoadFromStorage, 30000);
   } else {
     naRenderBlock('morning');
+    naRenderBlock('feelgood');
     naRenderBlock('charly');
+    naRenderBlock('dj');
   }
 }
 
@@ -3519,6 +3874,25 @@ function naInitLive(){
   naUpdateClock();
   setInterval(naUpdateClock,1000);
   setInterval(naFetchLive,60000);
+}
+
+/* ── Modal Incident Global ── */
+function naIncOpenModal(){
+  var modal=document.getElementById('inc-modal-overlay');
+  if(!modal)return;
+  modal.style.display='flex';
+  var dateEl=document.getElementById('inc-modal-date');
+  if(dateEl)dateEl.textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  var now=new Date();
+  var hEl=document.getElementById('na-inc-heure-debut');
+  if(hEl)hEl.value=('0'+now.getHours()).slice(-2)+':'+('0'+now.getMinutes()).slice(-2);
+  naIncLoadRecent();
+}
+function naIncCloseModal(e){
+  if(e&&e.target!==document.getElementById('inc-modal-overlay'))return;
+  var modal=document.getElementById('inc-modal-overlay');
+  if(modal)modal.style.display='none';
+  naIncCancel();
 }</script>
 
 </body>
