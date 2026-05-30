@@ -23,7 +23,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 
 
-.tab-btn 
+.tab-btn{}
 
 .tab-content{display:none;}
 .tab-content.active{display:block;}
@@ -1778,7 +1778,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .wx-pal-copy:hover{background:rgba(255,255,255,.1);color:#fff;}
 .wx-pal-body{
   padding:24px 28px;
-  min-height:80px;
+  min-height:100px;
 }
 .wx-pal-hint{
   font-family:'Barlow Condensed',sans-serif;font-size:13px;
@@ -2156,9 +2156,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 /* Structure principale */
 .hdr{
   background:#C4001A;
-  height:80px;
+  height:100px;
   display:grid;
-  grid-template-columns:200px 1fr auto;
+  grid-template-columns:240px 1fr auto;
   align-items:stretch;
   position:sticky;top:0;z-index:100;
   box-shadow:0 2px 24px rgba(0,0,0,.5);
@@ -2170,11 +2170,11 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   padding:0 24px;gap:2px;
   border-right:1px solid rgba(255,255,255,.15);
 }
-.hdr-logo{height:44px;width:auto;object-fit:contain;filter:brightness(0) invert(1);}
+.hdr-logo{height:70px;width:auto;object-fit:contain;filter:brightness(0) invert(1);}
 .hdr-brand-label{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:9px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
-  color:rgba(255,255,255,.45);
+  font-size:14px;font-weight:900;letter-spacing:.3em;text-transform:uppercase;
+  color:rgba(255,255,255,.7);
 }
 
 /* Navigation */
@@ -2579,11 +2579,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 <button id="ed-fab" onclick="toggleEditor()" style="position:fixed;bottom:24px;right:24px;z-index:9001;background:var(--red);color:#fff;border:none;border-radius:24px;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);">&#9997; Éditer</button>
 <script>
-
-
-
 /* TABS */
 var traficLoaded=false,weatherLoaded=false,antenneLoaded=false;
+
 function switchTab(n){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
   document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
@@ -2770,11 +2768,7 @@ function setCitiesDay(sfx,day,btn){if(sfx==='am')citiesDayAM=day;else citiesDayI
 
 /* INIT */
 /* Lire le paramètre URL ?tab=weather ou ?tab=trafic */
-(function(){
-  var params=new URLSearchParams(window.location.search);
-  var tab=params.get('tab');
-  switchTab(tab==='weather'?'weather':(tab==='antenne'?'antenne':'trafic'));
-})();
+
 setInterval(function(){if(traficLoaded){loadBoard();if(!TEST_MODE)loadDis();}},60000);
 setInterval(function(){if(traficLoaded)loadTravel();},600000);
 setInterval(function(){if(traficLoaded)loadA8Traffic();},300000);
@@ -4002,7 +3996,14 @@ function naIncCloseModal(e){
   var modal=document.getElementById('inc-modal-overlay');
   if(modal)modal.style.display='none';
   naIncCancel();
-}</script>
+}
+
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  var tab=params.get('tab');
+  switchTab(tab==='weather'?'weather':(tab==='antenne'?'antenne':'trafic'));
+})();
+</script>
 
 </body>
 </html>
