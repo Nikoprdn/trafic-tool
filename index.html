@@ -2228,18 +2228,27 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   padding:0 24px;
   border-left:1px solid rgba(255,255,255,.15);
 }
-.hdr-inc-btn{
-  display:flex;align-items:center;gap:6px;
-  padding:6px 14px;border-radius:8px;
-  border:1px solid rgba(255,255,255,.25);
-  background:rgba(0,0,0,.18);
-  color:rgba(255,255,255,.8);cursor:pointer;
-  transition:all .15s;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+.tab-btn-incident{
+  position:relative;
+  overflow:hidden;
 }
-.hdr-inc-btn:hover{background:rgba(0,0,0,.35);border-color:rgba(255,255,255,.5);color:#fff;}
-.hdr-inc-lbl{}
+.tab-btn-incident::before{
+  content:'';
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    45deg,
+    rgba(245,197,24,.4) 0px,
+    rgba(245,197,24,.4) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  pointer-events:none;
+  z-index:0;
+}
+.tab-btn-incident .tab-btn-ico,
+.tab-btn-incident .tab-btn-txt{
+  position:relative;z-index:1;
+}
 .hdr-clock{
   font-family:'Share Tech Mono',monospace;
   font-size:19px;font-weight:700;
@@ -2282,14 +2291,14 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <span class="tab-btn-ico">&#127897;&#65039;</span>
       <span class="tab-btn-txt">Note<br>Antenne</span>
     </button>
+    <button class="tab-btn tab-btn-incident" onclick="naIncOpenModal()">
+      <span class="tab-btn-ico">&#9888;&#65039;</span>
+      <span class="tab-btn-txt">Incident<br>Antenne</span>
+    </button>
   </nav>
 
   <!-- Droite -->
   <div class="hdr-right">
-    <button class="hdr-inc-btn" onclick="naIncOpenModal()" title="D&eacute;clarer un incident">
-      <span>&#9888;&#65039;</span>
-      <span class="hdr-inc-lbl">Incident</span>
-    </button>
     <div class="hdr-clock" id="clk">--:--:--</div>
   </div>
 
