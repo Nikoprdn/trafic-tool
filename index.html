@@ -1556,7 +1556,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 }
 /* ══ WEATHER TOOL ═════════════════════════════════════════════════════ */
 #tab-weather{background:var(--bg);}
-.wx-zone{display:none;}.wx-zone.active{display:block;}
+.wx-zone{display:none;visibility:hidden;height:0;overflow:hidden;}.wx-zone.active{display:block;visibility:visible;height:auto;overflow:visible;}
 .wx-rgn-bar{display:flex;align-items:center;gap:0;background:#07111f;border-bottom:1px solid rgba(255,255,255,.08);padding:0 28px;height:50px;}
 .wx-rgn-btn{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:0 24px;height:100%;border:none;border-bottom:3px solid transparent;background:transparent;color:rgba(255,255,255,.4);cursor:pointer;transition:all .15s;}
 .wx-rgn-btn:hover{color:rgba(255,255,255,.75);}
@@ -2191,6 +2191,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 /* Navigation */
 .hdr-nav{
   display:flex;align-items:stretch;justify-content:center;
+  background:#C4001A;
+  flex:1;
 }
 
 .tab-btn{
@@ -2212,10 +2214,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   width:1px;background:rgba(255,255,255,.1);
 }
 .tab-btn:last-child::after{display:none;}
-.tab-btn:hover{color:rgba(255,255,255,.85);background:rgba(0,0,0,.12);}
+.tab-btn:hover{color:rgba(255,255,255,.85);background:rgba(0,0,0,.08);}
 .tab-btn.active{
   color:#fff;
-  background:rgba(0,0,0,.2);
+  background:rgba(0,0,0,.12);
   border-bottom-color:#fff;
 }
 .tab-btn-ico{font-size:28px;line-height:1;flex-shrink:0;margin-bottom:4px;}
@@ -2605,8 +2607,10 @@ var traficLoaded=false,weatherLoaded=false,antenneLoaded=false;
 function switchTab(n){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
   document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
-  document.getElementById('tab-btn-'+n).classList.add('active');
-  document.getElementById('tab-'+n).classList.add('active');
+  var btn=document.getElementById('tab-btn-'+n);
+  var tab=document.getElementById('tab-'+n);
+  if(btn)btn.classList.add('active');
+  if(tab)tab.classList.add('active');
   if(n==='weather'&&!weatherLoaded){wxLoadZone('am');weatherLoaded=true;}
   if(n==='antenne'&&!antenneLoaded){initNoteAntenne();antenneLoaded=true;}
   if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);traficLoaded=true;}
