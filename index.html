@@ -2004,16 +2004,17 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .na-incident-body{padding:20px 22px;display:flex;flex-direction:column;gap:16px;}
 
 /* Types d'incidents */
-.na-inc-types{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.na-inc-types{display:flex;flex-direction:column;gap:8px;}
 .na-inc-type{
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  padding:14px 10px;border-radius:10px;
+  display:flex;flex-direction:row;align-items:center;gap:16px;
+  padding:16px 20px;border-radius:10px;
   border:1px solid rgba(255,255,255,.1);
   background:rgba(255,255,255,.04);
   color:rgba(255,255,255,.65);cursor:pointer;
   transition:all .15s;
-  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;
+  font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;
   letter-spacing:.04em;text-transform:uppercase;
+  text-align:left;width:100%;
 }
 .na-inc-type:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);color:#fff;}
 .na-inc-type.selected{
@@ -2023,7 +2024,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .na-inc-type--major:hover,.na-inc-type--major.selected{
   background:rgba(228,3,46,.25);border-color:#E4032E;
 }
-.na-inc-type-icon{font-size:24px;line-height:1;}
+.na-inc-type-icon{font-size:28px;line-height:1;flex-shrink:0;}
 
 /* Formulaire */
 .na-inc-form{display:flex;flex-direction:column;gap:10px;}
@@ -2106,7 +2107,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .inc-modal{
   background:#181B26;border:1px solid rgba(228,3,46,.3);
   border-top:3px solid #E4032E;
-  border-radius:16px;width:560px;max-width:92vw;
+  border-radius:16px;width:780px;max-width:96vw;
   box-shadow:0 24px 80px rgba(0,0,0,.8);
   overflow:hidden;
 }
