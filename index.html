@@ -3711,70 +3711,104 @@ function naLoadFromWorker(){
   return fetch(NA_WORKER_URL, {cache:'no-store'})
     .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
     .then(function(data){
+      console.log('[AdminTool] Worker data recu:', JSON.stringify(data).slice(0,300));
       if(!data || data.empty) return false;
-      /* Convertir le payload Admin Tool en format rm_na_emissions */
       var emissions = naConvertPayload(data);
+      console.log('[AdminTool] Emissions converties:', emissions.length, JSON.stringify(emissions).slice(0,300));
       if(!emissions.length) return false;
       renderNaBlocks(emissions);
-      /* Indicateur de sync */
       var badge = document.getElementById('na-sync-badge');
       if(badge){
         var d = data.publishedAt ? new Date(data.publishedAt) : new Date();
         badge.textContent = 'Sync ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
         badge.style.display = 'inline-block';
+        badge.style.color = 'rgba(46,204,113,.9)';
       }
       return true;
     })
-    .catch(function(e){ console.warn('naLoadFromWorker:', e); return false; });
+    .catch(function(e){
+      console.error('[AdminTool] Erreur Worker:', e);
+      return false;
+    });
 }
 
 function naConvertPayload(data){
-  /* data.days = [{dayIdx, date, mois, annee, isoDate, matin:{slots}, soir:{slots}}] */
+  /*
+    Payload Admin Tool :
+    {
+      weekKey, publishedAt,
+      days: [
+        { dayIdx:0, date, mois, annee, isoDate,
+          matin: { slots: [{hdebut,hfin,emission,color,animateurs:[],journalistes:[]}] },
+          soir:  { slots: [...] }
+        },
+        ... x7
+      ]
+    }
+    Objectif : regrouper par nom d'emission + remplir planning semaine
+  */
   var days = data.days || [];
   var JOURS = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
 
-  /* Regrouper les affectations par émission (typeId/nom) */
+  /* Collecter toutes les émissions distinctes avec leurs créneaux */
   var emMap = {};
 
   days.forEach(function(day){
-    var slots = (day.matin ? day.matin.slots : []).concat(day.soir ? day.soir.slots : []);
-    slots.forEach(function(slot){
-      var nom = slot.emission || '?';
-      var key = nom.toLowerCase().replace(/[^a-z0-9]/g,'_');
+    var allSlots = [];
+    if(day.matin && day.matin.slots) allSlots = allSlots.concat(day.matin.slots);
+    if(day.soir  && day.soir.slots)  allSlots = allSlots.concat(day.soir.slots);
+
+    allSlots.forEach(function(slot){
+      var nom = (slot.emission || '').trim();
+      if(!nom) return;
+
+      /* Clé unique par émission */
+      var key = nom.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');
+
+      /* Créer l'entrée si elle n'existe pas encore */
       if(!emMap[key]){
         emMap[key] = {
-          name: nom,
-          tranche: naSlotTranche(slot),
+          _firstHdebut: slot.hdebut,
+          name:  nom,
+          tranche: naHeure(slot.hdebut) + ' – ' + naHeure(slot.hfin),
           color: slot.color || '#E4032E',
-          planning: JOURS.slice(0,7).map(function(j){ return {day:j, team:'—'}; }),
+          planning: JOURS.map(function(j){ return {day:j, team:'—'}; }),
           jeu:{nom:'',desc:'',heure:''},
           commercial:[]
         };
       }
-      /* Remplir le jour */
-      var di = day.dayIdx; // 0=lun
+
+      /* Construire la liste des personnes ce jour-là */
+      var people = [];
+      (slot.animateurs  || []).forEach(function(a){
+        people.push(a.prenom + ' ' + (a.nom||'').toUpperCase());
+      });
+      (slot.journalistes || []).forEach(function(j){
+        people.push(j.prenom + ' ' + (j.nom||'').toUpperCase());
+      });
+
+      var di = typeof day.dayIdx === 'number' ? day.dayIdx : -1;
       if(di >= 0 && di < 7){
-        var people = [];
-        (slot.animateurs||[]).forEach(function(a){ people.push(a.prenom+' '+a.nom.toUpperCase()); });
-        (slot.journalistes||[]).forEach(function(j){ people.push(j.prenom+' '+j.nom.toUpperCase()); });
         emMap[key].planning[di].team = people.length ? people.join(' / ') : '—';
-        /* Mettre à jour la tranche avec la plus large */
-        emMap[key].tranche = naSlotTranche(slot);
       }
     });
   });
 
+  /* Trier par heure de début */
   return Object.values(emMap).sort(function(a,b){
-    return a.tranche.localeCompare(b.tranche);
+    return (a._firstHdebut||0) - (b._firstHdebut||0);
   });
 }
 
+function naHeure(h){
+  if(h === undefined || h === null || isNaN(h)) return '--:--';
+  var hh = Math.floor(h);
+  var mm = (h % 1) ? '30' : '00';
+  return String(hh).padStart(2,'0') + 'h' + mm;
+}
+
 function naSlotTranche(slot){
-  function fh(h){
-    if(h===undefined||h===null) return '--:--';
-    return String(Math.floor(h)).padStart(2,'0')+'h'+(h%1?'30':'00');
-  }
-  return fh(slot.hdebut)+' – '+fh(slot.hfin);
+  return naHeure(slot.hdebut) + ' – ' + naHeure(slot.hfin);
 }
 
 function naLoadFromStorage(){
