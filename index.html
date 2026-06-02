@@ -3771,15 +3771,19 @@ function renderNaBlockHtml(em){
   }
 
   var antenne = em.antenne || {};
-  var antenneHtml = '';
-  if(isEmpty){
-    antenneHtml = '<div class="na-today-team empty">—</div>';
-  } else {
-    var noms = todayTeam.split(' / ');
-    antenneHtml = noms.map(function(n){
-      return '<div class="na-today-team" style="font-size:26px;margin-bottom:4px;">'+n.trim()+'</div>';
-    }).join('');
-  }
+  var antenneHtml = isEmpty
+    ? '<div class="na-today-team empty">—</div>'
+    : (function(){
+        var COLORS=['#E4032E','#5B8DEF','#E87C3E','#2ecc71','#9B59B6'];
+        return '<div style="display:flex;flex-direction:column;gap:5px;">'
+          + todayTeam.split('|').map(function(n,i){
+              return '<div style="display:flex;align-items:center;gap:8px;">'
+                +'<span style="width:8px;height:8px;border-radius:50%;background:'+COLORS[i%COLORS.length]+';flex-shrink:0;"></span>'
+                +'<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:20px;font-weight:800;color:#fff;line-height:1;">'+n.trim()+'</span>'
+                +'</div>';
+            }).join('')
+          + '</div>';
+      })();
   if(antenne.titre)  antenneHtml += '<div class="na-jeu-nom" style="margin-top:8px;font-size:16px;">'+antenne.titre+'</div>';
   if(antenne.desc)   antenneHtml += '<div class="na-jeu-desc">'+antenne.desc+'</div>';
   if(antenne.invite) antenneHtml += '<div class="na-jeu-desc" style="color:var(--yellow)">\uD83C\uDF99 Invité : '+antenne.invite+'</div>';
@@ -3933,59 +3937,45 @@ function naIncLoadRecent(){
   }
 }
 
-/* ── Worker Admin Tool ── */
 var NA_WORKER_URL = 'https://adminsend.nicolas7lejeune.workers.dev/broadcast';
-
 function naLoadFromWorker(){
-  return fetch(NA_WORKER_URL, {cache:'no-store'})
-    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+  return fetch(NA_WORKER_URL,{cache:'no-store'})
+    .then(function(r){if(!r.ok)throw 0;return r.json();})
     .then(function(data){
-      if(!data || data.empty) return false;
-      var days = data.days || [];
-      var JOURS = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
-      var emMap = {};
+      if(!data||data.empty)return false;
+      var days=data.days||[],JOURS=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'],emMap={};
       days.forEach(function(day){
-        var slots = [];
-        if(day.matin && day.matin.slots) slots = slots.concat(day.matin.slots);
-        if(day.soir  && day.soir.slots)  slots = slots.concat(day.soir.slots);
+        var slots=[];
+        if(day.matin&&day.matin.slots)slots=slots.concat(day.matin.slots);
+        if(day.soir&&day.soir.slots)slots=slots.concat(day.soir.slots);
         slots.forEach(function(slot){
-          var nom = (slot.emission||'').trim(); if(!nom) return;
-          var key = nom.toLowerCase().replace(/[^a-z0-9]/g,'_');
+          var nom=(slot.emission||'').trim();if(!nom)return;
+          var key=nom.toLowerCase().replace(/[^a-z0-9]/g,'_');
           if(!emMap[key]){
-            var hd=slot.hdebut, hf=slot.hfin;
-            var fmt=function(h){ return h==null?'--':String(Math.floor(h)).padStart(2,'0')+'h'+(h%1?'30':'00'); };
-            emMap[key]={ name:nom, tranche:fmt(hd)+' – '+fmt(hf), color:slot.color||'#E4032E',
-              planning:JOURS.map(function(j){return{day:j,team:'—'};}),
-              jeu:{nom:'',desc:'',heure:''}, commercial:[] };
+            var f=function(h){return h==null?'--':String(Math.floor(h)).padStart(2,'0')+'h'+(h%1?'30':'00');};
+            emMap[key]={name:nom,tranche:f(slot.hdebut)+' – '+f(slot.hfin),color:slot.color||'#E4032E',
+              planning:JOURS.map(function(j){return{day:j,team:'—'};}),jeu:{nom:'',desc:'',heure:''},commercial:[]};
           }
-          var di=day.dayIdx; if(di<0||di>6) return;
+          var di=day.dayIdx;if(di<0||di>6)return;
           var people=[];
-          (slot.animateurs||[]).forEach(function(a){ people.push(a.prenom+' '+(a.nom||'').toUpperCase()); });
-          (slot.journalistes||[]).forEach(function(j){ people.push(j.prenom+' '+(j.nom||'').toUpperCase()); });
-          emMap[key].planning[di].team = people.length ? people.join(' / ') : '—';
+          (slot.animateurs||[]).forEach(function(a){people.push(a.prenom+' '+(a.nom||'').toUpperCase());});
+          (slot.journalistes||[]).forEach(function(j){people.push(j.prenom+' '+(j.nom||'').toUpperCase());});
+          emMap[key].planning[di].team=people.length?people.join('|'):'—';
         });
       });
-      var emissions = Object.values(emMap);
-      if(!emissions.length) return false;
-      renderNaBlocks(emissions);
-      return true;
-    })
-    .catch(function(){ return false; });
+      var em=Object.values(emMap);if(!em.length)return false;
+      renderNaBlocks(em);return true;
+    }).catch(function(){return false;});
 }
-
 function initNoteAntenne(){
   naIncInit();
   naLoadFromWorker().then(function(ok){
-    if(ok) return;
-    if(typeof window.storage !== 'undefined'){
-      naLoadFromStorage().then(function(loaded){
-        if(!loaded){ naRenderBlock('morning');naRenderBlock('feelgood');naRenderBlock('charly');naRenderBlock('dj'); }
-      });
-    } else {
-      naRenderBlock('morning');naRenderBlock('feelgood');naRenderBlock('charly');naRenderBlock('dj');
-    }
+    if(ok)return;
+    if(typeof window.storage!=='undefined'){
+      naLoadFromStorage().then(function(l){if(!l){naRenderBlock('morning');naRenderBlock('feelgood');naRenderBlock('charly');naRenderBlock('dj');}});
+    }else{naRenderBlock('morning');naRenderBlock('feelgood');naRenderBlock('charly');naRenderBlock('dj');}
   });
-  setInterval(naLoadFromWorker, 30000);
+  setInterval(naLoadFromWorker,30000);
 }
 
 /* ── Live antenne Radio Monaco ── */
@@ -4073,7 +4063,7 @@ function naIncCloseModal(e){
   var params=new URLSearchParams(window.location.search);
   var tab=params.get('tab');
   switchTab(tab==='weather'?'weather':(tab==='antenne'?'antenne':'trafic'));
-  setTimeout(naLoadFromWorker, 1000);
+  setTimeout(naLoadFromWorker,1000);
 })();
 </script>
 
