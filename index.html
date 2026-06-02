@@ -2445,7 +2445,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <input type="text" id="na-worker-url-input" placeholder="https://xxx.workers.dev/broadcast"
         style="flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:6px 12px;color:#fff;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;"
         oninput="localStorage.setItem('at_worker_url',this.value);NA_WORKER_URL=this.value;">
-      <button onclick="naLoadFromStorage()" style="background:rgba(46,204,113,.2);border:1px solid rgba(46,204,113,.4);color:#2ecc71;padding:6px 14px;border-radius:5px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;">&#8635; Sync</button>
+      <button onclick="naLoadFromWorker()" style="background:rgba(46,204,113,.2);border:1px solid rgba(46,204,113,.4);color:#2ecc71;padding:6px 14px;border-radius:5px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;">&#8635; Sync</button>
       <span id="na-sync-badge" style="display:none;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(46,204,113,.8);white-space:nowrap;"></span>
     </div>
 
@@ -3812,28 +3812,23 @@ function naSlotTranche(slot){
 }
 
 function naLoadFromStorage(){
-  /* 1. Essayer d'abord le Worker Admin Tool */
-  return naLoadFromWorker().then(function(ok){
-    if(ok) return true;
-    /* 2. Fallback : storage interne */
-    if(typeof window.storage === 'undefined') return false;
-    return window.storage.get('rm_na_emissions', true)
-      .then(function(r){
-        if(!r || !r.value) return false;
-        var data;
-        try{ data = JSON.parse(r.value); }catch(e){ return false; }
-        var emissions = Object.values(data||{});
-        if(!emissions.length) return false;
-        emissions.sort(function(a,b){
-          var ta=(a.tranche||'').split(/[–\-]/)[0].trim();
-          var tb=(b.tranche||'').split(/[–\-]/)[0].trim();
-          return ta.localeCompare(tb);
-        });
-        renderNaBlocks(emissions);
-        return true;
-      })
-      .catch(function(e){ console.warn('naLoadFromStorage:', e); return false; });
-  });
+  if(typeof window.storage === 'undefined') return Promise.resolve(false);
+  return window.storage.get('rm_na_emissions', true)
+    .then(function(r){
+      if(!r || !r.value) return false;
+      var data;
+      try{ data = JSON.parse(r.value); }catch(e){ return false; }
+      var emissions = Object.values(data||{});
+      if(!emissions.length) return false;
+      emissions.sort(function(a,b){
+        var ta=(a.tranche||'').split(/[–\-]/)[0].trim();
+        var tb=(b.tranche||'').split(/[–\-]/)[0].trim();
+        return ta.localeCompare(tb);
+      });
+      renderNaBlocks(emissions);
+      return true;
+    })
+    .catch(function(e){ console.warn('naLoadFromStorage:', e); return false; });
 }
 
 function renderNaBlocks(emissions){
@@ -4048,22 +4043,31 @@ function naIncLoadRecent(){
 }
 function initNoteAntenne(){
   naIncInit();
-  if(typeof window.storage !== 'undefined'){
-    naLoadFromStorage().then(function(loaded){
-      if(!loaded){
+  /* Toujours essayer le Worker Admin Tool d'abord, puis storage interne, puis statique */
+  function doLoad(){
+    naLoadFromWorker().then(function(ok){
+      if(ok) return;
+      /* Fallback storage interne */
+      if(typeof window.storage !== 'undefined'){
+        naLoadFromStorage().then(function(loaded){
+          if(!loaded){
+            naRenderBlock('morning');
+            naRenderBlock('feelgood');
+            naRenderBlock('charly');
+            naRenderBlock('dj');
+          }
+        });
+      } else {
         naRenderBlock('morning');
-    naRenderBlock('feelgood');
-    naRenderBlock('charly');
-    naRenderBlock('dj');
+        naRenderBlock('feelgood');
+        naRenderBlock('charly');
+        naRenderBlock('dj');
       }
     });
-    setInterval(naLoadFromStorage, 30000);
-  } else {
-    naRenderBlock('morning');
-    naRenderBlock('feelgood');
-    naRenderBlock('charly');
-    naRenderBlock('dj');
   }
+  doLoad();
+  /* Rafraichissement toutes les 30 secondes */
+  setInterval(doLoad, 30000);
 }
 
 /* ── Live antenne Radio Monaco ── */
