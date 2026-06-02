@@ -3832,9 +3832,11 @@ function naLoadFromStorage(){
 }
 
 function renderNaBlocks(emissions){
-  var page = document.querySelector('.na-page');
-  if(!page) return;
-  page.innerHTML = emissions.map(function(em){ return renderNaBlockHtml(em); }).join('');
+  /* Cibler le conteneur dédié pour ne pas écraser la barre Worker */
+  var container = document.getElementById('na-blocks-container');
+  if(!container) container = document.querySelector('.na-page');
+  if(!container) return;
+  container.innerHTML = emissions.map(function(em){ return renderNaBlockHtml(em); }).join('');
 }
 
 function renderNaBlockHtml(em){
