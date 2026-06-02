@@ -2624,7 +2624,7 @@ function switchTab(n){
   if(btn)btn.classList.add('active');
   if(tab)tab.classList.add('active');
   if(n==='weather'&&!weatherLoaded){wxLoadZone('am');weatherLoaded=true;}
-  if(n==='antenne'&&!antenneLoaded){initNoteAntenne();antenneLoaded=true;}
+  if(n==='antenne'){if(!antenneLoaded){initNoteAntenne();antenneLoaded=true;}else{naLoadFromWorker();}}
   if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);traficLoaded=true;}
 }
 
@@ -4155,6 +4155,11 @@ function naIncCloseModal(e){
   var params=new URLSearchParams(window.location.search);
   var tab=params.get('tab');
   switchTab(tab==='weather'?'weather':(tab==='antenne'?'antenne':'trafic'));
+  /* Charger les données antenne en arrière-plan même si l'onglet n'est pas actif */
+  setTimeout(function(){
+    naLoadFromWorker();
+    setInterval(naLoadFromWorker, 30000);
+  }, 500);
 })();
 </script>
 
