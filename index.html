@@ -3771,7 +3771,15 @@ function renderNaBlockHtml(em){
   }
 
   var antenne = em.antenne || {};
-  var antenneHtml = '<div class="na-today-team'+(isEmpty?' empty':'')+'">'+todayTeam+'</div>';
+  var antenneHtml = '';
+  if(isEmpty){
+    antenneHtml = '<div class="na-today-team empty">—</div>';
+  } else {
+    var noms = todayTeam.split(' / ');
+    antenneHtml = noms.map(function(n){
+      return '<div class="na-today-team" style="font-size:26px;margin-bottom:4px;">'+n.trim()+'</div>';
+    }).join('');
+  }
   if(antenne.titre)  antenneHtml += '<div class="na-jeu-nom" style="margin-top:8px;font-size:16px;">'+antenne.titre+'</div>';
   if(antenne.desc)   antenneHtml += '<div class="na-jeu-desc">'+antenne.desc+'</div>';
   if(antenne.invite) antenneHtml += '<div class="na-jeu-desc" style="color:var(--yellow)">\uD83C\uDF99 Invité : '+antenne.invite+'</div>';
