@@ -3704,7 +3704,7 @@ function naKeyOf(name){
 }
 
 /* ── URL Worker Admin Tool (sauvegardée en localStorage) ── */
-var NA_WORKER_URL = localStorage.getItem('at_worker_url') || '';
+var NA_WORKER_URL = localStorage.getItem('at_worker_url') || 'https://adminsend.nicolas7lejeune.workers.dev/broadcast';
 
 function naLoadFromWorker(){
   if(!NA_WORKER_URL) return Promise.resolve(false);
