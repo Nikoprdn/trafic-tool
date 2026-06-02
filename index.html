@@ -2439,15 +2439,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 <div class="tab-content" id="tab-antenne">
   <div class="na-page">
-    <!-- Barre de config Worker -->
-    <div id="na-worker-bar" style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;">
-      <span style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);">&#128225; Admin Tool</span>
-      <input type="text" id="na-worker-url-input" placeholder="https://xxx.workers.dev/broadcast"
-        style="flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:6px 12px;color:#fff;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;"
-        oninput="localStorage.setItem('at_worker_url',this.value);NA_WORKER_URL=this.value;">
-      <button onclick="naLoadFromWorker()" style="background:rgba(46,204,113,.2);border:1px solid rgba(46,204,113,.4);color:#2ecc71;padding:6px 14px;border-radius:5px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;">&#8635; Sync</button>
-      <span id="na-sync-badge" style="display:none;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(46,204,113,.8);white-space:nowrap;"></span>
-    </div>
 
     <!-- ▸ MORNING -->
     <div class="na-block na-block--morning">
@@ -2624,7 +2615,7 @@ function switchTab(n){
   if(btn)btn.classList.add('active');
   if(tab)tab.classList.add('active');
   if(n==='weather'&&!weatherLoaded){wxLoadZone('am');weatherLoaded=true;}
-  if(n==='antenne'){if(!antenneLoaded){initNoteAntenne();antenneLoaded=true;}else{naLoadFromWorker();}}
+  if(n==='antenne'&&!antenneLoaded){initNoteAntenne();antenneLoaded=true;}
   if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);traficLoaded=true;}
 }
 
@@ -3703,114 +3694,6 @@ function naKeyOf(name){
     .replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');
 }
 
-/* ── URL Worker Admin Tool (sauvegardée en localStorage) ── */
-var NA_WORKER_URL = localStorage.getItem('at_worker_url') || 'https://adminsend.nicolas7lejeune.workers.dev/broadcast';
-
-function naLoadFromWorker(){
-  if(!NA_WORKER_URL) return Promise.resolve(false);
-  return fetch(NA_WORKER_URL, {cache:'no-store'})
-    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-    .then(function(data){
-      console.log('[AdminTool] Worker data recu:', JSON.stringify(data).slice(0,300));
-      if(!data || data.empty) return false;
-      var emissions = naConvertPayload(data);
-      console.log('[AdminTool] Emissions converties:', emissions.length, JSON.stringify(emissions).slice(0,300));
-      if(!emissions.length) return false;
-      renderNaBlocks(emissions);
-      var badge = document.getElementById('na-sync-badge');
-      if(badge){
-        var d = data.publishedAt ? new Date(data.publishedAt) : new Date();
-        badge.textContent = 'Sync ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-        badge.style.display = 'inline-block';
-        badge.style.color = 'rgba(46,204,113,.9)';
-      }
-      return true;
-    })
-    .catch(function(e){
-      console.error('[AdminTool] Erreur Worker:', e);
-      return false;
-    });
-}
-
-function naConvertPayload(data){
-  /*
-    Payload Admin Tool :
-    {
-      weekKey, publishedAt,
-      days: [
-        { dayIdx:0, date, mois, annee, isoDate,
-          matin: { slots: [{hdebut,hfin,emission,color,animateurs:[],journalistes:[]}] },
-          soir:  { slots: [...] }
-        },
-        ... x7
-      ]
-    }
-    Objectif : regrouper par nom d'emission + remplir planning semaine
-  */
-  var days = data.days || [];
-  var JOURS = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
-
-  /* Collecter toutes les émissions distinctes avec leurs créneaux */
-  var emMap = {};
-
-  days.forEach(function(day){
-    var allSlots = [];
-    if(day.matin && day.matin.slots) allSlots = allSlots.concat(day.matin.slots);
-    if(day.soir  && day.soir.slots)  allSlots = allSlots.concat(day.soir.slots);
-
-    allSlots.forEach(function(slot){
-      var nom = (slot.emission || '').trim();
-      if(!nom) return;
-
-      /* Clé unique par émission */
-      var key = nom.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');
-
-      /* Créer l'entrée si elle n'existe pas encore */
-      if(!emMap[key]){
-        emMap[key] = {
-          _firstHdebut: slot.hdebut,
-          name:  nom,
-          tranche: naHeure(slot.hdebut) + ' – ' + naHeure(slot.hfin),
-          color: slot.color || '#E4032E',
-          planning: JOURS.map(function(j){ return {day:j, team:'—'}; }),
-          jeu:{nom:'',desc:'',heure:''},
-          commercial:[]
-        };
-      }
-
-      /* Construire la liste des personnes ce jour-là */
-      var people = [];
-      (slot.animateurs  || []).forEach(function(a){
-        people.push(a.prenom + ' ' + (a.nom||'').toUpperCase());
-      });
-      (slot.journalistes || []).forEach(function(j){
-        people.push(j.prenom + ' ' + (j.nom||'').toUpperCase());
-      });
-
-      var di = typeof day.dayIdx === 'number' ? day.dayIdx : -1;
-      if(di >= 0 && di < 7){
-        emMap[key].planning[di].team = people.length ? people.join(' / ') : '—';
-      }
-    });
-  });
-
-  /* Trier par heure de début */
-  return Object.values(emMap).sort(function(a,b){
-    return (a._firstHdebut||0) - (b._firstHdebut||0);
-  });
-}
-
-function naHeure(h){
-  if(h === undefined || h === null || isNaN(h)) return '--:--';
-  var hh = Math.floor(h);
-  var mm = (h % 1) ? '30' : '00';
-  return String(hh).padStart(2,'0') + 'h' + mm;
-}
-
-function naSlotTranche(slot){
-  return naHeure(slot.hdebut) + ' – ' + naHeure(slot.hfin);
-}
-
 function naLoadFromStorage(){
   if(typeof window.storage === 'undefined') return Promise.resolve(false);
   return window.storage.get('rm_na_emissions', true)
@@ -3832,11 +3715,9 @@ function naLoadFromStorage(){
 }
 
 function renderNaBlocks(emissions){
-  /* Cibler le conteneur dédié pour ne pas écraser la barre Worker */
-  var container = document.getElementById('na-blocks-container');
-  if(!container) container = document.querySelector('.na-page');
-  if(!container) return;
-  container.innerHTML = emissions.map(function(em){ return renderNaBlockHtml(em); }).join('');
+  var page = document.querySelector('.na-page');
+  if(!page) return;
+  page.innerHTML = emissions.map(function(em){ return renderNaBlockHtml(em); }).join('');
 }
 
 function renderNaBlockHtml(em){
@@ -4043,33 +3924,60 @@ function naIncLoadRecent(){
     render(JSON.parse(localStorage.getItem(key)||'[]'));
   }
 }
+
+/* ── Worker Admin Tool ── */
+var NA_WORKER_URL = 'https://adminsend.nicolas7lejeune.workers.dev/broadcast';
+
+function naLoadFromWorker(){
+  return fetch(NA_WORKER_URL, {cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(data){
+      if(!data || data.empty) return false;
+      var days = data.days || [];
+      var JOURS = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+      var emMap = {};
+      days.forEach(function(day){
+        var slots = [];
+        if(day.matin && day.matin.slots) slots = slots.concat(day.matin.slots);
+        if(day.soir  && day.soir.slots)  slots = slots.concat(day.soir.slots);
+        slots.forEach(function(slot){
+          var nom = (slot.emission||'').trim(); if(!nom) return;
+          var key = nom.toLowerCase().replace(/[^a-z0-9]/g,'_');
+          if(!emMap[key]){
+            var hd=slot.hdebut, hf=slot.hfin;
+            var fmt=function(h){ return h==null?'--':String(Math.floor(h)).padStart(2,'0')+'h'+(h%1?'30':'00'); };
+            emMap[key]={ name:nom, tranche:fmt(hd)+' – '+fmt(hf), color:slot.color||'#E4032E',
+              planning:JOURS.map(function(j){return{day:j,team:'—'};}),
+              jeu:{nom:'',desc:'',heure:''}, commercial:[] };
+          }
+          var di=day.dayIdx; if(di<0||di>6) return;
+          var people=[];
+          (slot.animateurs||[]).forEach(function(a){ people.push(a.prenom+' '+(a.nom||'').toUpperCase()); });
+          (slot.journalistes||[]).forEach(function(j){ people.push(j.prenom+' '+(j.nom||'').toUpperCase()); });
+          emMap[key].planning[di].team = people.length ? people.join(' / ') : '—';
+        });
+      });
+      var emissions = Object.values(emMap);
+      if(!emissions.length) return false;
+      renderNaBlocks(emissions);
+      return true;
+    })
+    .catch(function(){ return false; });
+}
+
 function initNoteAntenne(){
   naIncInit();
-  /* Toujours essayer le Worker Admin Tool d'abord, puis storage interne, puis statique */
-  function doLoad(){
-    naLoadFromWorker().then(function(ok){
-      if(ok) return;
-      /* Fallback storage interne */
-      if(typeof window.storage !== 'undefined'){
-        naLoadFromStorage().then(function(loaded){
-          if(!loaded){
-            naRenderBlock('morning');
-            naRenderBlock('feelgood');
-            naRenderBlock('charly');
-            naRenderBlock('dj');
-          }
-        });
-      } else {
-        naRenderBlock('morning');
-        naRenderBlock('feelgood');
-        naRenderBlock('charly');
-        naRenderBlock('dj');
-      }
-    });
-  }
-  doLoad();
-  /* Rafraichissement toutes les 30 secondes */
-  setInterval(doLoad, 30000);
+  naLoadFromWorker().then(function(ok){
+    if(ok) return;
+    if(typeof window.storage !== 'undefined'){
+      naLoadFromStorage().then(function(loaded){
+        if(!loaded){ naRenderBlock('morning');naRenderBlock('feelgood');naRenderBlock('charly');naRenderBlock('dj'); }
+      });
+    } else {
+      naRenderBlock('morning');naRenderBlock('feelgood');naRenderBlock('charly');naRenderBlock('dj');
+    }
+  });
+  setInterval(naLoadFromWorker, 30000);
 }
 
 /* ── Live antenne Radio Monaco ── */
@@ -4157,11 +4065,7 @@ function naIncCloseModal(e){
   var params=new URLSearchParams(window.location.search);
   var tab=params.get('tab');
   switchTab(tab==='weather'?'weather':(tab==='antenne'?'antenne':'trafic'));
-  /* Charger les données antenne en arrière-plan même si l'onglet n'est pas actif */
-  setTimeout(function(){
-    naLoadFromWorker();
-    setInterval(naLoadFromWorker, 30000);
-  }, 500);
+  setTimeout(naLoadFromWorker, 1000);
 })();
 </script>
 
