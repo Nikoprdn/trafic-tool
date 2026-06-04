@@ -2562,8 +2562,17 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
             <input class="na-inc-input" type="time" id="na-inc-heure-fin" />
           </div>
         </div>
-        <div class="na-inc-field">
-          <label class="na-inc-label">Description <span style="opacity:.4">(optionnel)</span></label>
+        <div class="na-inc-form-row" style="grid-template-columns:1fr 1fr;">
+          <div class="na-inc-field">
+            <label class="na-inc-label">Déclaré par</label>
+            <input class="na-inc-input" type="text" id="na-inc-auteur" placeholder="Votre nom">
+          </div>
+          <div class="na-inc-field">
+            <label class="na-inc-label">Description <span style="opacity:.4">(opt.)</span></label>
+            <input class="na-inc-input" type="text" id="na-inc-desc-inline" placeholder="Détails…">
+          </div>
+        </div>
+        <div class="na-inc-field" style="display:none;">
           <textarea class="na-inc-input na-inc-textarea" id="na-inc-desc" rows="2" placeholder="Détails…"></textarea>
         </div>
         <div class="na-inc-actions">
@@ -3870,7 +3879,10 @@ function naIncDeclare(){
   if(!naIncSelectedType) return;
   var heureDebut = document.getElementById('na-inc-heure-debut').value || '—';
   var heureFin   = document.getElementById('na-inc-heure-fin').value   || '';
-  var desc       = document.getElementById('na-inc-desc').value.trim() || '';
+  var descEl     = document.getElementById('na-inc-desc-inline') || document.getElementById('na-inc-desc');
+  var desc       = descEl ? descEl.value.trim() : '';
+  var auteurEl   = document.getElementById('na-inc-auteur');
+  var auteur     = auteurEl ? auteurEl.value.trim() : '';
 
   var incident = {
     id:        'inc_' + Date.now(),
@@ -3879,9 +3891,17 @@ function naIncDeclare(){
     heureDebut: heureDebut,
     heureFin:   heureFin,
     desc:       desc,
+    auteur:     auteur,
     declaredAt: new Date().toISOString(),
     status:     'actif'
   };
+
+  /* Envoyer au Worker Cloudflare */
+  fetch('https://adminsend.nicolas7lejeune.workers.dev/incidents', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(incident)
+  }).catch(function(){});
 
   /* Sauvegarder dans le storage partagé (lu par la page incidents) */
   var key = 'rm_incidents';
@@ -3908,9 +3928,11 @@ function naIncDeclare(){
   /* Rafraîchir l'affichage */
   naIncLoadRecent();
   naIncCancel();
-  /* Reset desc */
-  var descEl = document.getElementById('na-inc-desc');
-  if(descEl) descEl.value = '';
+  /* Reset champs */
+  var descEl2 = document.getElementById('na-inc-desc-inline') || document.getElementById('na-inc-desc');
+  if(descEl2) descEl2.value = '';
+  var auteurEl2 = document.getElementById('na-inc-auteur');
+  if(auteurEl2) auteurEl2.value = '';
 }
 
 function naIncLoadRecent(){
