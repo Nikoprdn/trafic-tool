@@ -3925,8 +3925,7 @@ function naIncDeclare(){
     save(localStorage.getItem(key));
   }
 
-  /* Rafraîchir l'affichage */
-  naIncLoadRecent();
+  /* On ne recharge pas la liste locale — l'incident part vers Admin Tool */
   naIncCancel();
   /* Reset champs */
   var descEl2 = document.getElementById('na-inc-desc-inline') || document.getElementById('na-inc-desc');
