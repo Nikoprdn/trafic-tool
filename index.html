@@ -3973,7 +3973,13 @@ function naLoadFromWorker(){
           var key=nom.toLowerCase().replace(/[^a-z0-9]/g,'_');
           if(!emMap[key]){
             var f=function(h){return h==null?'--':String(Math.floor(h)).padStart(2,'0')+'h'+(h%1?'30':'00');};
-            emMap[key]={name:nom,tranche:f(slot.hdebut)+' - '+f(slot.hfin),color:slot.color||'#E4032E',
+            /* Couleurs fixes par emission */
+            var emColor=slot.color||'#E4032E';
+            var nomLow=nom.toLowerCase();
+            if(nomLow.indexOf('morning')>=0) emColor='#E4032E';
+            else if(nomLow.indexOf('feel')>=0) emColor='#93C01F';
+            else if(nomLow.indexOf('charly')>=0) emColor='#F59C00';
+            emMap[key]={name:nom,tranche:f(slot.hdebut)+' - '+f(slot.hfin),color:emColor,
               planning:JOURS.map(function(j){return{day:j,team:'---',people:[]};}),
               jeu:{nom:'',desc:'',heure:''},commercial:[]};
           }
@@ -3985,7 +3991,15 @@ function naLoadFromWorker(){
           var di=day.dayIdx;if(di<0||di>6)return;
           var people=[];
           (slot.animateurs||[]).forEach(function(a){people.push({nom:a.prenom+' '+(a.nom||'').toUpperCase(),color:a.color||'#E4032E',role:'animateur'});});
-          (slot.journalistes||[]).forEach(function(j){people.push({nom:j.prenom+' '+(j.nom||'').toUpperCase(),color:j.color||'#E87C3E',role:'journaliste'});});
+          (slot.journalistes||[]).forEach(function(j){
+            var nomComplet=j.prenom+' '+(j.nom||'').toUpperCase();
+            var fh=function(h){return h==null?'':String(Math.floor(h)).padStart(2,'0')+'h'+(h%1?'30':'00');};
+            /* Si VT CONSULT, ajouter l'heure du RDV */
+            if(nomComplet.toUpperCase().indexOf('VT')>=0&&nomComplet.toUpperCase().indexOf('CONSULT')>=0){
+              nomComplet=nomComplet+' — '+fh(slot.hdebut);
+            }
+            people.push({nom:nomComplet,color:j.color||'#E87C3E',role:'journaliste'});
+          });
           var teamStr=people.map(function(p){return p.nom+':'+p.role;}).join('|');
           emMap[key].planning[di].team=teamStr||'---';
           emMap[key].planning[di].people=people;
