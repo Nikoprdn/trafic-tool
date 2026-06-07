@@ -3718,6 +3718,9 @@ function renderNaBlocks(emissions){
   var container=document.getElementById('na-blocks-container');
   if(!container)container=document.querySelector('.na-page');
   if(!container)return;
+  container.style.display='flex';
+  container.style.flexDirection='column';
+  container.style.gap='24px';
   var html=emissions.map(function(em){ return renderNaBlockHtml(em); }).join('');
   if(!html)html='<div style="padding:40px;text-align:center;font-family:\'Share Tech Mono\',monospace;font-size:12px;color:rgba(255,255,255,.25);letter-spacing:2px;">AUCUNE ÉMISSION CONFIGURÉE</div>';
   container.innerHTML=html;
@@ -4027,7 +4030,7 @@ function naLoadFromWorker(){
         });
       });
       var em=Object.values(emMap);
-      console.log('[NoteAntenne] Emissions trouvées:', em.length, em.map(function(e){return e.name;}));
+      console.log('[NoteAntenne] Emissions trouvées:', em.length, em.map(function(e){return e.name+'('+e.tranche+')';}));
       if(!em.length)return false;
       /* Trier par heure de début */
       em.sort(function(a,b){
