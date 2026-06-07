@@ -7334,34 +7334,13 @@ function registerVUGain(){}
 
 // ── DIFF 1 — source unique → VU sticky ──
 /* Declarer vu1 pour eviter ReferenceError */
-var _diffSecoursActive = false;
-
-function diffSecoursSetActive(active){
-  if(_diffSecoursActive === active) return;
-  _diffSecoursActive = active;
-  var btn = document.getElementById('tab-btn-secours');
-  if(btn){
-    if(active) btn.classList.add('diffsec-alert');
-    else btn.classList.remove('diffsec-alert');
-  }
-  fetch('https://adminsend.nicolas7lejeune.workers.dev/diffsec', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({active: active, triggeredAt: new Date().toISOString()})
-  }).catch(function(){});
-}
-
 var vu1 = null;
 
 const _t0_orig=D[0].togglePlay.bind(D[0]);
 D[0].togglePlay=function(){
+  console.log('[PLAY] D[0].togglePlay appelé, tracks:', D[0].tracks.length, 'playing:', D[0].playing);
   getCtx().resume();
   _t0_orig();
-  /* Notifier Admin Tool : diffuseur actif si en lecture */
-  setTimeout(function(){
-    var isPlaying = D[0].playing;
-    diffSecoursSetActive(isPlaying);
-  }, 100);
 };
 
 function vuLoop(){
@@ -8152,7 +8131,22 @@ document.addEventListener('keydown', function(e) {
 })();
 
 /* ── DIFFUSEUR DE SECOURS ── */
-/* diffSecoursSetActive déplacée plus haut */
+var _diffSecoursActive = false;
+
+function diffSecoursSetActive(active){
+  if(_diffSecoursActive === active) return;
+  _diffSecoursActive = active;
+  var btn = document.getElementById('tab-btn-secours');
+  if(btn){
+    if(active) btn.classList.add('diffsec-alert');
+    else btn.classList.remove('diffsec-alert');
+  }
+  fetch('https://adminsend.nicolas7lejeune.workers.dev/diffsec', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({active: active, triggeredAt: new Date().toISOString()})
+  }).catch(function(){});
+}
 
 </script>
 
