@@ -2495,7 +2495,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <span id="na-sync-badge" style="display:none;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(46,204,113,.7);"></span>
       <button onclick="naLoadFromWorker()" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3);padding:3px 10px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;cursor:pointer;">&#8635; Sync</button>
     </div>
-    <div id="na-blocks-container"></div>
+    <div id="na-blocks-container"><div style="padding:40px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,255,255,.25);letter-spacing:2px;">SYNCHRONISATION EN COURS…</div></div>
 
 
   </div>
@@ -3717,7 +3717,9 @@ function renderNaBlocks(emissions){
   var container=document.getElementById('na-blocks-container');
   if(!container)container=document.querySelector('.na-page');
   if(!container)return;
-  container.innerHTML=emissions.map(function(em){ return renderNaBlockHtml(em); }).join('');
+  var html=emissions.map(function(em){ return renderNaBlockHtml(em); }).join('');
+  if(!html)html='<div style="padding:40px;text-align:center;font-family:\'Share Tech Mono\',monospace;font-size:12px;color:rgba(255,255,255,.25);letter-spacing:2px;">AUCUNE ÉMISSION CONFIGURÉE</div>';
+  container.innerHTML=html;
 }
 
 function renderNaBlockHtml(em){
@@ -4020,12 +4022,7 @@ function naLoadFromWorker(){
 }
 function initNoteAntenne(){
   naIncInit();
-  naLoadFromWorker().then(function(ok){
-    if(ok)return;
-    if(typeof window.storage!=='undefined'){
-      naLoadFromStorage().then(function(l){if(!l){naRenderBlock('morning');naRenderBlock('feelgood');naRenderBlock('charly');naRenderBlock('dj');}});
-    }else{naRenderBlock('morning');naRenderBlock('feelgood');naRenderBlock('charly');naRenderBlock('dj');}
-  });
+  naLoadFromWorker();
   setInterval(naLoadFromWorker,30000);
 }
 
