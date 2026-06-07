@@ -8148,6 +8148,28 @@ function diffSecoursSetActive(active){
   }).catch(function(){});
 }
 
+/* Attacher le voyant diffsec sur le bouton play après chargement complet */
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    /* Bouton PLAY principal */
+    var playBtn = document.querySelector('.button.is-success.is-small.is-outlined');
+    if(playBtn){
+      playBtn.addEventListener('click', function(){
+        setTimeout(function(){ diffSecoursSetActive(D[0].playing); }, 200);
+      });
+    }
+    /* Surveiller l'état playing toutes les 2 secondes */
+    setInterval(function(){
+      if(typeof D !== 'undefined' && D[0]){
+        var isPlaying = !!D[0].playing;
+        if(isPlaying !== _diffSecoursActive){
+          diffSecoursSetActive(isPlaying);
+        }
+      }
+    }, 2000);
+  }, 3000);
+});
+
 </script>
 
 </body>
