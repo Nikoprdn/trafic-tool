@@ -8131,6 +8131,9 @@ document.addEventListener('keydown', function(e) {
 /* ── DIFFUSEUR DE SECOURS ── */
 var _diffSecoursActive = false;
 
+/* Stocker l'etat diffsec via le Cache API du Worker broadcast */
+var DIFFSEC_KEY = 'https://adminsend-diffsec/state';
+
 function diffSecoursSetActive(active){
   if(_diffSecoursActive === active) return;
   _diffSecoursActive = active;
@@ -8138,34 +8141,42 @@ function diffSecoursSetActive(active){
   /* Clignotement du bouton onglet */
   var btn = document.getElementById('tab-btn-secours');
   if(btn){
-    if(active){
-      btn.classList.add('diffsec-alert');
-    } else {
-      btn.classList.remove('diffsec-alert');
-    }
+    if(active) btn.classList.add('diffsec-alert');
+    else btn.classList.remove('diffsec-alert');
   }
 
-  /* Envoyer l'état au Worker */
-  fetch('https://adminsend.nicolas7lejeune.workers.dev/diffsec', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({active: active, triggeredAt: new Date().toISOString()})
-  }).catch(function(){});
+  /* Lire le broadcast actuel puis le republier avec diffsec */
+  fetch('https://adminsend.nicolas7lejeune.workers.dev/broadcast', {cache:'no-store'})
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if(!data || data.empty) data = {};
+      data.diffsec = { active: active, triggeredAt: new Date().toISOString() };
+      return fetch('https://adminsend.nicolas7lejeune.workers.dev/broadcast', {
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(data)
+      });
+    }).catch(function(){});
 }
 
-/* Polling : vérifier si le Worker connait un état actif (au cas où rechargement page) */
+/* Polling : lire l'etat diffsec depuis le broadcast */
 function diffSecoursSync(){
-  fetch('https://adminsend.nicolas7lejeune.workers.dev/diffsec', {cache:'no-store'})
+  fetch('https://adminsend.nicolas7lejeune.workers.dev/broadcast', {cache:'no-store'})
     .then(function(r){ return r.json(); })
     .then(function(d){
-      if(d && d.active && !_diffSecoursActive){
+      var active = d && d.diffsec && d.diffsec.active;
+      var btn = document.getElementById('tab-btn-secours');
+      if(active && !_diffSecoursActive){
         _diffSecoursActive = true;
-        var btn = document.getElementById('tab-btn-secours');
         if(btn) btn.classList.add('diffsec-alert');
+      } else if(!active && _diffSecoursActive){
+        _diffSecoursActive = false;
+        if(btn) btn.classList.remove('diffsec-alert');
       }
     }).catch(function(){});
 }
-setTimeout(diffSecoursSync, 3000);
+setTimeout(diffSecoursSync, 2000);
+setInterval(diffSecoursSync, 15000);
 
 </script>
 
