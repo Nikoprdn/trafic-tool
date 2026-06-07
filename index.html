@@ -3635,9 +3635,10 @@ function naRenderPlanning(show){
   days.forEach(function(d,i){
     var isToday=(i===todayIdx);
     var isEmpty=(!d.team||d.team==='—');
+    var teamDisp=isEmpty?'—':d.team.split('|').map(function(p){return p.trim().split(':')[0];}).join('<br>');
     html+='<div class="na-plan-day'+(isToday?' today':'')+'">'
       +'<div class="na-plan-day-name">'+d.day+'</div>'
-      +'<div class="na-plan-person'+(isEmpty?' empty':'')+'">'+d.team+'</div>'
+      +'<div class="na-plan-person'+(isEmpty?' empty':'')+'">'+teamDisp+'</div>'
     +'</div>';
   });
   el.innerHTML=html;
@@ -3733,8 +3734,11 @@ function renderNaBlockHtml(em){
 
   var planningHtml = planning.map(function(d,i){
     var isToday = (i === todayIdx);
-    var noTeam  = (!d.team || d.team === '—');
-    return '<div class="na-plan-day'+(isToday?' today':'')+'"><div class="na-plan-day-name">'+d.day+'</div><div class="na-plan-person'+(noTeam?' empty':'')+'">'+d.team+'</div></div>';
+    var noTeam  = (!d.team || d.team === '—' || d.team === '---');
+    var tDisp = noTeam ? '—' : (d.people && d.people.length
+      ? d.people.map(function(p){ return p.nom; }).join('<br>')
+      : d.team.split('|').map(function(p){ return p.trim().split(':')[0]; }).join('<br>'));
+    return '<div class="na-plan-day'+(isToday?' today':'')+'"><div class="na-plan-day-name">'+d.day+'</div><div class="na-plan-person'+(noTeam?' empty':'')+'">'+tDisp+'</div></div>';
   }).join('');
 
   var jeu = em.jeu || {};
