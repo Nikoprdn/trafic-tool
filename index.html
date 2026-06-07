@@ -2253,6 +2253,21 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .tab-btn-incident .tab-btn-txt{
   position:relative;z-index:1;
 }
+
+/* DIFFUSEUR SECOURS — alerte rouge */
+@keyframes diffSecBlink {
+  0%,100% { background:rgba(228,3,46,.4); border-bottom-color:#E4032E; }
+  50%      { background:rgba(228,3,46,.1); border-bottom-color:rgba(228,3,46,.3); }
+}
+.tab-btn-secours.diffsec-alert {
+  animation: diffSecBlink .5s ease-in-out infinite;
+  color: #fff !important;
+}
+.tab-btn-secours.diffsec-alert .tab-btn-txt,
+.tab-btn-secours.diffsec-alert .tab-btn-ico {
+  color: #fff !important;
+}
+
 .tab-btn-secours{
   position:relative;
   overflow:hidden;
@@ -2660,7 +2675,14 @@ function switchTab(n){
   if(n==='weather'&&!weatherLoaded){wxLoadZone('am');weatherLoaded=true;}
   if(n==='antenne'){if(!antenneLoaded){initNoteAntenne();antenneLoaded=true;}else{naLoadFromWorker();}}
   if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);traficLoaded=true;}
-  if(n==='secours'){/* à compléter */}
+  if(n==='secours'){
+    loadDiffSecours();
+    /* Notifier Admin Tool que le diffuseur de secours est actif */
+    diffSecoursSetActive(true);
+  } else {
+    /* Si on quitte l'onglet secours, le marquer inactif */
+    diffSecoursSetActive(false);
+  }
 }
 
 
@@ -8105,6 +8127,46 @@ document.addEventListener('keydown', function(e) {
   var btn = document.getElementById('tab-btn-secours');
   if (btn) btn.addEventListener('click', loadDiffSecours);
 })();
+
+/* ── DIFFUSEUR DE SECOURS ── */
+var _diffSecoursActive = false;
+
+function diffSecoursSetActive(active){
+  if(_diffSecoursActive === active) return;
+  _diffSecoursActive = active;
+
+  /* Clignotement du bouton onglet */
+  var btn = document.getElementById('tab-btn-secours');
+  if(btn){
+    if(active){
+      btn.classList.add('diffsec-alert');
+    } else {
+      btn.classList.remove('diffsec-alert');
+    }
+  }
+
+  /* Envoyer l'état au Worker */
+  fetch('https://adminsend.nicolas7lejeune.workers.dev/diffsec', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({active: active, triggeredAt: new Date().toISOString()})
+  }).catch(function(){});
+}
+
+/* Polling : vérifier si le Worker connait un état actif (au cas où rechargement page) */
+function diffSecoursSync(){
+  fetch('https://adminsend.nicolas7lejeune.workers.dev/diffsec', {cache:'no-store'})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if(d && d.active && !_diffSecoursActive){
+        _diffSecoursActive = true;
+        var btn = document.getElementById('tab-btn-secours');
+        if(btn) btn.classList.add('diffsec-alert');
+      }
+    }).catch(function(){});
+}
+setTimeout(diffSecoursSync, 3000);
+
 </script>
 
 </body>
