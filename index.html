@@ -2565,20 +2565,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 </div>
 <!-- ▸ TAB SECOURS -->
 <div class="tab-content" id="tab-secours" style="height:calc(100vh - 116px);overflow:hidden;display:flex;flex-direction:column;">
-  <!-- Barre de contrôle diffsec -->
-  <div style="display:flex;align-items:center;gap:16px;padding:10px 20px;background:#1a0404;border-bottom:2px solid #E4032E;flex-shrink:0;">
-    <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);">&#128308; Diffuseur de Secours</span>
-    <div style="flex:1;"></div>
-    <button id="diffsec-on-btn" onclick="diffSecoursSetActive(true)"
-      style="background:#E4032E;border:none;color:#fff;padding:8px 20px;border-radius:5px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;">
-      &#128308; ACTIVER
-    </button>
-    <button id="diffsec-off-btn" onclick="diffSecoursSetActive(false)"
-      style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);padding:8px 20px;border-radius:5px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;">
-      &#9899; DESACTIVER
-    </button>
-    <span id="diffsec-status-tt" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,255,255,.3);">Inactif</span>
-  </div>
+
   <iframe id="diff-secours-frame" style="width:100%;flex:1;border:none;display:block;min-height:0;"></iframe>
 </div>
 <!-- ▸ Modal Incident Antenne -->
@@ -6836,6 +6823,22 @@ function pazToggleAuto(){ pazToggleNext(); }
 const _r0=D[0].render.bind(D[0]);
 D[0].render=function(){ _r0(); pazRender(); pazRenderList(); };
 
+var _diffSecoursActive = false;
+
+function diffSecoursSetActive(active){
+  _diffSecoursActive = active;
+  var btn = document.getElementById('tab-btn-secours');
+  if(btn){
+    if(active) btn.classList.add('diffsec-alert');
+    else btn.classList.remove('diffsec-alert');
+  }
+  fetch('https://adminsend.nicolas7lejeune.workers.dev/diffsec', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({active: active, triggeredAt: new Date().toISOString()})
+  }).catch(function(){});
+}
+
 const _s0=D[0]._startTrack.bind(D[0]);
 D[0]._startTrack=function(i){
   console.log('[PLAY] _startTrack appelé, i:', i, 'tracks:', D[0].tracks.length);
@@ -8153,26 +8156,7 @@ document.addEventListener('keydown', function(e) {
 })();
 
 /* ── DIFFUSEUR DE SECOURS ── */
-var _diffSecoursActive = false;
 
-function diffSecoursSetActive(active){
-  _diffSecoursActive = active;
-  /* Bouton onglet */
-  var btn = document.getElementById('tab-btn-secours');
-  if(btn){
-    if(active) btn.classList.add('diffsec-alert');
-    else btn.classList.remove('diffsec-alert');
-  }
-  /* Statut local dans la barre */
-  var st = document.getElementById('diffsec-status-tt');
-  if(st){ st.textContent = active ? 'ACTIF' : 'Inactif'; st.style.color = active ? '#E4032E' : 'rgba(255,255,255,.3)'; }
-  /* Envoyer au Worker */
-  fetch('https://adminsend.nicolas7lejeune.workers.dev/diffsec', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({active: active, triggeredAt: new Date().toISOString()})
-  }).catch(function(){});
-}
 
 /* Attacher le voyant diffsec sur le bouton play après chargement complet */
 window.addEventListener('load', function(){
