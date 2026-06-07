@@ -6841,8 +6841,28 @@ function diffSecoursSetActive(active){
 const _s0=D[0]._startTrack.bind(D[0]);
 D[0]._startTrack=function(i){
   console.log('[PLAY] _startTrack appelé, i:', i, 'tracks:', D[0].tracks.length);
-  /* Notifier Admin Tool que le diffuseur est actif */
+  /* Notifier Admin Tool : diffuseur actif */
   if(typeof diffSecoursSetActive === 'function') diffSecoursSetActive(true);
+  /* Créer un incident automatique */
+  setTimeout(function(){
+    var track = D[0].tracks[i];
+    var fichier = track ? (track.title || track.src || 'Inconnu') : 'Inconnu';
+    var now = new Date();
+    var heure = now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    var incident = {
+      type: 'Diffuseur Secours',
+      heureDebut: heure,
+      heureFin: '',
+      desc: 'Fichier : ' + fichier,
+      auteur: 'Systeme',
+      declaredAt: now.toISOString()
+    };
+    fetch('https://adminsend.nicolas7lejeune.workers.dev/incidents', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(incident)
+    }).catch(function(){});
+  }, 500);
   _pazWvFile=null;
   _pazZoom={on:false,s:0,e:1,key:''};
   _pazLaunchTime=nowClock();
@@ -7353,6 +7373,13 @@ function registerVUGain(){}
 // ── DIFF 1 — source unique → VU sticky ──
 /* Declarer vu1 pour eviter ReferenceError */
 var vu1 = null;
+
+/* Hook stopAll → diffsec false */
+const _stopAll_orig=D[0].stopAll.bind(D[0]);
+D[0].stopAll=function(){
+  _stopAll_orig();
+  if(typeof diffSecoursSetActive === 'function') diffSecoursSetActive(false);
+};
 
 const _t0_orig=D[0].togglePlay.bind(D[0]);
 D[0].togglePlay=function(){
