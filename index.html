@@ -4223,34 +4223,34 @@ function naIncCloseModal(e){
   }
 
   function checkSNCF() {
-    var url = 'https://sncf-proxy.nicolas7lejeune.workers.dev/?gares=nice';
+    // Teste la vraie URL utilisée par l'app (gare de Nice)
     setDot('dot-sncf', 'pending');
-    fetch(url, { signal: AbortSignal.timeout(5000) })
+    fetch('https://sncf-proxy.nicolas7lejeune.workers.dev/?gares=nice', { signal: AbortSignal.timeout(8000) })
       .then(function(r) { setDot('dot-sncf', r.ok ? 'ok' : 'error'); })
       .catch(function() { setDot('dot-sncf', 'error'); });
   }
 
   function checkTomTom() {
-    var url = 'https://apitom.nicolas7lejeune.workers.dev/status';
+    // Teste le worker TomTom avec un appel léger (Monaco)
     setDot('dot-tomtom', 'pending');
-    fetch(url, { signal: AbortSignal.timeout(5000) })
-      .then(function(r) { setDot('dot-tomtom', r.ok ? 'ok' : 'error'); })
+    fetch('https://apitom.nicolas7lejeune.workers.dev/?from=43.7384,7.4246&to=43.7384,7.4246', { signal: AbortSignal.timeout(8000) })
+      .then(function(r) { setDot('dot-tomtom', r.status < 500 ? 'ok' : 'error'); })
       .catch(function() { setDot('dot-tomtom', 'error'); });
   }
 
   function checkMeteo() {
-    var url = 'https://api.open-meteo.com/v1/forecast?latitude=43.7&longitude=7.25&current=temperature_2m';
+    // Teste l'API open-meteo directement (pas de proxy)
     setDot('dot-meteo', 'pending');
-    fetch(url, { signal: AbortSignal.timeout(5000) })
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=43.7&longitude=7.25&current=temperature_2m', { signal: AbortSignal.timeout(8000) })
       .then(function(r) { setDot('dot-meteo', r.ok ? 'ok' : 'error'); })
       .catch(function() { setDot('dot-meteo', 'error'); });
   }
 
   function checkAdmin() {
-    var url = 'https://adminsend.nicolas7lejeune.workers.dev/status';
+    // Teste le worker admin avec un GET sur /broadcast
     setDot('dot-admin', 'pending');
-    fetch(url, { signal: AbortSignal.timeout(5000) })
-      .then(function(r) { setDot('dot-admin', r.ok ? 'ok' : 'error'); })
+    fetch('https://adminsend.nicolas7lejeune.workers.dev/broadcast', { signal: AbortSignal.timeout(8000) })
+      .then(function(r) { setDot('dot-admin', r.status < 500 ? 'ok' : 'error'); })
       .catch(function() { setDot('dot-admin', 'error'); });
   }
 
