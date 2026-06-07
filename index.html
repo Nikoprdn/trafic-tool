@@ -2678,11 +2678,6 @@ function switchTab(n){
   if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);traficLoaded=true;}
   if(n==='secours'){
     loadDiffSecours();
-    /* Notifier Admin Tool que le diffuseur de secours est actif */
-    diffSecoursSetActive(true);
-  } else {
-    /* Si on quitte l'onglet secours, le marquer inactif */
-    diffSecoursSetActive(false);
   }
 }
 
