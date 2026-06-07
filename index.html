@@ -3973,39 +3973,51 @@ function naLoadFromWorker(){
   return fetch(NA_WORKER_URL,{cache:'no-store'})
     .then(function(r){if(!r.ok)throw 0;return r.json();})
     .then(function(data){
+      console.log('[NoteAntenne] Worker data:', JSON.stringify(data).slice(0,500));
       if(!data||data.empty)return false;
-      var days=data.days||[],JOURS=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'],emMap={};
+      var JOURS=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'],emMap={};
+      var f=function(h){return h==null?'--':String(Math.floor(h)).padStart(2,'0')+'h'+(h%1?'30':'00');};
+      var fj=function(h){return h==null?'':String(Math.floor(h)).padStart(2,'0')+'h'+(h%1?'30':'00');};
+
+      /* Support deux formats : data.days[] ou data.emissions[] */
+      var days=data.days||[];
+
+      /* Format data.days */
       days.forEach(function(day){
-        var dKey=day.isoDate||'';
+        /* dayIdx peut venir de day.dayIdx ou calculé depuis day.isoDate */
+        var di=day.dayIdx;
+        if(di===undefined&&day.isoDate){
+          var d=new Date(day.isoDate);di=d.getDay()-1;if(di<0)di=6;
+        }
         var slots=[];
         if(day.matin&&day.matin.slots)slots=slots.concat(day.matin.slots);
         if(day.soir&&day.soir.slots)slots=slots.concat(day.soir.slots);
+        /* Certains formats mettent les slots directement */
+        if(day.slots)slots=slots.concat(day.slots);
         slots.forEach(function(slot){
-          var nom=(slot.emission||'').trim();if(!nom)return;
+          var nom=(slot.emission||slot.name||'').trim();if(!nom)return;
           var key=nom.toLowerCase().replace(/[^a-z0-9]/g,'_');
           if(!emMap[key]){
-            var f=function(h){return h==null?'--':String(Math.floor(h)).padStart(2,'0')+'h'+(h%1?'30':'00');};
-            /* Couleurs fixes par emission */
             var emColor=slot.color||'#E4032E';
             var nomLow=nom.toLowerCase();
             if(nomLow.indexOf('morning')>=0) emColor='#E4032E';
             else if(nomLow.indexOf('feel')>=0) emColor='#93C01F';
             else if(nomLow.indexOf('charly')>=0) emColor='#F59C00';
-            emMap[key]={name:nom,tranche:f(slot.hdebut)+' - '+f(slot.hfin),color:emColor,
+            emMap[key]={name:nom,tranche:f(slot.hdebut)+' — '+f(slot.hfin),color:emColor,
               planning:JOURS.map(function(j){return{day:j,team:'---',people:[]};}),
               jeu:{nom:'',desc:'',heure:''},commercial:[]};
           }
-          /* Jeu du slot */
           if(slot.jeu&&slot.jeu.nom){
-            var fj=function(h){return h==null?'':String(Math.floor(h)).padStart(2,'0')+'h'+(h%1?'30':'00');};
             emMap[key].jeu={nom:slot.jeu.nom,desc:slot.jeu.gain?'Gain : '+slot.jeu.gain:'',heure:fj(slot.jeu.heure)};
           }
-          var di=day.dayIdx;if(di<0||di>6)return;
+          if(di===undefined||di<0||di>6)return;
           var people=[];
-          (slot.animateurs||[]).forEach(function(a){people.push({nom:a.prenom+' '+(a.nom||'').toUpperCase(),color:a.color||'#E4032E',role:'animateur'});});
+          (slot.animateurs||[]).forEach(function(a){
+            var n=(a.prenom||'').trim()+' '+((a.nom||'').toUpperCase()).trim();
+            people.push({nom:n.trim(),color:a.color||'#E4032E',role:'animateur'});
+          });
           (slot.journalistes||[]).forEach(function(j){
-            var nomComplet=j.prenom+' '+(j.nom||'').toUpperCase();
-            /* Filtrer VT CONSULT */
+            var nomComplet=((j.prenom||'').trim()+' '+(j.nom||'').toUpperCase()).trim();
             if(nomComplet.toUpperCase().indexOf('VT')>=0&&nomComplet.toUpperCase().indexOf('CONSULT')>=0) return;
             people.push({nom:nomComplet,color:j.color||'#E87C3E',role:'journaliste'});
           });
@@ -4014,7 +4026,9 @@ function naLoadFromWorker(){
           emMap[key].planning[di].people=people;
         });
       });
-      var em=Object.values(emMap);if(!em.length)return false;
+      var em=Object.values(emMap);
+      console.log('[NoteAntenne] Emissions trouvées:', em.length, em.map(function(e){return e.name;}));
+      if(!em.length)return false;
       /* Trier par heure de début */
       em.sort(function(a,b){
         var ha=parseInt((a.tranche||'').replace(/h.*/,''))||0;
