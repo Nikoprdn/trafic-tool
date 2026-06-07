@@ -4005,11 +4005,8 @@ function naLoadFromWorker(){
           (slot.animateurs||[]).forEach(function(a){people.push({nom:a.prenom+' '+(a.nom||'').toUpperCase(),color:a.color||'#E4032E',role:'animateur'});});
           (slot.journalistes||[]).forEach(function(j){
             var nomComplet=j.prenom+' '+(j.nom||'').toUpperCase();
-            var fh=function(h){return h==null?'':String(Math.floor(h)).padStart(2,'0')+'h'+(h%1?'30':'00');};
-            /* Si VT CONSULT, ajouter l'heure du RDV */
-            if(nomComplet.toUpperCase().indexOf('VT')>=0&&nomComplet.toUpperCase().indexOf('CONSULT')>=0){
-              nomComplet=nomComplet+' — '+fh(slot.hdebut);
-            }
+            /* Filtrer VT CONSULT */
+            if(nomComplet.toUpperCase().indexOf('VT')>=0&&nomComplet.toUpperCase().indexOf('CONSULT')>=0) return;
             people.push({nom:nomComplet,color:j.color||'#E87C3E',role:'journaliste'});
           });
           var teamStr=people.map(function(p){return p.nom+':'+p.role;}).join('|');
