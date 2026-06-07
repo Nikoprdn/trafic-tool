@@ -5406,7 +5406,7 @@ function naIncCloseModal(e){
     </div>
     <div style="display:flex;align-items:center;gap:8px">
       <button class="button is-success is-small is-outlined" onclick="D[0].togglePlay()">▶ PLAY</button>
-      <button class="button is-danger is-small is-outlined" onclick="D[0].stopAll();setTimeout(function(){if(typeof diffSecoursSetActive==='function')diffSecoursSetActive(false);},200);">■ STOP</button>
+      <button class="button is-danger is-small is-outlined" onclick="D[0].stopAll();fetch('https://adminsend.nicolas7lejeune.workers.dev/diffsec',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({active:false,triggeredAt:new Date().toISOString()})});">■ STOP</button>
       <button class="button is-dark is-small" onclick="D[0].prevTrack()">|◀</button>
       <button class="button is-dark is-small" onclick="D[0].nextTrack()">▶|</button><span class="tag" style="background:#0c1428;color:#5a6880;border:1px solid #38404e">PISTE <strong id="c1-counter" style="color:#5a7090;margin-left:4px">0/0</strong></span>
     </div>
