@@ -6129,7 +6129,11 @@ class Diffuser{
         this.tracks.splice(pos,1); this.durs.splice(pos,1); this.audios.splice(pos,1);
       }
       this.ci=0; this._updateFdzCount();
-      if(!this.tracks.length) this.playing=false;
+      if(!this.tracks.length){
+        this.playing=false;
+        /* Playlist terminée → notifier Admin Tool */
+        if(typeof diffSecoursSetActive === 'function') diffSecoursSetActive(false);
+      }
       this.render();
     };
 
