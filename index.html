@@ -2229,9 +2229,12 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 /* Droite */
 .hdr-right{
-  display:flex;align-items:center;gap:16px;
-  padding:0 24px;
+  display:flex;align-items:stretch;gap:0;
   border-left:1px solid rgba(255,255,255,.15);
+}
+.hdr-right .hdr-clock{
+  display:flex;align-items:center;
+  padding:0 24px;
 }
 .tab-btn-incident{
   position:relative;
@@ -2336,22 +2339,18 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <span class="tab-btn-ico">&#9881;&#65039;</span>
       <span class="tab-btn-txt">Outils</span>
     </button>
-    <button class="tab-btn tab-btn-incident" onclick="naIncOpenModal()">
-      <span class="tab-btn-ico">&#9888;&#65039;</span>
-      <span class="tab-btn-txt">Incident<br>Antenne</span>
-    </button>
-    <button class="tab-btn tab-btn-secours" id="tab-btn-secours" onclick="switchTab('secours')">
-      <span class="tab-btn-ico">&#128308;</span>
-      <span class="tab-btn-txt">Diffuseur<br>Secours</span>
-    </button>
   </nav>
 
   <!-- Droite -->
   <div class="hdr-right">
-    <div style="display:flex;flex-direction:column;justify-content:center;align-items:flex-end;padding:0 16px;border-right:1px solid rgba(255,255,255,.12);gap:2px;">
-      <span style="font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(255,255,255,.35);letter-spacing:1.5px;">ADMIN TOOL</span>
-      <span id="hdr-sync-time" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,255,255,.4);letter-spacing:1px;">--:--</span>
-    </div>
+    <button class="tab-btn tab-btn-incident" onclick="naIncOpenModal()" style="border-radius:0;height:100%;padding:0 18px;">
+      <span class="tab-btn-ico">&#9888;&#65039;</span>
+      <span class="tab-btn-txt">Incident<br>Antenne</span>
+    </button>
+    <button class="tab-btn tab-btn-secours" id="tab-btn-secours" onclick="switchTab('secours')" style="border-radius:0;height:100%;padding:0 18px;">
+      <span class="tab-btn-ico">&#128308;</span>
+      <span class="tab-btn-txt">Diffuseur<br>Secours</span>
+    </button>
     <div class="hdr-clock" id="clk">--:--:--</div>
   </div>
 
@@ -2573,7 +2572,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   </div>
 </div>
 <!-- ▸ TAB OUTILS -->
-<div class="tab-content" id="tab-outils" style="overflow-y:auto;height:calc(100vh - 116px);background:#16181e;">
+<div class="tab-content" id="tab-outils" style="overflow-y:auto;height:calc(100vh - 116px);background:#16181e;font-family:'Barlow',sans-serif;">
 <div style="max-width:820px;margin:0 auto;padding:32px 24px 80px;">
   <p style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#e8ecf4;margin-bottom:4px;">&#9881;&#65039; Outils Studio</p>
   <p style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#4a5468;letter-spacing:2px;margin-bottom:32px;">UTILITAIRES INTERNES</p>
@@ -8312,9 +8311,10 @@ document.addEventListener('keydown', function(e) {
     sp(idx,10);
     var buf=await new Promise(function(res,rej){var r=new FileReader();r.onload=function(e){res(e.target.result);};r.onerror=rej;r.readAsArrayBuffer(file);});
     sp(idx,30);
-    var ab=await gCtx().decodeAudioData(buf.slice(0));
+    var ctx=gCtx();
+    var ab=await ctx.decodeAudioData(buf.slice(0));
     sp(idx,55);
-    var st=gCtx().createBuffer(2,ab.length,ab.sampleRate);
+    var st=ctx.createBuffer(2,ab.length,ab.sampleRate);
     st.copyToChannel(ab.getChannelData(0),0);
     st.copyToChannel(ab.numberOfChannels>1?ab.getChannelData(1):ab.getChannelData(0),1);
     sp(idx,70);
