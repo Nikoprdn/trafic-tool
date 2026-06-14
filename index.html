@@ -27,6 +27,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 .tab-content{display:none;}
 .tab-content.active{display:block;}
+#tab-secours.active{display:flex!important;}
 .wrap{max-width:1600px;margin:0 auto;padding:22px 28px 48px;display:flex;flex-direction:column;gap:20px;}
 
 /* BLUE CARD */
@@ -2343,6 +2344,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
   <!-- Droite -->
   <div class="hdr-right">
+    <div style="display:flex;flex-direction:column;justify-content:center;align-items:flex-end;padding:0 16px;border-right:1px solid rgba(255,255,255,.12);gap:2px;">
+      <span style="font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(255,255,255,.35);letter-spacing:1.5px;">ADMIN TOOL</span>
+      <span id="hdr-sync-time" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,255,255,.4);letter-spacing:1px;">--:--</span>
+    </div>
     <div class="hdr-clock" id="clk">--:--:--</div>
   </div>
 
@@ -2564,7 +2569,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   </div>
 </div>
 <!-- ▸ TAB SECOURS -->
-<div class="tab-content" id="tab-secours" style="height:calc(100vh - 116px);overflow:hidden;display:flex;flex-direction:column;">
+<div class="tab-content" id="tab-secours" style="height:calc(100vh - 116px);overflow:hidden;flex-direction:column;">
 
   <iframe id="diff-secours-frame" style="width:100%;flex:1;border:none;display:block;min-height:0;"></iframe>
 </div>
@@ -4057,12 +4062,6 @@ function naLoadFromWorker(){
             var fj=function(h){return h==null?'':String(Math.floor(h)).padStart(2,'0')+'h'+(h%1?'30':'00');};
             emMap[key].jeu={nom:slot.jeu.nom,desc:slot.jeu.gain?'Gain : '+slot.jeu.gain:'',heure:fj(slot.jeu.heure)};
           }
-          /* Commercial du slot */
-          if(slot.commercial&&slot.commercial.length){
-            emMap[key].commercial=slot.commercial.map(function(c){
-              return{nom:c.nom,type:c.type||'',time:c.time||''};
-            });
-          }
           var di=day.dayIdx;if(di<0||di>6)return;
           var people=[];
           (slot.animateurs||[]).forEach(function(a){people.push({nom:a.prenom+' '+(a.nom||'').toUpperCase(),color:a.color||'#E4032E',role:'animateur'});});
@@ -4084,6 +4083,8 @@ function naLoadFromWorker(){
       renderNaBlocks(em);
       var badge=document.getElementById('na-sync-badge');
       if(badge&&data.publishedAt){badge.textContent='Sync '+new Date(data.publishedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});badge.style.display='inline-block';}
+      var hdrSync=document.getElementById('hdr-sync-time');
+      if(hdrSync&&data.publishedAt){hdrSync.textContent=new Date(data.publishedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});hdrSync.style.color='rgba(255,255,255,.85)';}
       return true;
     }).catch(function(){return false;});
 }
