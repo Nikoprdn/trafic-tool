@@ -8302,7 +8302,17 @@ document.addEventListener('keydown', function(e) {
     for(var i=0;i<_f.length;i++){
       if(_f[i].status!=='wait')continue;
       _f[i].status='proc';sp(i,0);otRender();
-      try{var url=await cvt(_f[i].file,i);_f[i].url=url;_f[i].status='done';sp(i,100);}
+      try{
+        var url=await cvt(_f[i].file,i);
+        _f[i].url=url;_f[i].status='done';sp(i,100);
+        // Téléchargement automatique
+        var a=document.createElement('a');
+        a.href=url;
+        a.download=dln(_f[i].name);
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function(){document.body.removeChild(a);},1000);
+      }
       catch(e){_f[i].status='error';console.error(e);}
       otRender();
     }
