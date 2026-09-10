@@ -27,7 +27,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 .tab-content{display:none;}
 .tab-content.active{display:block;}
-#tab-secours.active{display:flex!important;}
 .wrap{max-width:1600px;margin:0 auto;padding:22px 28px 48px;display:flex;flex-direction:column;gap:20px;}
 
 /* BLUE CARD */
@@ -2229,12 +2228,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 /* Droite */
 .hdr-right{
-  display:flex;align-items:stretch;gap:0;
-  border-left:1px solid rgba(255,255,255,.15);
-}
-.hdr-right .hdr-clock{
-  display:flex;align-items:center;
+  display:flex;align-items:center;gap:16px;
   padding:0 24px;
+  border-left:1px solid rgba(255,255,255,.15);
 }
 .tab-btn-incident{
   position:relative;
@@ -2257,21 +2253,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .tab-btn-incident .tab-btn-txt{
   position:relative;z-index:1;
 }
-
-/* DIFFUSEUR SECOURS — alerte rouge */
-@keyframes diffSecBlink {
-  0%,100% { background:rgba(228,3,46,.4); border-bottom-color:#E4032E; }
-  50%      { background:rgba(228,3,46,.1); border-bottom-color:rgba(228,3,46,.3); }
-}
-.tab-btn-secours.diffsec-alert {
-  animation: diffSecBlink .5s ease-in-out infinite;
-  color: #fff !important;
-}
-.tab-btn-secours.diffsec-alert .tab-btn-txt,
-.tab-btn-secours.diffsec-alert .tab-btn-ico {
-  color: #fff !important;
-}
-
 .tab-btn-secours{
   position:relative;
   overflow:hidden;
@@ -2299,7 +2280,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   color:rgba(255,255,255,.85);letter-spacing:.05em;
   white-space:nowrap;
 }</style>
-<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
 </head>
 <body>
 
@@ -2336,22 +2316,18 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <span class="tab-btn-ico">&#127897;&#65039;</span>
       <span class="tab-btn-txt">Note<br>Antenne</span>
     </button>
-    <button class="tab-btn" id="tab-btn-outils" onclick="switchTab('outils')">
-      <span class="tab-btn-ico">&#9881;&#65039;</span>
-      <span class="tab-btn-txt">Outils</span>
+    <button class="tab-btn tab-btn-incident" onclick="naIncOpenModal()">
+      <span class="tab-btn-ico">&#9888;&#65039;</span>
+      <span class="tab-btn-txt">Incident<br>Antenne</span>
+    </button>
+    <button class="tab-btn tab-btn-secours" id="tab-btn-secours" onclick="switchTab('secours')">
+      <span class="tab-btn-ico">&#128308;</span>
+      <span class="tab-btn-txt">Diffuseur<br>Secours</span>
     </button>
   </nav>
 
   <!-- Droite -->
   <div class="hdr-right">
-    <button class="tab-btn tab-btn-incident" onclick="naIncOpenModal()" style="border-radius:0;height:100%;padding:0 18px;">
-      <span class="tab-btn-ico">&#9888;&#65039;</span>
-      <span class="tab-btn-txt">Incident<br>Antenne</span>
-    </button>
-    <button class="tab-btn tab-btn-secours" id="tab-btn-secours" onclick="switchTab('secours')" style="border-radius:0;height:100%;padding:0 18px;">
-      <span class="tab-btn-ico">&#128308;</span>
-      <span class="tab-btn-txt">Diffuseur<br>Secours</span>
-    </button>
     <div class="hdr-clock" id="clk">--:--:--</div>
   </div>
 
@@ -2513,153 +2489,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       </div>
     </div>
 
-    <!-- ▸ FEEL GOOD -->
-    <div class="na-block na-block--feelgood">
-      <div class="na-block-header" style="background:#37333E;border-bottom:4px solid #E4032E;">
-        <div class="na-block-title-group">
-          <span class="na-block-name">FEEL GOOD</span>
-          <span class="na-block-time">09:00 — 12:00</span>
-        </div>
-        <button class="na-planning-btn" onclick="naTogglePlanning('feelgood')">&#128197; Équipe de la semaine</button>
-      </div>
-      <div class="na-planning-wrap" id="na-planning-feelgood" style="display:none">
-        <div class="na-planning-grid" id="na-planning-grid-feelgood"></div>
-      </div>
-      <div class="na-block-body">
-        <div class="na-col"><div class="na-col-label">&#127908; Antenne aujourd'hui</div><div class="na-today-team empty" id="na-today-feelgood">—</div></div>
-        <div class="na-col"><div class="na-col-label">&#127918; Jeu antenne</div><div class="na-jeu" id="na-jeu-feelgood"><div class="na-empty">Aucun jeu configuré</div></div></div>
-        <div class="na-col"><div class="na-col-label">&#128188; Commercial Editor</div><div class="na-commercial" id="na-commercial-feelgood"><div class="na-empty">Aucun rendez-vous</div></div></div>
-      </div>
-    </div>
-
-    <!-- ▸ CHARLY FAMILY -->
-    <div class="na-block na-block--charly">
-      <div class="na-block-header" style="background:#37333E;border-bottom:4px solid #E4032E;">
-        <div class="na-block-title-group">
-          <span class="na-block-name">CHARLY FAMILY</span>
-          <span class="na-block-time">16:00 — 19:00</span>
-        </div>
-        <button class="na-planning-btn" onclick="naTogglePlanning('charly')">&#128197; Équipe de la semaine</button>
-      </div>
-      <div class="na-planning-wrap" id="na-planning-charly" style="display:none">
-        <div class="na-planning-grid" id="na-planning-grid-charly"></div>
-      </div>
-      <div class="na-block-body">
-        <div class="na-col"><div class="na-col-label">&#127908; Antenne aujourd'hui</div><div class="na-today-team empty" id="na-today-charly">—</div></div>
-        <div class="na-col"><div class="na-col-label">&#127918; Jeu antenne</div><div class="na-jeu" id="na-jeu-charly"><div class="na-empty">Aucun jeu configuré</div></div></div>
-        <div class="na-col"><div class="na-col-label">&#128188; Commercial Editor</div><div class="na-commercial" id="na-commercial-charly"><div class="na-empty">Aucun rendez-vous</div></div></div>
-      </div>
-    </div>
-
-    <!-- ▸ DJ -->
-    <div class="na-block na-block--dj">
-      <div class="na-block-header" style="background:#37333E;border-bottom:4px solid #E4032E;">
-        <div class="na-block-title-group">
-          <span class="na-block-name">DJ</span>
-          <span class="na-block-time">19:00 — 22:00</span>
-        </div>
-        <button class="na-planning-btn" onclick="naTogglePlanning('dj')">&#128197; Équipe de la semaine</button>
-      </div>
-      <div class="na-planning-wrap" id="na-planning-dj" style="display:none">
-        <div class="na-planning-grid" id="na-planning-grid-dj"></div>
-      </div>
-      <div class="na-block-body">
-        <div class="na-col"><div class="na-col-label">&#127908; Antenne aujourd'hui</div><div class="na-today-team empty" id="na-today-dj">—</div></div>
-        <div class="na-col"><div class="na-col-label">&#127918; Jeu antenne</div><div class="na-jeu" id="na-jeu-dj"><div class="na-empty">Aucun jeu configuré</div></div></div>
-        <div class="na-col"><div class="na-col-label">&#128188; Commercial Editor</div><div class="na-commercial" id="na-commercial-dj"><div class="na-empty">Aucun rendez-vous</div></div></div>
-      </div>
-    </div>
-
   </div>
 </div>
-<!-- ▸ TAB OUTILS -->
-<div class="tab-content" id="tab-outils">
-<div class="wrap" style="max-width:900px;">
-
-  <!-- Header section -->
-  <div class="card-h" style="background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:0;height:56px;">
-    <span style="font-size:16px;">&#9881;&#65039;</span>
-    <span class="card-t">Outils Studio</span>
-    <div class="pill" style="margin-left:0;">
-      <span class="dot" style="background:var(--green);"></span>LOCAL
-    </div>
-  </div>
-
-  <!-- Convertisseur -->
-  <div class="section-card">
-    <div class="card-h">
-      <span style="font-size:15px;">&#127925;</span>
-      <span class="card-t">Convertisseur Audio</span>
-      <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-left:4px;">— WAV · MP3 · Stéréo forcé</span>
-    </div>
-
-    <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
-
-      <!-- Drop zone -->
-      <div id="ot-dropzone"
-        style="border:2px dashed var(--border);border-radius:10px;padding:40px 24px;text-align:center;cursor:pointer;background:var(--bg);transition:border-color .2s,background .2s;"
-        onclick="document.getElementById('ot-fi').click()"
-        ondragover="event.preventDefault();this.style.borderColor='rgba(232,234,240,.4)';this.style.background='#0f1219'"
-        ondragleave="this.style.borderColor='var(--border)';this.style.background='var(--bg)'"
-        ondrop="otDrop(event)">
-        <input type="file" id="ot-fi" multiple accept="audio/*" style="display:none" onchange="otFiles(this.files)">
-        <div style="font-size:40px;margin-bottom:12px;opacity:.5;">&#127925;</div>
-        <p style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text);margin-bottom:4px;">Glissez vos fichiers ici</p>
-        <p style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;">MP3 · WAV · FLAC · AAC · OGG · M4A · AIFF</p>
-        <button class="rbtn" style="margin-top:16px;margin-left:0;">+ Ajouter des fichiers</button>
-      </div>
-
-      <!-- Format selector -->
-      <div style="display:flex;align-items:center;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;height:44px;">
-        <span style="padding:0 18px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);background:var(--card);border-right:1px solid var(--border);height:100%;display:flex;align-items:center;white-space:nowrap;">Format de sortie</span>
-        <button id="ot-btn-wav" onclick="otFmt('wav')"
-          style="flex:1;height:100%;background:rgba(27,94,184,.15);border:none;border-right:1px solid var(--border);color:#60a5fa;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;border-bottom:3px solid #60a5fa;">WAV</button>
-        <button id="ot-btn-mp3" onclick="otFmt('mp3')"
-          style="flex:1;height:100%;background:transparent;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;border-bottom:3px solid transparent;">MP3</button>
-      </div>
-
-      <!-- Stats -->
-      <div id="ot-stats" style="display:none;">
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;">
-            <p id="ot-n-total" style="font-family:'Share Tech Mono',monospace;font-size:24px;color:var(--text);margin:0;line-height:1;">0</p>
-            <p style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:4px 0 0;">Fichiers</p>
-          </div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;">
-            <p id="ot-n-done" style="font-family:'Share Tech Mono',monospace;font-size:24px;color:var(--green);margin:0;line-height:1;">0</p>
-            <p style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:4px 0 0;">Convertis</p>
-          </div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;">
-            <p id="ot-n-err" style="font-family:'Share Tech Mono',monospace;font-size:24px;color:var(--red);margin:0;line-height:1;">0</p>
-            <p style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:4px 0 0;">Erreurs</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Liste fichiers -->
-      <div id="ot-list" style="display:flex;flex-direction:column;gap:8px;"></div>
-
-      <!-- Actions -->
-      <div id="ot-actions" style="display:none;gap:10px;">
-        <button id="ot-btn-go" onclick="otConvertAll()"
-          style="flex:1;height:44px;background:rgba(39,174,96,.12);border:1px solid var(--green);color:var(--green);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;border-radius:6px;cursor:pointer;transition:background .15s;">
-          &#9654; Convertir tout
-        </button>
-        <button onclick="otClear()"
-          style="height:44px;padding:0 24px;background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border-radius:6px;cursor:pointer;">
-          &#10005; Vider
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-</div>
-</div>
-
 <!-- ▸ TAB SECOURS -->
-<div class="tab-content" id="tab-secours" style="height:calc(100vh - 116px);overflow:hidden;flex-direction:column;">
-
+<div class="tab-content" id="tab-secours" style="height:calc(100vh - 116px);overflow:hidden;display:flex;flex-direction:column;">
   <iframe id="diff-secours-frame" style="width:100%;flex:1;border:none;display:block;min-height:0;"></iframe>
 </div>
 <!-- ▸ Modal Incident Antenne -->
@@ -2770,9 +2603,7 @@ function switchTab(n){
   if(n==='weather'&&!weatherLoaded){wxLoadZone('am');weatherLoaded=true;}
   if(n==='antenne'){if(!antenneLoaded){initNoteAntenne();antenneLoaded=true;}else{naLoadFromWorker();}}
   if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);traficLoaded=true;}
-  if(n==='secours'){
-    loadDiffSecours();
-  }
+  if(n==='secours'){/* à compléter */}
 }
 
 
@@ -3350,11 +3181,7 @@ function wxDay(off){var d=new Date();d.setDate(d.getDate()+off);return['Dim','Lu
 /* ══ WEATHER TOOL ═══════════════════════════════════════════════════════ */
 var WX_ZONES={
   am:{lat:43.7384,lon:7.4246,name:'Monaco',cities:[{name:'Nice',lat:43.7102,lon:7.262},{name:'Cannes',lat:43.5528,lon:7.0174},{name:'Antibes',lat:43.5808,lon:7.1239},{name:'Menton',lat:43.7753,lon:7.5022},{name:'Grasse',lat:43.6581,lon:6.9239},{name:'Juan-les-Pins',lat:43.5667,lon:7.1167}]},
-  idf:{lat:48.8566,lon:2.3522,name:'Paris \u2014 \u00cele-de-France',cities:[{name:'Paris',lat:48.8566,lon:2.3522},{name:'Versailles',lat:48.8014,lon:2.1301},{name:'Pontoise',lat:49.0503,lon:2.1006},{name:'Meaux',lat:48.96,lon:2.8883},{name:'Melun',lat:48.5404,lon:2.6568},{name:'Évry',lat:48.6265,lon:2.4271}]},
-  dj:{
-    planning:[{day:'Lun',team:'—'},{day:'Mar',team:'—'},{day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}],
-    jeu:{nom:'',desc:'',heure:''},commercial:[]
-  }
+  idf:{lat:48.8566,lon:2.3522,name:'Paris \u2014 \u00cele-de-France',cities:[{name:'Paris',lat:48.8566,lon:2.3522},{name:'Versailles',lat:48.8014,lon:2.1301},{name:'Pontoise',lat:49.0503,lon:2.1006},{name:'Meaux',lat:48.96,lon:2.8883},{name:'Melun',lat:48.5404,lon:2.6568},{name:'Évry',lat:48.6265,lon:2.4271}]}
 };
 var wxLoaded={am:false,idf:false},wxCurrentZone='am';
 var WXCO_DAY={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'🌨️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️'};
@@ -3762,18 +3589,6 @@ var NA_DATA={
   morning:{
     planning:[{day:'Lun',team:'—'},{day:'Mar',team:'—'},{day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}],
     jeu:{nom:'',desc:'',heure:''},commercial:[]
-  },
-  feelgood:{
-    planning:[{day:'Lun',team:'—'},{day:'Mar',team:'—'},{day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}],
-    jeu:{nom:'',desc:'',heure:''},commercial:[]
-  },
-  charly:{
-    planning:[{day:'Lun',team:'—'},{day:'Mar',team:'—'},{day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}],
-    jeu:{nom:'',desc:'',heure:''},commercial:[]
-  },
-  dj:{
-    planning:[{day:'Lun',team:'—'},{day:'Mar',team:'—'},{day:'Mer',team:'—'},{day:'Jeu',team:'—'},{day:'Ven',team:'—'}],
-    jeu:{nom:'',desc:'',heure:''},commercial:[]
   }
 };
 
@@ -4140,8 +3955,7 @@ function naLoadFromWorker(){
             var emColor=slot.color||'#E4032E';
             var nomLow=nom.toLowerCase();
             if(nomLow.indexOf('morning')>=0) emColor='#E4032E';
-            else if(nomLow.indexOf('feel')>=0) emColor='#93C01F';
-            else if(nomLow.indexOf('charly')>=0) emColor='#F59C00';
+
             emMap[key]={name:nom,tranche:f(slot.hdebut)+' - '+f(slot.hfin),color:emColor,
               planning:JOURS.map(function(j){return{day:j,team:'---',people:[]};}),
               jeu:{nom:'',desc:'',heure:''},commercial:[]};
@@ -4172,8 +3986,6 @@ function naLoadFromWorker(){
       renderNaBlocks(em);
       var badge=document.getElementById('na-sync-badge');
       if(badge&&data.publishedAt){badge.textContent='Sync '+new Date(data.publishedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});badge.style.display='inline-block';}
-      var hdrSync=document.getElementById('hdr-sync-time');
-      if(hdrSync&&data.publishedAt){hdrSync.textContent=new Date(data.publishedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});hdrSync.style.color='rgba(255,255,255,.85)';}
       return true;
     }).catch(function(){return false;});
 }
@@ -4182,8 +3994,8 @@ function initNoteAntenne(){
   naLoadFromWorker().then(function(ok){
     if(ok)return;
     if(typeof window.storage!=='undefined'){
-      naLoadFromStorage().then(function(l){if(!l){naRenderBlock('morning');naRenderBlock('feelgood');naRenderBlock('charly');naRenderBlock('dj');}});
-    }else{naRenderBlock('morning');naRenderBlock('feelgood');naRenderBlock('charly');naRenderBlock('dj');}
+      naLoadFromStorage().then(function(l){if(!l){naRenderBlock('morning');}});
+    }else{naRenderBlock('morning');}
   });
   setInterval(naLoadFromWorker,30000);
 }
@@ -4191,12 +4003,8 @@ function initNoteAntenne(){
 /* ── Live antenne Radio Monaco ── */
 var NA_GRILLE_HEURES=[
   {h:0,name:'Non-stop Music',host:''},
-  {h:6,name:'Le Morning Made in Monte-Carlo',host:'Léo Barraband, Giulia Testaverde, Marie Marquet'},
-  {h:9,name:'Non-stop Music',host:''},
-  {h:12,name:'Non-stop Music',host:''},
-  {h:16,name:'La Charly Family',host:'Charly'},
-  {h:19,name:'Non-stop Music',host:''},
-  {h:22,name:'Non-stop Music',host:''}
+  {h:6,name:'Le Morning Made in Monte-Carlo',host:''},
+  {h:9,name:'Non-stop Music',host:''}
 ];
 function naGetEmissionFromGrille(){
   var hNow=new Date().getHours(),found=NA_GRILLE_HEURES[0];
@@ -5502,7 +5310,7 @@ function naIncCloseModal(e){
     </div>
     <div style="display:flex;align-items:center;gap:8px">
       <button class="button is-success is-small is-outlined" onclick="D[0].togglePlay()">▶ PLAY</button>
-      <button class="button is-danger is-small is-outlined" onclick="fetch('https://adminsend.nicolas7lejeune.workers.dev/diffsec',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({active:false,triggeredAt:new Date().toISOString()})});D[0].stopAll();">■ STOP</button>
+      <button class="button is-danger is-small is-outlined"  onclick="D[0].stopAll()">■ STOP</button>
       <button class="button is-dark is-small" onclick="D[0].prevTrack()">|◀</button>
       <button class="button is-dark is-small" onclick="D[0].nextTrack()">▶|</button><span class="tag" style="background:#0c1428;color:#5a6880;border:1px solid #38404e">PISTE <strong id="c1-counter" style="color:#5a7090;margin-left:4px">0/0</strong></span>
     </div>
@@ -6225,11 +6033,7 @@ class Diffuser{
         this.tracks.splice(pos,1); this.durs.splice(pos,1); this.audios.splice(pos,1);
       }
       this.ci=0; this._updateFdzCount();
-      if(!this.tracks.length){
-        this.playing=false;
-        /* Playlist terminée → notifier Admin Tool */
-        if(typeof diffSecoursSetActive === 'function') diffSecoursSetActive(false);
-      }
+      if(!this.tracks.length) this.playing=false;
       this.render();
     };
 
@@ -6918,47 +6722,9 @@ function pazToggleAuto(){ pazToggleNext(); }
 const _r0=D[0].render.bind(D[0]);
 D[0].render=function(){ _r0(); pazRender(); pazRenderList(); };
 
-var _diffSecoursActive = false;
-
-function diffSecoursSetActive(active){
-  _diffSecoursActive = active;
-  var btn = document.getElementById('tab-btn-secours');
-  if(btn){
-    if(active) btn.classList.add('diffsec-alert');
-    else btn.classList.remove('diffsec-alert');
-  }
-  fetch('https://adminsend.nicolas7lejeune.workers.dev/diffsec', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({active: active, triggeredAt: new Date().toISOString()})
-  }).catch(function(){});
-}
-
 const _s0=D[0]._startTrack.bind(D[0]);
 D[0]._startTrack=function(i){
   console.log('[PLAY] _startTrack appelé, i:', i, 'tracks:', D[0].tracks.length);
-  /* Notifier Admin Tool : diffuseur actif */
-  if(typeof diffSecoursSetActive === 'function') diffSecoursSetActive(true);
-  /* Créer un incident automatique */
-  setTimeout(function(){
-    var track = D[0].tracks[i];
-    var fichier = track ? (track.title || track.src || 'Inconnu') : 'Inconnu';
-    var now = new Date();
-    var heure = now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-    var incident = {
-      type: 'Diffuseur Secours',
-      heureDebut: heure,
-      heureFin: '',
-      desc: 'Fichier : ' + fichier,
-      auteur: 'Systeme',
-      declaredAt: now.toISOString()
-    };
-    fetch('https://adminsend.nicolas7lejeune.workers.dev/incidents', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(incident)
-    }).catch(function(){});
-  }, 500);
   _pazWvFile=null;
   _pazZoom={on:false,s:0,e:1,key:''};
   _pazLaunchTime=nowClock();
@@ -7467,28 +7233,13 @@ function registerVUGain(){}
 
 
 // ── DIFF 1 — source unique → VU sticky ──
-/* Declarer vu1 pour eviter ReferenceError */
-var vu1 = null;
-
-/* Hook stopAll → diffsec false */
-const _stopAll_orig=D[0].stopAll.bind(D[0]);
-D[0].stopAll=function(){
-  _stopAll_orig();
-  if(typeof diffSecoursSetActive === 'function') diffSecoursSetActive(false);
-};
-
 const _t0_orig=D[0].togglePlay.bind(D[0]);
 D[0].togglePlay=function(){
   console.log('[PLAY] D[0].togglePlay appelé, tracks:', D[0].tracks.length, 'playing:', D[0].playing);
   getCtx().resume();
   _t0_orig();
-  /* Si on vient de stopper → diffsec inactif */
-  setTimeout(function(){
-    if(!D[0].playing && typeof diffSecoursSetActive === 'function'){
-      diffSecoursSetActive(false);
-    }
-  }, 500);
 };
+
 
 function vuLoop(){
   requestAnimationFrame(vuLoop);
@@ -8276,207 +8027,6 @@ document.addEventListener('keydown', function(e) {
   var btn = document.getElementById('tab-btn-secours');
   if (btn) btn.addEventListener('click', loadDiffSecours);
 })();
-
-/* ── DIFFUSEUR DE SECOURS ── */
-
-
-
-/* == CONVERTISSEUR AUDIO == */
-(function(){
-  var _f=[],_fmt='wav',_run=false,_ctx=null;
-  function gCtx(){if(!_ctx)_ctx=new(window.AudioContext||window.webkitAudioContext)();return _ctx;}
-
-  window.otFmt=function(f){
-    _fmt=f;
-    var w=document.getElementById('ot-btn-wav'),m=document.getElementById('ot-btn-mp3');
-    if(w){w.style.background=f==='wav'?'rgba(27,94,184,.15)':'transparent';w.style.color=f==='wav'?'#60a5fa':'var(--muted)';w.style.borderBottom=f==='wav'?'3px solid #60a5fa':'3px solid transparent';}
-    if(m){m.style.background=f==='mp3'?'rgba(39,174,96,.1)':'transparent';m.style.color=f==='mp3'?'var(--green)':'var(--muted)';m.style.borderBottom=f==='mp3'?'3px solid var(--green)':'3px solid transparent';}
-  };
-  window.otDrop=function(e){
-    e.preventDefault();
-    var dz=document.getElementById('ot-dropzone');
-    if(dz){dz.style.borderColor='var(--border)';dz.style.background='var(--bg)';}
-    otFiles(e.dataTransfer.files);
-  };
-  window.otFiles=function(fl){
-    Array.from(fl).forEach(function(f){
-      if(!f.type.startsWith('audio/'))return;
-      _f.push({file:f,name:f.name,size:f.size,status:'wait',url:null,prog:0,wvData:null});
-    });
-    otRender();
-    // Générer les waveforms en arrière-plan
-    _f.forEach(function(item,i){if(!item.wvData)otGenWV(item,i);});
-  };
-  window.otClear=function(){_f=[];otRender();};
-  window.otRm=function(i){_f.splice(i,1);otRender();};
-
-  function sz(b){return b<1048576?(b/1024).toFixed(1)+' Ko':(b/1048576).toFixed(1)+' Mo';}
-  function dln(n){return n.replace(/\.[^.]+$/,'')+'.'+_fmt;}
-
-  // Générer waveform data depuis le fichier audio
-  function otGenWV(item,idx){
-    var reader=new FileReader();
-    reader.onload=function(e){
-      var tmpCtx=new(window.AudioContext||window.webkitAudioContext)();
-      tmpCtx.decodeAudioData(e.target.result).then(function(ab){
-        var data=ab.getChannelData(0);
-        var pts=200,step=Math.floor(data.length/pts),wv=[];
-        for(var i=0;i<pts;i++){
-          var s=i*step,mx=0;
-          for(var j=0;j<step;j++){var v=Math.abs(data[s+j]||0);if(v>mx)mx=v;}
-          wv.push(mx);
-        }
-        tmpCtx.close();
-        _f[idx].wvData=wv;
-        // Redessiner uniquement la waveform de cet item
-        var cv=document.getElementById('ot-wv-'+idx);
-        if(cv)otDrawWV(cv,wv,_f[idx].status);
-      }).catch(function(){});
-    };
-    reader.readAsArrayBuffer(item.file);
-  }
-
-  function otDrawWV(cv,data,status){
-    if(!cv||!data)return;
-    var W=cv.width,H=cv.height,c=cv.getContext('2d');
-    c.clearRect(0,0,W,H);
-    var color=status==='done'?'#27AE60':status==='error'?'#E4032E':'rgba(96,165,250,.7)';
-    var barW=W/data.length;
-    data.forEach(function(v,i){
-      var h=Math.max(1,v*H*.9);
-      var y=(H-h)/2;
-      c.fillStyle=color;
-      c.globalAlpha=0.7+v*0.3;
-      c.fillRect(i*barW,y,Math.max(1,barW-0.5),h);
-    });
-    c.globalAlpha=1;
-  }
-
-  function otRender(){
-    var list=document.getElementById('ot-list');
-    var acts=document.getElementById('ot-actions');
-    var stats=document.getElementById('ot-stats');
-    if(!list)return;
-    if(!_f.length){list.innerHTML='';if(acts)acts.style.display='none';if(stats)stats.style.display='none';return;}
-    if(acts)acts.style.display='flex';
-    if(stats)stats.style.display='block';
-    var done=_f.filter(function(x){return x.status==='done';}).length;
-    var err=_f.filter(function(x){return x.status==='error';}).length;
-    var els=[document.getElementById('ot-n-total'),document.getElementById('ot-n-done'),document.getElementById('ot-n-err')];
-    [_f.length,done,err].forEach(function(v,k){if(els[k])els[k].textContent=v;});
-    var clr={wait:'var(--muted)',proc:'var(--yellow)',done:'var(--green)',error:'var(--red)'};
-    var lbl={wait:'EN ATTENTE',proc:'CONVERSION…',done:'TERMINÉ',error:'ERREUR'};
-    list.innerHTML=_f.map(function(f,i){
-      var dl=f.status==='done'&&f.url
-        ?'<a href="'+f.url+'" download="'+dln(f.name)+'" style="flex-shrink:0;background:rgba(39,174,96,.1);border:1px solid var(--green);color:var(--green);font-family:\'Barlow Condensed\',sans-serif;font-size:12px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:5px 12px;border-radius:4px;text-decoration:none;">DL</a>'
-        :'';
-      return '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;">'
-        // Header fichier
-        +'<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;">'
-          +'<div style="flex:1;min-width:0;">'
-            +'<p style="font-family:\'Barlow Condensed\',sans-serif;font-size:14px;font-weight:700;letter-spacing:.05em;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0;">'+f.name+'</p>'
-            +'<p style="font-family:\'Share Tech Mono\',monospace;font-size:9px;color:var(--muted);margin:2px 0 0;">'+f.name.split('.').pop().toUpperCase()+' · '+sz(f.size)+'</p>'
-          +'</div>'
-          +'<span style="font-family:\'Barlow Condensed\',sans-serif;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:'+clr[f.status]+';flex-shrink:0;">'+lbl[f.status]+'</span>'
-          +dl
-          +'<button onclick="otRm('+i+')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:0 2px;flex-shrink:0;" onmouseover="this.style.color=\'var(--red)\'" onmouseout="this.style.color=\'var(--muted)\'">&#10005;</button>'
-        +'</div>'
-        // Waveform
-        +'<div style="padding:0 14px 10px;">'
-          +'<canvas id="ot-wv-'+i+'" width="860" height="48" style="width:100%;height:48px;border-radius:4px;background:var(--bg);display:block;"></canvas>'
-        +'</div>'
-        // Progress bar
-        +'<div style="height:2px;background:var(--border);">'
-          +'<div id="ot-p-'+i+'" style="height:100%;background:'+(f.status==='error'?'var(--red)':'var(--green)')+';width:'+f.prog+'%;transition:width .1s;"></div>'
-        +'</div>'
-      +'</div>';
-    }).join('');
-
-    // Dessiner les waveforms après le rendu DOM
-    _f.forEach(function(f,i){
-      var cv=document.getElementById('ot-wv-'+i);
-      if(cv&&f.wvData)otDrawWV(cv,f.wvData,f.status);
-    });
-
-    var btn=document.getElementById('ot-btn-go');
-    if(btn)btn.disabled=_run||!_f.some(function(x){return x.status==='wait';});
-  }
-
-  function sp(i,p){
-    _f[i].prog=p;
-    var el=document.getElementById('ot-p-'+i);
-    if(el)el.style.width=p+'%';
-  }
-
-  window.otConvertAll=async function(){
-    if(_run)return;_run=true;
-    for(var i=0;i<_f.length;i++){
-      if(_f[i].status!=='wait')continue;
-      _f[i].status='proc';sp(i,0);otRender();
-      try{
-        var url=await cvt(_f[i].file,i);
-        _f[i].url=url;_f[i].status='done';sp(i,100);
-        var a=document.createElement('a');
-        a.href=url;a.download=dln(_f[i].name);
-        document.body.appendChild(a);a.click();
-        setTimeout(function(){document.body.removeChild(a);},1000);
-      }catch(e){_f[i].status='error';console.error(e);}
-      otRender();
-    }
-    _run=false;otRender();
-  };
-
-  async function cvt(file,idx){
-    sp(idx,10);
-    var buf=await new Promise(function(res,rej){var r=new FileReader();r.onload=function(e){res(e.target.result);};r.onerror=rej;r.readAsArrayBuffer(file);});
-    sp(idx,30);
-    var ctx=gCtx();
-    var ab=await ctx.decodeAudioData(buf.slice(0));
-    sp(idx,55);
-    var st=ctx.createBuffer(2,ab.length,ab.sampleRate);
-    st.copyToChannel(ab.getChannelData(0),0);
-    st.copyToChannel(ab.numberOfChannels>1?ab.getChannelData(1):ab.getChannelData(0),1);
-    sp(idx,70);
-    var blob=_fmt==='wav'?encWAV(st):await encMP3(st,idx);
-    sp(idx,95);
-    return URL.createObjectURL(blob);
-  }
-
-  function encWAV(ab){
-    var sr=ab.sampleRate,len=ab.length,bpf=4,dl=len*bpf;
-    var buf=new ArrayBuffer(44+dl),v=new DataView(buf);
-    var ws=function(o,s){for(var i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
-    ws(0,'RIFF');v.setUint32(4,36+dl,true);ws(8,'WAVE');ws(12,'fmt ');
-    v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,2,true);
-    v.setUint32(24,sr,true);v.setUint32(28,sr*bpf,true);v.setUint16(32,bpf,true);v.setUint16(34,16,true);
-    ws(36,'data');v.setUint32(40,dl,true);
-    var L=ab.getChannelData(0),R=ab.getChannelData(1),o=44;
-    for(var i=0;i<len;i++){
-      v.setInt16(o,Math.max(-32768,Math.min(32767,L[i]*32767)),true);o+=2;
-      v.setInt16(o,Math.max(-32768,Math.min(32767,R[i]*32767)),true);o+=2;
-    }
-    return new Blob([buf],{type:'audio/wav'});
-  }
-
-  function encMP3(ab,idx){
-    return new Promise(function(res,rej){
-      if(typeof lamejs==='undefined'){rej(new Error('lamejs manquant'));return;}
-      var sr=ab.sampleRate,len=ab.length,enc=new lamejs.Mp3Encoder(2,sr,320);
-      var L=ab.getChannelData(0),R=ab.getChannelData(1);
-      var li=new Int16Array(len),ri=new Int16Array(len);
-      for(var i=0;i<len;i++){li[i]=Math.max(-32768,Math.min(32767,L[i]*32767));ri[i]=Math.max(-32768,Math.min(32767,R[i]*32767));}
-      var chunks=[],chunk=1152,enc2,fl;
-      for(var j=0;j<len;j+=chunk){
-        enc2=enc.encodeBuffer(li.subarray(j,Math.min(j+chunk,len)),ri.subarray(j,Math.min(j+chunk,len)));
-        if(enc2.length>0)chunks.push(new Int8Array(enc2));
-        if(!(j%(chunk*100)))sp(idx,70+Math.round(j/len*25));
-      }
-      fl=enc.flush();if(fl.length>0)chunks.push(new Int8Array(fl));
-      res(new Blob(chunks,{type:'audio/mp3'}));
-    });
-  }
-})();
-
 </script>
 
 </body>
