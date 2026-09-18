@@ -1979,16 +1979,18 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   max-width:1000px;margin:0 auto;
   display:flex;flex-direction:column;gap:18px;
 }
+.ng-section{margin-top:40px;padding-top:32px;border-top:1px solid rgba(255,255,255,.07);}
+.ng-section:first-child{margin-top:0;padding-top:0;border-top:none;}
 .ng-toolbar{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:4px 2px 4px;
+  padding:4px 2px 16px;
 }
 .ng-toolbar-title{
   font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;
   letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);
 }
 .ng-toolbar-right{display:flex;align-items:center;gap:8px;}
-.ng-grid{display:flex;flex-direction:column;gap:16px;}
+.ng-grid{display:flex;flex-direction:column;gap:20px;}
 .ng-empty{
   font-family:'Barlow Condensed',sans-serif;font-size:14px;
   letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.25);
@@ -2551,16 +2553,39 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 <div class="tab-content" id="tab-antenne">
   <div class="ng-page">
-    <div class="ng-toolbar">
-      <span class="ng-toolbar-title">&#128197; Grille des programmes — Aujourd'hui</span>
-      <div class="ng-toolbar-right">
-        <span id="na-sync-badge" style="display:none;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(46,204,113,.7);"></span>
-        <button onclick="naLoadGrilleDuJour()" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3);padding:3px 10px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;cursor:pointer;">&#8635; Sync</button>
+    <div class="ng-section">
+      <div class="ng-toolbar">
+        <span class="ng-toolbar-title">&#128197; Grille des programmes — Aujourd'hui</span>
+        <div class="ng-toolbar-right">
+          <span id="na-sync-badge" style="display:none;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(46,204,113,.7);"></span>
+          <button onclick="naLoadGrilleDuJour()" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3);padding:3px 10px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;cursor:pointer;">&#8635; Sync</button>
+        </div>
+      </div>
+      <div id="ng-grid-container" class="ng-grid">
+        <div class="ng-empty">Chargement de la grille&hellip;</div>
       </div>
     </div>
-    <div id="ng-grid-container" class="ng-grid">
-      <div class="ng-empty">Chargement de la grille&hellip;</div>
+
+    <!-- ▸ JEUX EN COURS -->
+    <div class="ng-section">
+      <div class="ng-toolbar">
+        <span class="ng-toolbar-title">&#127918; Jeux en cours</span>
+      </div>
+      <div id="ng-jeux-container" class="ng-grid">
+        <div class="ng-empty">Chargement des jeux&hellip;</div>
+      </div>
     </div>
+
+    <!-- ▸ ENTRÉE PLAYLIST -->
+    <div class="ng-section">
+      <div class="ng-toolbar">
+        <span class="ng-toolbar-title">&#127925; Entrée Playlist</span>
+      </div>
+      <div id="ng-playlist-container" class="ng-grid">
+        <div class="ng-empty">En attente de configuration&hellip;</div>
+      </div>
+    </div>
+
   </div>
 </div>
 <!-- ▸ TAB SECOURS -->
@@ -4113,10 +4138,28 @@ function naGCardHtml(slot){
   +'</div>';
 }
 
-function naRenderGrilleDuJour(slots){
+/* Retrouve l'objet "jour" correspondant à aujourd'hui, quel que soit le format renvoyé par le Worker */
+function naFindTodayDay(days){
+  var todayIso=new Date().toISOString().slice(0,10);
+  var jsDay=new Date().getDay();       /* 0=Dim..6=Sam (natif JS) */
+  var mondayIdx=(jsDay+6)%7;           /* 0=Lun..6=Dim (convention utilisée ailleurs dans l'app) */
+  var d;
+  d=days.find(function(x){return x.isoDate===todayIso;}); if(d)return d;
+  d=days.find(function(x){return x.date===todayIso;});    if(d)return d;
+  d=days.find(function(x){return x.dateISO===todayIso;}); if(d)return d;
+  d=days.find(function(x){return x.dayIdx===mondayIdx;}); if(d)return d;
+  d=days.find(function(x){return x.dayIdx===jsDay;});     if(d)return d;
+  /* Dernier recours : si un seul jour est renvoyé, on suppose que c'est celui d'aujourd'hui */
+  if(days.length===1)return days[0];
+  return null;
+}
+
+function naRenderGrilleDuJour(slots,debugInfo){
   var el=document.getElementById('ng-grid-container');if(!el)return;
   if(!slots||!slots.length){
-    el.innerHTML='<div class="ng-empty">Aucun programme (Morning / Morning+ / DJ) trouvé pour aujourd\'hui</div>';
+    el.innerHTML='<div class="ng-empty">Aucun programme (Morning / Morning+ / DJ) trouvé pour aujourd\'hui'
+      +(debugInfo?'<div style="margin-top:10px;font-family:\'Share Tech Mono\',monospace;font-size:10px;color:rgba(255,255,255,.2);letter-spacing:0;text-transform:none;">'+debugInfo+'</div>':'')
+      +'</div>';
     return;
   }
   slots.sort(function(a,b){return (a.hdebut||0)-(b.hdebut||0);});
@@ -4128,25 +4171,64 @@ function naLoadGrilleDuJour(){
   return fetch(NA_WORKER_URL,{cache:'no-store'})
     .then(function(r){if(!r.ok)throw 0;return r.json();})
     .then(function(data){
-      if(!data||data.empty){naRenderGrilleDuJour([]);return false;}
+      console.log('[grille du jour] réponse worker:',data);
+      if(!data||data.empty){naRenderGrilleDuJour([],'Le Worker n\'a renvoyé aucune donnée (data.empty).');naRenderJeuxEnCours([]);return false;}
       var days=data.days||[];
-      var todayIso=new Date().toISOString().slice(0,10);
-      var todayIdx=(new Date().getDay()+6)%7; /* 0=Lun ... 6=Dim, aligné sur dayIdx du worker */
-      var day=days.find(function(d){return d.isoDate===todayIso;})
-             || days.find(function(d){return d.dayIdx===todayIdx;});
+      var day=naFindTodayDay(days);
       NA_GRILLE_LAST_DAY=day||null;
       var slots=[];
       if(day){
         if(day.matin&&day.matin.slots)slots=slots.concat(day.matin.slots);
         if(day.soir&&day.soir.slots)slots=slots.concat(day.soir.slots);
       }
+      if(!day){
+        var recap=days.map(function(x){return '{dayIdx:'+x.dayIdx+', isoDate:'+(x.isoDate||'—')+'}';}).join(' ');
+        naRenderGrilleDuJour([], days.length?('Jour introuvable parmi '+days.length+' reçus &rarr; '+recap):'Aucun jour reçu du Worker.');
+        naRenderJeuxEnCours([]);
+        return false;
+      }
       var filtered=slots.filter(naGKeepSlot);
       naRenderGrilleDuJour(filtered);
+      naRenderJeuxEnCours(slots);
       var badge=document.getElementById('na-sync-badge');
       if(badge&&data.publishedAt){badge.textContent='Sync '+new Date(data.publishedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});badge.style.display='inline-block';}
       return true;
     })
-    .catch(function(){naRenderGrilleDuJour([]);return false;});
+    .catch(function(e){console.warn('[grille du jour] erreur:',e);naRenderGrilleDuJour([],'Erreur réseau lors de l\'appel au Worker.');naRenderJeuxEnCours([]);return false;});
+}
+
+/* ── Jeux en cours (tous les jeux antenne du jour, toutes émissions confondues) ── */
+function naJeuCardHtml(item){
+  var now=new Date();
+  var nowH=now.getHours()+now.getMinutes()/60;
+  var isLive=(item.hdebut!=null && item.hfin!=null && nowH>=item.hdebut && nowH<item.hfin);
+  return '<div class="ng-card'+(isLive?' live':'')+'">'
+    +'<div class="ng-card-time" style="width:110px;">'
+      +'<div class="ng-card-time-val" style="font-size:18px;">'+(item.heure||naGFmt(item.hdebut))+'</div>'
+      +'<div class="ng-card-time-sep">'+(item.emission||'')+'</div>'
+    +'</div>'
+    +'<div class="ng-card-body">'
+      +'<div class="ng-card-head">'
+        +'<span class="ng-card-name" style="font-size:22px;">&#127918; '+(item.nom||'Jeu')+'</span>'
+        +(isLive?'<span class="ng-live-badge"><span class="ng-live-dot"></span>En cours</span>':'')
+      +'</div>'
+      +(item.desc?'<div class="ng-card-extra">'+item.desc+'</div>':'')
+      +(item.gain?'<div class="ng-card-extra">&#127873; Gain : '+item.gain+'</div>':'')
+    +'</div>'
+  +'</div>';
+}
+
+function naRenderJeuxEnCours(slots){
+  var el=document.getElementById('ng-jeux-container');if(!el)return;
+  var items=(slots||[]).filter(function(s){return s.jeu&&s.jeu.nom;}).map(function(s){
+    return {nom:s.jeu.nom,desc:s.jeu.gain?'':'',gain:s.jeu.gain,heure:naGFmt(s.hdebut),hdebut:s.hdebut,hfin:s.hfin,emission:s.emission};
+  });
+  if(!items.length){
+    el.innerHTML='<div class="ng-empty">Aucun jeu antenne configuré aujourd\'hui</div>';
+    return;
+  }
+  items.sort(function(a,b){return (a.hdebut||0)-(b.hdebut||0);});
+  el.innerHTML=items.map(naJeuCardHtml).join('');
 }
 
 function initNoteAntenne(){
