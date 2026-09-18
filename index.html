@@ -4092,12 +4092,9 @@ function naGFmt(h){
   return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
 }
 
-/* Un créneau est retenu s'il correspond à Morning / Morning+ (nom) ou aux rendez-vous DJ du soir (à partir de 20h) */
+/* Toute la journée est affichée (plus de filtre Morning/DJ) */
 function naGKeepSlot(slot){
-  var nom=(slot.emission||'').toLowerCase();
-  if(nom.indexOf('morning')>=0)return true; /* Morning + Morning+ */
-  if(slot.hdebut!=null && slot.hdebut>=20)return true; /* Rendez-vous DJ à partir de 20h */
-  return false;
+  return true;
 }
 
 function naGBuildPeople(slot){
@@ -4157,7 +4154,7 @@ function naFindTodayDay(days){
 function naRenderGrilleDuJour(slots,debugInfo){
   var el=document.getElementById('ng-grid-container');if(!el)return;
   if(!slots||!slots.length){
-    el.innerHTML='<div class="ng-empty">Aucun programme (Morning / Morning+ / DJ) trouvé pour aujourd\'hui'
+    el.innerHTML='<div class="ng-empty">Aucun programme trouvé pour aujourd\'hui'
       +(debugInfo?'<div style="margin-top:10px;font-family:\'Share Tech Mono\',monospace;font-size:10px;color:rgba(255,255,255,.2);letter-spacing:0;text-transform:none;">'+debugInfo+'</div>':'')
       +'</div>';
     return;
