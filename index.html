@@ -1977,15 +1977,15 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .ng-page{
   padding:28px 32px 56px;
   max-width:1700px;margin:0 auto;
-  display:grid;grid-template-columns:300px 1fr 1fr;gap:0;align-items:start;
+  display:grid;grid-template-columns:300px 1fr 1fr;gap:0 36px;align-items:start;
 }
-.ng-col{min-width:0;padding:0 28px;}
-.ng-col:first-child{padding-left:0;}
-.ng-col:last-child{padding-right:0;}
-.ng-col+.ng-col{border-left:1px solid rgba(255,255,255,.07);}
+.ng-col{min-width:0;position:relative;}
+.ng-col:not(:first-child)::before{
+  content:'';position:absolute;top:0;bottom:0;left:-18px;width:1px;background:rgba(255,255,255,.07);
+}
 @media (max-width:1100px){
   .ng-page{display:flex;flex-direction:column;gap:18px;}
-  .ng-col{padding:0;border-left:none !important;}
+  .ng-col::before{display:none;}
 }
 .ng-toolbar{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -2025,6 +2025,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   border-color:rgba(228,3,46,.55);
   box-shadow:0 0 0 1px rgba(228,3,46,.25),0 8px 28px rgba(228,3,46,.18);
 }
+.ng-card.past{
+  opacity:.42;filter:grayscale(70%);
+}
+.ng-card.past:hover{opacity:.65;}
 .ng-card-time{
   flex-shrink:0;width:150px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -4125,6 +4129,7 @@ function naGCardHtml(slot){
   var now=new Date();
   var nowH=now.getHours()+now.getMinutes()/60;
   var isLive=(slot.hdebut!=null && slot.hfin!=null && nowH>=slot.hdebut && nowH<slot.hfin);
+  var isPast=(slot.hfin!=null && nowH>=slot.hfin);
   var people=naGBuildPeople(slot);
   var peopleHtml=people.length
     ? people.map(function(p){
@@ -4135,7 +4140,7 @@ function naGCardHtml(slot){
   if(slot.jeu&&slot.jeu.nom){
     jeuHtml='<div class="ng-card-extra">&#127918; '+slot.jeu.nom+(slot.jeu.gain?' — Gain : '+slot.jeu.gain:'')+'</div>';
   }
-  return '<div class="ng-card'+(isLive?' live':'')+'">'
+  return '<div class="ng-card'+(isLive?' live':'')+(isPast?' past':'')+'">'
     +'<div class="ng-card-time">'
       +'<div class="ng-card-time-val">'+naGFmt(slot.hdebut)+'</div>'
       +'<div class="ng-card-time-sep">&#8595;</div>'
@@ -4230,7 +4235,8 @@ function naJeuCardHtml(item){
   var now=new Date();
   var nowH=now.getHours()+now.getMinutes()/60;
   var isLive=(item.hdebut!=null && item.hfin!=null && nowH>=item.hdebut && nowH<item.hfin);
-  return '<div class="ng-card'+(isLive?' live':'')+'">'
+  var isPast=(item.hfin!=null && nowH>=item.hfin);
+  return '<div class="ng-card'+(isLive?' live':'')+(isPast?' past':'')+'">'
     +'<div class="ng-card-time" style="width:110px;">'
       +'<div class="ng-card-time-val" style="font-size:18px;">'+(item.heure||naGFmt(item.hdebut))+'</div>'
       +'<div class="ng-card-time-sep">'+(item.emission||'')+'</div>'
