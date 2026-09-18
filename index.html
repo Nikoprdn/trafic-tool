@@ -1973,6 +1973,93 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 [data-theme="light"] .na-today-team{color:#111;}
 [data-theme="light"] .na-comm-nom{color:#111;}
 
+/* ══ GRILLE DES PROGRAMMES DU JOUR (cartes empilées) ══════════════════════ */
+.ng-page{
+  padding:28px 32px 56px;
+  max-width:1000px;margin:0 auto;
+  display:flex;flex-direction:column;gap:18px;
+}
+.ng-toolbar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:4px 2px 4px;
+}
+.ng-toolbar-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;
+  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);
+}
+.ng-toolbar-right{display:flex;align-items:center;gap:8px;}
+.ng-grid{display:flex;flex-direction:column;gap:16px;}
+.ng-empty{
+  font-family:'Barlow Condensed',sans-serif;font-size:14px;
+  letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.25);
+  padding:40px 0;text-align:center;
+}
+.ng-card{
+  position:relative;
+  display:flex;align-items:stretch;gap:0;
+  border-radius:16px;overflow:hidden;
+  background:#2a2630;
+  border:1px solid rgba(255,255,255,.08);
+  transition:border-color .2s,box-shadow .2s;
+}
+.ng-card.live{
+  border-color:rgba(228,3,46,.55);
+  box-shadow:0 0 0 1px rgba(228,3,46,.25),0 8px 28px rgba(228,3,46,.18);
+}
+.ng-card-time{
+  flex-shrink:0;width:150px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;padding:22px 14px;
+  background:#37333E;border-right:1px solid rgba(255,255,255,.07);
+}
+.ng-card.live .ng-card-time{background:linear-gradient(160deg,#3a1418,#37333E 70%);}
+.ng-card-time-val{
+  font-family:'Share Tech Mono',monospace;font-size:24px;font-weight:700;
+  color:#fff;line-height:1.1;
+}
+.ng-card-time-sep{
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;
+  color:rgba(255,255,255,.25);letter-spacing:.1em;
+}
+.ng-card-body{
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  gap:10px;padding:20px 26px;min-width:0;
+}
+.ng-card-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.ng-card-name{
+  font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;
+  letter-spacing:.02em;color:#fff;line-height:1.1;
+}
+.ng-live-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(228,3,46,.15);border:1px solid rgba(228,3,46,.5);
+  border-radius:20px;padding:4px 12px 4px 10px;
+  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;
+  letter-spacing:.14em;text-transform:uppercase;color:#ff4d63;flex-shrink:0;
+}
+.ng-live-dot{
+  width:7px;height:7px;border-radius:50%;background:#E4032E;
+  box-shadow:0 0 8px #E4032E;animation:naPulse 1.4s ease-in-out infinite;
+}
+.ng-card-people{display:flex;flex-wrap:wrap;gap:8px;}
+.ng-person-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(255,255,255,.05);border-radius:20px;
+  padding:5px 12px 5px 8px;
+  font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;
+  color:rgba(255,255,255,.85);
+}
+.ng-person-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.ng-card-extra{
+  font-family:'Inter',sans-serif;font-size:12px;color:rgba(255,255,255,.4);
+}
+
+[data-theme="light"] .ng-card{background:#F5F4F7;}
+[data-theme="light"] .ng-card-time{background:#E4E3E8;}
+[data-theme="light"] .ng-card-time-val{color:#111;}
+[data-theme="light"] .ng-card-name{color:#111;}
+[data-theme="light"] .ng-person-chip{background:rgba(0,0,0,.05);color:#222;}
+
 /* ── Incident Antenne ── */
 .na-incident-card{
   background:#1a0a0a;
@@ -2392,7 +2479,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
         <span class="card-title">&#128663; Carte Trafic &mdash; Waze</span>
         <a href="https://www.waze.com/fr/livemap?ll=43.7384,7.4246&zoom=12" target="_blank" class="pill" style="margin-left:auto;text-decoration:none;font-size:10px;">Ouvrir Waze</a>
       </div>
-      <iframe src="https://embed.waze.com/iframe?zoom=12&lat=43.7384&lon=7.4246&ct=livemap&pin=0" width="100%" height="480" frameborder="0" style="display:block;border:none;" allowfullscreen loading="lazy"></iframe>
+      <iframe src="https://embed.waze.com/iframe?zoom=12&lat=43.7384&lon=7.4246&ct=livemap&pin=0" width="100%" height="760" frameborder="0" style="display:block;border:none;" allowfullscreen loading="lazy"></iframe>
     </div>
 
   </div>
@@ -2463,32 +2550,17 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 </div>
 
 <div class="tab-content" id="tab-antenne">
-  <div class="na-page">
-    <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:6px 0 4px;">
-      <span id="na-sync-badge" style="display:none;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(46,204,113,.7);"></span>
-      <button onclick="naLoadFromWorker()" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3);padding:3px 10px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;cursor:pointer;">&#8635; Sync</button>
-    </div>
-    <div id="na-blocks-container"></div>
-
-    <!-- ▸ MORNING -->
-    <div class="na-block na-block--morning">
-      <div class="na-block-header" style="background:#37333E;border-bottom:4px solid #E4032E;">
-        <div class="na-block-title-group">
-          <span class="na-block-name">MORNING</span>
-          <span class="na-block-time">06:00 — 09:00</span>
-        </div>
-        <button class="na-planning-btn" onclick="naTogglePlanning('morning')">&#128197; Équipe de la semaine</button>
-      </div>
-      <div class="na-planning-wrap" id="na-planning-morning" style="display:none">
-        <div class="na-planning-grid" id="na-planning-grid-morning"></div>
-      </div>
-      <div class="na-block-body">
-        <div class="na-col"><div class="na-col-label">&#127908; Antenne aujourd'hui</div><div class="na-today-team empty" id="na-today-morning">—</div></div>
-        <div class="na-col"><div class="na-col-label">&#127918; Jeu antenne</div><div class="na-jeu" id="na-jeu-morning"><div class="na-empty">Aucun jeu configuré</div></div></div>
-        <div class="na-col"><div class="na-col-label">&#128188; Commercial Editor</div><div class="na-commercial" id="na-commercial-morning"><div class="na-empty">Aucun rendez-vous</div></div></div>
+  <div class="ng-page">
+    <div class="ng-toolbar">
+      <span class="ng-toolbar-title">&#128197; Grille des programmes — Aujourd'hui</span>
+      <div class="ng-toolbar-right">
+        <span id="na-sync-badge" style="display:none;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(46,204,113,.7);"></span>
+        <button onclick="naLoadGrilleDuJour()" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3);padding:3px 10px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;cursor:pointer;">&#8635; Sync</button>
       </div>
     </div>
-
+    <div id="ng-grid-container" class="ng-grid">
+      <div class="ng-empty">Chargement de la grille&hellip;</div>
+    </div>
   </div>
 </div>
 <!-- ▸ TAB SECOURS -->
@@ -2601,7 +2673,7 @@ function switchTab(n){
   if(btn)btn.classList.add('active');
   if(tab)tab.classList.add('active');
   if(n==='weather'&&!weatherLoaded){wxLoadZone('am');weatherLoaded=true;}
-  if(n==='antenne'){if(!antenneLoaded){initNoteAntenne();antenneLoaded=true;}else{naLoadFromWorker();}}
+  if(n==='antenne'){if(!antenneLoaded){initNoteAntenne();antenneLoaded=true;}else{naLoadGrilleDuJour();}}
   if(n==='trafic'&&!traficLoaded){loadBoard();loadDis();renderTravelSkeleton();loadTravel();setTimeout(loadA8Traffic,600);traficLoaded=true;}
   if(n==='secours'){/* à compléter */}
 }
@@ -3989,15 +4061,98 @@ function naLoadFromWorker(){
       return true;
     }).catch(function(){return false;});
 }
+function naGFmt(h){
+  if(h==null)return'--:--';
+  var hh=Math.floor(h),mm=(h%1)?30:0;
+  return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
+}
+
+/* Un créneau est retenu s'il correspond à Morning / Morning+ (nom) ou aux rendez-vous DJ du soir (à partir de 20h) */
+function naGKeepSlot(slot){
+  var nom=(slot.emission||'').toLowerCase();
+  if(nom.indexOf('morning')>=0)return true; /* Morning + Morning+ */
+  if(slot.hdebut!=null && slot.hdebut>=20)return true; /* Rendez-vous DJ à partir de 20h */
+  return false;
+}
+
+function naGBuildPeople(slot){
+  var people=[];
+  (slot.animateurs||[]).forEach(function(a){people.push({nom:a.prenom+' '+(a.nom||'').toUpperCase(),color:a.color||'#E4032E',role:'Animateur'});});
+  (slot.journalistes||[]).forEach(function(j){people.push({nom:j.prenom+' '+(j.nom||'').toUpperCase(),color:j.color||'#E87C3E',role:'Journaliste'});});
+  return people;
+}
+
+function naGCardHtml(slot){
+  var now=new Date();
+  var nowH=now.getHours()+now.getMinutes()/60;
+  var isLive=(slot.hdebut!=null && slot.hfin!=null && nowH>=slot.hdebut && nowH<slot.hfin);
+  var people=naGBuildPeople(slot);
+  var peopleHtml=people.length
+    ? people.map(function(p){
+        return '<span class="ng-person-chip"><span class="ng-person-dot" style="background:'+p.color+';"></span>'+p.nom+' <span style="opacity:.4;font-weight:600;">&middot; '+p.role+'</span></span>';
+      }).join('')
+    : '<span class="ng-card-extra">Aucun intervenant renseigné</span>';
+  var jeuHtml='';
+  if(slot.jeu&&slot.jeu.nom){
+    jeuHtml='<div class="ng-card-extra">&#127918; '+slot.jeu.nom+(slot.jeu.gain?' — Gain : '+slot.jeu.gain:'')+'</div>';
+  }
+  return '<div class="ng-card'+(isLive?' live':'')+'">'
+    +'<div class="ng-card-time">'
+      +'<div class="ng-card-time-val">'+naGFmt(slot.hdebut)+'</div>'
+      +'<div class="ng-card-time-sep">&#8595;</div>'
+      +'<div class="ng-card-time-val">'+naGFmt(slot.hfin)+'</div>'
+    +'</div>'
+    +'<div class="ng-card-body">'
+      +'<div class="ng-card-head">'
+        +'<span class="ng-card-name">'+(slot.emission||'—')+'</span>'
+        +(isLive?'<span class="ng-live-badge"><span class="ng-live-dot"></span>En direct</span>':'')
+      +'</div>'
+      +'<div class="ng-card-people">'+peopleHtml+'</div>'
+      +jeuHtml
+    +'</div>'
+  +'</div>';
+}
+
+function naRenderGrilleDuJour(slots){
+  var el=document.getElementById('ng-grid-container');if(!el)return;
+  if(!slots||!slots.length){
+    el.innerHTML='<div class="ng-empty">Aucun programme (Morning / Morning+ / DJ) trouvé pour aujourd\'hui</div>';
+    return;
+  }
+  slots.sort(function(a,b){return (a.hdebut||0)-(b.hdebut||0);});
+  el.innerHTML=slots.map(naGCardHtml).join('');
+}
+
+var NA_GRILLE_LAST_DAY=null;
+function naLoadGrilleDuJour(){
+  return fetch(NA_WORKER_URL,{cache:'no-store'})
+    .then(function(r){if(!r.ok)throw 0;return r.json();})
+    .then(function(data){
+      if(!data||data.empty){naRenderGrilleDuJour([]);return false;}
+      var days=data.days||[];
+      var todayIso=new Date().toISOString().slice(0,10);
+      var todayIdx=(new Date().getDay()+6)%7; /* 0=Lun ... 6=Dim, aligné sur dayIdx du worker */
+      var day=days.find(function(d){return d.isoDate===todayIso;})
+             || days.find(function(d){return d.dayIdx===todayIdx;});
+      NA_GRILLE_LAST_DAY=day||null;
+      var slots=[];
+      if(day){
+        if(day.matin&&day.matin.slots)slots=slots.concat(day.matin.slots);
+        if(day.soir&&day.soir.slots)slots=slots.concat(day.soir.slots);
+      }
+      var filtered=slots.filter(naGKeepSlot);
+      naRenderGrilleDuJour(filtered);
+      var badge=document.getElementById('na-sync-badge');
+      if(badge&&data.publishedAt){badge.textContent='Sync '+new Date(data.publishedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});badge.style.display='inline-block';}
+      return true;
+    })
+    .catch(function(){naRenderGrilleDuJour([]);return false;});
+}
+
 function initNoteAntenne(){
   naIncInit();
-  naLoadFromWorker().then(function(ok){
-    if(ok)return;
-    if(typeof window.storage!=='undefined'){
-      naLoadFromStorage().then(function(l){if(!l){naRenderBlock('morning');}});
-    }else{naRenderBlock('morning');}
-  });
-  setInterval(naLoadFromWorker,30000);
+  naLoadGrilleDuJour();
+  setInterval(naLoadGrilleDuJour,30000);
 }
 
 /* ── Live antenne Radio Monaco ── */
@@ -4081,7 +4236,7 @@ function naIncCloseModal(e){
   var params=new URLSearchParams(window.location.search);
   var tab=params.get('tab');
   switchTab(tab==='weather'?'weather':(tab==='antenne'?'antenne':'trafic'));
-  setTimeout(naLoadFromWorker,1000);
+  setTimeout(naLoadGrilleDuJour,1000);
 })();
 
 /* ══ DIFFUSEUR DE SECOURS ════════════════════════════════════════════════ */
