@@ -1976,11 +1976,17 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 /* ══ GRILLE DES PROGRAMMES DU JOUR (cartes empilées) ══════════════════════ */
 .ng-page{
   padding:28px 32px 56px;
-  max-width:1000px;margin:0 auto;
-  display:flex;flex-direction:column;gap:18px;
+  max-width:1700px;margin:0 auto;
+  display:grid;grid-template-columns:300px 1fr 1fr;gap:0;align-items:start;
 }
-.ng-section{margin-top:40px;padding-top:32px;border-top:1px solid rgba(255,255,255,.07);}
-.ng-section:first-child{margin-top:0;padding-top:0;border-top:none;}
+.ng-col{min-width:0;padding:0 28px;}
+.ng-col:first-child{padding-left:0;}
+.ng-col:last-child{padding-right:0;}
+.ng-col+.ng-col{border-left:1px solid rgba(255,255,255,.07);}
+@media (max-width:1100px){
+  .ng-page{display:flex;flex-direction:column;gap:18px;}
+  .ng-col{padding:0;border-left:none !important;}
+}
 .ng-toolbar{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:4px 2px 16px;
@@ -1996,6 +2002,17 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.25);
   padding:40px 0;text-align:center;
 }
+/* Colonne "Grille antenne" : version compacte des cartes */
+#ng-grid-container.ng-grid{gap:12px;}
+#ng-grid-container .ng-card-time{width:78px;padding:12px 6px;gap:4px;}
+#ng-grid-container .ng-card-time-val{font-size:15px;}
+#ng-grid-container .ng-card-body{padding:12px 14px;gap:6px;}
+#ng-grid-container .ng-card-name{font-size:17px;}
+#ng-grid-container .ng-live-badge{font-size:9px;padding:3px 8px 3px 6px;}
+#ng-grid-container .ng-live-dot{width:6px;height:6px;}
+#ng-grid-container .ng-person-chip{font-size:11px;padding:3px 9px 3px 5px;gap:5px;}
+#ng-grid-container .ng-person-dot{width:6px;height:6px;}
+#ng-grid-container .ng-card-extra{font-size:10px;}
 .ng-card{
   position:relative;
   display:flex;align-items:stretch;gap:0;
@@ -2553,9 +2570,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 <div class="tab-content" id="tab-antenne">
   <div class="ng-page">
-    <div class="ng-section">
+    <div class="ng-col">
       <div class="ng-toolbar">
-        <span class="ng-toolbar-title">&#128197; Grille des programmes — Aujourd'hui</span>
+        <span class="ng-toolbar-title">&#128197; Grille antenne</span>
         <div class="ng-toolbar-right">
           <span id="na-sync-badge" style="display:none;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(46,204,113,.7);"></span>
           <button onclick="naLoadGrilleDuJour()" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3);padding:3px 10px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;cursor:pointer;">&#8635; Sync</button>
@@ -2567,7 +2584,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     </div>
 
     <!-- ▸ JEUX EN COURS -->
-    <div class="ng-section">
+    <div class="ng-col">
       <div class="ng-toolbar">
         <span class="ng-toolbar-title">&#127918; Jeux en cours</span>
       </div>
@@ -2577,7 +2594,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     </div>
 
     <!-- ▸ ENTRÉE PLAYLIST -->
-    <div class="ng-section">
+    <div class="ng-col">
       <div class="ng-toolbar">
         <span class="ng-toolbar-title">&#127925; Entrée Playlist</span>
       </div>
