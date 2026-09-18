@@ -4172,23 +4172,37 @@ function naLoadGrilleDuJour(){
     .then(function(r){if(!r.ok)throw 0;return r.json();})
     .then(function(data){
       console.log('[grille du jour] réponse worker:',data);
-      if(!data||data.empty){naRenderGrilleDuJour([],'Le Worker n\'a renvoyé aucune donnée (data.empty).');naRenderJeuxEnCours([]);return false;}
+      if(!data||data.empty){naRenderGrilleDuJour([],'Le Worker n\'a renvoyé aucune donnée (data.empty) — rien n\'a encore été publié depuis RM-Admin.');naRenderJeuxEnCours([]);return false;}
       var days=data.days||[];
       var day=naFindTodayDay(days);
       NA_GRILLE_LAST_DAY=day||null;
-      var slots=[];
-      if(day){
-        if(day.matin&&day.matin.slots)slots=slots.concat(day.matin.slots);
-        if(day.soir&&day.soir.slots)slots=slots.concat(day.soir.slots);
-      }
+
       if(!day){
         var recap=days.map(function(x){return '{dayIdx:'+x.dayIdx+', isoDate:'+(x.isoDate||'—')+'}';}).join(' ');
         naRenderGrilleDuJour([], days.length?('Jour introuvable parmi '+days.length+' reçus &rarr; '+recap):'Aucun jour reçu du Worker.');
         naRenderJeuxEnCours([]);
         return false;
       }
+
+      var slots=[];
+      if(day.matin&&day.matin.slots)slots=slots.concat(day.matin.slots);
+      if(day.soir&&day.soir.slots)slots=slots.concat(day.soir.slots);
+
+      if(!slots.length){
+        naRenderGrilleDuJour([], 'La grille du '+(day.isoDate||'jour')+' est vide côté RM-Admin — aucune émission n\'y a été placée pour l\'instant.');
+        naRenderJeuxEnCours([]);
+        var badge0=document.getElementById('na-sync-badge');
+        if(badge0&&data.publishedAt){badge0.textContent='Sync '+new Date(data.publishedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});badge0.style.display='inline-block';}
+        return true;
+      }
+
       var filtered=slots.filter(naGKeepSlot);
-      naRenderGrilleDuJour(filtered);
+      if(!filtered.length){
+        var noms=slots.map(function(s){return s.emission;}).join(', ');
+        naRenderGrilleDuJour([], 'Des émissions existent aujourd\'hui ('+noms+') mais aucune ne correspond au filtre Morning / Morning+ / DJ 20h+.');
+      } else {
+        naRenderGrilleDuJour(filtered);
+      }
       naRenderJeuxEnCours(slots);
       var badge=document.getElementById('na-sync-badge');
       if(badge&&data.publishedAt){badge.textContent='Sync '+new Date(data.publishedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});badge.style.display='inline-block';}
