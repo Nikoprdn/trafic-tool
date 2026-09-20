@@ -2338,7 +2338,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 /* Droite */
 .hdr-right{
-  display:flex;align-items:center;gap:16px;
+  display:flex;align-items:center;gap:8px;
   padding:0 24px;
   border-left:1px solid rgba(255,255,255,.15);
 }
@@ -2426,6 +2426,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <span class="tab-btn-ico">&#127897;&#65039;</span>
       <span class="tab-btn-txt">Note<br>Antenne</span>
     </button>
+  </nav>
+
+  <!-- Droite -->
+  <div class="hdr-right">
     <button class="tab-btn tab-btn-incident" onclick="naIncOpenModal()">
       <span class="tab-btn-ico">&#9888;&#65039;</span>
       <span class="tab-btn-txt">Incident<br>Antenne</span>
@@ -2434,10 +2438,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <span class="tab-btn-ico">&#128308;</span>
       <span class="tab-btn-txt">Diffuseur<br>Secours</span>
     </button>
-  </nav>
-
-  <!-- Droite -->
-  <div class="hdr-right">
     <div class="hdr-clock" id="clk">--:--:--</div>
   </div>
 
