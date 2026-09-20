@@ -2338,8 +2338,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 /* Droite */
 .hdr-right{
-  display:flex;align-items:center;gap:8px;
-  padding:0 24px;
+  display:flex;align-items:stretch;gap:0;
+  padding:0;
   border-left:1px solid rgba(255,255,255,.15);
 }
 .tab-btn-incident{
@@ -2363,32 +2363,13 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .tab-btn-incident .tab-btn-txt{
   position:relative;z-index:1;
 }
-.tab-btn-secours{
-  position:relative;
-  overflow:hidden;
-}
-.tab-btn-secours::before{
-  content:'';
-  position:absolute;inset:0;
-  background:repeating-linear-gradient(
-    45deg,
-    rgba(255,255,255,.07) 0px,
-    rgba(255,255,255,.07) 10px,
-    transparent 10px,
-    transparent 20px
-  );
-  pointer-events:none;
-  z-index:0;
-}
-.tab-btn-secours .tab-btn-ico,
-.tab-btn-secours .tab-btn-txt{
-  position:relative;z-index:1;
-}
 .hdr-clock{
   font-family:'Share Tech Mono',monospace;
   font-size:38px;font-weight:700;
   color:rgba(255,255,255,.85);letter-spacing:.05em;
   white-space:nowrap;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 24px;
 }</style>
 </head>
 <body>
@@ -2426,6 +2407,10 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <span class="tab-btn-ico">&#127897;&#65039;</span>
       <span class="tab-btn-txt">Note<br>Antenne</span>
     </button>
+    <button class="tab-btn" id="tab-btn-outils" onclick="switchTab('outils')">
+      <span class="tab-btn-ico">&#9881;&#65039;</span>
+      <span class="tab-btn-txt">Outils</span>
+    </button>
   </nav>
 
   <!-- Droite -->
@@ -2434,9 +2419,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <span class="tab-btn-ico">&#9888;&#65039;</span>
       <span class="tab-btn-txt">Incident<br>Antenne</span>
     </button>
-    <button class="tab-btn tab-btn-secours" id="tab-btn-secours" onclick="switchTab('secours')">
-      <span class="tab-btn-ico">&#128308;</span>
-      <span class="tab-btn-txt">Diffuseur<br>Secours</span>
+    <button class="tab-btn" id="tab-btn-secours" onclick="switchTab('secours')">
+      <span class="tab-btn-ico">&#128225;</span>
+      <span class="tab-btn-txt">Diffusion</span>
     </button>
     <div class="hdr-clock" id="clk">--:--:--</div>
   </div>
@@ -2609,6 +2594,67 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
   </div>
 </div>
+<!-- ▸ TAB OUTILS -->
+<div class="tab-content" id="tab-outils">
+<div style="padding:32px 28px 80px;max-width:900px;margin:0 auto;">
+
+  <div class="card-h" style="border-radius:12px 12px 0 0;">
+    <span style="font-size:16px;">&#9881;&#65039;</span>
+    <span class="card-t">Outils Studio</span>
+    <div class="pill" style="margin-left:auto;">
+      <span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;"></span>LOCAL — RIEN N'EST ENVOYÉ EN LIGNE
+    </div>
+  </div>
+
+  <div class="section-card" style="border-radius:0 0 12px 12px;margin-bottom:24px;">
+    <div class="card-h">
+      <span style="font-size:15px;">&#127925;</span>
+      <span class="card-t">Convertisseur Audio</span>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-left:4px;">— WAV · MP3 · Stéréo forcé</span>
+    </div>
+
+    <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Choix du format de sortie -->
+      <div style="display:flex;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;width:fit-content;">
+        <button id="ot-btn-wav" onclick="otFmt('wav')" style="padding:8px 22px;background:rgba(27,94,184,.15);color:#60a5fa;border:none;border-bottom:3px solid #60a5fa;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;">WAV</button>
+        <button id="ot-btn-mp3" onclick="otFmt('mp3')" style="padding:8px 22px;background:transparent;color:var(--muted);border:none;border-bottom:3px solid transparent;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;">MP3</button>
+      </div>
+
+      <!-- Drop zone -->
+      <div id="ot-dropzone"
+        style="border:2px dashed var(--border);border-radius:10px;padding:40px 24px;text-align:center;cursor:pointer;background:var(--bg);transition:border-color .2s,background .2s;"
+        onclick="document.getElementById('ot-fi').click()"
+        ondragover="event.preventDefault();this.style.borderColor='rgba(232,234,240,.4)';this.style.background='#0f1219'"
+        ondragleave="this.style.borderColor='var(--border)';this.style.background='var(--bg)'"
+        ondrop="otDrop(event)">
+        <input type="file" id="ot-fi" multiple accept="audio/*" style="display:none" onchange="otFiles(this.files)">
+        <div style="font-size:32px;margin-bottom:8px;">&#128193;</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:.05em;color:var(--text);">Glisse tes fichiers audio ici</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin-top:6px;">ou clique pour parcourir — MP3, WAV, M4A, OGG, FLAC...</div>
+      </div>
+
+      <!-- Liste des fichiers -->
+      <div id="ot-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+      <!-- Actions -->
+      <div id="ot-actions" style="display:none;gap:10px;">
+        <button onclick="otConvertAll()"
+          style="height:44px;padding:0 24px;background:rgba(39,174,96,.12);border:1px solid var(--green);color:var(--green);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;border-radius:6px;cursor:pointer;">
+          &#9654; Convertir tout
+        </button>
+        <button onclick="otClear()"
+          style="height:44px;padding:0 24px;background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:6px;cursor:pointer;">
+          &#10005; Vider
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+
 <!-- ▸ TAB SECOURS -->
 <div class="tab-content" id="tab-secours" style="height:calc(100vh - 116px);overflow:hidden;display:flex;flex-direction:column;">
   <iframe id="diff-secours-frame" style="width:100%;flex:1;border:none;display:block;min-height:0;"></iframe>
@@ -2727,6 +2773,127 @@ function switchTab(n){
 
 function tick(){var e=document.getElementById('clk');if(e)e.textContent=new Date().toLocaleTimeString('fr-FR',{hour12:false});}
 setInterval(tick,1000);tick();
+
+/* == CONVERTISSEUR AUDIO (Outils) == */
+(function(){
+  var _f=[],_fmt='wav',_ctx=null;
+  function gCtx(){if(!_ctx)_ctx=new(window.AudioContext||window.webkitAudioContext)();return _ctx;}
+  function sz(b){return b<1048576?(b/1024).toFixed(0)+' Ko':(b/1048576).toFixed(1)+' Mo';}
+
+  window.otFmt=function(f){
+    _fmt=f;
+    var w=document.getElementById('ot-btn-wav'),m=document.getElementById('ot-btn-mp3');
+    if(w){w.style.background=f==='wav'?'rgba(27,94,184,.15)':'transparent';w.style.color=f==='wav'?'#60a5fa':'var(--muted)';w.style.borderBottomColor=f==='wav'?'#60a5fa':'transparent';}
+    if(m){m.style.background=f==='mp3'?'rgba(39,174,96,.1)':'transparent';m.style.color=f==='mp3'?'var(--green)':'var(--muted)';m.style.borderBottomColor=f==='mp3'?'var(--green)':'transparent';}
+  };
+
+  window.otDrop=function(e){
+    e.preventDefault();
+    var dz=document.getElementById('ot-dropzone');
+    if(dz){dz.style.borderColor='var(--border)';dz.style.background='var(--bg)';}
+    otFiles(e.dataTransfer.files);
+  };
+  window.otFiles=function(fl){
+    Array.from(fl).forEach(function(f){
+      if(!f.type.startsWith('audio/'))return;
+      _f.push({file:f,name:f.name,size:f.size,status:'wait',blobUrl:null,outName:null});
+    });
+    otRender();
+  };
+  window.otClear=function(){_f.forEach(function(it){if(it.blobUrl)URL.revokeObjectURL(it.blobUrl);});_f=[];otRender();};
+  window.otRm=function(i){if(_f[i]&&_f[i].blobUrl)URL.revokeObjectURL(_f[i].blobUrl);_f.splice(i,1);otRender();};
+
+  function statusChip(it){
+    if(it.status==='wait')return '<span style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--muted);">EN ATTENTE</span>';
+    if(it.status==='busy')return '<span style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:#F5C518;">CONVERSION&hellip;</span>';
+    if(it.status==='err')return '<span style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--red);">ERREUR</span>';
+    return '<a href="'+it.blobUrl+'" download="'+it.outName+'" style="font-family:\'Barlow Condensed\',sans-serif;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--green);text-decoration:none;border:1px solid var(--green);border-radius:5px;padding:4px 12px;">&#11015; '+it.outName+'</a>';
+  }
+
+  function otRender(){
+    var list=document.getElementById('ot-list');
+    var actions=document.getElementById('ot-actions');
+    if(!list)return;
+    if(!_f.length){list.innerHTML='';if(actions)actions.style.display='none';return;}
+    if(actions)actions.style.display='flex';
+    list.innerHTML=_f.map(function(it,i){
+      return '<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;">'
+        +'<span style="font-size:16px;">&#127925;</span>'
+        +'<div style="flex:1;min-width:0;">'
+          +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+it.name+'</div>'
+          +'<div style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--muted);">'+sz(it.size)+'</div>'
+        +'</div>'
+        +statusChip(it)
+        +'<button onclick="otRm('+i+')" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 6px;">&#10005;</button>'
+      +'</div>';
+    }).join('');
+  }
+
+  /* Encodeur WAV PCM 16-bit, stéréo forcé */
+  function encodeWav(audioBuffer){
+    var numCh=2,sampleRate=audioBuffer.sampleRate,len=audioBuffer.length;
+    var chL=audioBuffer.getChannelData(0);
+    var chR=audioBuffer.numberOfChannels>1?audioBuffer.getChannelData(1):chL;
+    var bytesPerSample=2,blockAlign=numCh*bytesPerSample;
+    var dataSize=len*blockAlign;
+    var buf=new ArrayBuffer(44+dataSize),view=new DataView(buf);
+    function wStr(o,s){for(var i=0;i<s.length;i++)view.setUint8(o+i,s.charCodeAt(i));}
+    wStr(0,'RIFF');view.setUint32(4,36+dataSize,true);wStr(8,'WAVE');
+    wStr(12,'fmt ');view.setUint32(16,16,true);view.setUint16(20,1,true);
+    view.setUint16(22,numCh,true);view.setUint32(24,sampleRate,true);
+    view.setUint32(28,sampleRate*blockAlign,true);view.setUint16(32,blockAlign,true);
+    view.setUint16(34,16,true);wStr(36,'data');view.setUint32(40,dataSize,true);
+    var off=44;
+    for(var i=0;i<len;i++){
+      var l=Math.max(-1,Math.min(1,chL[i])),r=Math.max(-1,Math.min(1,chR[i]));
+      view.setInt16(off,l<0?l*0x8000:l*0x7FFF,true);off+=2;
+      view.setInt16(off,r<0?r*0x8000:r*0x7FFF,true);off+=2;
+    }
+    return new Blob([buf],{type:'audio/wav'});
+  }
+
+  /* Encodeur MP3 via lamejs (stéréo forcé), chargé depuis CDN */
+  function encodeMp3(audioBuffer){
+    return new Promise(function(resolve,reject){
+      if(typeof lamejs==='undefined'){reject(new Error('lamejs indisponible'));return;}
+      try{
+        var sampleRate=audioBuffer.sampleRate,len=audioBuffer.length;
+        var chL=audioBuffer.getChannelData(0);
+        var chR=audioBuffer.numberOfChannels>1?audioBuffer.getChannelData(1):chL;
+        function f2i16(f){var s=new Int16Array(f.length);for(var i=0;i<f.length;i++){var v=Math.max(-1,Math.min(1,f[i]));s[i]=v<0?v*0x8000:v*0x7FFF;}return s;}
+        var l16=f2i16(chL),r16=f2i16(chR);
+        var enc=new lamejs.Mp3Encoder(2,sampleRate,128);
+        var chunks=[],block=1152;
+        for(var i=0;i<len;i+=block){
+          var lc=l16.subarray(i,i+block),rc=r16.subarray(i,i+block);
+          var mp3buf=enc.encodeBuffer(lc,rc);
+          if(mp3buf.length>0)chunks.push(new Int8Array(mp3buf));
+        }
+        var end=enc.flush();
+        if(end.length>0)chunks.push(new Int8Array(end));
+        resolve(new Blob(chunks,{type:'audio/mp3'}));
+      }catch(e){reject(e);}
+    });
+  }
+
+  window.otConvertAll=async function(){
+    for(var i=0;i<_f.length;i++){
+      var it=_f[i];
+      if(it.status==='done')continue;
+      it.status='busy';otRender();
+      try{
+        var arr=await it.file.arrayBuffer();
+        var audioBuffer=await gCtx().decodeAudioData(arr);
+        var blob=_fmt==='wav'?encodeWav(audioBuffer):await encodeMp3(audioBuffer);
+        it.blobUrl=URL.createObjectURL(blob);
+        it.outName=it.name.replace(/\.[^.]+$/,'')+'.'+_fmt;
+        it.status='done';
+      }catch(e){console.warn('Conversion échouée:',it.name,e);it.status='err';}
+      otRender();
+    }
+  };
+})();
+
 
 /* TRAFIC */
 var W='https://sncf-proxy.nicolas7lejeune.workers.dev';var TEST_MODE=false;var TEST_DATA=[{"id":"t1","_trains":["881 134"],"_stops":[{"name":"Cannes"}],"_lines":[],"severity":{"effect":"SIGNIFICANT_DELAYS"},"messages":[{"text":"Retards 20-45 min.","channel":{"types":["web"]}}],"application_periods":[{"begin":"2025-01-01T12:00:00","end":"2099-12-31T23:59:59"}]}];var ORDER=['cannes','nice','monaco','menton'];
@@ -8173,19 +8340,6 @@ plInit();
 
 
 // ════════════════════════════════════════════════════════════════
-// NAVIGATION ONGLETS
-// ════════════════════════════════════════════════════════════════
-function switchTab(name){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  const panel=document.getElementById('tab-'+name);
-  if(panel) panel.classList.add('active');
-  const btn=document.getElementById('tab-btn-'+name);
-  if(btn) btn.classList.add('active');
-  if(name==='diffusion'){ requestAnimationFrame(()=>{ _pazWvFile=null; pazDrawBg(true); }); }
-}
-
-// ════════════════════════════════════════════════════════════════
 // RACCOURCIS CLAVIER
 // ════════════════════════════════════════════════════════════════
 document.addEventListener('keydown', function(e) {
@@ -8299,6 +8453,7 @@ document.addEventListener('keydown', function(e) {
   if (btn) btn.addEventListener('click', loadDiffSecours);
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.0/lame.min.js"></script>
 
 </body>
 </html>
