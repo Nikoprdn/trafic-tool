@@ -1886,12 +1886,9 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .ng-page{
   padding:28px 32px 56px;
   max-width:1700px;margin:0 auto;
-  display:grid;grid-template-columns:300px 1fr;gap:0 36px;align-items:start;
+  display:grid;grid-template-columns:300px 1fr 1fr;column-gap:36px;row-gap:12px;align-items:start;
 }
 .ng-col{min-width:0;position:relative;}
-.ng-col:not(:first-child)::before{
-  content:'';position:absolute;top:0;bottom:0;left:-18px;width:1px;background:rgba(255,255,255,.07);
-}
 .ng-full-row{
   grid-column:1 / -1;
   margin-top:40px;padding-top:32px;
@@ -1899,7 +1896,6 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 }
 @media (max-width:1100px){
   .ng-page{display:flex;flex-direction:column;gap:18px;}
-  .ng-col::before{display:none;}
 }
 .ng-toolbar{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -2435,27 +2431,29 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 
 <div class="tab-content" id="tab-antenne">
   <div class="ng-page">
-    <div class="ng-col">
-      <div class="ng-toolbar">
-        <span class="ng-toolbar-title">&#128197; Grille antenne</span>
-        <div class="ng-toolbar-right">
-          <span id="na-sync-badge" style="display:none;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(46,204,113,.7);"></span>
-          <button onclick="naLoadGrilleDuJour()" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3);padding:3px 10px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;cursor:pointer;">&#8635; Sync</button>
-        </div>
-      </div>
-      <div id="ng-grid-container" class="ng-grid">
-        <div class="ng-empty">Chargement de la grille&hellip;</div>
+
+    <div class="ng-toolbar" style="grid-column:1;grid-row:1;">
+      <span class="ng-toolbar-title">&#128197; Grille antenne</span>
+      <div class="ng-toolbar-right">
+        <span id="na-sync-badge" style="display:none;font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(46,204,113,.7);"></span>
+        <button onclick="naLoadGrilleDuJour()" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3);padding:3px 10px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;cursor:pointer;">&#8635; Sync</button>
       </div>
     </div>
+    <div class="ng-toolbar" style="grid-column:2;grid-row:1;">
+      <span class="ng-toolbar-title">&#127918; Jeux</span>
+    </div>
+    <div class="ng-toolbar" style="grid-column:3;grid-row:1;">
+      <span class="ng-toolbar-title">&#127942; Sponsoring de la semaine</span>
+    </div>
+
+    <div id="ng-grid-container" style="display:contents;">
+      <div class="ng-empty" style="grid-column:1;grid-row:2;">Chargement de la grille&hellip;</div>
+    </div>
+    <div id="ng-jeux-container" style="display:contents;"></div>
 
     <!-- ▸ SPONSORING DE LA SEMAINE -->
-    <div class="ng-col">
-      <div class="ng-toolbar">
-        <span class="ng-toolbar-title">&#127942; Sponsoring de la semaine</span>
-      </div>
-      <div id="ng-sponsor-container" class="ng-grid">
-        <div class="ng-empty">En attente de configuration&hellip;</div>
-      </div>
+    <div id="ng-sponsor-container" style="grid-column:3;grid-row:2;">
+      <div class="ng-empty">En attente de configuration&hellip;</div>
     </div>
 
     <!-- ▸ ENTRÉE PLAYLIST (pleine largeur, en bas) -->
@@ -4011,7 +4009,7 @@ function naGBuildPeople(slot){
   return people;
 }
 
-function naGCardHtml(slot){
+function naGCardHtml(slot,rowIdx){
   var now=new Date();
   var nowH=now.getHours()+now.getMinutes()/60;
   var isLive=(slot.hdebut!=null && slot.hfin!=null && nowH>=slot.hdebut && nowH<slot.hfin);
@@ -4022,11 +4020,7 @@ function naGCardHtml(slot){
         return '<span class="ng-person-chip"><span class="ng-person-dot" style="background:'+p.color+';"></span>'+p.nom+' <span style="opacity:.4;font-weight:600;">&middot; '+p.role+'</span></span>';
       }).join('')
     : '<span class="ng-card-extra">Aucun intervenant renseigné</span>';
-  var jeuHtml='';
-  if(slot.jeu&&slot.jeu.nom){
-    jeuHtml='<div class="ng-card-extra">&#127918; '+escHtml(slot.jeu.nom)+(slot.jeu.gain?' — Gain : '+escHtml(slot.jeu.gain):'')+'</div>';
-  }
-  return '<div class="ng-card'+(isLive?' live':'')+(isPast?' past':'')+'">'
+  return '<div class="ng-card'+(isLive?' live':'')+(isPast?' past':'')+'" style="grid-column:1;grid-row:'+rowIdx+';">'
     +'<div class="ng-card-time">'
       +'<div class="ng-card-time-val">'+naGFmt(slot.hdebut)+'</div>'
       +'<div class="ng-card-time-sep">&#8595;</div>'
@@ -4038,7 +4032,22 @@ function naGCardHtml(slot){
         +(isLive?'<span class="ng-live-badge"><span class="ng-live-dot"></span>En direct</span>':'')
       +'</div>'
       +'<div class="ng-card-people">'+peopleHtml+'</div>'
-      +jeuHtml
+    +'</div>'
+  +'</div>';
+}
+
+/* Carte "Jeu" alignée sur la même ligne de grille que la tranche dont elle dépend */
+function naGJeuCardHtml(slot,rowIdx){
+  var now=new Date();
+  var nowH=now.getHours()+now.getMinutes()/60;
+  var isLive=(slot.hdebut!=null && slot.hfin!=null && nowH>=slot.hdebut && nowH<slot.hfin);
+  var isPast=(slot.hfin!=null && nowH>=slot.hfin);
+  return '<div class="ng-card'+(isLive?' live':'')+(isPast?' past':'')+'" style="grid-column:2;grid-row:'+rowIdx+';">'
+    +'<div class="ng-card-body" style="justify-content:center;">'
+      +'<div class="ng-card-head">'
+        +'<span class="ng-card-name">&#127918; '+escHtml(slot.jeu.nom)+'</span>'
+      +'</div>'
+      +(slot.jeu.gain?'<div class="ng-card-extra">&#127873; Gain : '+escHtml(slot.jeu.gain)+'</div>':'')
     +'</div>'
   +'</div>';
 }
@@ -4061,14 +4070,22 @@ function naFindTodayDay(days){
 
 function naRenderGrilleDuJour(slots,debugInfo){
   var el=document.getElementById('ng-grid-container');if(!el)return;
+  var jeuxEl=document.getElementById('ng-jeux-container');
   if(!slots||!slots.length){
-    el.innerHTML='<div class="ng-empty">Aucun programme trouvé pour aujourd\'hui'
+    el.innerHTML='<div class="ng-empty" style="grid-column:1;grid-row:2;">Aucun programme trouvé pour aujourd\'hui'
       +(debugInfo?'<div style="margin-top:10px;font-family:\'Share Tech Mono\',monospace;font-size:10px;color:rgba(255,255,255,.2);letter-spacing:0;text-transform:none;">'+debugInfo+'</div>':'')
       +'</div>';
+    if(jeuxEl)jeuxEl.innerHTML='';
     return;
   }
   slots.sort(function(a,b){return (a.hdebut||0)-(b.hdebut||0);});
-  el.innerHTML=slots.map(naGCardHtml).join('');
+  /* La ligne 1 de la grille est occupée par les entêtes ; les tranches démarrent donc à la ligne 2 */
+  el.innerHTML=slots.map(function(slot,i){return naGCardHtml(slot,i+2);}).join('');
+  if(jeuxEl){
+    jeuxEl.innerHTML=slots
+      .map(function(slot,i){return(slot.jeu&&slot.jeu.nom)?naGJeuCardHtml(slot,i+2):'';})
+      .join('');
+  }
 }
 
 var NA_GRILLE_LAST_DAY=null;
@@ -4077,7 +4094,7 @@ function naLoadGrilleDuJour(){
     .then(function(r){if(!r.ok)throw 0;return r.json();})
     .then(function(data){
       console.log('[grille du jour] réponse worker:',data);
-      if(!data||data.empty){naRenderGrilleDuJour([],'Le Worker n\'a renvoyé aucune donnée (data.empty) — rien n\'a encore été publié depuis RM-Admin.');naRenderJeuxEnCours([]);return false;}
+      if(!data||data.empty){naRenderGrilleDuJour([],'Le Worker n\'a renvoyé aucune donnée (data.empty) — rien n\'a encore été publié depuis RM-Admin.');return false;}
       var days=data.days||[];
       var day=naFindTodayDay(days);
       NA_GRILLE_LAST_DAY=day||null;
@@ -4085,7 +4102,6 @@ function naLoadGrilleDuJour(){
       if(!day){
         var recap=days.map(function(x){return '{dayIdx:'+x.dayIdx+', isoDate:'+(x.isoDate||'—')+'}';}).join(' ');
         naRenderGrilleDuJour([], days.length?('Jour introuvable parmi '+days.length+' reçus &rarr; '+recap):'Aucun jour reçu du Worker.');
-        naRenderJeuxEnCours([]);
         return false;
       }
 
@@ -4095,7 +4111,6 @@ function naLoadGrilleDuJour(){
 
       if(!slots.length){
         naRenderGrilleDuJour([], 'La grille du '+(day.isoDate||'jour')+' est vide côté RM-Admin — aucune émission n\'y a été placée pour l\'instant.');
-        naRenderJeuxEnCours([]);
         var badge0=document.getElementById('na-sync-badge');
         if(badge0&&data.publishedAt){badge0.textContent='Sync '+new Date(data.publishedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});badge0.style.display='inline-block';}
         return true;
@@ -4108,47 +4123,11 @@ function naLoadGrilleDuJour(){
       } else {
         naRenderGrilleDuJour(filtered);
       }
-      naRenderJeuxEnCours(slots);
       var badge=document.getElementById('na-sync-badge');
       if(badge&&data.publishedAt){badge.textContent='Sync '+new Date(data.publishedAt).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});badge.style.display='inline-block';}
       return true;
     })
-    .catch(function(e){console.warn('[grille du jour] erreur:',e);naRenderGrilleDuJour([],'Erreur réseau lors de l\'appel au Worker.');naRenderJeuxEnCours([]);return false;});
-}
-
-/* ── Jeux en cours (tous les jeux antenne du jour, toutes émissions confondues) ── */
-function naJeuCardHtml(item){
-  var now=new Date();
-  var nowH=now.getHours()+now.getMinutes()/60;
-  var isLive=(item.hdebut!=null && item.hfin!=null && nowH>=item.hdebut && nowH<item.hfin);
-  var isPast=(item.hfin!=null && nowH>=item.hfin);
-  return '<div class="ng-card'+(isLive?' live':'')+(isPast?' past':'')+'">'
-    +'<div class="ng-card-time">'
-      +'<div class="ng-card-time-val">'+(item.heure||naGFmt(item.hdebut))+'</div>'
-      +'<div class="ng-card-time-sep">'+escHtml(item.emission||'')+'</div>'
-    +'</div>'
-    +'<div class="ng-card-body">'
-      +'<div class="ng-card-head">'
-        +'<span class="ng-card-name">&#127918; '+escHtml(item.nom||'Jeu')+'</span>'
-        +(isLive?'<span class="ng-live-badge"><span class="ng-live-dot"></span>En cours</span>':'')
-      +'</div>'
-      +(item.desc?'<div class="ng-card-extra">'+escHtml(item.desc)+'</div>':'')
-      +(item.gain?'<div class="ng-card-extra">&#127873; Gain : '+escHtml(item.gain)+'</div>':'')
-    +'</div>'
-  +'</div>';
-}
-
-function naRenderJeuxEnCours(slots){
-  var el=document.getElementById('ng-jeux-container');if(!el)return;
-  var items=(slots||[]).filter(function(s){return s.jeu&&s.jeu.nom;}).map(function(s){
-    return {nom:s.jeu.nom,desc:s.jeu.gain?'':'',gain:s.jeu.gain,heure:naGFmt(s.hdebut),hdebut:s.hdebut,hfin:s.hfin,emission:s.emission};
-  });
-  if(!items.length){
-    el.innerHTML='<div class="ng-empty">Aucun jeu antenne configuré aujourd\'hui</div>';
-    return;
-  }
-  items.sort(function(a,b){return (a.hdebut||0)-(b.hdebut||0);});
-  el.innerHTML=items.map(naJeuCardHtml).join('');
+    .catch(function(e){console.warn('[grille du jour] erreur:',e);naRenderGrilleDuJour([],'Erreur réseau lors de l\'appel au Worker.');return false;});
 }
 
 function initNoteAntenne(){
