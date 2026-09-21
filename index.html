@@ -1912,16 +1912,26 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
   padding:40px 0;text-align:center;
 }
 /* Colonne "Grille antenne" : version compacte des cartes */
-#ng-grid-container.ng-grid{gap:12px;}
-#ng-grid-container .ng-card-time{width:78px;padding:12px 6px;gap:4px;}
-#ng-grid-container .ng-card-time-val{font-size:15px;}
-#ng-grid-container .ng-card-body{padding:12px 14px;gap:6px;}
-#ng-grid-container .ng-card-name{font-size:17px;}
-#ng-grid-container .ng-live-badge{font-size:9px;padding:3px 8px 3px 6px;}
-#ng-grid-container .ng-live-dot{width:6px;height:6px;}
-#ng-grid-container .ng-person-chip{font-size:11px;padding:3px 9px 3px 5px;gap:5px;}
-#ng-grid-container .ng-person-dot{width:6px;height:6px;}
-#ng-grid-container .ng-card-extra{font-size:10px;}
+#ng-grid-container.ng-grid,
+#ng-jeux-container.ng-grid{gap:12px;}
+#ng-grid-container .ng-card-time,
+#ng-jeux-container .ng-card-time{width:78px;padding:12px 6px;gap:4px;}
+#ng-grid-container .ng-card-time-val,
+#ng-jeux-container .ng-card-time-val{font-size:15px;}
+#ng-grid-container .ng-card-body,
+#ng-jeux-container .ng-card-body{padding:12px 14px;gap:6px;}
+#ng-grid-container .ng-card-name,
+#ng-jeux-container .ng-card-name{font-size:17px;}
+#ng-grid-container .ng-live-badge,
+#ng-jeux-container .ng-live-badge{font-size:9px;padding:3px 8px 3px 6px;}
+#ng-grid-container .ng-live-dot,
+#ng-jeux-container .ng-live-dot{width:6px;height:6px;}
+#ng-grid-container .ng-person-chip,
+#ng-jeux-container .ng-person-chip{font-size:11px;padding:3px 9px 3px 5px;gap:5px;}
+#ng-grid-container .ng-person-dot,
+#ng-jeux-container .ng-person-dot{width:6px;height:6px;}
+#ng-grid-container .ng-card-extra,
+#ng-jeux-container .ng-card-extra{font-size:10px;}
 .ng-card{
   position:relative;
   display:flex;align-items:stretch;gap:0;
@@ -2433,7 +2443,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       </div>
     </div>
 
-    <!-- ▸ JEUX EN COURS -->
+    <!-- ▸ JEUX EN COURS + ENTRÉE PLAYLIST -->
     <div class="ng-col">
       <div class="ng-toolbar">
         <span class="ng-toolbar-title">&#127918; Jeux en cours</span>
@@ -2441,14 +2451,23 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       <div id="ng-jeux-container" class="ng-grid">
         <div class="ng-empty">Chargement des jeux&hellip;</div>
       </div>
-    </div>
 
-    <!-- ▸ ENTRÉE PLAYLIST -->
-    <div class="ng-col">
+      <div style="height:32px;"></div>
+
       <div class="ng-toolbar">
         <span class="ng-toolbar-title">&#127925; Entrée Playlist</span>
       </div>
       <div id="ng-playlist-container" class="ng-grid">
+        <div class="ng-empty">En attente de configuration&hellip;</div>
+      </div>
+    </div>
+
+    <!-- ▸ SPONSORING DE LA SEMAINE -->
+    <div class="ng-col">
+      <div class="ng-toolbar">
+        <span class="ng-toolbar-title">&#127942; Sponsoring de la semaine</span>
+      </div>
+      <div id="ng-sponsor-container" class="ng-grid">
         <div class="ng-empty">En attente de configuration&hellip;</div>
       </div>
     </div>
@@ -4108,13 +4127,13 @@ function naJeuCardHtml(item){
   var isLive=(item.hdebut!=null && item.hfin!=null && nowH>=item.hdebut && nowH<item.hfin);
   var isPast=(item.hfin!=null && nowH>=item.hfin);
   return '<div class="ng-card'+(isLive?' live':'')+(isPast?' past':'')+'">'
-    +'<div class="ng-card-time" style="width:110px;">'
-      +'<div class="ng-card-time-val" style="font-size:18px;">'+(item.heure||naGFmt(item.hdebut))+'</div>'
+    +'<div class="ng-card-time">'
+      +'<div class="ng-card-time-val">'+(item.heure||naGFmt(item.hdebut))+'</div>'
       +'<div class="ng-card-time-sep">'+escHtml(item.emission||'')+'</div>'
     +'</div>'
     +'<div class="ng-card-body">'
       +'<div class="ng-card-head">'
-        +'<span class="ng-card-name" style="font-size:22px;">&#127918; '+escHtml(item.nom||'Jeu')+'</span>'
+        +'<span class="ng-card-name">&#127918; '+escHtml(item.nom||'Jeu')+'</span>'
         +(isLive?'<span class="ng-live-badge"><span class="ng-live-dot"></span>En cours</span>':'')
       +'</div>'
       +(item.desc?'<div class="ng-card-extra">'+escHtml(item.desc)+'</div>':'')
