@@ -1886,11 +1886,16 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .ng-page{
   padding:28px 32px 56px;
   max-width:1700px;margin:0 auto;
-  display:grid;grid-template-columns:300px 1fr 1fr;gap:0 36px;align-items:start;
+  display:grid;grid-template-columns:300px 1fr;gap:0 36px;align-items:start;
 }
 .ng-col{min-width:0;position:relative;}
 .ng-col:not(:first-child)::before{
   content:'';position:absolute;top:0;bottom:0;left:-18px;width:1px;background:rgba(255,255,255,.07);
+}
+.ng-full-row{
+  grid-column:1 / -1;
+  margin-top:40px;padding-top:32px;
+  border-top:1px solid rgba(255,255,255,.07);
 }
 @media (max-width:1100px){
   .ng-page{display:flex;flex-direction:column;gap:18px;}
@@ -2443,31 +2448,22 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
       </div>
     </div>
 
-    <!-- ▸ JEUX EN COURS + ENTRÉE PLAYLIST -->
-    <div class="ng-col">
-      <div class="ng-toolbar">
-        <span class="ng-toolbar-title">&#127918; Jeux en cours</span>
-      </div>
-      <div id="ng-jeux-container" class="ng-grid">
-        <div class="ng-empty">Chargement des jeux&hellip;</div>
-      </div>
-
-      <div style="height:32px;"></div>
-
-      <div class="ng-toolbar">
-        <span class="ng-toolbar-title">&#127925; Entrée Playlist</span>
-      </div>
-      <div id="ng-playlist-container" class="ng-grid">
-        <div class="ng-empty">En attente de configuration&hellip;</div>
-      </div>
-    </div>
-
     <!-- ▸ SPONSORING DE LA SEMAINE -->
     <div class="ng-col">
       <div class="ng-toolbar">
         <span class="ng-toolbar-title">&#127942; Sponsoring de la semaine</span>
       </div>
       <div id="ng-sponsor-container" class="ng-grid">
+        <div class="ng-empty">En attente de configuration&hellip;</div>
+      </div>
+    </div>
+
+    <!-- ▸ ENTRÉE PLAYLIST (pleine largeur, en bas) -->
+    <div class="ng-full-row">
+      <div class="ng-toolbar">
+        <span class="ng-toolbar-title">&#127925; Entrée Playlist</span>
+      </div>
+      <div id="ng-playlist-container" class="ng-grid">
         <div class="ng-empty">En attente de configuration&hellip;</div>
       </div>
     </div>
