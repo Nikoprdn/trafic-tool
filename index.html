@@ -4054,16 +4054,32 @@ function naGJeuCardHtml(slot,rowIdx){
 
 /* Carte "Sponsor" alignée sur la même ligne de grille que la tranche qu'elle sponsorise.
    Alimentée par slot.commercial = [{nom, type, time}, ...] publié par RM-Admin
-   (Conducteur → affectation sponsor, cf buildBroadcastPayload côté Admin Tool). */
+   (Conducteur → affectation sponsor, cf buildBroadcastPayload côté Admin Tool).
+   Les rendez-vous d'une même tranche sont vendus par "genre" (Météo, Infos trafic, ...)
+   → on les regroupe sous leur genre (c.type) plutôt que d'afficher chaque occurrence. */
+function naGSponsorGroup(commercial){
+  var groups={},order=[];
+  (commercial||[]).forEach(function(c){
+    var genre=(c.type&&String(c.type).trim())||'Sponsoring';
+    if(!groups[genre]){groups[genre]=[];order.push(genre);}
+    groups[genre].push(c);
+  });
+  return order.map(function(genre){return{genre:genre,entries:groups[genre]};});
+}
+
 function naGSponsorCardHtml(slot,rowIdx){
   var now=new Date();
   var nowH=now.getHours()+now.getMinutes()/60;
   var isLive=(slot.hdebut!=null && slot.hfin!=null && nowH>=slot.hdebut && nowH<slot.hfin);
   var isPast=(slot.hfin!=null && nowH>=slot.hfin);
-  var items=(slot.commercial||[]).map(function(c){
+  var items=naGSponsorGroup(slot.commercial).map(function(g){
+    var noms=g.entries.map(function(c){
+      var nom=escHtml(c.nom||'—');
+      return c.time?nom+' <span style="opacity:.5;">('+escHtml(c.time)+')</span>':nom;
+    }).join(', ');
     return '<div class="ng-card-extra" style="display:flex;flex-direction:column;gap:1px;">'
-      +'<span style="color:rgba(255,255,255,.85);font-weight:700;">&#127942; '+escHtml(c.nom||'—')+'</span>'
-      +(c.type||c.time?'<span style="opacity:.6;">'+[c.type,c.time].filter(Boolean).map(escHtml).join(' &middot; ')+'</span>':'')
+      +'<span style="color:rgba(255,255,255,.85);font-weight:700;">&#127942; '+escHtml(g.genre)+'</span>'
+      +'<span style="opacity:.65;">'+noms+'</span>'
     +'</div>';
   }).join('');
   return '<div class="ng-card'+(isLive?' live':'')+(isPast?' past':'')+'" style="grid-column:3;grid-row:'+rowIdx+';">'
