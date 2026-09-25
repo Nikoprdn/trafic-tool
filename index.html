@@ -4072,6 +4072,11 @@ function naGJeuCardHtml(slot,rowIdx){
   var isLive=(slot.hdebut!=null && slot.hfin!=null && nowH>=slot.hdebut && nowH<slot.hfin);
   var isPast=(slot.hfin!=null && nowH>=slot.hfin);
   return '<div class="ng-card'+(isLive?' live':'')+(isPast?' past':'')+'" style="grid-column:2;grid-row:'+rowIdx+';">'
+    +'<div class="ng-card-time">'
+      +'<div class="ng-card-time-val">'+naGFmt(slot.hdebut)+'</div>'
+      +'<div class="ng-card-time-sep">&#8595;</div>'
+      +'<div class="ng-card-time-val">'+naGFmt(slot.hfin)+'</div>'
+    +'</div>'
     +'<div class="ng-card-body" style="justify-content:center;">'
       +'<div class="ng-card-head">'
         +'<span class="ng-card-name">&#127918; '+escHtml(slot.jeu.nom)+'</span>'
