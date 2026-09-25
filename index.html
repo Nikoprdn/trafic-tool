@@ -2452,8 +2452,8 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
     <div id="ng-jeux-container" style="display:contents;"></div>
 
     <!-- ▸ SPONSORING DE LA SEMAINE -->
-    <div id="ng-sponsor-container" style="grid-column:3;grid-row:2;">
-      <div class="ng-empty">En attente de configuration&hellip;</div>
+    <div id="ng-sponsor-container" style="display:contents;">
+      <div class="ng-empty" style="grid-column:3;grid-row:2;">En attente de configuration&hellip;</div>
     </div>
 
     <!-- ▸ ENTRÉE PLAYLIST (pleine largeur, en bas) -->
@@ -4052,6 +4052,25 @@ function naGJeuCardHtml(slot,rowIdx){
   +'</div>';
 }
 
+/* Carte "Sponsor" alignée sur la même ligne de grille que la tranche qu'elle sponsorise.
+   Alimentée par slot.commercial = [{nom, type, time}, ...] publié par RM-Admin
+   (Conducteur → affectation sponsor, cf buildBroadcastPayload côté Admin Tool). */
+function naGSponsorCardHtml(slot,rowIdx){
+  var now=new Date();
+  var nowH=now.getHours()+now.getMinutes()/60;
+  var isLive=(slot.hdebut!=null && slot.hfin!=null && nowH>=slot.hdebut && nowH<slot.hfin);
+  var isPast=(slot.hfin!=null && nowH>=slot.hfin);
+  var items=(slot.commercial||[]).map(function(c){
+    return '<div class="ng-card-extra" style="display:flex;flex-direction:column;gap:1px;">'
+      +'<span style="color:rgba(255,255,255,.85);font-weight:700;">&#127942; '+escHtml(c.nom||'—')+'</span>'
+      +(c.type||c.time?'<span style="opacity:.6;">'+[c.type,c.time].filter(Boolean).map(escHtml).join(' &middot; ')+'</span>':'')
+    +'</div>';
+  }).join('');
+  return '<div class="ng-card'+(isLive?' live':'')+(isPast?' past':'')+'" style="grid-column:3;grid-row:'+rowIdx+';">'
+    +'<div class="ng-card-body" style="justify-content:center;gap:8px;">'+items+'</div>'
+  +'</div>';
+}
+
 /* Retrouve l'objet "jour" correspondant à aujourd'hui, quel que soit le format renvoyé par le Worker */
 function naFindTodayDay(days){
   var todayIso=new Date().toISOString().slice(0,10);
@@ -4071,11 +4090,13 @@ function naFindTodayDay(days){
 function naRenderGrilleDuJour(slots,debugInfo){
   var el=document.getElementById('ng-grid-container');if(!el)return;
   var jeuxEl=document.getElementById('ng-jeux-container');
+  var sponsorEl=document.getElementById('ng-sponsor-container');
   if(!slots||!slots.length){
     el.innerHTML='<div class="ng-empty" style="grid-column:1;grid-row:2;">Aucun programme trouvé pour aujourd\'hui'
       +(debugInfo?'<div style="margin-top:10px;font-family:\'Share Tech Mono\',monospace;font-size:10px;color:rgba(255,255,255,.2);letter-spacing:0;text-transform:none;">'+debugInfo+'</div>':'')
       +'</div>';
     if(jeuxEl)jeuxEl.innerHTML='';
+    if(sponsorEl)sponsorEl.innerHTML='<div class="ng-empty" style="grid-column:3;grid-row:2;">En attente de configuration&hellip;</div>';
     return;
   }
   slots.sort(function(a,b){return (a.hdebut||0)-(b.hdebut||0);});
@@ -4085,6 +4106,14 @@ function naRenderGrilleDuJour(slots,debugInfo){
     jeuxEl.innerHTML=slots
       .map(function(slot,i){return(slot.jeu&&slot.jeu.nom)?naGJeuCardHtml(slot,i+2):'';})
       .join('');
+  }
+  if(sponsorEl){
+    var sponsorHtml=slots
+      .map(function(slot,i){return(slot.commercial&&slot.commercial.length)?naGSponsorCardHtml(slot,i+2):'';})
+      .join('');
+    sponsorEl.innerHTML=sponsorHtml.trim()
+      ? sponsorHtml
+      : '<div class="ng-empty" style="grid-column:3;grid-row:2;">Aucun sponsor affecté aujourd\'hui</div>';
   }
 }
 
