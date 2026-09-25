@@ -1886,7 +1886,7 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .ng-page{
   padding:28px 32px 56px;
   max-width:1700px;margin:0 auto;
-  display:grid;grid-template-columns:300px 1fr 1fr;column-gap:36px;row-gap:12px;align-items:start;
+  display:grid;grid-template-columns:300px 1fr 1fr;column-gap:36px;row-gap:12px;align-items:stretch;
 }
 .ng-col{min-width:0;position:relative;}
 .ng-full-row{
@@ -1996,18 +1996,35 @@ body{background:var(--bg);color:var(--text);min-height:100vh;font-family:'Barlow
 .ng-card-extra{
   font-family:'Inter',sans-serif;font-size:12px;color:rgba(255,255,255,.4);
 }
-.ng-sp-line{
-  font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;
-  color:rgba(255,255,255,.7);white-space:normal;
+.ng-sp-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px;}
+.ng-sp-hero{
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:700;
+  color:#F5C518;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.35);
+  border-radius:20px;padding:3px 12px;letter-spacing:.02em;white-space:nowrap;
 }
+.ng-sp-rows{
+  display:flex;flex-direction:column;
+  border-top:1px solid rgba(255,255,255,.08);margin-top:8px;
+}
+.ng-sp-row{
+  display:grid;grid-template-columns:120px 1fr;column-gap:12px;align-items:baseline;
+  padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);
+  font-family:'Inter',sans-serif;font-size:12px;line-height:1.35;
+}
+.ng-sp-row:last-child{border-bottom:none;}
 .ng-sp-label{
-  font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:.04em;
-  color:rgba(255,255,255,.9);
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4);
 }
-.ng-sp-val{color:rgba(255,255,255,.65);}
-[data-theme="light"] .ng-sp-line{color:rgba(0,0,0,.6);}
-[data-theme="light"] .ng-sp-label{color:#111;}
-[data-theme="light"] .ng-sp-val{color:rgba(0,0,0,.55);}
+.ng-sp-val{color:rgba(255,255,255,.8);font-weight:600;}
+[data-theme="light"] .ng-sp-rows{border-color:rgba(0,0,0,.08);}
+[data-theme="light"] .ng-sp-row{border-color:rgba(0,0,0,.06);}
+[data-theme="light"] .ng-sp-label{color:rgba(0,0,0,.4);}
+[data-theme="light"] .ng-sp-val{color:#222;}
+#ng-sponsor-container .ng-card-time{width:78px;padding:12px 6px;gap:4px;}
+#ng-sponsor-container .ng-card-time-val{font-size:15px;}
+#ng-sponsor-container .ng-card-body{padding:14px 18px;gap:0;justify-content:center;}
+#ng-sponsor-container .ng-card-name{font-size:19px;}
 
 [data-theme="light"] .ng-card{background:#F5F4F7;}
 [data-theme="light"] .ng-card-time{background:#E4E3E8;}
@@ -4079,19 +4096,32 @@ function naGSponsorGroup(commercial){
   return order.map(function(genre){return{genre:genre,entries:groups[genre]};});
 }
 
+function naGSponsorNoms(entries){
+  var noms=[];
+  entries.forEach(function(c){
+    var nom=(c.nom||'—').trim();
+    if(noms.indexOf(nom)===-1)noms.push(nom);
+  });
+  return noms.join(', ');
+}
+
 function naGSponsorCardHtml(slot,rowIdx){
   var now=new Date();
   var nowH=now.getHours()+now.getMinutes()/60;
   var isLive=(slot.hdebut!=null && slot.hfin!=null && nowH>=slot.hdebut && nowH<slot.hfin);
   var isPast=(slot.hfin!=null && nowH>=slot.hfin);
-  var lignes='<div class="ng-sp-line"><span class="ng-sp-label">EMISSION</span> : <span class="ng-sp-val">'+escHtml(slot.emission||'—')+'</span></div>';
-  lignes+=naGSponsorGroup(slot.commercial).map(function(g){
-    var noms=[];
-    g.entries.forEach(function(c){
-      var nom=(c.nom||'—').trim();
-      if(noms.indexOf(nom)===-1)noms.push(nom);
-    });
-    return '<div class="ng-sp-line"><span class="ng-sp-label">'+escHtml(g.genre.toUpperCase())+'</span> : <span class="ng-sp-val">'+escHtml(noms.join(', '))+'</span></div>';
+  var groups=naGSponsorGroup(slot.commercial);
+  /* "Heure entière" = l'émission elle-même sponsorisée sur tout son créneau :
+     on fusionne ce sponsor directement dans l'en-tête, plutôt que d'en faire une ligne à part. */
+  var heureIdx=-1;
+  groups.forEach(function(g,i){if(/^heure/i.test(g.genre))heureIdx=i;});
+  var heureSponsor=heureIdx>=0?naGSponsorNoms(groups[heureIdx].entries):'';
+  var autres=groups.filter(function(g,i){return i!==heureIdx;});
+  var rows=autres.map(function(g){
+    return '<div class="ng-sp-row">'
+      +'<span class="ng-sp-label">'+escHtml(g.genre)+'</span>'
+      +'<span class="ng-sp-val">'+escHtml(naGSponsorNoms(g.entries))+'</span>'
+    +'</div>';
   }).join('');
   return '<div class="ng-card'+(isLive?' live':'')+(isPast?' past':'')+'" style="grid-column:3;grid-row:'+rowIdx+';">'
     +'<div class="ng-card-time">'
@@ -4099,7 +4129,13 @@ function naGSponsorCardHtml(slot,rowIdx){
       +'<div class="ng-card-time-sep">&#8595;</div>'
       +'<div class="ng-card-time-val">'+naGFmt(slot.hfin)+'</div>'
     +'</div>'
-    +'<div class="ng-card-body">'+lignes+'</div>'
+    +'<div class="ng-card-body">'
+      +'<div class="ng-sp-head">'
+        +'<span class="ng-card-name">'+escHtml(slot.emission||'—')+'</span>'
+        +(heureSponsor?'<span class="ng-sp-hero">'+escHtml(heureSponsor)+'</span>':'')
+      +'</div>'
+      +(rows?'<div class="ng-sp-rows">'+rows+'</div>':'')
+    +'</div>'
   +'</div>';
 }
 
